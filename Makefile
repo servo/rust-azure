@@ -44,11 +44,12 @@ all: libazure.a
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
 
-%.o: %.cpp
-	$(CXX) $< -o $@ -c $(AZURE_CXXFLAGS)
-
 src/2d/%.o: src/2d/%.cpp
 	$(CXX) $< -o $@ -c $(AZURE_CXXFLAGS)
 
 src/memory/mozalloc/%.o: src/memory/mozalloc/%.cpp
 	$(CXX) $< -o $@ -c $(MOZALLOC_CXXFLAGS)
+
+./%.o: ./%.cpp
+	$(CXX) $< -o $@ -c $(AZURE_CXXFLAGS)
+
