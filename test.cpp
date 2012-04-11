@@ -46,6 +46,17 @@ void paint(cairo_surface_t *cs) {
     cairo_fill(c);
 }
 
+using namespace mozilla;
+using namespace mozilla::gfx;
+
+void paint3() { }
+
+void paint2(RefPtr<DrawTarget> drawTarget) {
+    Rect rect = Rect(50, 50, 200, 200);
+    ColorPattern pattern = ColorPattern(Color(0.0, 0.5, 0.0));
+    drawTarget->FillRect(rect, pattern);
+}
+
 int main() {
     Display *dpy;
     Window rootwin;
@@ -68,10 +79,13 @@ int main() {
 
     cs = cairo_xlib_surface_create(dpy, win, DefaultVisual(dpy, 0), SIZEX, SIZEY);
 
+    RefPtr<DrawTarget> dt = Factory::CreateDrawTargetForCairoSurface(cs);
+
     while(1) {
 	XNextEvent(dpy, &e);
 	if (e.type==Expose && e.xexpose.count<1) {
-	    paint(cs);
+	    //paint(cs);
+	    paint2(dt);
 	} else if (e.type==ButtonPress) break;
     }
 
