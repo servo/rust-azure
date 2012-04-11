@@ -102,6 +102,7 @@ struct Rect {
 /* 2D.h */
 
 typedef void* DrawTargetRef;
-
+typedef void* PatternRef;
+typedef void* ColorPatternRef;
 
 #endif /* MOZILLA_GFX_AZURE_C_H */
