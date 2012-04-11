@@ -4,7 +4,8 @@
 
 use std;
 
-#[link_args = "-L."]
+#[link_args = "-L. -lazure -lcairo"]
+#[nolink]
 native mod azure {
     fn AzureCSanityCheck();
 }
