@@ -1,3 +1,4 @@
+CC ?= gcc
 CXX ?= g++
 CXXFLAGS ?=
 AR ?= ar
@@ -12,6 +13,8 @@ AZURE_CPP_SRC = \
         src/2d/ScaledFontBase.cpp \
         src/2d/DrawTargetDual.cpp \
         $(NULL)
+
+AZURE_CPP_SRC += azure-c.cpp
 
 AZURE_OBJS = $(AZURE_CPP_SRC:%.cpp=%.o)
 AZURE_CXXFLAGS = \
