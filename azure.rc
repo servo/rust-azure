@@ -5,7 +5,9 @@
 use std;
 
 import libc::types::common::c99::*;
+import libc::types::os::arch::c95::wchar_t;
 import cairo::*;
+import xlib::*;
 
 mod xlib;
 mod cairo;

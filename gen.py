@@ -55,7 +55,8 @@ args = [
     "-l", "X",
     "-o", "xlib.rs",
     "-match", "Xlib",
-    cairo]
+    "-match", "X",
+    xlib]
 args += includes + sysincludes
 
 subprocess.call(args)
