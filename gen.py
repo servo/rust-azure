@@ -21,10 +21,42 @@ args = [
     bindgen,
     "-l", "azure",
     "-o", "azure.rs",
-    "-match" ,"azure-c",
+    "-match", "azure-c",
     azure]
 args += includes + sysincludes + otherflags
 
 subprocess.call(args)
-        
+
+cairo = "/usr/include/cairo/cairo.h"
+args = [
+    bindgen,
+    "-l", "cairo",
+    "-o", "cairo.rs",
+    "-match", "cairo",
+    cairo]
+args += includes + sysincludes
+
+subprocess.call(args)
+
+cairo_xlib = "/usr/include/cairo/cairo-xlib.h"
+args = [
+    bindgen,
+    "-l", "cairo",
+    "-o", "cairo_xlib.rs",
+    "-match", "cairo-xlib",
+    cairo_xlib]
+args += includes + sysincludes
+
+subprocess.call(args)
+
+xlib = "/usr/include/X11/Xlib.h"
+args = [
+    bindgen,
+    "-l", "X",
+    "-o", "xlib.rs",
+    "-match", "Xlib",
+    cairo]
+args += includes + sysincludes
+
+subprocess.call(args)
         
