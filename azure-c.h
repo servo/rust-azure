@@ -3,6 +3,14 @@
 
 #include <stdint.h>
 
+#ifdef USE_CAIRO
+#include <cairo/cairo.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // FIXME: Probably want to prefix all these with something
 // FIXME: This stuff is copy pasted from the azure headers
 
@@ -80,29 +88,47 @@ enum SamplingBounds { SAMPLING_UNBOUNDED, SAMPLING_BOUNDED };
 
 enum Side {eSideTop, eSideRight, eSideBottom, eSideLeft};
 
-struct Color {
+typedef struct _Color {
     Float r, g, b, a;
-};
+} Color;
 
-struct GradientStop {
+typedef struct _GradientStop {
     Float offset;
     Color color;
-};
+} GradientStop;
 
 /* Rect.h */
 
-struct IntRect {
+typedef struct _IntRect {
     int32_t x, y, width, height;
-};
+} IntRect;
 
-struct Rect {
+typedef struct _Rect {
     Float x, y, width, height;
-};
+} Rect;
 
 /* 2D.h */
 
 typedef void* DrawTargetRef;
 typedef void* PatternRef;
 typedef void* ColorPatternRef;
+
+void AzureCSanityCheck();
+
+#ifdef USE_CAIRO
+DrawTargetRef CreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
+#endif
+
+void ReleaseDrawTarget(DrawTargetRef aTarget);
+
+ColorPatternRef CreateColorPattern(Color *aColor);
+
+void ReleaseColorPattern(ColorPatternRef aColorPattern);
+
+void DrawTargetFillRect(DrawTargetRef aDrawTarget, Rect *aRect, PatternRef aPattern);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MOZILLA_GFX_AZURE_C_H */

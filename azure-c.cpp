@@ -3,10 +3,6 @@
 
 #include <assert.h>
 
-#ifdef USE_CAIRO
-#include <cairo/cairo.h>
-#endif
-
 using namespace mozilla;
 
 extern "C"
