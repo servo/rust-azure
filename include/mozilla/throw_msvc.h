@@ -14,19 +14,19 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is mozilla.org code.
+ * The Original Code is Mozilla Code
  *
  * The Initial Developer of the Original Code is
- * Mozilla Foundation
+ * The Mozilla Foundation.
  * Portions created by the Initial Developer are Copyright (C) 2010
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *  Chris Jones <jones.chris.g@gmail.com>
+ *   Chris Jones <jones.chris.g@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
- * either of the GNU General Public License Version 2 or later (the "GPL"),
- * or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
  * in which case the provisions of the GPL or the LGPL are applicable instead
  * of those above. If you wish to allow use of your version of this file only
  * under the terms of either the GPL or the LGPL, and not to allow others to
@@ -38,40 +38,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*
- * This header is the "anti-header" for mozalloc_macro_wrappers.h.
- * Including it undefines all the macros defined by
- * mozalloc_macro_wrappers.h.
- */
+#ifndef mozilla_throw_msvc_h
+#define mozilla_throw_msvc_h
 
-#ifndef mozilla_mozalloc_macro_wrappers_h
-#  error "mozalloc macro wrappers haven't been defined"
+#if defined(MOZ_MSVC_STL_WRAP__RAISE)
+#  include "msvc_raise_wrappers.h"
+#elif defined(MOZ_MSVC_STL_WRAP__Throw)
+#  include "msvc_throw_wrapper.h"
+#else
+#  error "Unknown STL wrapper tactic"
 #endif
 
-/*
- * This allows the wrappers to be redefined by including
- * mozalloc_macro_wrappers.h again 
- */
-#undef mozilla_mozalloc_macro_wrappers_h
-
-#undef free
-#undef malloc
-#undef calloc
-#undef realloc
-#undef strdup
-
-#if defined(HAVE_STRNDUP)
-#  undef strndup
-#endif
-
-#if defined(HAVE_POSIX_MEMALIGN)
-#  undef posix_memalign
-#endif
-
-#if defined(HAVE_MEMALIGN)
-#  undef memalign
-#endif
-
-#if defined(HAVE_VALLOC)
-#  undef valloc
-#endif
+#endif  // mozilla_throw_msvc_h

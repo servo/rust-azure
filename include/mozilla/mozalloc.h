@@ -50,7 +50,7 @@
 #if defined(__cplusplus)
 #  include <new>
 #endif
-//#include "xpcom-config.h"
+#include "xpcom-config.h"
 
 #define MOZALLOC_HAVE_XMALLOC
 
@@ -106,7 +106,7 @@ MOZALLOC_EXPORT
 void moz_free(void* ptr);
 
 MOZALLOC_EXPORT void* moz_xmalloc(size_t size)
-     NS_WARN_UNUSED_RESULT;
+    NS_ATTR_MALLOC NS_WARN_UNUSED_RESULT;
 
 MOZALLOC_EXPORT
 void* moz_malloc(size_t size)

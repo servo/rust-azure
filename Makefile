@@ -53,3 +53,6 @@ src/memory/mozalloc/%.o: src/memory/mozalloc/%.cpp
 ./%.o: ./%.cpp
 	$(CXX) $< -o $@ -c $(AZURE_CXXFLAGS)
 
+.PHONY: clean
+clean:
+	rm *.o *.a azure */*/*.o

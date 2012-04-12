@@ -53,11 +53,6 @@
 #  include <unistd.h>           // for valloc on *BSD
 #endif //if defined(XP_UNIX)
 
-#if defined(MOZ_MEMORY)
-// jemalloc.h doesn't redeclare symbols if they're provided by the OS
-#  include "jemalloc.h"
-#endif
-
 #if defined(XP_WIN) || (defined(XP_OS2) && defined(__declspec))
 #  define MOZALLOC_EXPORT __declspec(dllexport)
 #endif
@@ -67,6 +62,10 @@
 #include "mozilla/mozalloc.h"
 #include "mozilla/mozalloc_oom.h"  // for mozalloc_handle_oom
 
+/* Windows doesn't have malloc_usable_size, but jemalloc has */
+#if defined(MOZ_MEMORY_WINDOWS)
+extern "C" size_t malloc_usable_size(const void *ptr);
+#endif
 
 #if defined(__GNUC__) && (__GNUC__ > 2)
 #define LIKELY(x)    (__builtin_expect(!!(x), 1))
@@ -74,21 +73,6 @@
 #else
 #define LIKELY(x)    (x)
 #define UNLIKELY(x)  (x)
-#endif
-
-#ifdef MOZ_MEMORY_DARWIN
-#include "jemalloc.h"
-#define malloc(a)               je_malloc(a)
-#define posix_memalign(a, b, c) je_posix_memalign(a, b, c)
-#define valloc(a)               je_valloc(a)
-#define calloc(a, b)            je_calloc(a, b)
-#define memalign(a, b)          je_memalign(a, b)
-#define strdup(a)               je_strdup(a)
-#define strndup(a, b)           je_strndup(a, b)
-/* We omit functions which could be passed a memory region that was not
- * allocated by jemalloc (realloc, free and malloc_usable_size). Instead,
- * we use the system-provided functions, which will in turn call the
- * jemalloc versions when appropriate */
 #endif
 
 void
@@ -101,7 +85,7 @@ void*
 moz_xmalloc(size_t size)
 {
     void* ptr = malloc(size);
-    if (UNLIKELY(!ptr)) {
+    if (UNLIKELY(!ptr && size)) {
         mozalloc_handle_oom(size);
         return moz_xmalloc(size);
     }
@@ -117,7 +101,7 @@ void*
 moz_xcalloc(size_t nmemb, size_t size)
 {
     void* ptr = calloc(nmemb, size);
-    if (UNLIKELY(!ptr)) {
+    if (UNLIKELY(!ptr && nmemb && size)) {
         mozalloc_handle_oom(size);
         return moz_xcalloc(nmemb, size);
     }
@@ -133,7 +117,7 @@ void*
 moz_xrealloc(void* ptr, size_t size)
 {
     void* newptr = realloc(ptr, size);
-    if (UNLIKELY(!newptr)) {
+    if (UNLIKELY(!newptr && size)) {
         mozalloc_handle_oom(size);
         return moz_xrealloc(ptr, size);
     }
@@ -179,7 +163,7 @@ moz_strndup(const char* str, size_t strsize)
 }
 #endif  // if defined(HAVE_STRNDUP)
 
-#if defined(HAVE_POSIX_MEMALIGN) || defined(HAVE_JEMALLOC_POSIX_MEMALIGN)
+#if defined(HAVE_POSIX_MEMALIGN)
 int
 moz_xposix_memalign(void **ptr, size_t alignment, size_t size)
 {
@@ -214,7 +198,7 @@ moz_posix_memalign(void **ptr, size_t alignment, size_t size)
 }
 #endif // if defined(HAVE_POSIX_MEMALIGN)
 
-#if defined(HAVE_MEMALIGN) || defined(HAVE_JEMALLOC_MEMALIGN)
+#if defined(HAVE_MEMALIGN)
 void*
 moz_xmemalign(size_t boundary, size_t size)
 {
@@ -233,7 +217,7 @@ moz_memalign(size_t boundary, size_t size)
 }
 #endif // if defined(HAVE_MEMALIGN)
 
-#if defined(HAVE_VALLOC) || defined(HAVE_JEMALLOC_VALLOC)
+#if defined(HAVE_VALLOC)
 void*
 moz_xvalloc(size_t size)
 {
@@ -259,10 +243,8 @@ moz_malloc_usable_size(void *ptr)
 
 #if defined(XP_MACOSX)
     return malloc_size(ptr);
-#elif defined(MOZ_MEMORY) || defined(XP_LINUX)
-    // XXX: the |defined(XP_LINUX)| may be too lax;  some Linux installations
-    // might use a libc that doesn't have malloc_usable_size.  Let's fix this
-    // if/when it happens.
+#elif defined(MOZ_MEMORY) || (defined(XP_LINUX) && !defined(ANDROID))
+    // Android bionic libc doesn't have malloc_usable_size.
     return malloc_usable_size(ptr);
 #elif defined(XP_WIN)
     return _msize(ptr);
