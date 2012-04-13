@@ -52,7 +52,7 @@ subprocess.call(args)
 xlib = "/usr/include/X11/Xlib.h"
 args = [
     bindgen,
-    "-l", "X",
+    "-l", "X11",
     "-o", "xlib.rs",
     "-match", "Xlib",
     "-match", "X",

@@ -32,12 +32,13 @@ void ReleaseDrawTarget(DrawTargetRef aTarget) {
 extern "C"
 ColorPatternRef CreateColorPattern(Color *aColor) {
     gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
-    return new gfx::ColorPattern(*gfxColor);
+    gfx::ColorPattern *gfxColorPattern = new gfx::ColorPattern(*gfxColor);
+    return gfxColorPattern;
 }
 
 extern "C"
 void ReleaseColorPattern(ColorPatternRef aColorPattern) {
-    gfx::Color *gfxColorPattern = static_cast<gfx::Color*>(aColorPattern);
+    gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
     delete gfxColorPattern;
 }
 

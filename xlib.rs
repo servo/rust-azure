@@ -34,7 +34,7 @@ type XPointer = *c_char;
 
 type struct__XExtData = {
     number: c_int,
-    next: *struct__XExtData,
+    next: *c_void,
     free_private: *u8,
     private_data: XPointer,
 };
@@ -995,14 +995,6 @@ type XIOErrorHandler = *u8;
 
 type XConnectionWatchProc = *u8;
 
-type union_unnamed4 = c_void /* FIXME: union type */;
-
-type union_unnamed3 = c_void /* FIXME: union type */;
-
-type union_unnamed2 = c_void /* FIXME: union type */;
-
-type union_unnamed5 = c_void /* FIXME: union type */;
-
 type struct_unnamed1 = {
     ext_data: *XExtData,
     private1: *struct__XPrivate,
@@ -1050,7 +1042,15 @@ type struct_unnamed1 = {
     xdefaults: *c_char,
 };
 
-#[link_name="X"]
+type union_unnamed5 = c_void /* FIXME: union type */;
+
+type union_unnamed4 = c_void /* FIXME: union type */;
+
+type union_unnamed3 = c_void /* FIXME: union type */;
+
+type union_unnamed2 = c_void /* FIXME: union type */;
+
+#[link_name="X11"]
 native mod bindgen {
 
 fn _Xmblen(++arg0: *c_char, ++arg1: c_int) -> c_int;
