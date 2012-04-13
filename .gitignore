@@ -5,3 +5,4 @@ azure
 libazure.a
 a.out
 libazure*.so
+libazure.dummy

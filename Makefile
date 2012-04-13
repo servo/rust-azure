@@ -2,6 +2,10 @@ CC ?= gcc
 CXX ?= g++
 CXXFLAGS ?=
 AR ?= ar
+RUSTC ?= rustc
+RUSTFLAGS ?=
+
+CXXFLAGS += -fPIC
 
 MOZALLOC_CPP_SRC = \
 	src/memory/mozalloc/mozalloc_abort.cpp \
@@ -13,6 +17,7 @@ MOZALLOC_CXXFLAGS = \
 	-Iinclude \
 	-DXP_UNIX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
+	$(CXXFLAGS) \
 	$(NULL)
 
 AZURE_CPP_SRC = \
@@ -33,14 +38,20 @@ AZURE_CXXFLAGS = \
 	-I/usr/include/cairo \
 	-DMOZ_GFX -DUSE_CAIRO \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
-	-g -O0 \
+	$(CXXFLAGS) \
 	$(NULL)
 
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
 ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o)
 
+RUST_SRC=$(shell find . -type f -name '*.rs')
+
 .PHONY: all
-all: libazure.a
+all: libazure.dummy
+
+libazure.dummy: azure.rc $(RUST_SRC) libazure.a
+	$(RUSTC) $(RUSTFLAGS) -o $@ $<
+	touch $@
 
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
@@ -56,4 +67,4 @@ src/memory/mozalloc/%.o: src/memory/mozalloc/%.cpp
 
 .PHONY: clean
 clean:
-	rm *.o *.a azure */*/*.o
+	rm *.o *.a azure */*/*.o *.so
