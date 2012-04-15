@@ -67,4 +67,4 @@ src/memory/mozalloc/%.o: src/memory/mozalloc/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f *.o *.a azure */*/*.o *.so
+	rm -f *.o *.a azure */*/*.o *.so *.dummy
