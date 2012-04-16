@@ -12,6 +12,10 @@ void AzureCSanityCheck() {
     assert(sizeof(GradientStop) == sizeof(gfx::GradientStop));
     assert(sizeof(Rect) == sizeof(gfx::Rect));
     assert(sizeof(IntRect) == sizeof(gfx::IntRect));
+    assert(sizeof(Point) == sizeof(gfx::Point));
+    assert(sizeof(IntPoint) == sizeof(gfx::IntPoint));
+    assert(sizeof(Size) == sizeof(gfx::Size));
+    assert(sizeof(IntSize) == sizeof(gfx::IntSize));
 }
 
 #ifdef USE_CAIRO

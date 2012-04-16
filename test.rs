@@ -43,6 +43,7 @@ fn xexpose(event: *XEventStub) -> *XExposeEvent unsafe {
 }
 
 #[test]
+#[ignore]
 fn cairo_it_up() {
     let dpy = XOpenDisplay(ptr::null());
     assert(ptr::is_not_null(dpy));

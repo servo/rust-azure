@@ -53,6 +53,9 @@ libazure.dummy: azure.rc $(RUST_SRC) libazure.a
 	$(RUSTC) $(RUSTFLAGS) -o $@ $<
 	touch $@
 
+azure-test: azure.rc $(RUST_SRC) libazure.a
+	$(RUSTC) $(RUSTFLAGS) -o $@ $< --test
+
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
 

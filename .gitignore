@@ -2,6 +2,7 @@
 *#
 *.o
 azure
+azure-test
 libazure.a
 a.out
 libazure*.so

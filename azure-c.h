@@ -107,6 +107,24 @@ typedef struct _Rect {
     Float x, y, width, height;
 } Rect;
 
+/* Point.h */
+
+typedef struct _IntPoint {
+  int32_t x, y;
+} IntPoint;
+
+typedef struct _Point {
+  Float x, y;
+} Point;
+
+typedef struct _IntSize {
+  int32_t width, height;
+} IntSize;
+
+typedef struct _Size {
+  Float width, height;
+} Size;
+
 /* 2D.h */
 
 typedef void* DrawTargetRef;
