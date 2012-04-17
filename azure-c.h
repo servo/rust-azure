@@ -11,8 +11,8 @@
 extern "C" {
 #endif
 
-// FIXME: Probably want to prefix all these with something
 // FIXME: This stuff is copy pasted from the azure headers
+
 
 /* Types.h */
 
@@ -30,7 +30,6 @@ enum AzSurfaceType
   AZ_SURFACE_SKIA, /* Surface wrapping a Skia bitmap */
   AZ_SURFACE_DUAL_DT /* Snapshot of a dual drawtarget */
 };
-
 
 enum AzSurfaceFormat
 {
@@ -158,6 +157,7 @@ typedef struct _AzGradientStop {
     AzColor color;
 } AzGradientStop;
 
+
 /* Rect.h */
 
 typedef struct _AzIntRect {
@@ -167,6 +167,7 @@ typedef struct _AzIntRect {
 typedef struct _AzRect {
     AzFloat x, y, width, height;
 } AzRect;
+
 
 /* Point.h */
 
@@ -185,6 +186,7 @@ typedef struct _AzIntSize {
 typedef struct _AzSize {
   AzFloat width, height;
 } AzSize;
+
 
 /* 2D.h */
 
