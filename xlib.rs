@@ -995,6 +995,10 @@ type XIOErrorHandler = *u8;
 
 type XConnectionWatchProc = *u8;
 
+type union_unnamed5 = c_void /* FIXME: union type */;
+
+type union_unnamed4 = c_void /* FIXME: union type */;
+
 type union_unnamed3 = c_void /* FIXME: union type */;
 
 type struct_unnamed1 = {
@@ -1045,10 +1049,6 @@ type struct_unnamed1 = {
 };
 
 type union_unnamed2 = c_void /* FIXME: union type */;
-
-type union_unnamed5 = c_void /* FIXME: union type */;
-
-type union_unnamed4 = c_void /* FIXME: union type */;
 
 #[link_name="X11"]
 native mod bindgen {

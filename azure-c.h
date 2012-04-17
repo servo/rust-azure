@@ -190,6 +190,17 @@ typedef struct _AzSize {
 
 /* 2D.h */
 
+// FIXME: rust-bindgen can't handle bitfields
+typedef struct _AzDrawOptions {
+  AzFloat mAlpha;
+  uint16_t fields;
+  /*
+  enum AzCompositionOp mCompositionOp : 8;
+  enum AzAntialiasMode mAntialiasMode : 2;
+  enum AzSnapping mSnapping : 1;
+  */
+} AzDrawOptions;
+
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;

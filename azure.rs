@@ -173,6 +173,13 @@ type struct__AzSize = {
 
 type AzSize = struct__AzSize;
 
+type struct__AzDrawOptions = {
+    mAlpha: AzFloat,
+    fields: uint16_t,
+};
+
+type AzDrawOptions = struct__AzDrawOptions;
+
 type AzDrawTargetRef = *c_void;
 
 type AzPatternRef = *c_void;

@@ -5,19 +5,21 @@
 
 using namespace mozilla;
 
+#define CHECK_SIZE(name) assert(sizeof(Az##name) == sizeof(gfx::name))
 #define CHECK_ENUM(name) assert((int)AZ_##name == (int)gfx::name)
 
 extern "C"
 void AzSanityCheck() {
-    assert(sizeof(AzFloat) == sizeof(gfx::Float));
-    assert(sizeof(AzColor) == sizeof(gfx::Color));
-    assert(sizeof(AzGradientStop) == sizeof(gfx::GradientStop));
-    assert(sizeof(AzRect) == sizeof(gfx::Rect));
-    assert(sizeof(AzIntRect) == sizeof(gfx::IntRect));
-    assert(sizeof(AzPoint) == sizeof(gfx::Point));
-    assert(sizeof(AzIntPoint) == sizeof(gfx::IntPoint));
-    assert(sizeof(AzSize) == sizeof(gfx::Size));
-    assert(sizeof(AzIntSize) == sizeof(gfx::IntSize));
+    CHECK_SIZE(Float);
+    CHECK_SIZE(Color);
+    CHECK_SIZE(GradientStop);
+    CHECK_SIZE(Rect);
+    CHECK_SIZE(IntRect);
+    CHECK_SIZE(Point);
+    CHECK_SIZE(IntPoint);
+    CHECK_SIZE(Size);
+    CHECK_SIZE(IntSize);
+    CHECK_SIZE(DrawOptions);
 
     CHECK_ENUM(SURFACE_DATA);
     CHECK_ENUM(SURFACE_D2D1_BITMAP);
