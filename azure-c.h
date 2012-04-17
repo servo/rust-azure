@@ -1,6 +1,7 @@
 #ifndef MOZILLA_GFX_AZURE_C_H_
 #define MOZILLA_GFX_AZURE_C_H_
 
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef USE_CAIRO
@@ -10,6 +11,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// A function that we use to test that our definitions match the C++
+void AzSanityCheck();
+
 
 // FIXME: This stuff is copy pasted from the azure headers
 
@@ -201,11 +206,33 @@ typedef struct _AzDrawOptions {
   */
 } AzDrawOptions;
 
+// FIXME: Again, bitfields
+typedef struct _AzStrokeOptions {
+  AzFloat mLineWidth;
+  AzFloat mMiterLimit;
+  const AzFloat* mDashPattern;
+  size_t mDashLength;
+  AzFloat mDashOffset;
+  uint16_t fields;
+  /*
+    enum AzJoinStyle mLineJoin : 4;
+    enum AzCapStyle mLineCap : 3;
+   */
+} AzStrokeOptions;
+
+// FIXME: Guess what? Bitfields
+typedef struct _AzDrawSurfaceOptions {
+  uint32_t fields;
+  /*
+  enum Filter mFilter : 3;
+  enum Filter mSamplingBounds : 1;
+  */
+} AzDrawSurfaceOptions;
+
+typedef void* AzGradientStopsRef;
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
-
-void AzSanityCheck();
 
 #ifdef USE_CAIRO
 AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
@@ -214,7 +241,6 @@ AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
-
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern);

@@ -180,6 +180,25 @@ type struct__AzDrawOptions = {
 
 type AzDrawOptions = struct__AzDrawOptions;
 
+type struct__AzStrokeOptions = {
+    mLineWidth: AzFloat,
+    mMiterLimit: AzFloat,
+    mDashPattern: *AzFloat,
+    mDashLength: size_t,
+    mDashOffset: AzFloat,
+    fields: uint16_t,
+};
+
+type AzStrokeOptions = struct__AzStrokeOptions;
+
+type struct__AzDrawSurfaceOptions = {
+    fields: uint32_t,
+};
+
+type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
+
+type AzGradientStopsRef = *c_void;
+
 type AzDrawTargetRef = *c_void;
 
 type AzPatternRef = *c_void;

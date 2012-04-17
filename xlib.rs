@@ -995,11 +995,13 @@ type XIOErrorHandler = *u8;
 
 type XConnectionWatchProc = *u8;
 
+type union_unnamed3 = c_void /* FIXME: union type */;
+
 type union_unnamed5 = c_void /* FIXME: union type */;
 
-type union_unnamed4 = c_void /* FIXME: union type */;
+type union_unnamed2 = c_void /* FIXME: union type */;
 
-type union_unnamed3 = c_void /* FIXME: union type */;
+type union_unnamed4 = c_void /* FIXME: union type */;
 
 type struct_unnamed1 = {
     ext_data: *XExtData,
@@ -1047,8 +1049,6 @@ type struct_unnamed1 = {
     private19: c_int,
     xdefaults: *c_char,
 };
-
-type union_unnamed2 = c_void /* FIXME: union type */;
 
 #[link_name="X11"]
 native mod bindgen {

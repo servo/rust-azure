@@ -20,6 +20,8 @@ void AzSanityCheck() {
     CHECK_SIZE(Size);
     CHECK_SIZE(IntSize);
     CHECK_SIZE(DrawOptions);
+    CHECK_SIZE(StrokeOptions);
+    CHECK_SIZE(DrawSurfaceOptions);
 
     CHECK_ENUM(SURFACE_DATA);
     CHECK_ENUM(SURFACE_D2D1_BITMAP);
