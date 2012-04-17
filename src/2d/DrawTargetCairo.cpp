@@ -280,7 +280,13 @@ DrawTargetCairo::~DrawTargetCairo()
 IntSize
 DrawTargetCairo::GetSize()
 {
-  return IntSize();
+  cairo_surface_t* csurf = cairo_get_target(mContext);
+  IntSize size;
+  if (GetCairoSurfaceSize(csurf, size)) {
+    return size;
+  } else {
+    return IntSize();
+  }
 }
 
 TemporaryRef<SourceSurface>

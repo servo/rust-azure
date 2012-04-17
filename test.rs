@@ -110,3 +110,17 @@ fn paint(dt: AzDrawTargetRef) {
         unsafe { unsafe::reinterpret_cast(pattern) });
     AzReleaseColorPattern(pattern);
 }
+
+#[test]
+fn test_draw_target_get_size() {
+    let surface = cairo_image_surface_create(
+        CAIRO_FORMAT_RGB24, 100 as c_int, 200 as c_int);
+    assert surface.is_not_null();
+    let dt = AzCreateDrawTargetForCairoSurface(surface);
+    assert dt.is_not_null();
+    let size = AzDrawTargetGetSize(dt);
+    assert size.width == 100 as int32_t;
+    assert size.height == 200 as int32_t;
+    AzReleaseDrawTarget(dt);
+    cairo_surface_destroy(surface);
+}

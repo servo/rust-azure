@@ -2,8 +2,18 @@
 #include "mozilla/gfx/2D.h"
 
 #include <assert.h>
+#include <string.h>
 
 using namespace mozilla;
+
+// Utilities
+
+static AzIntSize IntSizeToC(gfx::IntSize src) {
+    AzIntSize dst;
+    memcpy(&dst, &src, sizeof(dst));
+    return dst;
+}
+
 
 #define CHECK_SIZE(name) assert(sizeof(Az##name) == sizeof(gfx::name))
 #define CHECK_ENUM(name) assert((int)AZ_##name == (int)gfx::name)
@@ -115,6 +125,20 @@ void AzSanityCheck() {
     assert((int)AZ_eSideLeft == (int)css::eSideLeft);
 }
 
+
+extern "C"
+AzColorPatternRef AzCreateColorPattern(AzColor *aColor) {
+    gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
+    gfx::ColorPattern *gfxColorPattern = new gfx::ColorPattern(*gfxColor);
+    return gfxColorPattern;
+}
+
+extern "C"
+void AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
+    gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
+    delete gfxColorPattern;
+}
+
 #ifdef USE_CAIRO
 extern "C"
 AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
@@ -131,16 +155,9 @@ void AzReleaseDrawTarget(AzDrawTargetRef aTarget) {
 }
 
 extern "C"
-AzColorPatternRef AzCreateColorPattern(AzColor *aColor) {
-    gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
-    gfx::ColorPattern *gfxColorPattern = new gfx::ColorPattern(*gfxColor);
-    return gfxColorPattern;
-}
-
-extern "C"
-void AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
-    gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
-    delete gfxColorPattern;
+AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    return IntSizeToC(gfxDrawTarget->GetSize());
 }
 
 extern "C"

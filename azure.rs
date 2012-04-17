@@ -221,13 +221,15 @@ native mod bindgen {
 
 fn AzSanityCheck(/* FIXME: variadic function */);
 
+fn AzCreateColorPattern(++arg0: *AzColor) -> AzColorPatternRef;
+
+fn AzReleaseColorPattern(++arg0: AzColorPatternRef);
+
 fn AzCreateDrawTargetForCairoSurface(++arg0: *cairo_surface_t) -> AzDrawTargetRef;
 
 fn AzReleaseDrawTarget(++arg0: AzDrawTargetRef);
 
-fn AzCreateColorPattern(++arg0: *AzColor) -> AzColorPatternRef;
-
-fn AzReleaseColorPattern(++arg0: AzColorPatternRef);
+fn AzDrawTargetGetSize(++arg0: AzDrawTargetRef) -> AzIntSize;
 
 fn AzDrawTargetFillRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect, ++arg2: AzPatternRef);
 

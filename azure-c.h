@@ -243,15 +243,16 @@ typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
 
+AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
+void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
+
 #ifdef USE_CAIRO
 AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
 #endif
 
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
-AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
-void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
-
+AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern);
 
 #ifdef __cplusplus
