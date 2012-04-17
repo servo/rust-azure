@@ -253,7 +253,23 @@ AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
 AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget);
-void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern);
+void AzDrawTargetFlush(AzDrawTargetRef aDrawTarget);
+void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
+void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
+			  AzRect *aRect,
+			  AzPatternRef aPattern);
+void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
+			    AzRect *aRect,
+			    AzPatternRef aPattern,
+			    AzStrokeOptions *aStrokeOptions,
+			    AzDrawOptions *aDrawOptions);
+void AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
+			    AzPoint *aStart,
+			    AzPoint *aEnd,
+			    AzPatternRef aPattern,
+			    AzStrokeOptions *aStrokeOptions,
+			    AzDrawOptions *aDrawOptions);
+
 
 #ifdef __cplusplus
 }

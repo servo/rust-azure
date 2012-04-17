@@ -231,6 +231,14 @@ fn AzReleaseDrawTarget(++arg0: AzDrawTargetRef);
 
 fn AzDrawTargetGetSize(++arg0: AzDrawTargetRef) -> AzIntSize;
 
+fn AzDrawTargetFlush(++arg0: AzDrawTargetRef);
+
+fn AzDrawTargetClearRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect);
+
 fn AzDrawTargetFillRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect, ++arg2: AzPatternRef);
+
+fn AzDrawTargetStrokeRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect, ++arg2: AzPatternRef, ++arg3: *AzStrokeOptions, ++arg4: *AzDrawOptions);
+
+fn AzDrawTargetStrokeLine(++arg0: AzDrawTargetRef, ++arg1: *AzPoint, ++arg2: *AzPoint, ++arg3: *AzPatternRef, ++arg4: *AzStrokeOptions, ++arg5: *AzDrawOptions);
 
 }

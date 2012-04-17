@@ -126,44 +126,85 @@ void AzSanityCheck() {
 }
 
 
-extern "C"
-AzColorPatternRef AzCreateColorPattern(AzColor *aColor) {
+extern "C" AzColorPatternRef
+AzCreateColorPattern(AzColor *aColor) {
     gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
     gfx::ColorPattern *gfxColorPattern = new gfx::ColorPattern(*gfxColor);
     return gfxColorPattern;
 }
 
-extern "C"
-void AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
+extern "C" void
+AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
     delete gfxColorPattern;
 }
 
 #ifdef USE_CAIRO
-extern "C"
-AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
+extern "C" AzDrawTargetRef
+AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
     RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetForCairoSurface(aSurface);
     target->AddRef();
     return target;
 }
 #endif
 
-extern "C"
-void AzReleaseDrawTarget(AzDrawTargetRef aTarget) {
+extern "C" void
+AzReleaseDrawTarget(AzDrawTargetRef aTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
     gfxDrawTarget->Release();
 }
 
-extern "C"
-AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget) {
+extern "C" AzIntSize
+AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     return IntSizeToC(gfxDrawTarget->GetSize());
 }
 
-extern "C"
-void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern) {
+extern "C" void
+AzDrawTargetFlush(AzDrawTargetRef aDrawTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfxDrawTarget->Flush();
+}
+
+extern "C" void
+AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfxDrawTarget->ClearRect(*gfxRect);
+}
+
+extern "C" void
+AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
+		     AzPatternRef aPattern) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
     gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
     gfxDrawTarget->FillRect(*gfxRect, *gfxPattern);
+}
+
+extern "C" void
+AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
+		       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
+		       AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<gfx::StrokeOptions*>(aStrokeOptions);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->StrokeRect(*gfxRect, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
+}
+
+extern "C" void
+AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
+		       AzPoint *aStart, AzPoint *aEnd,
+		       AzPatternRef aPattern,
+		       AzStrokeOptions *aStrokeOptions,
+		       AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Point *gfxStart = reinterpret_cast<gfx::Point*>(aStart);
+    gfx::Point *gfxEnd = reinterpret_cast<gfx::Point*>(aEnd);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<gfx::StrokeOptions*>(aStrokeOptions);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->StrokeLine(*gfxStart, *gfxEnd, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
 }
