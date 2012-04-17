@@ -6,10 +6,6 @@ import cairo::*;
 import cairo::bindgen::*;
 import cairo_xlib::bindgen::*;
 
-#[link_args = "-L. -lcairo -lazure"]
-#[nolink]
-native mod m { }
-
 #[test]
 fn sanity_check() {
     AzSanityCheck();

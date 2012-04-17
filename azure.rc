@@ -14,3 +14,4 @@ mod xlib;
 mod cairo;
 mod cairo_xlib;
 mod test;
+mod linkhack;
