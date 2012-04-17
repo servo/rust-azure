@@ -10,6 +10,7 @@ using namespace mozilla;
 
 extern "C"
 void AzSanityCheck() {
+    CHECK_SIZE(Matrix);
     CHECK_SIZE(Float);
     CHECK_SIZE(Color);
     CHECK_SIZE(GradientStop);

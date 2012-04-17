@@ -173,6 +173,17 @@ type struct__AzSize = {
 
 type AzSize = struct__AzSize;
 
+type struct__AzMatrix = {
+    _11: AzFloat,
+    _12: AzFloat,
+    _21: AzFloat,
+    _22: AzFloat,
+    _31: AzFloat,
+    _32: AzFloat,
+};
+
+type AzMatrix = struct__AzMatrix;
+
 type struct__AzDrawOptions = {
     mAlpha: AzFloat,
     fields: uint16_t,

@@ -193,6 +193,15 @@ typedef struct _AzSize {
 } AzSize;
 
 
+/* Matrix.h */
+
+typedef struct _AzMatrix {
+  AzFloat _11, _12;
+  AzFloat _21, _22;
+  AzFloat _31, _32;
+} AzMatrix;
+
+
 /* 2D.h */
 
 // FIXME: rust-bindgen can't handle bitfields
