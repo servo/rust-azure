@@ -6,21 +6,21 @@
 using namespace mozilla;
 
 extern "C"
-void AzureCSanityCheck() {
-    assert(sizeof(Float) == sizeof(gfx::Float));
-    assert(sizeof(Color) == sizeof(gfx::Color));
-    assert(sizeof(GradientStop) == sizeof(gfx::GradientStop));
-    assert(sizeof(Rect) == sizeof(gfx::Rect));
-    assert(sizeof(IntRect) == sizeof(gfx::IntRect));
-    assert(sizeof(Point) == sizeof(gfx::Point));
-    assert(sizeof(IntPoint) == sizeof(gfx::IntPoint));
-    assert(sizeof(Size) == sizeof(gfx::Size));
-    assert(sizeof(IntSize) == sizeof(gfx::IntSize));
+void AzSanityCheck() {
+    assert(sizeof(AzFloat) == sizeof(gfx::Float));
+    assert(sizeof(AzColor) == sizeof(gfx::Color));
+    assert(sizeof(AzGradientStop) == sizeof(gfx::GradientStop));
+    assert(sizeof(AzRect) == sizeof(gfx::Rect));
+    assert(sizeof(AzIntRect) == sizeof(gfx::IntRect));
+    assert(sizeof(AzPoint) == sizeof(gfx::Point));
+    assert(sizeof(AzIntPoint) == sizeof(gfx::IntPoint));
+    assert(sizeof(AzSize) == sizeof(gfx::Size));
+    assert(sizeof(AzIntSize) == sizeof(gfx::IntSize));
 }
 
 #ifdef USE_CAIRO
 extern "C"
-DrawTargetRef CreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
+AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
     RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetForCairoSurface(aSurface);
     target->AddRef();
     return target;
@@ -28,26 +28,26 @@ DrawTargetRef CreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
 #endif
 
 extern "C"
-void ReleaseDrawTarget(DrawTargetRef aTarget) {
+void AzReleaseDrawTarget(AzDrawTargetRef aTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
     gfxDrawTarget->Release();
 }
 
 extern "C"
-ColorPatternRef CreateColorPattern(Color *aColor) {
+AzColorPatternRef AzCreateColorPattern(AzColor *aColor) {
     gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
     gfx::ColorPattern *gfxColorPattern = new gfx::ColorPattern(*gfxColor);
     return gfxColorPattern;
 }
 
 extern "C"
-void ReleaseColorPattern(ColorPatternRef aColorPattern) {
+void AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
     delete gfxColorPattern;
 }
 
 extern "C"
-void DrawTargetFillRect(DrawTargetRef aDrawTarget, Rect *aRect, PatternRef aPattern) {
+void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
     gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);

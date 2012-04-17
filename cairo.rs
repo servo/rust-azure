@@ -384,13 +384,13 @@ const CAIRO_REGION_OVERLAP_PART: u32 = 2_u32;
 type cairo_region_overlap_t = enum__cairo_region_overlap;
 
 type struct_unnamed1 = {
-    _type: cairo_path_data_type_t,
-    length: c_int,
+    x: c_double,
+    y: c_double,
 };
 
 type struct_unnamed2 = {
-    x: c_double,
-    y: c_double,
+    _type: cairo_path_data_type_t,
+    length: c_int,
 };
 
 #[link_name="cairo"]

@@ -34,7 +34,7 @@ type XPointer = *c_char;
 
 type struct__XExtData = {
     number: c_int,
-    next: *c_void,
+    next: *c_void /* struct__XExtData */,
     free_private: *u8,
     private_data: XPointer,
 };
@@ -105,7 +105,7 @@ type struct__XDisplay = c_void;
 
 type Screen = {
     ext_data: *XExtData,
-    display: *struct__XDisplay,
+    display: *c_void /* struct__XDisplay */,
     root: Window,
     width: c_int,
     height: c_int,
@@ -115,7 +115,7 @@ type Screen = {
     depths: *Depth,
     root_depth: c_int,
     root_visual: *Visual,
-    default_gc: GC,
+    default_gc: *c_void /* GC */,
     cmap: Colormap,
     white_pixel: c_ulong,
     black_pixel: c_ulong,
@@ -800,14 +800,14 @@ type XmbTextItem = {
     chars: *c_char,
     nchars: c_int,
     delta: c_int,
-    font_set: XFontSet,
+    font_set: *c_void /* XFontSet */,
 };
 
 type XwcTextItem = {
     chars: *wchar_t,
     nchars: c_int,
     delta: c_int,
-    font_set: XFontSet,
+    font_set: *c_void /* XFontSet */,
 };
 
 type XOMCharSetList = {
@@ -995,9 +995,11 @@ type XIOErrorHandler = *u8;
 
 type XConnectionWatchProc = *u8;
 
+type union_unnamed3 = c_void /* FIXME: union type */;
+
 type struct_unnamed1 = {
     ext_data: *XExtData,
-    private1: *struct__XPrivate,
+    private1: *c_void /* struct__XPrivate */,
     fd: c_int,
     private2: c_int,
     proto_major_version: c_int,
@@ -1016,8 +1018,8 @@ type struct_unnamed1 = {
     pixmap_format: *ScreenFormat,
     private8: c_int,
     release: c_int,
-    private9: *struct__XPrivate,
-    private10: *struct__XPrivate,
+    private9: *c_void /* struct__XPrivate */,
+    private10: *c_void /* struct__XPrivate */,
     qlen: c_int,
     last_request_read: c_ulong,
     request: c_ulong,
@@ -1026,7 +1028,7 @@ type struct_unnamed1 = {
     private13: XPointer,
     private14: XPointer,
     max_request_size: c_uint,
-    db: *struct__XrmHashBucketRec,
+    db: *c_void /* struct__XrmHashBucketRec */,
     private15: *u8,
     display_name: *c_char,
     default_screen: c_int,
@@ -1042,13 +1044,11 @@ type struct_unnamed1 = {
     xdefaults: *c_char,
 };
 
+type union_unnamed2 = c_void /* FIXME: union type */;
+
 type union_unnamed5 = c_void /* FIXME: union type */;
 
 type union_unnamed4 = c_void /* FIXME: union type */;
-
-type union_unnamed3 = c_void /* FIXME: union type */;
-
-type union_unnamed2 = c_void /* FIXME: union type */;
 
 #[link_name="X11"]
 native mod bindgen {

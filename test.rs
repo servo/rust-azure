@@ -12,7 +12,7 @@ native mod m { }
 
 #[test]
 fn sanity_check() {
-    AzureCSanityCheck();
+    AzSanityCheck();
 }
 
 const SIZEX: c_uint = 400 as c_uint;
@@ -73,7 +73,7 @@ fn cairo_it_up() {
     };
     let ep = ptr::addr_of(e);
 
-    let dt = CreateDrawTargetForCairoSurface(cs);
+    let dt = AzCreateDrawTargetForCairoSurface(cs);
 
     loop unsafe {
         XNextEvent(dpy, unsafe::reinterpret_cast(ep));
@@ -88,29 +88,29 @@ fn cairo_it_up() {
         }
     }
 
-    ReleaseDrawTarget(dt);
+    AzReleaseDrawTarget(dt);
     cairo_surface_destroy(cs);
     XCloseDisplay(dpy);
 }
 
-fn paint(dt: DrawTargetRef) {
+fn paint(dt: AzDrawTargetRef) {
     log(error, "painting");
     let rect = {
-        x: 200f as Float,
-        y: 200f as Float,
-        width: 100f as Float,
-        height: 100f as Float
+        x: 200f as AzFloat,
+        y: 200f as AzFloat,
+        width: 100f as AzFloat,
+        height: 100f as AzFloat
     };
     let color = {
-        r: 0f as Float,
-        g: 1f as Float,
-        b: 0f as Float,
-        a: 1f as Float
+        r: 0f as AzFloat,
+        g: 1f as AzFloat,
+        b: 0f as AzFloat,
+        a: 1f as AzFloat
     };
-    let pattern = CreateColorPattern(ptr::addr_of(color));
-    DrawTargetFillRect(
+    let pattern = AzCreateColorPattern(ptr::addr_of(color));
+    AzDrawTargetFillRect(
         dt,
         ptr::addr_of(rect),
         unsafe { unsafe::reinterpret_cast(pattern) });
-    ReleaseColorPattern(pattern);
+    AzReleaseColorPattern(pattern);
 }

@@ -16,134 +16,195 @@ extern "C" {
 
 /* Types.h */
 
-typedef float Float;
+typedef float AzFloat;
 
-enum SurfaceType
+enum AzSurfaceType
 {
-  SURFACE_DATA, /* Data surface - bitmap in memory */
-  SURFACE_D2D1_BITMAP, /* Surface wrapping a ID2D1Bitmap */
-  SURFACE_D2D1_DRAWTARGET, /* Surface made from a D2D draw target */
-  SURFACE_CAIRO, /* Surface wrapping a cairo surface */
-  SURFACE_CAIRO_IMAGE, /* Data surface wrapping a cairo image surface */
-  SURFACE_COREGRAPHICS_IMAGE, /* Surface wrapping a CoreGraphics Image */
-  SURFACE_COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
-  SURFACE_SKIA, /* Surface wrapping a Skia bitmap */
-  SURFACE_DUAL_DT /* Snapshot of a dual drawtarget */
+  AZ_SURFACE_DATA, /* Data surface - bitmap in memory */
+  AZ_SURFACE_D2D1_BITMAP, /* Surface wrapping a ID2D1Bitmap */
+  AZ_SURFACE_D2D1_DRAWTARGET, /* Surface made from a D2D draw target */
+  AZ_SURFACE_CAIRO, /* Surface wrapping a cairo surface */
+  AZ_SURFACE_CAIRO_IMAGE, /* Data surface wrapping a cairo image surface */
+  AZ_SURFACE_COREGRAPHICS_IMAGE, /* Surface wrapping a CoreGraphics Image */
+  AZ_SURFACE_COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
+  AZ_SURFACE_SKIA, /* Surface wrapping a Skia bitmap */
+  AZ_SURFACE_DUAL_DT /* Snapshot of a dual drawtarget */
 };
 
 
-enum SurfaceFormat
+enum AzSurfaceFormat
 {
-  FORMAT_B8G8R8A8,
-  FORMAT_B8G8R8X8,
-  FORMAT_R5G6B5,
-  FORMAT_A8
+  AZ_FORMAT_B8G8R8A8,
+  AZ_FORMAT_B8G8R8X8,
+  AZ_FORMAT_R5G6B5,
+  AZ_FORMAT_A8
 };
 
-enum BackendType
+enum AzBackendType
 {
-  BACKEND_NONE,
-  BACKEND_DIRECT2D,
-  BACKEND_COREGRAPHICS,
-  BACKEND_CAIRO,
-  BACKEND_SKIA
+  AZ_BACKEND_NONE,
+  AZ_BACKEND_DIRECT2D,
+  AZ_BACKEND_COREGRAPHICS,
+  AZ_BACKEND_CAIRO,
+  AZ_BACKEND_SKIA
 };
 
-enum FontType
+enum AzFontType
 {
-  FONT_DWRITE,
-  FONT_GDI,
-  FONT_MAC,
-  FONT_SKIA,
-  FONT_CAIRO,
-  FONT_COREGRAPHICS
+  AZ_FONT_DWRITE,
+  AZ_FONT_GDI,
+  AZ_FONT_MAC,
+  AZ_FONT_SKIA,
+  AZ_FONT_CAIRO,
+  AZ_FONT_COREGRAPHICS
 };
 
-enum NativeSurfaceType
+enum AzNativeSurfaceType
 {
-  NATIVE_SURFACE_D3D10_TEXTURE,
-  NATIVE_SURFACE_CAIRO_SURFACE,
-  NATIVE_SURFACE_CGCONTEXT
+  AZ_NATIVE_SURFACE_D3D10_TEXTURE,
+  AZ_NATIVE_SURFACE_CAIRO_SURFACE,
+  AZ_NATIVE_SURFACE_CGCONTEXT
 };
 
-enum NativeFontType
+enum AzNativeFontType
 {
-  NATIVE_FONT_DWRITE_FONT_FACE,
-  NATIVE_FONT_GDI_FONT_FACE,
-  NATIVE_FONT_MAC_FONT_FACE,
-  NATIVE_FONT_SKIA_FONT_FACE,
-  NATIVE_FONT_CAIRO_FONT_FACE
+  AZ_NATIVE_FONT_DWRITE_FONT_FACE,
+  AZ_NATIVE_FONT_GDI_FONT_FACE,
+  AZ_NATIVE_FONT_MAC_FONT_FACE,
+  AZ_NATIVE_FONT_SKIA_FONT_FACE,
+  AZ_NATIVE_FONT_CAIRO_FONT_FACE
 };
 
-enum CompositionOp { OP_OVER, OP_ADD, OP_ATOP, OP_OUT, OP_IN, OP_SOURCE, OP_DEST_IN, OP_DEST_OUT, OP_DEST_OVER, OP_DEST_ATOP, OP_XOR, OP_COUNT };
-enum ExtendMode { EXTEND_CLAMP, EXTEND_REPEAT, EXTEND_REFLECT };
-enum FillRule { FILL_WINDING, FILL_EVEN_ODD };
-enum AntialiasMode { AA_NONE, AA_GRAY, AA_SUBPIXEL };
-enum Snapping { SNAP_NONE, SNAP_ALIGNED };
-enum Filter { FILTER_LINEAR, FILTER_POINT };
-enum PatternType { PATTERN_COLOR, PATTERN_SURFACE, PATTERN_LINEAR_GRADIENT, PATTERN_RADIAL_GRADIENT };
-enum JoinStyle { JOIN_BEVEL, JOIN_ROUND, JOIN_MITER, JOIN_MITER_OR_BEVEL };
-enum CapStyle { CAP_BUTT, CAP_ROUND, CAP_SQUARE };
-enum SamplingBounds { SAMPLING_UNBOUNDED, SAMPLING_BOUNDED };
+enum AzCompositionOp {
+  AZ_OP_OVER,
+  AZ_OP_ADD,
+  AZ_OP_ATOP,
+  AZ_OP_OUT,
+  AZ_OP_IN,
+  AZ_OP_SOURCE,
+  AZ_OP_DEST_IN,
+  AZ_OP_DEST_OUT,
+  AZ_OP_DEST_OVER,
+  AZ_OP_DEST_ATOP,
+  AZ_OP_XOR,
+  AZ_OP_COUNT
+};
 
-enum Side {eSideTop, eSideRight, eSideBottom, eSideLeft};
+enum AzExtendMode {
+  AZ_EXTEND_CLAMP,
+  AZ_EXTEND_REPEAT,
+  AZ_EXTEND_REFLECT
+};
 
-typedef struct _Color {
-    Float r, g, b, a;
-} Color;
+enum AzFillRule {
+  AZ_FILL_WINDING,
+  AZ_FILL_EVEN_ODD
+};
 
-typedef struct _GradientStop {
-    Float offset;
-    Color color;
-} GradientStop;
+enum AzAntialiasMode {
+  AZ_AA_NONE,
+  AZ_AA_GRAY,
+  AZ_AA_SUBPIXEL
+};
+
+enum AzSnapping {
+  AZ_SNAP_NONE,
+  AZ_SNAP_ALIGNED
+};
+
+enum AzFilter {
+  AZ_FILTER_LINEAR,
+  AZ_FILTER_POINT
+};
+
+enum AzPatternType {
+  AZ_PATTERN_COLOR,
+  AZ_PATTERN_SURFACE,
+  AZ_PATTERN_LINEAR_GRADIENT,
+  AZ_PATTERN_RADIAL_GRADIENT
+};
+
+enum AzJoinStyle {
+  AZ_JOIN_BEVEL,
+  AZ_JOIN_ROUND,
+  AZ_JOIN_MITER,
+  AZ_JOIN_MITER_OR_BEVEL
+};
+
+enum AzCapStyle {
+  AZ_CAP_BUTT,
+  AZ_CAP_ROUND,
+  AZ_CAP_SQUARE
+};
+
+enum AzSamplingBounds {
+  AZ_SAMPLING_UNBOUNDED,
+  AZ_SAMPLING_BOUNDED
+};
+
+enum AzSide {
+  AZ_eSideTop,
+  AZ_eSideRight,
+  AZ_eSideBottom,
+  AZ_eSideLeft
+};
+
+typedef struct _AzColor {
+    AzFloat r, g, b, a;
+} AzColor;
+
+typedef struct _AzGradientStop {
+    AzFloat offset;
+    AzColor color;
+} AzGradientStop;
 
 /* Rect.h */
 
-typedef struct _IntRect {
+typedef struct _AzIntRect {
     int32_t x, y, width, height;
-} IntRect;
+} AzIntRect;
 
-typedef struct _Rect {
-    Float x, y, width, height;
-} Rect;
+typedef struct _AzRect {
+    AzFloat x, y, width, height;
+} AzRect;
 
 /* Point.h */
 
-typedef struct _IntPoint {
+typedef struct _AzIntPoint {
   int32_t x, y;
-} IntPoint;
+} AzIntPoint;
 
-typedef struct _Point {
-  Float x, y;
-} Point;
+typedef struct _AzPoint {
+  AzFloat x, y;
+} AzPoint;
 
-typedef struct _IntSize {
+typedef struct _AzIntSize {
   int32_t width, height;
-} IntSize;
+} AzIntSize;
 
-typedef struct _Size {
-  Float width, height;
-} Size;
+typedef struct _AzSize {
+  AzFloat width, height;
+} AzSize;
 
 /* 2D.h */
 
-typedef void* DrawTargetRef;
-typedef void* PatternRef;
-typedef void* ColorPatternRef;
+typedef void* AzDrawTargetRef;
+typedef void* AzPatternRef;
+typedef void* AzColorPatternRef;
 
-void AzureCSanityCheck();
+void AzSanityCheck();
 
 #ifdef USE_CAIRO
-DrawTargetRef CreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
+AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
 #endif
 
-void ReleaseDrawTarget(DrawTargetRef aTarget);
+void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
-ColorPatternRef CreateColorPattern(Color *aColor);
+AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 
-void ReleaseColorPattern(ColorPatternRef aColorPattern);
+void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
-void DrawTargetFillRect(DrawTargetRef aDrawTarget, Rect *aRect, PatternRef aPattern);
+void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect, AzPatternRef aPattern);
 
 #ifdef __cplusplus
 }
