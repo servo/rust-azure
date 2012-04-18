@@ -10,8 +10,18 @@ import bindgen::*;
 import cairo::*;
 import xlib::*;
 
+#[cfg(target_os = "linux")]
 mod xlib;
+
+#[cfg(target_os = "macos")]
+#[path = "bogus"]
+mod xlib { }
+
 mod cairo;
+
+#[cfg(target_os = "linux")]
 mod cairo_xlib;
+
+#[cfg(target_os = "linux")]
 mod test;
 mod linkhack;

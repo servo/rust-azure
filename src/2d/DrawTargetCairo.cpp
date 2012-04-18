@@ -48,6 +48,7 @@
 #ifdef CAIRO_HAS_QUARTZ_SURFACE
 #include "cairo-quartz.h"
 #include <ApplicationServices/ApplicationServices.h>
+#undef CAIRO_HAS_XLIB_SURFACE
 #endif
 
 #ifdef CAIRO_HAS_XLIB_SURFACE

@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #ifdef USE_CAIRO
-#include <cairo/cairo.h>
+#include "cairo.h"
 #endif
 
 #ifdef __cplusplus

@@ -1,9 +1,10 @@
 *~
 *#
 *.o
-azure
+*.a
+*.so
+*.dylib
+*.dSYM
+*.dll
+*.dummy
 azure-test
-libazure.a
-a.out
-libazure*.so
-libazure.dummy

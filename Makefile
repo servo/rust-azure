@@ -5,6 +5,9 @@ AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
 
+RUSTFLAGS += \
+        -L /usr/local/Cellar/cairo/1.10.2/lib
+
 CXXFLAGS += -fPIC
 
 MOZALLOC_CPP_SRC = \
@@ -15,7 +18,7 @@ MOZALLOC_CPP_SRC = \
 
 MOZALLOC_CXXFLAGS = \
 	-Iinclude \
-	-DXP_UNIX \
+	-DXP_MACOSX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(CXXFLAGS) \
 	$(NULL)
@@ -36,6 +39,8 @@ AZURE_CPP_SRC += azure-c.cpp
 AZURE_CXXFLAGS = \
 	-Iinclude \
 	-I/usr/include/cairo \
+        -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
+	-XP_MACOSX \
 	-DMOZ_GFX -DUSE_CAIRO \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(CXXFLAGS) \
@@ -50,11 +55,11 @@ RUST_SRC=$(shell find . -type f -name '*.rs')
 all: libazure.dummy
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
-	$(RUSTC) $(RUSTFLAGS) -o $@ $<
+	$(RUSTC) $(RUSTFLAGS) $< -o $@
 	touch $@
 
 azure-test: azure.rc $(RUST_SRC) libazure.a
-	$(RUSTC) $(RUSTFLAGS) -o $@ $< --test
+	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
@@ -68,6 +73,9 @@ src/memory/mozalloc/%.o: src/memory/mozalloc/%.cpp
 ./%.o: ./%.cpp
 	$(CXX) $< -o $@ -c $(AZURE_CXXFLAGS)
 
+check: azure-test
+	./azure-test
+
 .PHONY: clean
 clean:
-	rm -f *.o *.a azure */*/*.o *.so *.dummy
+	rm -f azure-test *.o *.a */*/*.o *.so *.dylib *.dll *.dummy
