@@ -53,9 +53,15 @@ ifeq ($(OSTYPE),darwin)
 # FIXME: This is not the right way to set up the lib location
 RUSTFLAGS += -L /usr/local/Cellar/cairo/1.10.2/lib
 MOZALLOC_CXXFLAGS += -DXP_MACOSX
-# FIXME: This also needs -DXP_MACOSX
 AZURE_CXXFLAGS += \
         -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
+	-DXP_MACOSX \
+	$(NULL)
+AZURE_CPP_SRC += \
+	src/2d/ScaledFontMac.cpp \
+	src/2d/DrawTargetCG.cpp \
+	src/2d/PathCG.cpp \
+	src/2d/SourceSurfaceCG.cpp \
 	$(NULL)
 endif
 
