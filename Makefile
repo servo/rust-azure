@@ -5,8 +5,14 @@ AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
 
-RUSTFLAGS += \
-        -L /usr/local/Cellar/cairo/1.10.2/lib
+UNAME=$(shell uname)
+
+ifeq ($(UNAME),Darwin)
+    OSTYPE=darwin
+endif
+ifeq ($(UNAME),Linux)
+    OSTYPE=linux
+endif
 
 CXXFLAGS += -fPIC
 
@@ -18,7 +24,6 @@ MOZALLOC_CPP_SRC = \
 
 MOZALLOC_CXXFLAGS = \
 	-Iinclude \
-	-DXP_MACOSX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(CXXFLAGS) \
 	$(NULL)
@@ -38,13 +43,29 @@ AZURE_CPP_SRC += azure-c.cpp
 
 AZURE_CXXFLAGS = \
 	-Iinclude \
-	-I/usr/include/cairo \
-        -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
-	-XP_MACOSX \
 	-DMOZ_GFX -DUSE_CAIRO \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(CXXFLAGS) \
 	$(NULL)
+
+ifeq ($(OSTYPE),darwin)
+# The homebrew location of a particular version of cairo
+# FIXME: This is not the right way to set up the lib location
+RUSTFLAGS += -L /usr/local/Cellar/cairo/1.10.2/lib
+MOZALLOC_CXXFLAGS += -DXP_MACOSX
+AZURE_CXXFLAGS += \
+        -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
+	-DXP_MACOSX \
+	$(NULL)
+endif
+
+ifeq ($(OSTYPE),linux)
+MOZALLOC_CXXFLAGS += -DXP_UNIX
+AZURE_CXXFLAGS += \
+	-I/usr/include/cairo \
+	-DXP_UNIX \
+	$(NULL)
+endif
 
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
 ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o)
