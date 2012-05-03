@@ -52,7 +52,7 @@ ifeq ($(OSTYPE),darwin)
 # The homebrew location of a particular version of cairo
 # FIXME: This is not the right way to set up the lib location
 RUSTFLAGS += -L /usr/local/Cellar/cairo/1.10.2/lib
-MOZALLOC_CXXFLAGS += -DXP_MACOSX
+MOZALLOC_CXXFLAGS += -DXP_MACOSX -DXP_UNIX
 AZURE_CXXFLAGS += \
         -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
 	-DXP_MACOSX \
