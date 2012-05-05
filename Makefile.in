@@ -74,7 +74,7 @@ RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 .PHONY: all
 all: libazure.dummy
 
-%.o: %.cpp
+%.o: %.cpp prepare-dirs
 	$(CXX) $< -o $@ -c $(CXXFLAGS)
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
