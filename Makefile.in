@@ -74,7 +74,7 @@ RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 .PHONY: all
 all: libazure.dummy
 
-%.o: %.cpp prepare-dirs
+%.o: %.cpp
 	$(CXX) $< -o $@ -c $(CXXFLAGS)
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
@@ -86,11 +86,6 @@ azure-test: azure.rc $(RUST_SRC) libazure.a
 
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
-
-.PHONY: prepare-dirs
-prepare-dirs:
-	mkdir -p src/2d
-	mkdir -p src/memory/mozalloc
 
 check: azure-test
 	./azure-test
