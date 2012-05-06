@@ -49,7 +49,8 @@ RUSTFLAGS += -L /usr/local/Cellar/cairo/1.10.2/lib
 CXXFLAGS += \
         -I/usr/local/Cellar/cairo/1.10.2/include/cairo \
 	-DXP_MACOSX \
-	-XP_UNIX \
+	-DXP_UNIX \
+	-DMALLOC_H="<malloc/malloc.h>" \
 	$(NULL)
 AZURE_CPP_SRC += \
 	src/2d/ScaledFontMac.cpp \
