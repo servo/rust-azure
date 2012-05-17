@@ -238,10 +238,22 @@ typedef struct _AzDrawSurfaceOptions {
   */
 } AzDrawSurfaceOptions;
 
+typedef struct _AzGlyph {
+  uint32_t mIndex;
+  AzPoint mPosition;
+} AzGlyph;
+
+typedef struct _AzGlyphBuffer {
+  const AzGlyph *mGlyphs;
+  uint32_t mNumGlyphs;
+} AzGlyphBuffer;
+
 typedef void* AzGradientStopsRef;
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
+typedef void* AzScaledFontRef;
+typedef void* AzGlyphRenderingOptionsRef;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
@@ -269,6 +281,13 @@ void AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
 			    AzPatternRef aPattern,
 			    AzStrokeOptions *aStrokeOptions,
 			    AzDrawOptions *aDrawOptions);
+void AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
+                            AzScaledFontRef aFont,
+                            AzGlyphBuffer *aGlyphBuffer,
+                            AzPatternRef aPattern,
+                            AzDrawOptions *aOptions,
+                            AzGlyphRenderingOptionsRef aRenderingOptions);
+                              
 
 
 #ifdef __cplusplus

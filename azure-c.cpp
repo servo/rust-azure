@@ -33,6 +33,8 @@ void AzSanityCheck() {
     CHECK_SIZE(DrawOptions);
     CHECK_SIZE(StrokeOptions);
     CHECK_SIZE(DrawSurfaceOptions);
+    CHECK_SIZE(Glyph);
+    CHECK_SIZE(GlyphBuffer);
 
     CHECK_ENUM(SURFACE_DATA);
     CHECK_ENUM(SURFACE_D2D1_BITMAP);
@@ -207,4 +209,20 @@ AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
     gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<gfx::StrokeOptions*>(aStrokeOptions);
     gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
     gfxDrawTarget->StrokeLine(*gfxStart, *gfxEnd, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
+}
+
+extern "C" void
+AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
+                       AzScaledFontRef aFont,
+                       AzGlyphBuffer *aGlyphBuffer,
+                       AzPatternRef aPattern,
+                       AzDrawOptions *aOptions,
+                       AzGlyphRenderingOptionsRef aRenderingOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::ScaledFont *gfxScaledFont = static_cast<gfx::ScaledFont*>(aFont);
+    gfx::GlyphBuffer *gfxGlyphBuffer = reinterpret_cast<gfx::GlyphBuffer*>(aGlyphBuffer);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxOptions = reinterpret_cast<gfx::DrawOptions*>(aOptions);
+    gfx::GlyphRenderingOptions *gfxRenderingOptions = static_cast<gfx::GlyphRenderingOptions*>(aRenderingOptions);
+    gfxDrawTarget->FillGlyphs(gfxScaledFont, *gfxGlyphBuffer, *gfxPattern, *gfxOptions, gfxRenderingOptions);
 }
