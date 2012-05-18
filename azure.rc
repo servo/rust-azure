@@ -9,6 +9,8 @@ import libc::types::os::arch::c95::wchar_t;
 import bindgen::*;
 import cairo::*;
 import xlib::*;
+import freetype::*;
+import fontconfig::*;
 
 #[cfg(target_os = "linux")]
 mod xlib;
@@ -23,5 +25,23 @@ mod cairo;
 mod cairo_xlib;
 
 #[cfg(target_os = "linux")]
+mod cairo_ft;
+
+#[cfg(target_os = "linux")]
+mod freetype;
+
+#[cfg(target_os = "macos")]
+#[path = "bogus"]
+mod freetype { }
+
+#[cfg(target_os = "linux")]
+mod fontconfig;
+
+#[cfg(target_os = "macos")]
+#[path = "bogus"]
+mod fontconfig { }
+
+#[cfg(target_os = "linux")]
 mod test;
+
 mod linkhack;

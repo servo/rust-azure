@@ -8,7 +8,10 @@ includes = [
     ]
 sysincludes = [
     "-isystem", "/usr/lib/x86_64-linux-gnu/gcc/x86_64-linux-gnu/4.5/include",
-    "-isystem", "/usr/lib/gcc/x86_64-linux-gnu/4.6/include"
+    "-isystem", "/usr/lib/x86_64-linux-gnu/gcc/x86_64-linux-gnu/4.5/include-fixed",
+    "-isystem", "/usr/lib/gcc/x86_64-linux-gnu/4.6/include",
+    "-isystem", "/usr/include/cairo",
+    "-isystem", "/usr/include/freetype2",
     ]
 otherflags = [
     "-DMOZ_GFX",
@@ -38,6 +41,17 @@ args += includes + sysincludes
 
 subprocess.call(args)
 
+cairo_ft = "/usr/include/cairo/cairo-ft.h"
+args = [
+    bindgen,
+    "-l", "cairo",
+    "-o", "cairo_ft.rs",
+    "-match", "cairo-ft",
+    cairo_ft]
+args += includes + sysincludes + ["-DCAIRO_HAS_FT_FONT", "-DCAIRO_HAS_FC_FONT"]
+
+subprocess.call(args)
+
 cairo_xlib = "/usr/include/cairo/cairo-xlib.h"
 args = [
     bindgen,
@@ -45,6 +59,28 @@ args = [
     "-o", "cairo_xlib.rs",
     "-match", "cairo-xlib",
     cairo_xlib]
+args += includes + sysincludes
+
+subprocess.call(args)
+
+ft = "/usr/include/freetype2/freetype/freetype.h"
+args = [
+    bindgen,
+    "-l", "freetype",
+    "-o", "freetype.rs",
+    "-match", "freetype",
+    cairo_ft]
+args += includes + sysincludes
+
+subprocess.call(args)
+
+fc = "/usr/include/fontconfig/fontconfig.h"
+args = [
+    bindgen,
+    "-l", "fontconfig",
+    "-o", "fontconfig.rs",
+    "-match", "fontconfig",
+    cairo_ft]
 args += includes + sysincludes
 
 subprocess.call(args)
