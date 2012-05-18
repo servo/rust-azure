@@ -208,6 +208,27 @@ type struct__AzDrawSurfaceOptions = {
 
 type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
+type struct__AzGlyph = {
+    mIndex: uint32_t,
+    mPosition: AzPoint,
+};
+
+type AzGlyph = struct__AzGlyph;
+
+type struct__AzGlyphBuffer = {
+    mGlyphs: *AzGlyph,
+    mNumGlyphs: uint32_t,
+};
+
+type AzGlyphBuffer = struct__AzGlyphBuffer;
+
+type struct__AzNativeFont = {
+    mType: enum_AzNativeFontType,
+    mFont: *c_void,
+};
+
+type AzNativeFont = struct__AzNativeFont;
+
 type AzGradientStopsRef = *c_void;
 
 type AzDrawTargetRef = *c_void;
@@ -216,29 +237,37 @@ type AzPatternRef = *c_void;
 
 type AzColorPatternRef = *c_void;
 
+type AzScaledFontRef = *c_void;
+
+type AzGlyphRenderingOptionsRef = *c_void;
+
 #[link_name="azure"]
 native mod bindgen {
 
 fn AzSanityCheck(/* FIXME: variadic function */);
 
-fn AzCreateColorPattern(++arg0: *AzColor) -> AzColorPatternRef;
+fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
 
-fn AzReleaseColorPattern(++arg0: AzColorPatternRef);
+fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
 
-fn AzCreateDrawTargetForCairoSurface(++arg0: *cairo_surface_t) -> AzDrawTargetRef;
+fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t) -> AzDrawTargetRef;
 
-fn AzReleaseDrawTarget(++arg0: AzDrawTargetRef);
+fn AzReleaseDrawTarget(++aTarget: AzDrawTargetRef);
 
-fn AzDrawTargetGetSize(++arg0: AzDrawTargetRef) -> AzIntSize;
+fn AzDrawTargetGetSize(++aDrawTarget: AzDrawTargetRef) -> AzIntSize;
 
-fn AzDrawTargetFlush(++arg0: AzDrawTargetRef);
+fn AzDrawTargetFlush(++aDrawTarget: AzDrawTargetRef);
 
-fn AzDrawTargetClearRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect);
+fn AzDrawTargetClearRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect);
 
-fn AzDrawTargetFillRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect, ++arg2: AzPatternRef);
+fn AzDrawTargetFillRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef);
 
-fn AzDrawTargetStrokeRect(++arg0: AzDrawTargetRef, ++arg1: *AzRect, ++arg2: AzPatternRef, ++arg3: *AzStrokeOptions, ++arg4: *AzDrawOptions);
+fn AzDrawTargetStrokeRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
 
-fn AzDrawTargetStrokeLine(++arg0: AzDrawTargetRef, ++arg1: *AzPoint, ++arg2: *AzPoint, ++arg3: *AzPatternRef, ++arg4: *AzStrokeOptions, ++arg5: *AzDrawOptions);
+fn AzDrawTargetStrokeLine(++aDrawTarget: AzDrawTargetRef, ++aStart: *AzPoint, ++aEnd: *AzPoint, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
+
+fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontRef, ++aGlyphBuffer: *AzGlyphBuffer, ++aPattern: AzPatternRef, ++aOptions: *AzDrawOptions, ++aRenderingOptions: AzGlyphRenderingOptionsRef);
+
+fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 
 }

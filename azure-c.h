@@ -248,6 +248,11 @@ typedef struct _AzGlyphBuffer {
   uint32_t mNumGlyphs;
 } AzGlyphBuffer;
 
+typedef struct _AzNativeFont {
+  enum AzNativeFontType mType;
+  void *mFont;
+} AzNativeFont;
+
 typedef void* AzGradientStopsRef;
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
@@ -288,6 +293,14 @@ void AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
                             AzDrawOptions *aOptions,
                             AzGlyphRenderingOptionsRef aRenderingOptions);
                               
+
+/* Factory.h */
+
+#ifdef USE_CAIRO
+AzScaledFontRef AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
+                                            AzFloat aSize,
+                                            cairo_scaled_font_t *aScaledFont);
+#endif
 
 
 #ifdef __cplusplus

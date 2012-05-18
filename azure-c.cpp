@@ -35,6 +35,7 @@ void AzSanityCheck() {
     CHECK_SIZE(DrawSurfaceOptions);
     CHECK_SIZE(Glyph);
     CHECK_SIZE(GlyphBuffer);
+    CHECK_SIZE(NativeFont);
 
     CHECK_ENUM(SURFACE_DATA);
     CHECK_ENUM(SURFACE_D2D1_BITMAP);
@@ -225,4 +226,22 @@ AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
     gfx::DrawOptions *gfxOptions = reinterpret_cast<gfx::DrawOptions*>(aOptions);
     gfx::GlyphRenderingOptions *gfxRenderingOptions = static_cast<gfx::GlyphRenderingOptions*>(aRenderingOptions);
     gfxDrawTarget->FillGlyphs(gfxScaledFont, *gfxGlyphBuffer, *gfxPattern, *gfxOptions, gfxRenderingOptions);
+}
+
+#ifdef USE_CAIRO
+extern "C" AzScaledFontRef
+AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
+                            AzFloat aSize,
+                            cairo_scaled_font_t *aScaledFont) {
+    gfx::NativeFont *gfxNativeFont = reinterpret_cast<gfx::NativeFont*>(aNativeFont);
+    RefPtr<gfx::ScaledFont> font = gfx::Factory::CreateScaledFontWithCairo(*gfxNativeFont, aSize, aScaledFont);
+    font->AddRef();
+    return font;
+}
+#endif
+
+extern "C" void
+AzReleaseScaledFont(AzScaledFontRef aFont) {
+    gfx::ScaledFont *gfxFont = static_cast<gfx::ScaledFont*>(aFont);
+    gfxFont->Release();
 }
