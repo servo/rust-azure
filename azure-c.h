@@ -302,6 +302,8 @@ AzScaledFontRef AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
                                             cairo_scaled_font_t *aScaledFont);
 #endif
 
+void AzReleaseScaledFont(AzScaledFontRef aFont);
+
 
 #ifdef __cplusplus
 }

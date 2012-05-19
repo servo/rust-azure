@@ -270,4 +270,6 @@ fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontR
 
 fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 
+fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
+
 }
