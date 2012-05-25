@@ -124,3 +124,90 @@ fn test_draw_target_get_size() {
     AzReleaseDrawTarget(dt);
     cairo_surface_destroy(surface);
 }
+
+#[test]
+fn fonts() {
+    import cairo::*;
+    import cairo::bindgen::*;
+
+    let dpy = XOpenDisplay(ptr::null());
+    assert(ptr::is_not_null(dpy));
+    let scr = XDefaultScreen(dpy);
+    let rootwin = XRootWindow(dpy, scr);
+    let win = XCreateSimpleWindow(
+        dpy, rootwin, 1 as c_int, 1 as c_int, SIZEX, SIZEY, 0 as c_uint,
+        XBlackPixel(dpy, scr), XBlackPixel(dpy, scr));
+    str::as_c_str("test") {|cstr|
+        XStoreName(dpy, win, cstr);
+    }
+    XSelectInput(dpy, win, ExposureMask | ButtonPressMask);
+    XMapWindow(dpy, win);
+
+    let cs = cairo_xlib_surface_create(
+        dpy, win, XDefaultVisual(dpy, 0 as c_int),
+        SIZEX as c_int, SIZEY as c_int);
+
+    let e = {
+        type_: 0 as c_int,
+        padding: (
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        )
+    };
+    let ep = ptr::addr_of(e);
+
+    loop unsafe {
+        XNextEvent(dpy, unsafe::reinterpret_cast(ep));
+        log(error, *ep);
+        log(error, *xexpose(ep));
+        if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
+            paint(cs);
+        } else if e.type_ == ButtonPress {
+            break;
+        } else {
+            paint(cs);
+        }
+    }
+
+    cairo_surface_destroy(cs);
+    XCloseDisplay(dpy);
+
+    fn paint(surf: *cairo_surface_t) {
+        import libc::c_double;
+        import cairo::*;
+        import cairo::bindgen::*;
+
+        let cr: *cairo_t = cairo_create(surf);
+        assert cr.is_not_null();
+
+        cairo_set_source_rgb(cr, 0.5 as c_double, 0.1 as c_double, 0.1 as c_double);
+        cairo_paint(cr);
+
+        let te: cairo_text_extents_t = {
+            x_bearing: 0 as c_double,
+            y_bearing: 0 as c_double,
+            width: 0 as c_double,
+            height: 0 as c_double,
+            x_advance: 0 as c_double,
+            y_advance: 0 as c_double
+        };
+        cairo_set_source_rgb(cr, 0.9 as c_double, 0.5 as c_double, 0.5 as c_double);
+        str::as_c_str("Georgia") {|fontname|
+            cairo_select_font_face(cr, fontname, CAIRO_FONT_SLANT_NORMAL,
+                                   CAIRO_FONT_WEIGHT_BOLD);
+        }
+        cairo_set_font_size(cr, 20.2 as c_double);
+        str::as_c_str("a") {|text|
+            cairo_text_extents(cr, text, ptr::addr_of(te));
+            cairo_move_to(cr,
+                          100.0 + 0.5 - te.width / 2.0 - te.x_bearing,
+                          100.0 + 0.5 - te.height / 2.0 - te.y_bearing);
+            cairo_show_text(cr, text);
+        }
+
+        cairo_destroy(cr);
+    }
+}
+
