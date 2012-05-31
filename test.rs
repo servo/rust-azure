@@ -126,6 +126,7 @@ fn test_draw_target_get_size() {
 }
 
 #[test]
+#[ignore]
 fn fonts() {
     import cairo::*;
     import cairo::bindgen::*;
