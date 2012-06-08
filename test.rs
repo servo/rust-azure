@@ -202,9 +202,12 @@ fn fonts() {
         cairo_set_font_size(cr, 20.2 as c_double);
         str::as_c_str("a") {|text|
             cairo_text_extents(cr, text, ptr::addr_of(te));
-            cairo_move_to(cr,
-                          100.0 + 0.5 - te.width / 2.0 - te.x_bearing,
-                          100.0 + 0.5 - te.height / 2.0 - te.y_bearing);
+            cairo_move_to(
+                cr,
+                (100.0 + 0.5) as c_double -
+                te.width / (2.0 as c_double) - te.x_bearing,
+                (100.0 + 0.5) as c_double -
+                te.height / (2.0 as c_double) - te.y_bearing);
             cairo_show_text(cr, text);
         }
 
