@@ -3,6 +3,7 @@
 #[crate_type = "lib"];
 
 use std;
+use geom;
 
 import libc::types::common::c99::*;
 import libc::types::os::arch::c95::wchar_t;
@@ -44,6 +45,7 @@ mod fontconfig;
 #[path = "bogus"]
 mod fontconfig { }
 
+mod azure_hl;
 mod cairo_hl;
 
 #[cfg(target_os = "linux")]
