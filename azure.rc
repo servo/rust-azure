@@ -44,7 +44,10 @@ mod fontconfig;
 #[path = "bogus"]
 mod fontconfig { }
 
+mod cairo_hl;
+
 #[cfg(target_os = "linux")]
 mod test;
 
 mod linkhack;
+
