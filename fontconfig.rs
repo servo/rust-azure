@@ -148,7 +148,7 @@ type FcCache = struct__FcCache;
 type union_unnamed1 = c_void /* FIXME: union type */;
 
 #[link_name="fontconfig"]
-native mod bindgen {
+extern mod bindgen {
 
 fn FcBlanksCreate() -> *FcBlanks;
 

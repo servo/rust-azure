@@ -639,7 +639,7 @@ const FT_Err_Corrupted_Font_Glyphs: u32 = 186_u32;
 const FT_Err_Max: u32 = 187_u32;
 
 #[link_name="freetype"]
-native mod bindgen {
+extern mod bindgen {
 
 fn FT_Init_FreeType(++alibrary: *FT_Library) -> FT_Error;
 
