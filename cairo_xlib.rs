@@ -3,7 +3,7 @@
 import libc::*;
 
 #[link_name="cairo"]
-native mod bindgen {
+extern mod bindgen {
 
 fn cairo_xlib_surface_create(++arg0: *Display, ++arg1: Drawable, ++arg2: *Visual, ++arg3: c_int, ++arg4: c_int) -> *cairo_surface_t;
 

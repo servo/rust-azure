@@ -242,7 +242,7 @@ type AzScaledFontRef = *c_void;
 type AzGlyphRenderingOptionsRef = *c_void;
 
 #[link_name="azure"]
-native mod bindgen {
+extern mod bindgen {
 
 fn AzSanityCheck(/* FIXME: variadic function */);
 
