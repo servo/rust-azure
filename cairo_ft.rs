@@ -3,7 +3,7 @@
 import libc::*;
 
 #[link_name="cairo"]
-native mod bindgen {
+extern mod bindgen {
 
 fn cairo_ft_font_face_create_for_ft_face(++face: FT_Face, ++load_flags: c_int) -> *cairo_font_face_t;
 

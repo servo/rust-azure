@@ -394,7 +394,7 @@ type struct_unnamed2 = {
 };
 
 #[link_name="cairo"]
-native mod bindgen {
+extern mod bindgen {
 
 fn cairo_version() -> c_int;
 
