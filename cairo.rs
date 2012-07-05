@@ -520,8 +520,6 @@ fn cairo_in_stroke(++arg0: *cairo_t, ++arg1: c_double, ++arg2: c_double) -> cair
 
 fn cairo_in_fill(++arg0: *cairo_t, ++arg1: c_double, ++arg2: c_double) -> cairo_bool_t;
 
-fn cairo_in_clip(++arg0: *cairo_t, ++arg1: c_double, ++arg2: c_double) -> cairo_bool_t;
-
 fn cairo_stroke_extents(++arg0: *cairo_t, ++arg1: *c_double, ++arg2: *c_double, ++arg3: *c_double, ++arg4: *c_double);
 
 fn cairo_fill_extents(++arg0: *cairo_t, ++arg1: *c_double, ++arg2: *c_double, ++arg3: *c_double, ++arg4: *c_double);
@@ -730,28 +728,6 @@ fn cairo_status(++arg0: *cairo_t) -> cairo_status_t;
 
 fn cairo_status_to_string(++arg0: cairo_status_t) -> *c_char;
 
-fn cairo_device_reference(++arg0: *cairo_device_t) -> *cairo_device_t;
-
-fn cairo_device_get_type(++arg0: *cairo_device_t) -> cairo_device_type_t;
-
-fn cairo_device_status(++arg0: *cairo_device_t) -> cairo_status_t;
-
-fn cairo_device_acquire(++arg0: *cairo_device_t) -> cairo_status_t;
-
-fn cairo_device_release(++arg0: *cairo_device_t);
-
-fn cairo_device_flush(++arg0: *cairo_device_t);
-
-fn cairo_device_finish(++arg0: *cairo_device_t);
-
-fn cairo_device_destroy(++arg0: *cairo_device_t);
-
-fn cairo_device_get_reference_count(++arg0: *cairo_device_t) -> c_uint;
-
-fn cairo_device_get_user_data(++arg0: *cairo_device_t, ++arg1: *cairo_user_data_key_t) -> *c_void;
-
-fn cairo_device_set_user_data(++arg0: *cairo_device_t, ++arg1: *cairo_user_data_key_t, ++arg2: *c_void, ++arg3: cairo_destroy_func_t) -> cairo_status_t;
-
 fn cairo_surface_create_similar(++arg0: *cairo_surface_t, ++arg1: cairo_content_t, ++arg2: c_int, ++arg3: c_int) -> *cairo_surface_t;
 
 fn cairo_surface_create_for_rectangle(++arg0: *cairo_surface_t, ++arg1: c_double, ++arg2: c_double, ++arg3: c_double, ++arg4: c_double) -> *cairo_surface_t;
@@ -761,8 +737,6 @@ fn cairo_surface_reference(++arg0: *cairo_surface_t) -> *cairo_surface_t;
 fn cairo_surface_finish(++arg0: *cairo_surface_t);
 
 fn cairo_surface_destroy(++arg0: *cairo_surface_t);
-
-fn cairo_surface_get_device(++arg0: *cairo_surface_t) -> *cairo_device_t;
 
 fn cairo_surface_get_reference_count(++arg0: *cairo_surface_t) -> c_uint;
 
@@ -779,10 +753,6 @@ fn cairo_surface_write_to_png_stream(++arg0: *cairo_surface_t, ++arg1: cairo_wri
 fn cairo_surface_get_user_data(++arg0: *cairo_surface_t, ++arg1: *cairo_user_data_key_t) -> *c_void;
 
 fn cairo_surface_set_user_data(++arg0: *cairo_surface_t, ++arg1: *cairo_user_data_key_t, ++arg2: *c_void, ++arg3: cairo_destroy_func_t) -> cairo_status_t;
-
-fn cairo_surface_get_mime_data(++arg0: *cairo_surface_t, ++arg1: *c_char, ++arg2: **c_uchar, ++arg3: *c_ulong);
-
-fn cairo_surface_set_mime_data(++arg0: *cairo_surface_t, ++arg1: *c_char, ++arg2: *c_uchar, ++arg3: c_ulong, ++arg4: cairo_destroy_func_t, ++arg5: *c_void) -> cairo_status_t;
 
 fn cairo_surface_get_font_options(++arg0: *cairo_surface_t, ++arg1: *cairo_font_options_t);
 
@@ -905,52 +875,6 @@ fn cairo_matrix_multiply(++arg0: *cairo_matrix_t, ++arg1: *cairo_matrix_t, ++arg
 fn cairo_matrix_transform_distance(++arg0: *cairo_matrix_t, ++arg1: *c_double, ++arg2: *c_double);
 
 fn cairo_matrix_transform_point(++arg0: *cairo_matrix_t, ++arg1: *c_double, ++arg2: *c_double);
-
-fn cairo_region_create() -> *cairo_region_t;
-
-fn cairo_region_create_rectangle(++arg0: *cairo_rectangle_int_t) -> *cairo_region_t;
-
-fn cairo_region_create_rectangles(++arg0: *cairo_rectangle_int_t, ++arg1: c_int) -> *cairo_region_t;
-
-fn cairo_region_copy(++arg0: *cairo_region_t) -> *cairo_region_t;
-
-fn cairo_region_reference(++arg0: *cairo_region_t) -> *cairo_region_t;
-
-fn cairo_region_destroy(++arg0: *cairo_region_t);
-
-fn cairo_region_equal(++arg0: *cairo_region_t, ++arg1: *cairo_region_t) -> cairo_bool_t;
-
-fn cairo_region_status(++arg0: *cairo_region_t) -> cairo_status_t;
-
-fn cairo_region_get_extents(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t);
-
-fn cairo_region_num_rectangles(++arg0: *cairo_region_t) -> c_int;
-
-fn cairo_region_get_rectangle(++arg0: *cairo_region_t, ++arg1: c_int, ++arg2: *cairo_rectangle_int_t);
-
-fn cairo_region_is_empty(++arg0: *cairo_region_t) -> cairo_bool_t;
-
-fn cairo_region_contains_rectangle(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t) -> cairo_region_overlap_t;
-
-fn cairo_region_contains_point(++arg0: *cairo_region_t, ++arg1: c_int, ++arg2: c_int) -> cairo_bool_t;
-
-fn cairo_region_translate(++arg0: *cairo_region_t, ++arg1: c_int, ++arg2: c_int);
-
-fn cairo_region_subtract(++arg0: *cairo_region_t, ++arg1: *cairo_region_t) -> cairo_status_t;
-
-fn cairo_region_subtract_rectangle(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t) -> cairo_status_t;
-
-fn cairo_region_intersect(++arg0: *cairo_region_t, ++arg1: *cairo_region_t) -> cairo_status_t;
-
-fn cairo_region_intersect_rectangle(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t) -> cairo_status_t;
-
-fn cairo_region_union(++arg0: *cairo_region_t, ++arg1: *cairo_region_t) -> cairo_status_t;
-
-fn cairo_region_union_rectangle(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t) -> cairo_status_t;
-
-fn cairo_region_xor(++arg0: *cairo_region_t, ++arg1: *cairo_region_t) -> cairo_status_t;
-
-fn cairo_region_xor_rectangle(++arg0: *cairo_region_t, ++arg1: *cairo_rectangle_int_t) -> cairo_status_t;
 
 fn cairo_debug_reset_static_data();
 
