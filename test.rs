@@ -110,6 +110,7 @@ fn paint(dt: AzDrawTargetRef) {
 }
 
 #[test]
+#[ignore(reason="busted on linux 32 bit")]
 fn test_draw_target_get_size() {
     let surface = cairo_image_surface_create(
         CAIRO_FORMAT_RGB24, 100 as c_int, 200 as c_int);
