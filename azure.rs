@@ -2,6 +2,8 @@
 
 import libc::*;
 
+import cairo::{cairo_surface_t, cairo_scaled_font_t};
+
 type AzFloat = c_float;
 
 type enum_AzSurfaceType = c_uint;

@@ -1,6 +1,6 @@
 // High-level bindings to Cairo.
 
-import cairo::cairo_surface_t;
+import cairo::{cairo_surface_t, cairo_format_t, cairo_t};
 import cairo::bindgen::{cairo_create, cairo_fill, cairo_image_surface_create};
 import cairo::bindgen::{cairo_image_surface_get_data, cairo_image_surface_get_format};
 import cairo::bindgen::{cairo_image_surface_get_height, cairo_image_surface_get_stride};

@@ -3,6 +3,7 @@
 import bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
 import bindgen::{AzDrawTargetClearRect, AzDrawTargetFillRect, AzDrawTargetFlush};
 import bindgen::{AzDrawTargetStrokeRect, AzReleaseColorPattern};
+import bindgen::{AzReleaseDrawTarget};
 import cairo_hl::ImageSurface;
 import geom::rect::Rect;
 import ptr::{addr_of, null};

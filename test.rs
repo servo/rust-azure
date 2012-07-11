@@ -1,10 +1,5 @@
-import xlib::*;
-import libc::*;
-import cairo_xlib::*;
-import xlib::bindgen::*;
-import cairo::*;
-import cairo::bindgen::*;
-import cairo_xlib::bindgen::*;
+import xlib::XExposeEvent;
+import bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
 
 #[test]
 fn sanity_check() {

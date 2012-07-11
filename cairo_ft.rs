@@ -2,6 +2,12 @@
 
 import libc::*;
 
+import freetype::FT_Face;
+import fontconfig::FcPattern;
+import cairo::{
+    cairo_font_face_t, cairo_scaled_font_t, cairo_font_options_t
+};
+
 #[link_name="cairo"]
 extern mod bindgen {
 
