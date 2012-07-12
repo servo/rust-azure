@@ -1,5 +1,14 @@
 import xlib::XExposeEvent;
+import xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
+import xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};
+import xlib::bindgen::{XSelectInput, XCloseDisplay, XNextEvent, XDefaultVisual};
+import xlib::bindgen::{XMapWindow};
 import bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
+import bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTarget};
+import bindgen::{AzDrawTargetGetSize};
+import cairo::{CAIRO_FORMAT_RGB24};
+import cairo::bindgen::{cairo_image_surface_create, cairo_surface_destroy};
+import cairo_xlib::bindgen::{cairo_xlib_surface_create};
 
 #[test]
 fn sanity_check() {
