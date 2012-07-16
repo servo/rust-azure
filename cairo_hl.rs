@@ -15,7 +15,7 @@ class ImageSurface {
     new(format: cairo_format_t, width: c_int, height: c_int) {
         self.cairo_surface = cairo_image_surface_create(format, width, height);
         if self.cairo_surface.is_null() {
-            fail "couldn't create Cairo image surface";
+            fail ~"couldn't create Cairo image surface";
         };
     }
 
@@ -24,7 +24,7 @@ class ImageSurface {
     fn stride() -> c_int    { cairo_image_surface_get_stride(self.cairo_surface) }
     fn format() -> c_int    { cairo_image_surface_get_format(self.cairo_surface) }
 
-    fn data() -> [u8]/~ unsafe {
+    fn data() -> ~[u8] unsafe {
         let buffer = cairo_image_surface_get_data(self.cairo_surface);
         ret from_buf(buffer, (self.stride() * self.height()) as uint);
     }

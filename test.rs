@@ -52,7 +52,7 @@ fn cairo_it_up() {
     let win = XCreateSimpleWindow(
         dpy, rootwin, 1 as c_int, 1 as c_int, SIZEX, SIZEY, 0 as c_uint,
         XBlackPixel(dpy, scr), XBlackPixel(dpy, scr));
-    str::as_c_str("test", |cstr| XStoreName(dpy, win, cstr));
+    str::as_c_str(~"test", |cstr| XStoreName(dpy, win, cstr));
     XSelectInput(dpy, win, ExposureMask | ButtonPressMask);
     XMapWindow(dpy, win);
 
@@ -141,7 +141,7 @@ fn fonts() {
     let win = XCreateSimpleWindow(
         dpy, rootwin, 1 as c_int, 1 as c_int, SIZEX, SIZEY, 0 as c_uint,
         XBlackPixel(dpy, scr), XBlackPixel(dpy, scr));
-    str::as_c_str("test", |cstr| XStoreName(dpy, win, cstr));
+    str::as_c_str(~"test", |cstr| XStoreName(dpy, win, cstr));
     XSelectInput(dpy, win, ExposureMask | ButtonPressMask);
     XMapWindow(dpy, win);
 
@@ -196,11 +196,11 @@ fn fonts() {
             y_advance: 0 as c_double
         };
         cairo_set_source_rgb(cr, 0.9 as c_double, 0.5 as c_double, 0.5 as c_double);
-        str::as_c_str("Georgia", |fontname| {
+        str::as_c_str(~"Georgia", |fontname| {
             cairo_select_font_face(cr, fontname, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
         });
         cairo_set_font_size(cr, 20.2 as c_double);
-        str::as_c_str("a", |text| {
+        str::as_c_str(~"a", |text| {
             cairo_text_extents(cr, text, ptr::addr_of(te));
             cairo_move_to(
                 cr,
