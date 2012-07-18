@@ -8,7 +8,11 @@ import cairo_hl::ImageSurface;
 import geom::rect::Rect;
 import ptr::{addr_of, null};
 
-impl AzureExtensions for Rect<AzFloat> {
+trait AsAzureRect {
+    fn as_azure_rect() -> AzRect;
+}
+
+impl AzureExtensions of AsAzureRect for Rect<AzFloat> {
     fn as_azure_rect() -> AzRect {
         {
             x: self.origin.x,
