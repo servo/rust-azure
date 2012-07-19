@@ -1,10 +1,15 @@
 // High-level bindings to Azure.
 
 import bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
-import bindgen::{AzDrawSurfaceOptions, AzDrawTargetClearRect, AzDrawTargetCreateSourceSurfaceFromData};
+import AzDrawSurfaceOptions;
+import bindgen::AzDrawTargetClearRect;
+import bindgen::AzDrawTargetCreateSourceSurfaceFromData;
 import bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-import bindgen::{AzDrawTargetStrokeRect, AzFilter, AzReleaseColorPattern, AzReleaseDrawTarget};
-import bindgen::{AzReleaseSourceSurface, AzSurfaceFormat};
+import bindgen::{AzDrawTargetStrokeRect};
+import AzFilter;
+import bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
+import bindgen::AzReleaseSourceSurface;
+import AzSurfaceFormat;
 import cairo_hl::ImageSurface;
 import geom::rect::Rect;
 import geom::size::Size2D;
