@@ -259,6 +259,8 @@ typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
 typedef void* AzScaledFontRef;
 typedef void* AzGlyphRenderingOptionsRef;
+typedef void* AzSourceSurfaceRef;
+typedef void* AzDrawSurfaceOptionsRef;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
@@ -292,7 +294,19 @@ void AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
                             AzPatternRef aPattern,
                             AzDrawOptions *aOptions,
                             AzGlyphRenderingOptionsRef aRenderingOptions);
-                              
+void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
+                             AzSourceSurfaceRef aSurface,
+                             AzRect *aDest,
+                             AzRect *aSource,
+                             AzDrawSurfaceOptionsRef aSurfOptions,
+                             AzDrawOptions *aOptions);
+AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
+                                                           unsigned char *aData,
+                                                           AzIntSize *aSize,
+                                                           int32_t aStride,
+                                                           AzSurfaceFormat aFormat);
+void AzReleaseSourceSurface(AzSourceSurfaceRef aSurface);
+
 
 /* Factory.h */
 

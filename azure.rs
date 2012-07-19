@@ -23,6 +23,8 @@ const AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
 const AZ_FORMAT_R5G6B5: u32 = 2_u32;
 const AZ_FORMAT_A8: u32 = 3_u32;
 
+type AzSurfaceFormat = enum_AzSurfaceFormat;
+
 type enum_AzBackendType = c_uint;
 const AZ_BACKEND_NONE: u32 = 0_u32;
 const AZ_BACKEND_DIRECT2D: u32 = 1_u32;
@@ -85,6 +87,8 @@ const AZ_SNAP_ALIGNED: u32 = 1_u32;
 type enum_AzFilter = c_uint;
 const AZ_FILTER_LINEAR: u32 = 0_u32;
 const AZ_FILTER_POINT: u32 = 1_u32;
+
+type AzFilter = enum_AzFilter;
 
 type enum_AzPatternType = c_uint;
 const AZ_PATTERN_COLOR: u32 = 0_u32;
@@ -243,6 +247,10 @@ type AzScaledFontRef = *c_void;
 
 type AzGlyphRenderingOptionsRef = *c_void;
 
+type AzSourceSurfaceRef = *c_void;
+
+type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
+
 #[link_name="azure"]
 extern mod bindgen {
 
@@ -269,6 +277,12 @@ fn AzDrawTargetStrokeRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aP
 fn AzDrawTargetStrokeLine(++aDrawTarget: AzDrawTargetRef, ++aStart: *AzPoint, ++aEnd: *AzPoint, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
 
 fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontRef, ++aGlyphBuffer: *AzGlyphBuffer, ++aPattern: AzPatternRef, ++aOptions: *AzDrawOptions, ++aRenderingOptions: AzGlyphRenderingOptionsRef);
+
+fn AzDrawTargetDrawSurface(++aDrawTarget: AzDrawTargetRef, ++aSurface: AzSourceSurfaceRef, ++aDest: *AzRect, ++aSource: *AzRect, ++aSurfOptions: AzDrawSurfaceOptionsRef, ++aOptions: *AzDrawOptions);
+
+fn AzDrawTargetCreateSourceSurfaceFromData(++aDrawTarget: AzDrawTargetRef, ++aData: *u8, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
+
+fn AzReleaseSourceSurface(++aSurface: AzSourceSurfaceRef);
 
 fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 

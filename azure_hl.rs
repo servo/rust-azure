@@ -1,11 +1,13 @@
 // High-level bindings to Azure.
 
 import bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
-import bindgen::{AzDrawTargetClearRect, AzDrawTargetFillRect, AzDrawTargetFlush};
-import bindgen::{AzDrawTargetStrokeRect, AzReleaseColorPattern};
-import bindgen::{AzReleaseDrawTarget};
+import bindgen::{AzDrawSurfaceOptions, AzDrawTargetClearRect, AzDrawTargetCreateSourceSurfaceFromData};
+import bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+import bindgen::{AzDrawTargetStrokeRect, AzFilter, AzReleaseColorPattern, AzReleaseDrawTarget};
+import bindgen::{AzReleaseSourceSurface, AzSurfaceFormat};
 import cairo_hl::ImageSurface;
 import geom::rect::Rect;
+import geom::size::Size2D;
 import ptr::{addr_of, null};
 
 trait AsAzureRect {
@@ -19,6 +21,19 @@ impl AzureExtensions of AsAzureRect for Rect<AzFloat> {
             y: self.origin.y,
             width: self.size.width,
             height: self.size.height
+        }
+    }
+}
+
+trait AsAzureIntSize {
+    fn as_azure_int_size() -> AzIntSize;
+}
+
+impl AzureExtensions of AsAzureIntSize for Size2D<i32> {
+    fn as_azure_int_size() -> AzIntSize {
+        {
+            width: self.width,
+            height: self.height
         }
     }
 }
@@ -94,6 +109,44 @@ class DrawOptions {
     }
 }
 
+enum SurfaceFormat {
+    B8G8R8A8,
+    R8G8R8X8,
+    R5G6B5,
+    A8
+}
+
+impl extensions for SurfaceFormat {
+    fn as_azure_surface_format() -> AzSurfaceFormat {
+        self as AzSurfaceFormat
+    }
+}
+
+enum Filter {
+    Linear,
+    Point
+}
+
+impl extensions for Filter {
+    fn as_azure_filter() -> AzFilter {
+        self as AzFilter
+    }
+}
+
+struct DrawSurfaceOptions {
+    filter: Filter;
+    sampling_bounds: bool;
+
+    new(filter: Filter, sampling_bounds: bool) {
+        self.filter = filter;
+        self.sampling_bounds = sampling_bounds;
+    }
+
+    fn as_azure_draw_surface_options() -> AzDrawSurfaceOptions {
+        { fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32 }
+    }
+}
+
 class DrawTarget {
     let azure_draw_target: AzDrawTargetRef;
 
@@ -126,6 +179,42 @@ class DrawTarget {
                                pattern.azure_color_pattern,
                                addr_of(stroke_options.as_azure_stroke_options()),
                                addr_of(draw_options.as_azure_draw_options()));
+    }
+
+    fn draw_surface(surface: SourceSurface, dest: Rect<AzFloat>, source: Rect<AzFloat>,
+                    surf_options: DrawSurfaceOptions, options: DrawOptions) {
+
+        AzDrawTargetDrawSurface(self.azure_draw_target,
+                                surface.azure_source_surface,
+                                addr_of(dest.as_azure_rect()),
+                                addr_of(source.as_azure_rect()),
+                                addr_of(surf_options.as_azure_draw_surface_options()),
+                                addr_of(options.as_azure_draw_options()));
+    }
+
+    fn create_source_surface_from_data(data: &[u8], size: Size2D<i32>, stride: i32,
+                                       format: SurfaceFormat) -> SourceSurface {
+
+        assert data.len() as i32 == stride * size.height;
+        let azure_surface =
+            AzDrawTargetCreateSourceSurfaceFromData(self.azure_draw_target,
+                                                    addr_of(data[0]),
+                                                    addr_of(size.as_azure_int_size()),
+                                                    stride,
+                                                    format.as_azure_surface_format());
+        SourceSurface(azure_surface)
+    }
+}
+
+struct SourceSurface {
+    azure_source_surface: AzSourceSurfaceRef;
+
+    new(azure_source_surface: AzSourceSurfaceRef) {
+        self.azure_source_surface = azure_source_surface;
+    }
+
+    drop {
+        AzReleaseSourceSurface(self.azure_source_surface);
     }
 }
 

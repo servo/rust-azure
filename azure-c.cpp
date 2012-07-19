@@ -228,6 +228,42 @@ AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
     gfxDrawTarget->FillGlyphs(gfxScaledFont, *gfxGlyphBuffer, *gfxPattern, *gfxOptions, gfxRenderingOptions);
 }
 
+extern "C" void
+AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
+                        AzSourceSurfaceRef aSurface,
+                        AzRect *aDest,
+                        AzRect *aSource,
+                        AzDrawSurfaceOptionsRef aSurfOptions,
+                        AzDrawOptions *aOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfx::Rect *gfxDest = reinterpret_cast<gfx::Rect*>(aDest);
+    gfx::Rect *gfxSource = reinterpret_cast<gfx::Rect*>(aSource);
+    gfx::DrawSurfaceOptions *gfxDrawSurfaceOptions = static_cast<gfx::DrawSurfaceOptions*>(aSurfOptions);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aOptions);
+    gfxDrawTarget->DrawSurface(gfxSourceSurface, *gfxDest, *gfxSource, *gfxDrawSurfaceOptions, *gfxDrawOptions);
+}
+
+extern "C" AzSourceSurfaceRef
+AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
+                                        unsigned char *aData,
+                                        AzIntSize *aSize,
+                                        int32_t aStride,
+                                        AzSurfaceFormat aFormat) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::IntSize *gfxSize = reinterpret_cast<gfx::IntSize*>(aSize);
+    gfx::SurfaceFormat gfxSurfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
+    RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->CreateSourceSurfaceFromData(aData, *gfxSize, aStride, gfxSurfaceFormat);
+    gfxSourceSurface->AddRef();
+    return gfxSourceSurface;
+}
+
+extern "C" void
+AzReleaseSourceSurface(AzSourceSurfaceRef aSurface) {
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfxSourceSurface->Release();
+}
+
 #ifdef USE_CAIRO
 extern "C" AzScaledFontRef
 AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
@@ -245,3 +281,4 @@ AzReleaseScaledFont(AzScaledFontRef aFont) {
     gfx::ScaledFont *gfxFont = static_cast<gfx::ScaledFont*>(aFont);
     gfxFont->Release();
 }
+
