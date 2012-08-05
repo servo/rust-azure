@@ -26,7 +26,7 @@ class ImageSurface {
 
     fn data() -> ~[u8] unsafe {
         let buffer = cairo_image_surface_get_data(self.cairo_surface);
-        ret from_buf(buffer, (self.stride() * self.height()) as uint);
+        return from_buf(buffer, (self.stride() * self.height()) as uint);
     }
 
     drop {
