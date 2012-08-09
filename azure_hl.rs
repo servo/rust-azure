@@ -19,7 +19,7 @@ trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
 }
 
-impl AzureExtensions of AsAzureRect for Rect<AzFloat> {
+impl Rect<AzFloat> : AsAzureRect {
     fn as_azure_rect() -> AzRect {
         {
             x: self.origin.x,
@@ -34,7 +34,7 @@ trait AsAzureIntSize {
     fn as_azure_int_size() -> AzIntSize;
 }
 
-impl AzureExtensions of AsAzureIntSize for Size2D<i32> {
+impl Size2D<i32> : AsAzureIntSize {
     fn as_azure_int_size() -> AzIntSize {
         {
             width: self.width,
@@ -121,7 +121,7 @@ enum SurfaceFormat {
     A8
 }
 
-impl extensions for SurfaceFormat {
+impl SurfaceFormat {
     fn as_azure_surface_format() -> AzSurfaceFormat {
         self as AzSurfaceFormat
     }
@@ -132,7 +132,7 @@ enum Filter {
     Point
 }
 
-impl extensions for Filter {
+impl Filter {
     fn as_azure_filter() -> AzFilter {
         self as AzFilter
     }
