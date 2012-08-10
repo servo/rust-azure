@@ -1,12 +1,17 @@
 // High-level bindings to Cairo.
 
-import cairo::{cairo_surface_t, cairo_format_t, cairo_t};
+import cairo::{CAIRO_STATUS_SUCCESS, cairo_format_t, cairo_status_t, cairo_surface_t, cairo_t};
 import cairo::bindgen::{cairo_create, cairo_fill, cairo_image_surface_create};
 import cairo::bindgen::{cairo_image_surface_get_data, cairo_image_surface_get_format};
 import cairo::bindgen::{cairo_image_surface_get_height, cairo_image_surface_get_stride};
 import cairo::bindgen::{cairo_image_surface_get_width, cairo_rectangle, cairo_set_line_width};
 import cairo::bindgen::{cairo_set_source_rgb, cairo_stroke, cairo_surface_destroy};
-import vec::unsafe::from_buf;
+import cairo::bindgen::{cairo_surface_write_to_png_stream};
+import io::{mem_buffer, writer};
+import ptr::addr_of;
+import result::{err, ok, result};
+import unsafe::reinterpret_cast;
+import vec::unsafe::{form_slice, from_buf};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
 class ImageSurface {
@@ -31,6 +36,27 @@ class ImageSurface {
 
     drop {
         cairo_surface_destroy(self.cairo_surface);
+    }
+}
+
+impl ImageSurface {
+    fn write_to_png_stream(buffer: &io::mem_buffer) -> result<(),cairo_status_t> unsafe {
+        extern fn write_fn(closure: *c_void, data: *c_uchar, len: c_uint)
+                        -> cairo_status_t unsafe {
+            let writer: *mem_buffer = reinterpret_cast(closure);
+            do form_slice(data, len as uint) |bytes| {
+                (*writer).write(bytes);
+            }
+            return CAIRO_STATUS_SUCCESS;
+        }
+
+        let buffer_ptr = reinterpret_cast(buffer);
+        let status = cairo_surface_write_to_png_stream(self.cairo_surface, write_fn, buffer_ptr);
+        if status != CAIRO_STATUS_SUCCESS {
+            return err(status);
+        }
+
+        return ok(());
     }
 }
 
