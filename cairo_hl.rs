@@ -6,7 +6,7 @@ import cairo::bindgen::{cairo_image_surface_get_data, cairo_image_surface_get_fo
 import cairo::bindgen::{cairo_image_surface_get_height, cairo_image_surface_get_stride};
 import cairo::bindgen::{cairo_image_surface_get_width, cairo_rectangle, cairo_set_line_width};
 import cairo::bindgen::{cairo_set_source_rgb, cairo_stroke, cairo_surface_destroy};
-import cairo::bindgen::{cairo_surface_write_to_png_stream};
+import cairo::bindgen::{cairo_surface_reference, cairo_surface_write_to_png_stream};
 import io::{mem_buffer, writer};
 import ptr::addr_of;
 import result::{err, ok, result};
@@ -17,19 +17,13 @@ import vec::unsafe::{form_slice, from_buf};
 class ImageSurface {
     let cairo_surface: *cairo_surface_t;
 
-    new(format: cairo_format_t, width: c_int, height: c_int) {
-        self.cairo_surface = cairo_image_surface_create(format, width, height);
-        if self.cairo_surface.is_null() {
-            fail ~"couldn't create Cairo image surface";
-        };
-    }
-
     fn width()  -> c_int    { cairo_image_surface_get_width(self.cairo_surface)  }
     fn height() -> c_int    { cairo_image_surface_get_height(self.cairo_surface) }
     fn stride() -> c_int    { cairo_image_surface_get_stride(self.cairo_surface) }
     fn format() -> c_int    { cairo_image_surface_get_format(self.cairo_surface) }
 
-    fn data() -> ~[u8] unsafe {
+    // FIXME: This should not copy!
+    pure fn data() -> ~[u8] unsafe {
         let buffer = cairo_image_surface_get_data(self.cairo_surface);
         return from_buf(buffer, (self.stride() * self.height()) as uint);
     }
@@ -37,6 +31,20 @@ class ImageSurface {
     drop {
         cairo_surface_destroy(self.cairo_surface);
     }
+}
+
+// Should be private.
+fn image_surface_from_cairo_surface(cairo_surface: *cairo_surface_t) -> ImageSurface {
+    assert !cairo_surface.is_null();
+    ImageSurface { cairo_surface: cairo_surface }
+}
+
+fn ImageSurface(format: cairo_format_t, width: c_int, height: c_int) -> ImageSurface {
+    let cairo_surface = cairo_image_surface_create(format, width, height);
+    if cairo_surface.is_null() {
+        fail ~"couldn't create Cairo image surface";
+    }
+    return image_surface_from_cairo_surface(move cairo_surface);
 }
 
 impl ImageSurface {
@@ -57,6 +65,11 @@ impl ImageSurface {
         }
 
         return ok(());
+    }
+
+    fn clone() -> ImageSurface {
+        cairo_surface_reference(self.cairo_surface);
+        return image_surface_from_cairo_surface(self.cairo_surface);
     }
 }
 
