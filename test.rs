@@ -73,16 +73,18 @@ fn cairo_it_up() {
 
     let dt = AzCreateDrawTargetForCairoSurface(cs);
 
-    loop unsafe {
-        XNextEvent(dpy, unsafe::reinterpret_cast(ep));
-        log(error, *ep);
-        log(error, *xexpose(ep));
-        if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
-            paint(dt);
-        } else if e.type_ == ButtonPress {
-            break;
-        } else {
-            paint(dt);
+    loop {
+        unsafe {
+            XNextEvent(dpy, unsafe::reinterpret_cast(ep));
+            log(error, *ep);
+            log(error, *xexpose(ep));
+            if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
+                paint(dt);
+            } else if e.type_ == ButtonPress {
+                break;
+            } else {
+                paint(dt);
+            }
         }
     }
 
@@ -160,16 +162,18 @@ fn fonts() {
     };
     let ep = ptr::addr_of(e);
 
-    loop unsafe {
-        XNextEvent(dpy, unsafe::reinterpret_cast(ep));
-        log(error, *ep);
-        log(error, *xexpose(ep));
-        if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
-            paint(cs);
-        } else if e.type_ == ButtonPress {
-            break;
-        } else {
-            paint(cs);
+    loop {
+        unsafe {
+            XNextEvent(dpy, unsafe::reinterpret_cast(ep));
+            log(error, *ep);
+            log(error, *xexpose(ep));
+            if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
+                paint(cs);
+            } else if e.type_ == ButtonPress {
+                break;
+            } else {
+                paint(cs);
+            }
         }
     }
 
