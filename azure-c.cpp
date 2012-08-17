@@ -152,6 +152,12 @@ AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
 #endif
 
 extern "C" void
+AzRetainDrawTarget(AzDrawTargetRef aTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
+    gfxDrawTarget->AddRef();
+}
+
+extern "C" void
 AzReleaseDrawTarget(AzDrawTargetRef aTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
     gfxDrawTarget->Release();

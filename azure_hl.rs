@@ -9,6 +9,7 @@ import bindgen::{AzDrawTargetStrokeRect};
 import AzFilter;
 import bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 import bindgen::AzReleaseSourceSurface;
+import bindgen::AzRetainDrawTarget;
 import AzSurfaceFormat;
 import cairo_hl::ImageSurface;
 import geom::rect::Rect;
@@ -208,6 +209,19 @@ class DrawTarget {
                                                     stride,
                                                     format.as_azure_surface_format());
         SourceSurface(azure_surface)
+    }
+}
+
+fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
+    DrawTarget {
+        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
+    }
+}
+
+fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {
+    AzRetainDrawTarget(azure_draw_target);
+    DrawTarget {
+        azure_draw_target: azure_draw_target
     }
 }
 

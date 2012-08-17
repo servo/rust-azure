@@ -269,6 +269,8 @@ void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
 #endif
 
+void AzRetainDrawTarget(AzDrawTargetRef aTarget);
+
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
 AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget);
