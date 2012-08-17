@@ -164,6 +164,10 @@ class DrawTarget {
         AzReleaseDrawTarget(self.azure_draw_target);
     }
 
+    fn clone() -> DrawTarget {
+        return new_draw_target_from_azure_draw_target(self.azure_draw_target);
+    }
+
     fn flush() {
         AzDrawTargetFlush(self.azure_draw_target);
     }
@@ -210,6 +214,11 @@ class DrawTarget {
                                                     format.as_azure_surface_format());
         SourceSurface(azure_surface)
     }
+}
+
+// Ugly workaround for the lack of explicit self.
+fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
+    return new_draw_target_from_azure_draw_target(draw_target.azure_draw_target);
 }
 
 fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
