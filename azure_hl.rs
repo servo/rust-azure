@@ -44,7 +44,7 @@ impl Size2D<i32> : AsAzureIntSize {
     }
 }
 
-class Color {
+struct Color {
     let r: AzFloat;
     let g: AzFloat;
     let b: AzFloat;
@@ -63,7 +63,7 @@ class Color {
 }
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
-class ColorPattern {
+struct ColorPattern {
     let azure_color_pattern: AzColorPatternRef;
 
     new(+color: Color) {
@@ -75,7 +75,7 @@ class ColorPattern {
     }
 }
 
-class StrokeOptions {
+struct StrokeOptions {
     let line_width: AzFloat;
     let miter_limit: AzFloat;
     let fields: uint16_t;
@@ -98,7 +98,7 @@ class StrokeOptions {
     }
 }
 
-class DrawOptions {
+struct DrawOptions {
     let alpha: AzFloat;
     let fields: uint16_t;
 
@@ -153,7 +153,7 @@ struct DrawSurfaceOptions {
     }
 }
 
-class DrawTarget {
+struct DrawTarget {
     let azure_draw_target: AzDrawTargetRef;
 
     new(&&cairo_surface: ImageSurface) {

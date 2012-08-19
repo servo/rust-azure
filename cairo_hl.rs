@@ -14,7 +14,7 @@ import unsafe::reinterpret_cast;
 import vec::unsafe::{form_slice, from_buf};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
-class ImageSurface {
+struct ImageSurface {
     let cairo_surface: *cairo_surface_t;
 
     fn width()  -> c_int    { cairo_image_surface_get_width(self.cairo_surface)  }
@@ -73,7 +73,7 @@ impl ImageSurface {
     }
 }
 
-class Context {
+struct Context {
     let cairo_context: *cairo_t;
 
     new(&&surface: ImageSurface) {
