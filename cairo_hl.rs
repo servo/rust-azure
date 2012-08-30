@@ -9,7 +9,7 @@ import cairo::bindgen::{cairo_set_source_rgb, cairo_stroke, cairo_surface_destro
 import cairo::bindgen::{cairo_surface_reference, cairo_surface_write_to_png_stream};
 import io::{MemBuffer, Writer};
 import ptr::addr_of;
-import result::{err, ok, result};
+import result::{Err, Ok, Result};
 import unsafe::reinterpret_cast;
 import vec::unsafe::{form_slice, from_buf};
 
@@ -48,7 +48,7 @@ fn ImageSurface(format: cairo_format_t, width: c_int, height: c_int) -> ImageSur
 }
 
 impl ImageSurface {
-    fn write_to_png_stream(buffer: &io::MemBuffer) -> result<(),cairo_status_t> unsafe {
+    fn write_to_png_stream(buffer: &io::MemBuffer) -> Result<(),cairo_status_t> unsafe {
         extern fn write_fn(closure: *c_void, data: *c_uchar, len: c_uint)
                         -> cairo_status_t unsafe {
             let writer: *MemBuffer = reinterpret_cast(closure);
@@ -61,10 +61,10 @@ impl ImageSurface {
         let buffer_ptr = reinterpret_cast(buffer);
         let status = cairo_surface_write_to_png_stream(self.cairo_surface, write_fn, buffer_ptr);
         if status != CAIRO_STATUS_SUCCESS {
-            return err(status);
+            return Err(status);
         }
 
-        return ok(());
+        return Ok(());
     }
 
     fn clone() -> ImageSurface {
