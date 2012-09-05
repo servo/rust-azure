@@ -51,7 +51,7 @@ impl ImageSurface {
     fn write_to_png_stream(buffer: &io::MemBuffer) -> Result<(),cairo_status_t> unsafe {
         extern fn write_fn(closure: *c_void, data: *c_uchar, len: c_uint)
                         -> cairo_status_t unsafe {
-            let writer: *MemBuffer = reinterpret_cast(closure);
+            let writer: *MemBuffer = reinterpret_cast(&closure);
             do form_slice(data, len as uint) |bytes| {
                 (*writer).write(bytes);
             }
