@@ -58,7 +58,7 @@ impl ImageSurface {
             return CAIRO_STATUS_SUCCESS;
         }
 
-        let buffer_ptr = reinterpret_cast(buffer);
+        let buffer_ptr = reinterpret_cast(&buffer);
         let status = cairo_surface_write_to_png_stream(self.cairo_surface, write_fn, buffer_ptr);
         if status != CAIRO_STATUS_SUCCESS {
             return Err(status);
