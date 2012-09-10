@@ -55,7 +55,7 @@ struct Color {
     }
 }
 
-fn new_color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
+fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
     Color { r: r, g: g, b: b, a: a }
 }
 
@@ -69,7 +69,7 @@ struct ColorPattern {
     }
 }
 
-fn new_pattern(color: Color) -> ColorPattern {
+fn ColorPattern(color: Color) -> ColorPattern {
     ColorPattern { 
         azure_color_pattern: AzCreateColorPattern(addr_of(color.as_azure_color()))
     }
@@ -92,7 +92,7 @@ struct StrokeOptions {
     }
 }
 
-fn StrokeOptions_(line_width: AzFloat,
+fn StrokeOptions(line_width: AzFloat,
                   miter_limit: AzFloat,
                   fields: uint16_t) -> StrokeOptions {
     StrokeOptions {
@@ -115,7 +115,7 @@ struct DrawOptions {
 }
 
 
-fn DrawOptions_(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
+fn DrawOptions(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
     DrawOptions {
         alpha : alpha,
         fields : fields,
@@ -156,7 +156,7 @@ struct DrawSurfaceOptions {
 }
 
 
-fn DrawSurfaceOptions_(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
+fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
     DrawSurfaceOptions {
         filter: filter,
         sampling_bounds: sampling_bounds,
@@ -219,12 +219,12 @@ struct DrawTarget {
                                                     addr_of(size.as_azure_int_size()),
                                                     stride,
                                                     format.as_azure_surface_format());
-        SourceSurface_(azure_surface)
+        SourceSurface(azure_surface)
     }
 }
 
 
-fn DrawTarget_(&&cairo_surface: ImageSurface) -> DrawTarget {
+fn DrawTarget(&&cairo_surface: ImageSurface) -> DrawTarget {
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
     }
@@ -257,7 +257,7 @@ struct SourceSurface {
     }
 }
 
-fn SourceSurface_(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
+fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
     return SourceSurface {
         azure_source_surface:  azure_source_surface
     }
