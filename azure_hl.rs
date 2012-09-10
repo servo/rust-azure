@@ -45,46 +45,40 @@ impl Size2D<i32> : AsAzureIntSize {
 }
 
 struct Color {
-    let r: AzFloat;
-    let g: AzFloat;
-    let b: AzFloat;
-    let a: AzFloat;
-
-    new(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) {
-        self.r = r;
-        self.g = g;
-        self.b = b;
-        self.a = a;
-    }
+    r: AzFloat,
+    g: AzFloat,
+    b: AzFloat,
+    a: AzFloat,
 
     fn as_azure_color() -> AzColor {
         { r: self.r, g: self.g, b: self.b, a: self.a }
     }
 }
 
+fn new_color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
+    Color { r: r, g: g, b: b, a: a }
+}
+
+
 // FIXME: Should have a class hierarchy here starting with Pattern.
 struct ColorPattern {
-    let azure_color_pattern: AzColorPatternRef;
-
-    new(+color: Color) {
-        self.azure_color_pattern = AzCreateColorPattern(addr_of(color.as_azure_color()));
-    }
+    azure_color_pattern: AzColorPatternRef,
 
     drop {
         AzReleaseColorPattern(self.azure_color_pattern);
     }
 }
 
-struct StrokeOptions {
-    let line_width: AzFloat;
-    let miter_limit: AzFloat;
-    let fields: uint16_t;
-
-    new(line_width: AzFloat, miter_limit: AzFloat, fields: uint16_t) {
-        self.line_width = line_width;
-        self.miter_limit = miter_limit;
-        self.fields = fields;
+fn new_pattern(color: Color) -> ColorPattern {
+    ColorPattern { 
+        azure_color_pattern: AzCreateColorPattern(addr_of(color.as_azure_color()))
     }
+}
+
+struct StrokeOptions {
+    line_width: AzFloat,
+    miter_limit: AzFloat,
+    fields: uint16_t,
 
     fn as_azure_stroke_options() -> AzStrokeOptions {
         {
@@ -98,20 +92,33 @@ struct StrokeOptions {
     }
 }
 
-struct DrawOptions {
-    let alpha: AzFloat;
-    let fields: uint16_t;
-
-    new(alpha: AzFloat, fields: uint16_t) {
-        self.alpha = alpha;
-        self.fields = fields;
+fn StrokeOptions_(line_width: AzFloat,
+                  miter_limit: AzFloat,
+                  fields: uint16_t) -> StrokeOptions {
+    StrokeOptions {
+        line_width: line_width,
+        miter_limit: miter_limit,
+        fields: fields
     }
+}
+
+struct DrawOptions {
+    alpha: AzFloat,
+    fields: uint16_t,
 
     fn as_azure_draw_options() -> AzDrawOptions {
         {
             mAlpha: self.alpha,
             fields: self.fields
         }
+    }
+}
+
+
+fn DrawOptions_(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
+    DrawOptions {
+        alpha : alpha,
+        fields : fields,
     }
 }
 
@@ -140,25 +147,25 @@ impl Filter {
 }
 
 struct DrawSurfaceOptions {
-    filter: Filter;
-    sampling_bounds: bool;
-
-    new(filter: Filter, sampling_bounds: bool) {
-        self.filter = filter;
-        self.sampling_bounds = sampling_bounds;
-    }
+    filter: Filter,
+    sampling_bounds: bool,
 
     fn as_azure_draw_surface_options() -> AzDrawSurfaceOptions {
         { fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32 }
     }
 }
 
-struct DrawTarget {
-    let azure_draw_target: AzDrawTargetRef;
 
-    new(&&cairo_surface: ImageSurface) {
-        self.azure_draw_target = AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface);
+fn DrawSurfaceOptions_(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
+    DrawSurfaceOptions {
+        filter: filter,
+        sampling_bounds: sampling_bounds,
     }
+}
+
+
+struct DrawTarget {
+    azure_draw_target: AzDrawTargetRef,
 
     drop {
         AzReleaseDrawTarget(self.azure_draw_target);
@@ -212,9 +219,17 @@ struct DrawTarget {
                                                     addr_of(size.as_azure_int_size()),
                                                     stride,
                                                     format.as_azure_surface_format());
-        SourceSurface(azure_surface)
+        SourceSurface_(azure_surface)
     }
 }
+
+
+fn DrawTarget_(&&cairo_surface: ImageSurface) -> DrawTarget {
+    DrawTarget {
+        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
+    }
+}
+
 
 // Ugly workaround for the lack of explicit self.
 fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
@@ -235,14 +250,16 @@ fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) ->
 }
 
 struct SourceSurface {
-    azure_source_surface: AzSourceSurfaceRef;
-
-    new(azure_source_surface: AzSourceSurfaceRef) {
-        self.azure_source_surface = azure_source_surface;
-    }
+    azure_source_surface: AzSourceSurfaceRef,
 
     drop {
         AzReleaseSourceSurface(self.azure_source_surface);
+    }
+}
+
+fn SourceSurface_(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
+    return SourceSurface {
+        azure_source_surface:  azure_source_surface
     }
 }
 
