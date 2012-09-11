@@ -5,12 +5,12 @@
 use std;
 use geom;
 
-import libc::types::common::c99::*;
-import libc::types::os::arch::c95::wchar_t;
-//import bindgen::*;
-//import xlib::Display;
-//import cairo::cairo_scaled_font_t;
-//import xlib::Display;
+use libc::types::common::c99::*;
+use libc::types::os::arch::c95::wchar_t;
+//use bindgen::*;
+//use xlib::Display;
+//use cairo::cairo_scaled_font_t;
+//use xlib::Display;
 
 #[cfg(target_os = "linux")]
 mod xlib;

@@ -1,14 +1,14 @@
-import xlib::XExposeEvent;
-import xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
-import xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};
-import xlib::bindgen::{XSelectInput, XCloseDisplay, XNextEvent, XDefaultVisual};
-import xlib::bindgen::{XMapWindow};
-import bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
-import bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTarget};
-import bindgen::{AzDrawTargetGetSize};
-import cairo::{CAIRO_FORMAT_RGB24};
-import cairo::bindgen::{cairo_image_surface_create, cairo_surface_destroy};
-import cairo_xlib::bindgen::{cairo_xlib_surface_create};
+use xlib::XExposeEvent;
+use xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
+use xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};
+use xlib::bindgen::{XSelectInput, XCloseDisplay, XNextEvent, XDefaultVisual};
+use xlib::bindgen::{XMapWindow};
+use bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
+use bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTarget};
+use bindgen::{AzDrawTargetGetSize};
+use cairo::{CAIRO_FORMAT_RGB24};
+use cairo::bindgen::{cairo_image_surface_create, cairo_surface_destroy};
+use cairo_xlib::bindgen::{cairo_xlib_surface_create};
 
 #[test]
 fn sanity_check() {
@@ -133,8 +133,8 @@ fn test_draw_target_get_size() {
 #[test]
 #[ignore]
 fn fonts() {
-    import cairo::*;
-    import cairo::bindgen::*;
+    use cairo::*;
+    use cairo::bindgen::*;
 
     let dpy = XOpenDisplay(ptr::null());
     assert(ptr::is_not_null(dpy));
@@ -181,9 +181,9 @@ fn fonts() {
     XCloseDisplay(dpy);
 
     fn paint(surf: *cairo_surface_t) {
-        import libc::c_double;
-        import cairo::*;
-        import cairo::bindgen::*;
+        use libc::c_double;
+        use cairo::*;
+        use cairo::bindgen::*;
 
         let cr: *cairo_t = cairo_create(surf);
         assert cr.is_not_null();

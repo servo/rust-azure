@@ -2,7 +2,7 @@
 
 use cocoa;
 
-import cocoa::cg::CGFontRef;
+use cocoa::cg::CGFontRef;
 
 #[nolink]
 extern mod bindgen {

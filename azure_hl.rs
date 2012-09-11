@@ -1,20 +1,20 @@
 // High-level bindings to Azure.
 
-import bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
-import AzDrawSurfaceOptions;
-import bindgen::AzDrawTargetClearRect;
-import bindgen::AzDrawTargetCreateSourceSurfaceFromData;
-import bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-import bindgen::{AzDrawTargetStrokeRect};
-import AzFilter;
-import bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
-import bindgen::AzReleaseSourceSurface;
-import bindgen::AzRetainDrawTarget;
-import AzSurfaceFormat;
-import cairo_hl::ImageSurface;
-import geom::rect::Rect;
-import geom::size::Size2D;
-import ptr::{addr_of, null};
+use bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
+//use bindgen::AzDrawSurfaceOptions;
+use bindgen::AzDrawTargetClearRect;
+use bindgen::AzDrawTargetCreateSourceSurfaceFromData;
+use bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use bindgen::{AzDrawTargetStrokeRect};
+//use bindgen::AzFilter;
+use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
+use bindgen::AzReleaseSourceSurface;
+use bindgen::AzRetainDrawTarget;
+//use bindgen::AzSurfaceFormat;
+use cairo_hl::ImageSurface;
+use geom::rect::Rect;
+use geom::size::Size2D;
+use ptr::{addr_of, null};
 
 trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
@@ -49,7 +49,9 @@ struct Color {
     g: AzFloat,
     b: AzFloat,
     a: AzFloat,
+}
 
+impl Color {
     fn as_azure_color() -> AzColor {
         { r: self.r, g: self.g, b: self.b, a: self.a }
     }
@@ -79,7 +81,9 @@ struct StrokeOptions {
     line_width: AzFloat,
     miter_limit: AzFloat,
     fields: uint16_t,
+}
 
+impl StrokeOptions {
     fn as_azure_stroke_options() -> AzStrokeOptions {
         {
             mLineWidth: self.line_width,
@@ -105,7 +109,9 @@ fn StrokeOptions(line_width: AzFloat,
 struct DrawOptions {
     alpha: AzFloat,
     fields: uint16_t,
+}
 
+impl DrawOptions {
     fn as_azure_draw_options() -> AzDrawOptions {
         {
             mAlpha: self.alpha,
@@ -149,7 +155,9 @@ impl Filter {
 struct DrawSurfaceOptions {
     filter: Filter,
     sampling_bounds: bool,
+}
 
+impl DrawSurfaceOptions {
     fn as_azure_draw_surface_options() -> AzDrawSurfaceOptions {
         { fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32 }
     }
@@ -170,7 +178,9 @@ struct DrawTarget {
     drop {
         AzReleaseDrawTarget(self.azure_draw_target);
     }
+}
 
+impl DrawTarget {
     fn clone() -> DrawTarget {
         return new_draw_target_from_azure_draw_target(self.azure_draw_target);
     }
