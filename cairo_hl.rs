@@ -11,7 +11,7 @@ use io::{MemBuffer, Writer};
 use ptr::addr_of;
 use result::{Err, Ok, Result};
 use unsafe::reinterpret_cast;
-use vec::unsafe::{form_slice, from_buf};
+use vec::raw::{form_slice, from_buf};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
 struct ImageSurface {

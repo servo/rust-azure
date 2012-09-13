@@ -2,8 +2,8 @@
        vers = "0.1")];
 #[crate_type = "lib"];
 
-use std;
-use geom;
+extern mod std;
+extern mod geom;
 
 use libc::types::common::c99::*;
 use libc::types::os::arch::c95::wchar_t;

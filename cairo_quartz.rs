@@ -1,6 +1,6 @@
 // FIXME: Use bindgen
 
-use cocoa;
+extern mod cocoa;
 
 use cocoa::cg::CGFontRef;
 
