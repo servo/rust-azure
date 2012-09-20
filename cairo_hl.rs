@@ -7,10 +7,10 @@ use cairo::bindgen::{cairo_image_surface_get_height, cairo_image_surface_get_str
 use cairo::bindgen::{cairo_image_surface_get_width, cairo_rectangle, cairo_set_line_width};
 use cairo::bindgen::{cairo_set_source_rgb, cairo_stroke, cairo_surface_destroy};
 use cairo::bindgen::{cairo_surface_reference, cairo_surface_write_to_png_stream};
-use io::{MemBuffer, Writer};
+use cast::reinterpret_cast;
+use io::{BytesWriter, Writer};
 use ptr::addr_of;
 use result::{Err, Ok, Result};
-use unsafe::reinterpret_cast;
 use vec::raw::{form_slice, from_buf};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
@@ -51,10 +51,10 @@ fn ImageSurface(format: cairo_format_t, width: c_int, height: c_int) -> ImageSur
 }
 
 impl ImageSurface {
-    fn write_to_png_stream(buffer: &io::MemBuffer) -> Result<(),cairo_status_t> unsafe {
+    fn write_to_png_stream(buffer: &BytesWriter) -> Result<(),cairo_status_t> unsafe {
         extern fn write_fn(closure: *c_void, data: *c_uchar, len: c_uint)
                         -> cairo_status_t unsafe {
-            let writer: *MemBuffer = reinterpret_cast(&closure);
+            let writer: *BytesWriter = reinterpret_cast(&closure);
             do form_slice(data, len as uint) |bytes| {
                 (*writer).write(bytes);
             }
