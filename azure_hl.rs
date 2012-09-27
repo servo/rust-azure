@@ -16,7 +16,7 @@ use geom::rect::Rect;
 use geom::size::Size2D;
 use ptr::{addr_of, null};
 
-trait AsAzureRect {
+pub trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
 }
 
@@ -31,7 +31,7 @@ impl Rect<AzFloat> : AsAzureRect {
     }
 }
 
-trait AsAzureIntSize {
+pub trait AsAzureIntSize {
     fn as_azure_int_size() -> AzIntSize;
 }
 
@@ -44,7 +44,7 @@ impl Size2D<i32> : AsAzureIntSize {
     }
 }
 
-struct Color {
+pub struct Color {
     r: AzFloat,
     g: AzFloat,
     b: AzFloat,
@@ -57,13 +57,13 @@ impl Color {
     }
 }
 
-fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
+pub fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
     Color { r: r, g: g, b: b, a: a }
 }
 
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
-struct ColorPattern {
+pub struct ColorPattern {
     azure_color_pattern: AzColorPatternRef,
 
     drop {
@@ -71,13 +71,13 @@ struct ColorPattern {
     }
 }
 
-fn ColorPattern(color: Color) -> ColorPattern {
+pub fn ColorPattern(color: Color) -> ColorPattern {
     ColorPattern { 
         azure_color_pattern: AzCreateColorPattern(addr_of(color.as_azure_color()))
     }
 }
 
-struct StrokeOptions {
+pub struct StrokeOptions {
     line_width: AzFloat,
     miter_limit: AzFloat,
     fields: uint16_t,
@@ -96,7 +96,7 @@ impl StrokeOptions {
     }
 }
 
-fn StrokeOptions(line_width: AzFloat,
+pub fn StrokeOptions(line_width: AzFloat,
                   miter_limit: AzFloat,
                   fields: uint16_t) -> StrokeOptions {
     StrokeOptions {
@@ -106,7 +106,7 @@ fn StrokeOptions(line_width: AzFloat,
     }
 }
 
-struct DrawOptions {
+pub struct DrawOptions {
     alpha: AzFloat,
     fields: uint16_t,
 }
@@ -121,14 +121,14 @@ impl DrawOptions {
 }
 
 
-fn DrawOptions(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
+pub fn DrawOptions(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
     DrawOptions {
         alpha : alpha,
         fields : fields,
     }
 }
 
-enum SurfaceFormat {
+pub enum SurfaceFormat {
     B8G8R8A8,
     R8G8R8X8,
     R5G6B5,
@@ -141,7 +141,7 @@ impl SurfaceFormat {
     }
 }
 
-enum Filter {
+pub enum Filter {
     Linear,
     Point
 }
@@ -152,7 +152,7 @@ impl Filter {
     }
 }
 
-struct DrawSurfaceOptions {
+pub struct DrawSurfaceOptions {
     filter: Filter,
     sampling_bounds: bool,
 }
@@ -164,7 +164,7 @@ impl DrawSurfaceOptions {
 }
 
 
-fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
+pub fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
     DrawSurfaceOptions {
         filter: filter,
         sampling_bounds: sampling_bounds,
@@ -172,7 +172,7 @@ fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptio
 }
 
 
-struct DrawTarget {
+pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
 
     drop {
@@ -234,7 +234,7 @@ impl DrawTarget {
 }
 
 
-fn DrawTarget(&&cairo_surface: ImageSurface) -> DrawTarget {
+pub fn DrawTarget(&&cairo_surface: ImageSurface) -> DrawTarget {
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
     }
@@ -242,24 +242,24 @@ fn DrawTarget(&&cairo_surface: ImageSurface) -> DrawTarget {
 
 
 // Ugly workaround for the lack of explicit self.
-fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
+pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
     return new_draw_target_from_azure_draw_target(draw_target.azure_draw_target);
 }
 
-fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
+pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
     }
 }
 
-fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {
+pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {
     AzRetainDrawTarget(azure_draw_target);
     DrawTarget {
         azure_draw_target: azure_draw_target
     }
 }
 
-struct SourceSurface {
+pub struct SourceSurface {
     azure_source_surface: AzSourceSurfaceRef,
 
     drop {
@@ -267,7 +267,7 @@ struct SourceSurface {
     }
 }
 
-fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
+pub fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
     return SourceSurface {
         azure_source_surface:  azure_source_surface
     }

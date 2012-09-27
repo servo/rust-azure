@@ -13,42 +13,42 @@ use libc::types::os::arch::c95::wchar_t;
 //use xlib::Display;
 
 #[cfg(target_os = "linux")]
-mod xlib;
+pub mod xlib;
 
 #[cfg(target_os = "macos")]
 #[path = "bogus"]
-mod xlib { }
+pub mod xlib { }
 
-mod cairo;
-
-#[cfg(target_os = "linux")]
-mod cairo_xlib;
+pub mod cairo;
 
 #[cfg(target_os = "linux")]
-mod cairo_ft;
+pub mod cairo_xlib;
+
+#[cfg(target_os = "linux")]
+pub mod cairo_ft;
 
 #[cfg(target_os = "macos")]
-mod cairo_quartz;
+pub mod cairo_quartz;
 
 #[cfg(target_os = "linux")]
-mod freetype;
-
-#[cfg(target_os = "macos")]
-#[path = "bogus"]
-mod freetype { }
-
-#[cfg(target_os = "linux")]
-mod fontconfig;
+pub mod freetype;
 
 #[cfg(target_os = "macos")]
 #[path = "bogus"]
-mod fontconfig { }
-
-mod azure_hl;
-mod cairo_hl;
+pub mod freetype { }
 
 #[cfg(target_os = "linux")]
-mod test;
+pub mod fontconfig;
 
-mod linkhack;
+#[cfg(target_os = "macos")]
+#[path = "bogus"]
+pub mod fontconfig { }
+
+pub mod azure_hl;
+pub mod cairo_hl;
+
+#[cfg(target_os = "linux")]
+pub mod test;
+
+pub mod linkhack;
 

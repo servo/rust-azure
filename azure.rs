@@ -4,182 +4,182 @@ use libc::*;
 
 use cairo::{cairo_surface_t, cairo_scaled_font_t};
 
-type AzFloat = c_float;
+pub type AzFloat = c_float;
 
-type enum_AzSurfaceType = c_uint;
-const AZ_SURFACE_DATA: u32 = 0_u32;
-const AZ_SURFACE_D2D1_BITMAP: u32 = 1_u32;
-const AZ_SURFACE_D2D1_DRAWTARGET: u32 = 2_u32;
-const AZ_SURFACE_CAIRO: u32 = 3_u32;
-const AZ_SURFACE_CAIRO_IMAGE: u32 = 4_u32;
-const AZ_SURFACE_COREGRAPHICS_IMAGE: u32 = 5_u32;
-const AZ_SURFACE_COREGRAPHICS_CGCONTEXT: u32 = 6_u32;
-const AZ_SURFACE_SKIA: u32 = 7_u32;
-const AZ_SURFACE_DUAL_DT: u32 = 8_u32;
+pub type enum_AzSurfaceType = c_uint;
+pub const AZ_SURFACE_DATA: u32 = 0_u32;
+pub const AZ_SURFACE_D2D1_BITMAP: u32 = 1_u32;
+pub const AZ_SURFACE_D2D1_DRAWTARGET: u32 = 2_u32;
+pub const AZ_SURFACE_CAIRO: u32 = 3_u32;
+pub const AZ_SURFACE_CAIRO_IMAGE: u32 = 4_u32;
+pub const AZ_SURFACE_COREGRAPHICS_IMAGE: u32 = 5_u32;
+pub const AZ_SURFACE_COREGRAPHICS_CGCONTEXT: u32 = 6_u32;
+pub const AZ_SURFACE_SKIA: u32 = 7_u32;
+pub const AZ_SURFACE_DUAL_DT: u32 = 8_u32;
 
-type enum_AzSurfaceFormat = c_uint;
-const AZ_FORMAT_B8G8R8A8: u32 = 0_u32;
-const AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
-const AZ_FORMAT_R5G6B5: u32 = 2_u32;
-const AZ_FORMAT_A8: u32 = 3_u32;
+pub type enum_AzSurfaceFormat = c_uint;
+pub const AZ_FORMAT_B8G8R8A8: u32 = 0_u32;
+pub const AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
+pub const AZ_FORMAT_R5G6B5: u32 = 2_u32;
+pub const AZ_FORMAT_A8: u32 = 3_u32;
 
-type AzSurfaceFormat = enum_AzSurfaceFormat;
+pub type AzSurfaceFormat = enum_AzSurfaceFormat;
 
-type enum_AzBackendType = c_uint;
-const AZ_BACKEND_NONE: u32 = 0_u32;
-const AZ_BACKEND_DIRECT2D: u32 = 1_u32;
-const AZ_BACKEND_COREGRAPHICS: u32 = 2_u32;
-const AZ_BACKEND_CAIRO: u32 = 3_u32;
-const AZ_BACKEND_SKIA: u32 = 4_u32;
+pub type enum_AzBackendType = c_uint;
+pub const AZ_BACKEND_NONE: u32 = 0_u32;
+pub const AZ_BACKEND_DIRECT2D: u32 = 1_u32;
+pub const AZ_BACKEND_COREGRAPHICS: u32 = 2_u32;
+pub const AZ_BACKEND_CAIRO: u32 = 3_u32;
+pub const AZ_BACKEND_SKIA: u32 = 4_u32;
 
-type enum_AzFontType = c_uint;
-const AZ_FONT_DWRITE: u32 = 0_u32;
-const AZ_FONT_GDI: u32 = 1_u32;
-const AZ_FONT_MAC: u32 = 2_u32;
-const AZ_FONT_SKIA: u32 = 3_u32;
-const AZ_FONT_CAIRO: u32 = 4_u32;
-const AZ_FONT_COREGRAPHICS: u32 = 5_u32;
+pub type enum_AzFontType = c_uint;
+pub const AZ_FONT_DWRITE: u32 = 0_u32;
+pub const AZ_FONT_GDI: u32 = 1_u32;
+pub const AZ_FONT_MAC: u32 = 2_u32;
+pub const AZ_FONT_SKIA: u32 = 3_u32;
+pub const AZ_FONT_CAIRO: u32 = 4_u32;
+pub const AZ_FONT_COREGRAPHICS: u32 = 5_u32;
 
-type enum_AzNativeSurfaceType = c_uint;
-const AZ_NATIVE_SURFACE_D3D10_TEXTURE: u32 = 0_u32;
-const AZ_NATIVE_SURFACE_CAIRO_SURFACE: u32 = 1_u32;
-const AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 2_u32;
+pub type enum_AzNativeSurfaceType = c_uint;
+pub const AZ_NATIVE_SURFACE_D3D10_TEXTURE: u32 = 0_u32;
+pub const AZ_NATIVE_SURFACE_CAIRO_SURFACE: u32 = 1_u32;
+pub const AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 2_u32;
 
-type enum_AzNativeFontType = c_uint;
-const AZ_NATIVE_FONT_DWRITE_FONT_FACE: u32 = 0_u32;
-const AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
-const AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
-const AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
-const AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
+pub type enum_AzNativeFontType = c_uint;
+pub const AZ_NATIVE_FONT_DWRITE_FONT_FACE: u32 = 0_u32;
+pub const AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
+pub const AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
+pub const AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
+pub const AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
 
-type enum_AzCompositionOp = c_uint;
-const AZ_OP_OVER: u32 = 0_u32;
-const AZ_OP_ADD: u32 = 1_u32;
-const AZ_OP_ATOP: u32 = 2_u32;
-const AZ_OP_OUT: u32 = 3_u32;
-const AZ_OP_IN: u32 = 4_u32;
-const AZ_OP_SOURCE: u32 = 5_u32;
-const AZ_OP_DEST_IN: u32 = 6_u32;
-const AZ_OP_DEST_OUT: u32 = 7_u32;
-const AZ_OP_DEST_OVER: u32 = 8_u32;
-const AZ_OP_DEST_ATOP: u32 = 9_u32;
-const AZ_OP_XOR: u32 = 10_u32;
-const AZ_OP_COUNT: u32 = 11_u32;
+pub type enum_AzCompositionOp = c_uint;
+pub const AZ_OP_OVER: u32 = 0_u32;
+pub const AZ_OP_ADD: u32 = 1_u32;
+pub const AZ_OP_ATOP: u32 = 2_u32;
+pub const AZ_OP_OUT: u32 = 3_u32;
+pub const AZ_OP_IN: u32 = 4_u32;
+pub const AZ_OP_SOURCE: u32 = 5_u32;
+pub const AZ_OP_DEST_IN: u32 = 6_u32;
+pub const AZ_OP_DEST_OUT: u32 = 7_u32;
+pub const AZ_OP_DEST_OVER: u32 = 8_u32;
+pub const AZ_OP_DEST_ATOP: u32 = 9_u32;
+pub const AZ_OP_XOR: u32 = 10_u32;
+pub const AZ_OP_COUNT: u32 = 11_u32;
 
-type enum_AzExtendMode = c_uint;
-const AZ_EXTEND_CLAMP: u32 = 0_u32;
-const AZ_EXTEND_REPEAT: u32 = 1_u32;
-const AZ_EXTEND_REFLECT: u32 = 2_u32;
+pub type enum_AzExtendMode = c_uint;
+pub const AZ_EXTEND_CLAMP: u32 = 0_u32;
+pub const AZ_EXTEND_REPEAT: u32 = 1_u32;
+pub const AZ_EXTEND_REFLECT: u32 = 2_u32;
 
-type enum_AzFillRule = c_uint;
-const AZ_FILL_WINDING: u32 = 0_u32;
-const AZ_FILL_EVEN_ODD: u32 = 1_u32;
+pub type enum_AzFillRule = c_uint;
+pub const AZ_FILL_WINDING: u32 = 0_u32;
+pub const AZ_FILL_EVEN_ODD: u32 = 1_u32;
 
-type enum_AzAntialiasMode = c_uint;
-const AZ_AA_NONE: u32 = 0_u32;
-const AZ_AA_GRAY: u32 = 1_u32;
-const AZ_AA_SUBPIXEL: u32 = 2_u32;
+pub type enum_AzAntialiasMode = c_uint;
+pub const AZ_AA_NONE: u32 = 0_u32;
+pub const AZ_AA_GRAY: u32 = 1_u32;
+pub const AZ_AA_SUBPIXEL: u32 = 2_u32;
 
-type enum_AzSnapping = c_uint;
-const AZ_SNAP_NONE: u32 = 0_u32;
-const AZ_SNAP_ALIGNED: u32 = 1_u32;
+pub type enum_AzSnapping = c_uint;
+pub const AZ_SNAP_NONE: u32 = 0_u32;
+pub const AZ_SNAP_ALIGNED: u32 = 1_u32;
 
-type enum_AzFilter = c_uint;
-const AZ_FILTER_LINEAR: u32 = 0_u32;
-const AZ_FILTER_POINT: u32 = 1_u32;
+pub type enum_AzFilter = c_uint;
+pub const AZ_FILTER_LINEAR: u32 = 0_u32;
+pub const AZ_FILTER_POINT: u32 = 1_u32;
 
-type AzFilter = enum_AzFilter;
+pub type AzFilter = enum_AzFilter;
 
-type enum_AzPatternType = c_uint;
-const AZ_PATTERN_COLOR: u32 = 0_u32;
-const AZ_PATTERN_SURFACE: u32 = 1_u32;
-const AZ_PATTERN_LINEAR_GRADIENT: u32 = 2_u32;
-const AZ_PATTERN_RADIAL_GRADIENT: u32 = 3_u32;
+pub type enum_AzPatternType = c_uint;
+pub const AZ_PATTERN_COLOR: u32 = 0_u32;
+pub const AZ_PATTERN_SURFACE: u32 = 1_u32;
+pub const AZ_PATTERN_LINEAR_GRADIENT: u32 = 2_u32;
+pub const AZ_PATTERN_RADIAL_GRADIENT: u32 = 3_u32;
 
-type enum_AzJoinStyle = c_uint;
-const AZ_JOIN_BEVEL: u32 = 0_u32;
-const AZ_JOIN_ROUND: u32 = 1_u32;
-const AZ_JOIN_MITER: u32 = 2_u32;
-const AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
+pub type enum_AzJoinStyle = c_uint;
+pub const AZ_JOIN_BEVEL: u32 = 0_u32;
+pub const AZ_JOIN_ROUND: u32 = 1_u32;
+pub const AZ_JOIN_MITER: u32 = 2_u32;
+pub const AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
 
-type enum_AzCapStyle = c_uint;
-const AZ_CAP_BUTT: u32 = 0_u32;
-const AZ_CAP_ROUND: u32 = 1_u32;
-const AZ_CAP_SQUARE: u32 = 2_u32;
+pub type enum_AzCapStyle = c_uint;
+pub const AZ_CAP_BUTT: u32 = 0_u32;
+pub const AZ_CAP_ROUND: u32 = 1_u32;
+pub const AZ_CAP_SQUARE: u32 = 2_u32;
 
-type enum_AzSamplingBounds = c_uint;
-const AZ_SAMPLING_UNBOUNDED: u32 = 0_u32;
-const AZ_SAMPLING_BOUNDED: u32 = 1_u32;
+pub type enum_AzSamplingBounds = c_uint;
+pub const AZ_SAMPLING_UNBOUNDED: u32 = 0_u32;
+pub const AZ_SAMPLING_BOUNDED: u32 = 1_u32;
 
-type enum_AzSide = c_uint;
-const AZ_eSideTop: u32 = 0_u32;
-const AZ_eSideRight: u32 = 1_u32;
-const AZ_eSideBottom: u32 = 2_u32;
-const AZ_eSideLeft: u32 = 3_u32;
+pub type enum_AzSide = c_uint;
+pub const AZ_eSideTop: u32 = 0_u32;
+pub const AZ_eSideRight: u32 = 1_u32;
+pub const AZ_eSideBottom: u32 = 2_u32;
+pub const AZ_eSideLeft: u32 = 3_u32;
 
-type struct__AzColor = {
+pub type struct__AzColor = {
     r: AzFloat,
     g: AzFloat,
     b: AzFloat,
     a: AzFloat,
 };
 
-type AzColor = struct__AzColor;
+pub type AzColor = struct__AzColor;
 
-type struct__AzGradientStop = {
+pub type struct__AzGradientStop = {
     offset: AzFloat,
     color: AzColor,
 };
 
-type AzGradientStop = struct__AzGradientStop;
+pub type AzGradientStop = struct__AzGradientStop;
 
-type struct__AzIntRect = {
+pub type struct__AzIntRect = {
     x: int32_t,
     y: int32_t,
     width: int32_t,
     height: int32_t,
 };
 
-type AzIntRect = struct__AzIntRect;
+pub type AzIntRect = struct__AzIntRect;
 
-type struct__AzRect = {
+pub type struct__AzRect = {
     x: AzFloat,
     y: AzFloat,
     width: AzFloat,
     height: AzFloat,
 };
 
-type AzRect = struct__AzRect;
+pub type AzRect = struct__AzRect;
 
-type struct__AzIntPoint = {
+pub type struct__AzIntPoint = {
     x: int32_t,
     y: int32_t,
 };
 
-type AzIntPoint = struct__AzIntPoint;
+pub type AzIntPoint = struct__AzIntPoint;
 
-type struct__AzPoint = {
+pub type struct__AzPoint = {
     x: AzFloat,
     y: AzFloat,
 };
 
-type AzPoint = struct__AzPoint;
+pub type AzPoint = struct__AzPoint;
 
-type struct__AzIntSize = {
+pub type struct__AzIntSize = {
     width: int32_t,
     height: int32_t,
 };
 
-type AzIntSize = struct__AzIntSize;
+pub type AzIntSize = struct__AzIntSize;
 
-type struct__AzSize = {
+pub type struct__AzSize = {
     width: AzFloat,
     height: AzFloat,
 };
 
-type AzSize = struct__AzSize;
+pub type AzSize = struct__AzSize;
 
-type struct__AzMatrix = {
+pub type struct__AzMatrix = {
     _11: AzFloat,
     _12: AzFloat,
     _21: AzFloat,
@@ -188,16 +188,16 @@ type struct__AzMatrix = {
     _32: AzFloat,
 };
 
-type AzMatrix = struct__AzMatrix;
+pub type AzMatrix = struct__AzMatrix;
 
-type struct__AzDrawOptions = {
+pub type struct__AzDrawOptions = {
     mAlpha: AzFloat,
     fields: uint16_t,
 };
 
-type AzDrawOptions = struct__AzDrawOptions;
+pub type AzDrawOptions = struct__AzDrawOptions;
 
-type struct__AzStrokeOptions = {
+pub type struct__AzStrokeOptions = {
     mLineWidth: AzFloat,
     mMiterLimit: AzFloat,
     mDashPattern: *AzFloat,
@@ -206,88 +206,88 @@ type struct__AzStrokeOptions = {
     fields: uint16_t,
 };
 
-type AzStrokeOptions = struct__AzStrokeOptions;
+pub type AzStrokeOptions = struct__AzStrokeOptions;
 
-type struct__AzDrawSurfaceOptions = {
+pub type struct__AzDrawSurfaceOptions = {
     fields: uint32_t,
 };
 
-type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
+pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
-type struct__AzGlyph = {
+pub type struct__AzGlyph = {
     mIndex: uint32_t,
     mPosition: AzPoint,
 };
 
-type AzGlyph = struct__AzGlyph;
+pub type AzGlyph = struct__AzGlyph;
 
-type struct__AzGlyphBuffer = {
+pub type struct__AzGlyphBuffer = {
     mGlyphs: *AzGlyph,
     mNumGlyphs: uint32_t,
 };
 
-type AzGlyphBuffer = struct__AzGlyphBuffer;
+pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
-type struct__AzNativeFont = {
+pub type struct__AzNativeFont = {
     mType: enum_AzNativeFontType,
     mFont: *c_void,
 };
 
-type AzNativeFont = struct__AzNativeFont;
+pub type AzNativeFont = struct__AzNativeFont;
 
-type AzGradientStopsRef = *c_void;
+pub type AzGradientStopsRef = *c_void;
 
-type AzDrawTargetRef = *c_void;
+pub type AzDrawTargetRef = *c_void;
 
-type AzPatternRef = *c_void;
+pub type AzPatternRef = *c_void;
 
-type AzColorPatternRef = *c_void;
+pub type AzColorPatternRef = *c_void;
 
-type AzScaledFontRef = *c_void;
+pub type AzScaledFontRef = *c_void;
 
-type AzGlyphRenderingOptionsRef = *c_void;
+pub type AzGlyphRenderingOptionsRef = *c_void;
 
-type AzSourceSurfaceRef = *c_void;
+pub type AzSourceSurfaceRef = *c_void;
 
-type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
+pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
 #[link_name="azure"]
 extern mod bindgen {
 
-fn AzSanityCheck(/* FIXME: variadic function */);
+pub fn AzSanityCheck(/* FIXME: variadic function */);
 
-fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
+pub fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
 
-fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
+pub fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
 
-fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t) -> AzDrawTargetRef;
+pub fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t) -> AzDrawTargetRef;
 
-fn AzRetainDrawTarget(++aTarget: AzDrawTargetRef);
+pub fn AzRetainDrawTarget(++aTarget: AzDrawTargetRef);
 
-fn AzReleaseDrawTarget(++aTarget: AzDrawTargetRef);
+pub fn AzReleaseDrawTarget(++aTarget: AzDrawTargetRef);
 
-fn AzDrawTargetGetSize(++aDrawTarget: AzDrawTargetRef) -> AzIntSize;
+pub fn AzDrawTargetGetSize(++aDrawTarget: AzDrawTargetRef) -> AzIntSize;
 
-fn AzDrawTargetFlush(++aDrawTarget: AzDrawTargetRef);
+pub fn AzDrawTargetFlush(++aDrawTarget: AzDrawTargetRef);
 
-fn AzDrawTargetClearRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect);
+pub fn AzDrawTargetClearRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect);
 
-fn AzDrawTargetFillRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef);
+pub fn AzDrawTargetFillRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef);
 
-fn AzDrawTargetStrokeRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
 
-fn AzDrawTargetStrokeLine(++aDrawTarget: AzDrawTargetRef, ++aStart: *AzPoint, ++aEnd: *AzPoint, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeLine(++aDrawTarget: AzDrawTargetRef, ++aStart: *AzPoint, ++aEnd: *AzPoint, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
 
-fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontRef, ++aGlyphBuffer: *AzGlyphBuffer, ++aPattern: AzPatternRef, ++aOptions: *AzDrawOptions, ++aRenderingOptions: AzGlyphRenderingOptionsRef);
+pub fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontRef, ++aGlyphBuffer: *AzGlyphBuffer, ++aPattern: AzPatternRef, ++aOptions: *AzDrawOptions, ++aRenderingOptions: AzGlyphRenderingOptionsRef);
 
-fn AzDrawTargetDrawSurface(++aDrawTarget: AzDrawTargetRef, ++aSurface: AzSourceSurfaceRef, ++aDest: *AzRect, ++aSource: *AzRect, ++aSurfOptions: AzDrawSurfaceOptionsRef, ++aOptions: *AzDrawOptions);
+pub fn AzDrawTargetDrawSurface(++aDrawTarget: AzDrawTargetRef, ++aSurface: AzSourceSurfaceRef, ++aDest: *AzRect, ++aSource: *AzRect, ++aSurfOptions: AzDrawSurfaceOptionsRef, ++aOptions: *AzDrawOptions);
 
-fn AzDrawTargetCreateSourceSurfaceFromData(++aDrawTarget: AzDrawTargetRef, ++aData: *u8, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
+pub fn AzDrawTargetCreateSourceSurfaceFromData(++aDrawTarget: AzDrawTargetRef, ++aData: *u8, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
 
-fn AzReleaseSourceSurface(++aSurface: AzSourceSurfaceRef);
+pub fn AzReleaseSourceSurface(++aSurface: AzSourceSurfaceRef);
 
-fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
+pub fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 
-fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
+pub fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
 
 }
