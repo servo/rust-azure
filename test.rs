@@ -39,7 +39,7 @@ type XEventStub = {
 };
 
 fn xexpose(event: *XEventStub) -> *XExposeEvent unsafe {
-    unsafe::reinterpret_cast(&ptr::addr_of((*event).padding))
+    cast::reinterpret_cast(&ptr::addr_of((*event).padding))
 }
 
 #[test]
@@ -75,7 +75,7 @@ fn cairo_it_up() {
 
     loop {
         unsafe {
-            XNextEvent(dpy, unsafe::reinterpret_cast(&ep));
+            XNextEvent(dpy, cast::reinterpret_cast(&ep));
             log(error, *ep);
             log(error, *xexpose(ep));
             if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
@@ -111,7 +111,7 @@ fn paint(dt: AzDrawTargetRef) {
     AzDrawTargetFillRect(
         dt,
         ptr::addr_of(rect),
-        unsafe { unsafe::reinterpret_cast(&pattern) });
+        unsafe { cast::reinterpret_cast(&pattern) });
     AzReleaseColorPattern(pattern);
 }
 
@@ -164,7 +164,7 @@ fn fonts() {
 
     loop {
         unsafe {
-            XNextEvent(dpy, unsafe::reinterpret_cast(&ep));
+            XNextEvent(dpy, cast::reinterpret_cast(&ep));
             log(error, *ep);
             log(error, *xexpose(ep));
             if e.type_ == Expose && (*xexpose(ep)).count < 1 as c_int {
