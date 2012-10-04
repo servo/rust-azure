@@ -252,7 +252,7 @@ pub type AzSourceSurfaceRef = *c_void;
 pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
 #[link_name="azure"]
-extern mod bindgen {
+pub extern mod bindgen {
 
 pub fn AzSanityCheck(/* FIXME: variadic function */);
 

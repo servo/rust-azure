@@ -11,10 +11,10 @@ use cast::reinterpret_cast;
 use io::{BytesWriter, Writer};
 use ptr::addr_of;
 use result::{Err, Ok, Result};
-use vec::raw::{form_slice, from_buf};
+use vec::raw::{buf_as_slice, from_buf};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
-struct ImageSurface {
+pub struct ImageSurface {
     cairo_surface: *cairo_surface_t,
 
     drop {
@@ -42,7 +42,7 @@ fn image_surface_from_cairo_surface(cairo_surface: *cairo_surface_t) -> ImageSur
     ImageSurface { cairo_surface: cairo_surface }
 }
 
-fn ImageSurface(format: cairo_format_t, width: c_int, height: c_int) -> ImageSurface {
+pub fn ImageSurface(format: cairo_format_t, width: c_int, height: c_int) -> ImageSurface {
     let cairo_surface = cairo_image_surface_create(format, width, height);
     if cairo_surface.is_null() {
         fail ~"couldn't create Cairo image surface";
@@ -55,7 +55,7 @@ impl ImageSurface {
         extern fn write_fn(closure: *c_void, data: *c_uchar, len: c_uint)
                         -> cairo_status_t unsafe {
             let writer: *BytesWriter = reinterpret_cast(&closure);
-            do form_slice(data, len as uint) |bytes| {
+            do buf_as_slice(data, len as uint) |bytes| {
                 (*writer).write(bytes);
             }
             return CAIRO_STATUS_SUCCESS;

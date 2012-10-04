@@ -11,10 +11,10 @@ use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use bindgen::AzReleaseSourceSurface;
 use bindgen::AzRetainDrawTarget;
 //use bindgen::AzSurfaceFormat;
-use cairo_hl::ImageSurface;
+pub use cairo_hl::ImageSurface;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use ptr::{addr_of, null};
+use ptr::{null, to_unsafe_ptr};
 
 pub trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
@@ -73,7 +73,7 @@ pub struct ColorPattern {
 
 pub fn ColorPattern(color: Color) -> ColorPattern {
     ColorPattern { 
-        azure_color_pattern: AzCreateColorPattern(addr_of(color.as_azure_color()))
+        azure_color_pattern: AzCreateColorPattern(to_unsafe_ptr(&color.as_azure_color()))
     }
 }
 
@@ -190,22 +190,22 @@ impl DrawTarget {
     }
 
     fn clear_rect(&&rect: Rect<AzFloat>) {
-        AzDrawTargetClearRect(self.azure_draw_target, addr_of(rect.as_azure_rect()));
+        AzDrawTargetClearRect(self.azure_draw_target, to_unsafe_ptr(&rect.as_azure_rect()));
     }
 
     fn fill_rect(&&rect: Rect<AzFloat>, &&pattern: ColorPattern) {
         AzDrawTargetFillRect(self.azure_draw_target,
-                             addr_of(rect.as_azure_rect()),
+                             to_unsafe_ptr(&rect.as_azure_rect()),
                              pattern.azure_color_pattern);
     }
 
     fn stroke_rect(&&rect: Rect<AzFloat>, &&pattern: ColorPattern, &&stroke_options: StrokeOptions,
                    &&draw_options: DrawOptions) {
         AzDrawTargetStrokeRect(self.azure_draw_target,
-                               addr_of(rect.as_azure_rect()),
+                               to_unsafe_ptr(&rect.as_azure_rect()),
                                pattern.azure_color_pattern,
-                               addr_of(stroke_options.as_azure_stroke_options()),
-                               addr_of(draw_options.as_azure_draw_options()));
+                               to_unsafe_ptr(&stroke_options.as_azure_stroke_options()),
+                               to_unsafe_ptr(&draw_options.as_azure_draw_options()));
     }
 
     fn draw_surface(surface: SourceSurface, dest: Rect<AzFloat>, source: Rect<AzFloat>,
@@ -213,10 +213,10 @@ impl DrawTarget {
 
         AzDrawTargetDrawSurface(self.azure_draw_target,
                                 surface.azure_source_surface,
-                                addr_of(dest.as_azure_rect()),
-                                addr_of(source.as_azure_rect()),
-                                addr_of(surf_options.as_azure_draw_surface_options()),
-                                addr_of(options.as_azure_draw_options()));
+                                to_unsafe_ptr(&dest.as_azure_rect()),
+                                to_unsafe_ptr(&source.as_azure_rect()),
+                                to_unsafe_ptr(&surf_options.as_azure_draw_surface_options()),
+                                to_unsafe_ptr(&options.as_azure_draw_options()));
     }
 
     fn create_source_surface_from_data(data: &[u8], size: Size2D<i32>, stride: i32,
@@ -225,8 +225,8 @@ impl DrawTarget {
         assert data.len() as i32 == stride * size.height;
         let azure_surface =
             AzDrawTargetCreateSourceSurfaceFromData(self.azure_draw_target,
-                                                    addr_of(data[0]),
-                                                    addr_of(size.as_azure_int_size()),
+                                                    to_unsafe_ptr(&data[0]),
+                                                    to_unsafe_ptr(&size.as_azure_int_size()),
                                                     stride,
                                                     format.as_azure_surface_format());
         SourceSurface(azure_surface)
