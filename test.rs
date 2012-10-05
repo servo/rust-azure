@@ -39,7 +39,7 @@ type XEventStub = {
 };
 
 fn xexpose(event: *XEventStub) -> *XExposeEvent unsafe {
-    cast::reinterpret_cast(&ptr::addr_of((*event).padding))
+    cast::reinterpret_cast(&ptr::addr_of(&(*event).padding))
 }
 
 #[test]
@@ -69,7 +69,7 @@ fn cairo_it_up() {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         )
     };
-    let ep = ptr::addr_of(e);
+    let ep = ptr::addr_of(&e);
 
     let dt = AzCreateDrawTargetForCairoSurface(cs);
 
@@ -107,10 +107,10 @@ fn paint(dt: AzDrawTargetRef) {
         b: 0f as AzFloat,
         a: 1f as AzFloat
     };
-    let pattern = AzCreateColorPattern(ptr::addr_of(color));
+    let pattern = AzCreateColorPattern(ptr::addr_of(&color));
     AzDrawTargetFillRect(
         dt,
-        ptr::addr_of(rect),
+        ptr::addr_of(&rect),
         unsafe { cast::reinterpret_cast(&pattern) });
     AzReleaseColorPattern(pattern);
 }
@@ -160,7 +160,7 @@ fn fonts() {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         )
     };
-    let ep = ptr::addr_of(e);
+    let ep = ptr::addr_of(&e);
 
     loop {
         unsafe {
@@ -205,7 +205,7 @@ fn fonts() {
         });
         cairo_set_font_size(cr, 20.2 as c_double);
         str::as_c_str(~"a", |text| {
-            cairo_text_extents(cr, text, ptr::addr_of(te));
+            cairo_text_extents(cr, text, ptr::addr_of(&te));
             cairo_move_to(
                 cr,
                 (100.0 + 0.5) as c_double -
