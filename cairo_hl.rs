@@ -103,7 +103,7 @@ impl Context {
 }
 
 
-fn make_context(&&surface: ImageSurface) -> Context {
+fn make_context(surface: &ImageSurface) -> Context {
     Context {
         cairo_context: cairo_create(surface.cairo_surface)
     }

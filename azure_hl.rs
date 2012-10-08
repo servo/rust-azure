@@ -189,18 +189,18 @@ impl DrawTarget {
         AzDrawTargetFlush(self.azure_draw_target);
     }
 
-    fn clear_rect(&&rect: Rect<AzFloat>) {
+    fn clear_rect(rect: &Rect<AzFloat>) {
         AzDrawTargetClearRect(self.azure_draw_target, to_unsafe_ptr(&rect.as_azure_rect()));
     }
 
-    fn fill_rect(&&rect: Rect<AzFloat>, &&pattern: ColorPattern) {
+    fn fill_rect(rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         AzDrawTargetFillRect(self.azure_draw_target,
                              to_unsafe_ptr(&rect.as_azure_rect()),
                              pattern.azure_color_pattern);
     }
 
-    fn stroke_rect(&&rect: Rect<AzFloat>, &&pattern: ColorPattern, &&stroke_options: StrokeOptions,
-                   &&draw_options: DrawOptions) {
+    fn stroke_rect(rect: &Rect<AzFloat>, pattern: &ColorPattern, stroke_options: &StrokeOptions,
+                   draw_options: &DrawOptions) {
         AzDrawTargetStrokeRect(self.azure_draw_target,
                                to_unsafe_ptr(&rect.as_azure_rect()),
                                pattern.azure_color_pattern,
@@ -234,7 +234,7 @@ impl DrawTarget {
 }
 
 
-pub fn DrawTarget(&&cairo_surface: ImageSurface) -> DrawTarget {
+pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
     }
