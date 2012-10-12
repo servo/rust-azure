@@ -70,9 +70,11 @@ impl ImageSurface {
         return Ok(());
     }
 
-    fn clone() -> ImageSurface {
-        cairo_surface_reference(self.cairo_surface);
-        return image_surface_from_cairo_surface(self.cairo_surface);
+    pure fn clone() -> ImageSurface {
+        unsafe {
+            cairo_surface_reference(self.cairo_surface);
+            return image_surface_from_cairo_surface(self.cairo_surface);
+        }
     }
 }
 
