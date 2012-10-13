@@ -11,7 +11,7 @@ use cast::reinterpret_cast;
 use io::{BytesWriter, Writer};
 use ptr::addr_of;
 use result::{Err, Ok, Result};
-use vec::raw::{buf_as_slice, from_buf};
+use vec::raw::{buf_as_slice, from_buf_raw};
 
 // FIXME: We should have a hierarchy of surfaces, but this needs to wait on case classes.
 pub struct ImageSurface {
@@ -32,7 +32,7 @@ impl ImageSurface {
     // FIXME: This should not copy!
     pure fn data() -> ~[u8] unsafe {
         let buffer = cairo_image_surface_get_data(self.cairo_surface);
-        return from_buf(buffer, (self.stride() * self.height()) as uint);
+        return from_buf_raw(buffer, (self.stride() * self.height()) as uint);
     }
 }
 
