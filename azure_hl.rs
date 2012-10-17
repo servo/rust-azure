@@ -91,7 +91,7 @@ impl StrokeOptions {
             mDashPattern: null(),
             mDashLength: 0,
             mDashOffset: 0.0f as AzFloat,
-            fields: 0
+            fields: self.fields
         }
     }
 }
