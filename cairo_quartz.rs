@@ -1,8 +1,8 @@
 // FIXME: Use bindgen
 
-extern mod cocoa;
+extern mod core_graphics;
 
-use cocoa::cg::CGFontRef;
+use core_graphics::font::CGFontRef;
 
 #[nolink]
 pub extern mod bindgen {
