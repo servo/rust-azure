@@ -1,3 +1,6 @@
+extern mod xlib;
+extern mod cairo;
+
 use xlib::XExposeEvent;
 use xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
 use xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};

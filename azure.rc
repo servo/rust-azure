@@ -4,34 +4,12 @@
 
 extern mod std;
 extern mod geom;
+extern mod cairo;
 
 use libc::types::common::c99::*;
 use libc::types::os::arch::c95::wchar_t;
-//use bindgen::*;
-//use xlib::Display;
-//use cairo::cairo_scaled_font_t;
-//use xlib::Display;
-
-#[cfg(target_os = "linux")]
-pub mod xlib;
-
-#[cfg(target_os = "macos")]
-#[path = "bogus"]
-pub mod xlib { }
-
-pub mod cairo;
-
-#[cfg(target_os = "linux")]
-pub mod cairo_xlib;
-
-#[cfg(target_os = "linux")]
-pub mod cairo_ft;
-
-#[cfg(target_os = "macos")]
-pub mod cairo_quartz;
 
 pub mod azure_hl;
-pub mod cairo_hl;
 
 #[cfg(target_os = "linux")]
 pub mod test;

@@ -1,4 +1,5 @@
 // High-level bindings to Azure.
+use cairo_hl = cairo::cairo_hl;
 
 use bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
 //use bindgen::AzDrawSurfaceOptions;
