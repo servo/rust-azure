@@ -31,13 +31,6 @@ pub mod cairo_ft;
 pub mod cairo_quartz;
 
 #[cfg(target_os = "linux")]
-pub mod freetype;
-
-#[cfg(target_os = "macos")]
-#[path = "bogus"]
-pub mod freetype { }
-
-#[cfg(target_os = "linux")]
 pub mod fontconfig;
 
 #[cfg(target_os = "macos")]

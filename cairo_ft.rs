@@ -3,6 +3,8 @@
 
 use libc::*;
 
+extern mod freetype;
+
 use freetype::FT_Face;
 use fontconfig::FcPattern;
 use cairo::{
