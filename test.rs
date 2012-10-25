@@ -11,7 +11,7 @@ use bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTar
 use bindgen::{AzDrawTargetGetSize};
 use cairo::{CAIRO_FORMAT_RGB24};
 use cairo::bindgen::{cairo_image_surface_create, cairo_surface_destroy};
-use cairo_xlib::bindgen::{cairo_xlib_surface_create};
+use cairo::cairo_xlib::bindgen::{cairo_xlib_surface_create};
 
 #[test]
 fn sanity_check() {
