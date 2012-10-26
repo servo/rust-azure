@@ -6,16 +6,18 @@ use bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
 use bindgen::AzDrawTargetClearRect;
 use bindgen::AzDrawTargetCreateSourceSurfaceFromData;
 use bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use bindgen::{AzDrawTargetStrokeRect};
+use bindgen::{AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
 //use bindgen::AzFilter;
 use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use bindgen::AzReleaseSourceSurface;
 use bindgen::AzRetainDrawTarget;
 //use bindgen::AzSurfaceFormat;
 pub use cairo_hl::ImageSurface;
+use geom::matrix2d::Matrix2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
 use ptr::{null, to_unsafe_ptr};
+use cast::transmute;
 
 pub trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
@@ -231,6 +233,12 @@ impl DrawTarget {
                                                     stride,
                                                     format.as_azure_surface_format());
         SourceSurface(azure_surface)
+    }
+
+    fn set_transform(matrix: &Matrix2D<AzFloat>) {
+        unsafe {
+            AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
+        }
     }
 }
 

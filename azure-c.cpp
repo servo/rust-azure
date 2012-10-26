@@ -288,3 +288,11 @@ AzReleaseScaledFont(AzScaledFontRef aFont) {
     gfxFont->Release();
 }
 
+extern "C" void
+AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
+                         AzMatrix *aTransform) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    gfxDrawTarget->SetTransform(*gfxMatrix);
+}
+

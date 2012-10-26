@@ -290,4 +290,6 @@ pub fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloa
 
 pub fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
 
+pub fn AzDrawTargetSetTransform(++aDrawTarget: AzDrawTargetRef, ++aTransform: *AzMatrix);
+
 }
