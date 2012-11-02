@@ -1,52 +1,20 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *     Matt Woodrow <mwoodrow@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "DrawTargetSkia.h"
 #include "SourceSurfaceSkia.h"
 #include "ScaledFontBase.h"
-#include "skia/SkDevice.h"
-#include "skia/SkTypeface.h"
-#include "skia/SkGradientShader.h"
-#include "skia/SkBlurDrawLooper.h"
-#include "skia/SkBlurMaskFilter.h"
-#include "skia/SkColorFilter.h"
-#include "skia/SkLayerRasterizer.h"
-#include "skia/SkLayerDrawLooper.h"
-#include "skia/SkDashPathEffect.h"
+#include "SkDevice.h"
+#include "SkTypeface.h"
+#include "SkGradientShader.h"
+#include "SkBlurDrawLooper.h"
+#include "SkBlurMaskFilter.h"
+#include "SkColorFilter.h"
+#include "SkLayerRasterizer.h"
+#include "SkLayerDrawLooper.h"
+#include "SkDashPathEffect.h"
 #include "Logging.h"
 #include "HelpersSkia.h"
 #include "Tools.h"
@@ -64,7 +32,8 @@ namespace gfx {
 SkColor ColorToSkColor(const Color &color, Float aAlpha)
 {
   //XXX: do a better job converting to int
-  return SkColorSetARGB(color.a*aAlpha*255.0, color.r*255.0, color.g*255.0, color.b*255.0);
+  return SkColorSetARGB(U8CPU(color.a*aAlpha*255.0), U8CPU(color.r*255.0),
+                        U8CPU(color.g*255.0), U8CPU(color.b*255.0));
 }
 
 class GradientStopsSkia : public GradientStops
@@ -163,7 +132,8 @@ IntRectToSkRect(const IntRect& aRect)
 SkIRect
 RectToSkIRect(const Rect& aRect)
 {
-  return SkIRect::MakeXYWH(aRect.x, aRect.y, aRect.width, aRect.height);
+  return SkIRect::MakeXYWH(int32_t(aRect.x), int32_t(aRect.y),
+                           int32_t(aRect.width), int32_t(aRect.height));
 }
 
 SkIRect
@@ -194,7 +164,7 @@ DrawTargetSkia::Snapshot()
 {
   RefPtr<SourceSurfaceSkia> source = new SourceSurfaceSkia();
   if (!source->InitWithBitmap(mBitmap, mFormat, this)) {
-    return NULL;
+    return nullptr;
   }
   AppendSnapshot(source);
   return source;
@@ -238,10 +208,14 @@ void SetPaintPattern(SkPaint& aPaint, const Pattern& aPattern, Float aAlpha = 1.
                                                           &stops->mPositions.front(), 
                                                           stops->mCount, 
                                                           mode);
-        SkMatrix mat;
-        GfxMatrixToSkiaMatrix(pat.mMatrix, mat);
-        shader->setLocalMatrix(mat);
-        SkSafeUnref(aPaint.setShader(shader));
+
+        if (shader) {
+            SkMatrix mat;
+            GfxMatrixToSkiaMatrix(pat.mMatrix, mat);
+            shader->setLocalMatrix(mat);
+            SkSafeUnref(aPaint.setShader(shader));
+        }
+
       } else {
         aPaint.setColor(SkColorSetARGB(0, 0, 0, 0));
       }
@@ -257,18 +231,21 @@ void SetPaintPattern(SkPaint& aPaint, const Pattern& aPattern, Float aAlpha = 1.
         points[0] = SkPoint::Make(SkFloatToScalar(pat.mCenter1.x), SkFloatToScalar(pat.mCenter1.y));
         points[1] = SkPoint::Make(SkFloatToScalar(pat.mCenter2.x), SkFloatToScalar(pat.mCenter2.y));
 
-        SkShader* shader = SkGradientShader::CreateTwoPointRadial(points[0], 
-                                                                  SkFloatToScalar(pat.mRadius1),
-                                                                  points[1], 
-                                                                  SkFloatToScalar(pat.mRadius2),
-                                                                  &stops->mColors.front(), 
-                                                                  &stops->mPositions.front(), 
-                                                                  stops->mCount, 
-                                                                  mode);
-        SkMatrix mat;
-        GfxMatrixToSkiaMatrix(pat.mMatrix, mat);
-        shader->setLocalMatrix(mat);
-        SkSafeUnref(aPaint.setShader(shader));
+        SkShader* shader = SkGradientShader::CreateTwoPointConical(points[0], 
+                                                                   SkFloatToScalar(pat.mRadius1),
+                                                                   points[1], 
+                                                                   SkFloatToScalar(pat.mRadius2),
+                                                                   &stops->mColors.front(), 
+                                                                   &stops->mPositions.front(), 
+                                                                   stops->mCount, 
+                                                                   mode);
+        if (shader) {
+            SkMatrix mat;
+            GfxMatrixToSkiaMatrix(pat.mMatrix, mat);
+            shader->setLocalMatrix(mat);
+            SkSafeUnref(aPaint.setShader(shader));
+        }
+
       } else {
         aPaint.setColor(SkColorSetARGB(0, 0, 0, 0));
       }
@@ -334,12 +311,12 @@ struct AutoPaintSetup {
       mPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
       SkPaint temp;
       temp.setXfermodeMode(GfxOpToSkiaOp(aOptions.mCompositionOp));
-      temp.setAlpha(aOptions.mAlpha*255);
+      temp.setAlpha(U8CPU(aOptions.mAlpha*255));
       //TODO: Get a rect here
-      mCanvas->saveLayer(NULL, &temp);
+      mCanvas->saveLayer(nullptr, &temp);
       mNeedsRestore = true;
     } else {
-      mPaint.setAlpha(aOptions.mAlpha*255.0);
+      mPaint.setAlpha(U8CPU(aOptions.mAlpha*255.0));
       mAlpha = aOptions.mAlpha;
     }
     mPaint.setFilterBitmap(true);
@@ -450,7 +427,8 @@ DrawTargetSkia::DrawSurfaceWithShadow(SourceSurface *aSurface,
   paint.setXfermodeMode(GfxOpToSkiaOp(aOperator));
   SkSafeUnref(paint.setLooper(dl));
 
-  SkRect rect = RectToSkRect(Rect(aDest.x, aDest.y, bitmap.width(), bitmap.height()));
+  SkRect rect = RectToSkRect(Rect(Float(aDest.x), Float(aDest.y),
+                                  Float(bitmap.width()), Float(bitmap.height())));
   mCanvas->drawRect(rect, paint);
   mCanvas->restore();
 }
@@ -474,6 +452,7 @@ DrawTargetSkia::Stroke(const Path *aPath,
                        const DrawOptions &aOptions)
 {
   MarkChanged();
+  MOZ_ASSERT(aPath, "Null path");
   if (aPath->GetBackendType() != BACKEND_SKIA) {
     return;
   }
@@ -546,7 +525,9 @@ DrawTargetSkia::FillGlyphs(ScaledFont *aFont,
                            const DrawOptions &aOptions,
                            const GlyphRenderingOptions*)
 {
-  if (aFont->GetType() != FONT_MAC && aFont->GetType() != FONT_SKIA) {
+  if (aFont->GetType() != FONT_MAC &&
+      aFont->GetType() != FONT_SKIA &&
+      aFont->GetType() != FONT_GDI) {
     return;
   }
 
@@ -592,7 +573,7 @@ DrawTargetSkia::Mask(const Pattern &aSource,
   // Take our destination bounds and convert them into user space to use
   // as the path to draw.
   SkPath path;
-  path.addRect(SkRect::MakeWH(mSize.width, mSize.height));
+  path.addRect(SkRect::MakeWH(SkScalar(mSize.width), SkScalar(mSize.height)));
  
   Matrix temp = mTransform;
   temp.Invert();
@@ -613,7 +594,7 @@ DrawTargetSkia::CreateSourceSurfaceFromData(unsigned char *aData,
 
   if (!newSurf->InitFromData(aData, aSize, aStride, aFormat)) {
     gfxDebug() << *this << ": Failure to create source surface from data. Size: " << aSize;
-    return NULL;
+    return nullptr;
   }
     
   return newSurf;
@@ -624,7 +605,7 @@ DrawTargetSkia::CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFor
 {
   RefPtr<DrawTargetSkia> target = new DrawTargetSkia();
   if (!target->Init(aSize, aFormat)) {
-    return NULL;
+    return nullptr;
   }
   return target;
 }
@@ -632,13 +613,13 @@ DrawTargetSkia::CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFor
 TemporaryRef<SourceSurface>
 DrawTargetSkia::OptimizeSourceSurface(SourceSurface *aSurface) const
 {
-  return NULL;
+  return nullptr;
 }
 
 TemporaryRef<SourceSurface>
 DrawTargetSkia::CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const
 {
-  return NULL;
+  return nullptr;
 }
 
 void
@@ -662,7 +643,17 @@ DrawTargetSkia::CopySurface(SourceSurface *aSurface,
   SkIRect source = IntRectToSkIRect(aSourceRect);
   mCanvas->clipRect(dest, SkRegion::kReplace_Op);
   SkPaint paint;
-  paint.setXfermodeMode(GfxOpToSkiaOp(OP_SOURCE));
+
+  if (mBitmap.config() == SkBitmap::kRGB_565_Config &&
+      mCanvas->getDevice()->config() == SkBitmap::kRGB_565_Config) {
+    // Set the xfermode to SOURCE_OVER to workaround
+    // http://code.google.com/p/skia/issues/detail?id=628
+    // RGB565 is opaque so they're equivalent anyway
+    paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
+  } else {
+    paint.setXfermodeMode(SkXfermode::kSrc_Mode);
+  }
+
   mCanvas->drawBitmapRect(bitmap, &source, dest, &paint);
   mCanvas->restore();
 }
@@ -688,6 +679,12 @@ DrawTargetSkia::Init(const IntSize &aSize, SurfaceFormat aFormat)
 void
 DrawTargetSkia::Init(unsigned char* aData, const IntSize &aSize, int32_t aStride, SurfaceFormat aFormat)
 {
+  if (aFormat == FORMAT_B8G8R8X8) {
+    // We have to manually set the A channel to be 255 as Skia doesn't understand BGRX
+    ConvertBGRXToBGRA(aData, aSize, aStride);
+    mBitmap.setIsOpaque(true);
+  }
+
   mBitmap.setConfig(GfxFormatToSkiaConfig(aFormat), aSize.width, aSize.height, aStride);
   mBitmap.setPixels(aData);
   

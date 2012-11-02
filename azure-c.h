@@ -266,7 +266,8 @@ AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
 #ifdef USE_CAIRO
-AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface);
+AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface,
+												  AzIntSize *aSize);
 #endif
 
 void AzRetainDrawTarget(AzDrawTargetRef aTarget);

@@ -144,8 +144,9 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
 
 #ifdef USE_CAIRO
 extern "C" AzDrawTargetRef
-AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface) {
-    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetForCairoSurface(aSurface);
+AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface, AzIntSize *aSize) {
+	gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
+    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetForCairoSurface(aSurface, *size);
     target->AddRef();
     return target;
 }

@@ -74,7 +74,7 @@ fn cairo_it_up() {
     };
     let ep = ptr::addr_of(&e);
 
-    let dt = AzCreateDrawTargetForCairoSurface(cs);
+    let dt = AzCreateDrawTargetForCairoSurface(cs, { width: SIZEX, height: SIZEY });
 
     loop {
         unsafe {

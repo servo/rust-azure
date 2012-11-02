@@ -1,42 +1,12 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Bas Schouten <bschouten@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "SourceSurfaceD2D.h"
+#include "DrawTargetD2D.h"
 #include "Logging.h"
+#include "Tools.h"
 
 namespace mozilla {
 namespace gfx {
@@ -47,6 +17,9 @@ SourceSurfaceD2D::SourceSurfaceD2D()
 
 SourceSurfaceD2D::~SourceSurfaceD2D()
 {
+  if (mBitmap) {
+    DrawTargetD2D::mVRAMUsageSS -= GetByteSize();
+  }
 }
 
 IntSize
@@ -61,10 +34,20 @@ SourceSurfaceD2D::GetFormat() const
   return mFormat;
 }
 
+bool
+SourceSurfaceD2D::IsValid() const
+{
+  return mDevice == Factory::GetDirect3D10Device();
+}
+
 TemporaryRef<DataSourceSurface>
 SourceSurfaceD2D::GetDataSurface()
 {
-  return NULL;
+  RefPtr<DataSourceSurfaceD2D> result = new DataSourceSurfaceD2D(this);
+  if (result->IsValid()) {
+    return result;
+  }
+  return nullptr;
 }
 
 bool
@@ -81,13 +64,8 @@ SourceSurfaceD2D::InitFromData(unsigned char *aData,
 
   if ((uint32_t)aSize.width > aRT->GetMaximumBitmapSize() ||
       (uint32_t)aSize.height > aRT->GetMaximumBitmapSize()) {
-    int newStride = BytesPerPixel(aFormat) * aSize.width;
-    mRawData.resize(aSize.height * newStride);
-    for (int y = 0; y < aSize.height; y++) {
-      memcpy(&mRawData.front() + y * newStride, aData + y * aStride, newStride);
-    }
-    gfxDebug() << "Bitmap does not fit in texture, saving raw data.";
-    return true;
+    gfxDebug() << "Bitmap does not fit in texture.";
+    return false;
   }
 
   D2D1_BITMAP_PROPERTIES props =
@@ -98,6 +76,9 @@ SourceSurfaceD2D::InitFromData(unsigned char *aData,
     gfxWarning() << "Failed to create D2D Bitmap for data. Code: " << hr;
     return false;
   }
+
+  DrawTargetD2D::mVRAMUsageSS += GetByteSize();
+  mDevice = Factory::GetDirect3D10Device();
 
   return true;
 }
@@ -133,7 +114,135 @@ SourceSurfaceD2D::InitFromTexture(ID3D10Texture2D *aTexture,
     return false;
   }
 
+  aTexture->GetDevice(byRef(mDevice));
+  DrawTargetD2D::mVRAMUsageSS += GetByteSize();
+
   return true;
+}
+
+uint32_t
+SourceSurfaceD2D::GetByteSize() const
+{
+  return mSize.width * mSize.height * BytesPerPixel(mFormat);
+}
+
+DataSourceSurfaceD2D::DataSourceSurfaceD2D(SourceSurfaceD2D* aSourceSurface)
+  : mTexture(nullptr)
+  , mFormat(aSourceSurface->mFormat)
+  , mSize(aSourceSurface->mSize)
+  , mMapped(false)
+{
+  // We allocate ourselves a regular D3D surface (sourceTexture) and paint the
+  // D2D bitmap into it via a DXGI render target. Then we need to copy
+  // sourceTexture into a staging texture (mTexture), which we will lazily map
+  // to get the data.
+
+  CD3D10_TEXTURE2D_DESC desc(DXGIFormat(mFormat), mSize.width, mSize.height);
+  desc.MipLevels = 1;
+  desc.Usage = D3D10_USAGE_DEFAULT;
+  desc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+  RefPtr<ID3D10Texture2D> sourceTexture;
+  HRESULT hr = aSourceSurface->mDevice->CreateTexture2D(&desc, nullptr,
+                                                        byRef(sourceTexture));
+  if (FAILED(hr)) {
+    gfxWarning() << "Failed to create texture. Code: " << hr;
+    return;
+  }
+
+  RefPtr<IDXGISurface> dxgiSurface;
+  hr = sourceTexture->QueryInterface((IDXGISurface**)byRef(dxgiSurface));
+  if (FAILED(hr)) {
+    gfxWarning() << "Failed to create DXGI surface. Code: " << hr;
+    return;
+  }
+
+  D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties(
+            D2D1_RENDER_TARGET_TYPE_DEFAULT,
+            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
+
+  RefPtr<ID2D1RenderTarget> renderTarget;
+  hr = DrawTargetD2D::factory()->CreateDxgiSurfaceRenderTarget(dxgiSurface,
+                                                               &rtProps,
+                                                               byRef(renderTarget));
+  if (FAILED(hr)) {
+    gfxWarning() << "Failed to create render target. Code: " << hr;
+    return;
+  }
+
+  renderTarget->BeginDraw();
+  renderTarget->DrawBitmap(aSourceSurface->mBitmap,
+                           D2D1::RectF(0, 0, mSize.width, mSize.height));
+  renderTarget->EndDraw();
+
+  desc.CPUAccessFlags = D3D10_CPU_ACCESS_READ;
+  desc.Usage = D3D10_USAGE_STAGING;
+  desc.BindFlags = 0;
+  hr = aSourceSurface->mDevice->CreateTexture2D(&desc, nullptr, byRef(mTexture));
+  if (FAILED(hr)) {
+    gfxWarning() << "Failed to create staging texture. Code: " << hr;
+    mTexture = nullptr;
+    return;
+  }
+
+  aSourceSurface->mDevice->CopyResource(mTexture, sourceTexture);
+}
+
+DataSourceSurfaceD2D::~DataSourceSurfaceD2D()
+{
+  if (mMapped) {
+    mTexture->Unmap(0);
+  }
+}
+
+unsigned char*
+DataSourceSurfaceD2D::GetData()
+{
+  EnsureMappedTexture();
+  if (!mMapped) {
+    return nullptr;
+  }
+
+  return reinterpret_cast<unsigned char*>(mData.pData);
+}
+
+int32_t
+DataSourceSurfaceD2D::Stride()
+{
+  EnsureMappedTexture();
+  if (!mMapped) {
+    return 0;
+  }
+
+  return mData.RowPitch;
+}
+
+IntSize
+DataSourceSurfaceD2D::GetSize() const
+{
+  return mSize;
+}
+
+SurfaceFormat
+DataSourceSurfaceD2D::GetFormat() const
+{
+  return mFormat;
+}
+
+void
+DataSourceSurfaceD2D::EnsureMappedTexture()
+{
+  if (mMapped ||
+      !mTexture) {
+    return;
+  }
+
+  HRESULT hr = mTexture->Map(0, D3D10_MAP_READ, 0, &mData);
+  if (FAILED(hr)) {
+    gfxWarning() << "Failed to map texture. Code: " << hr;
+    mTexture = nullptr;
+  } else {
+    mMapped = true;
+  }
 }
 
 }

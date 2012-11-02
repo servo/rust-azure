@@ -1,37 +1,6 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla gfx.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "mozilla/gfx/Blur.h"
 
@@ -39,12 +8,10 @@
 #include <math.h>
 #include <string.h>
 
-#include "CheckedInt.h"
+#include "mozilla/CheckedInt.h"
+#include "mozilla/Constants.h"
+#include "mozilla/NullPtr.h"
 #include "mozilla/Util.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
 
 using namespace std;
 
@@ -81,7 +48,7 @@ BoxBlurHorizontal(unsigned char* aInput,
         memcpy(aOutput, aInput, aWidth*aRows);
         return;
     }
-    PRUint32 reciprocal = (PRUint64(1) << 32)/boxSize;
+    uint32_t reciprocal = uint32_t((uint64_t(1) << 32) / boxSize);
 
     for (int32_t y = 0; y < aRows; y++) {
         // Check whether the skip rect intersects this row. If the skip
@@ -128,7 +95,7 @@ BoxBlurHorizontal(unsigned char* aInput,
             int32_t last = max(tmp, 0);
             int32_t next = min(tmp + boxSize, aWidth - 1);
 
-            aOutput[aWidth * y + x] = (PRUint64(alphaSum)*reciprocal) >> 32;
+            aOutput[aWidth * y + x] = (uint64_t(alphaSum) * reciprocal) >> 32;
 
             alphaSum += aInput[aWidth * y + next] -
                         aInput[aWidth * y + last];
@@ -159,7 +126,7 @@ BoxBlurVertical(unsigned char* aInput,
         memcpy(aOutput, aInput, aWidth*aRows);
         return;
     }
-    PRUint32 reciprocal = (PRUint64(1) << 32)/boxSize;
+    uint32_t reciprocal = uint32_t((uint64_t(1) << 32) / boxSize);
 
     for (int32_t x = 0; x < aWidth; x++) {
         bool inSkipRectX = x >= aSkipRect.x &&
@@ -199,7 +166,7 @@ BoxBlurVertical(unsigned char* aInput,
             int32_t last = max(tmp, 0);
             int32_t next = min(tmp + boxSize, aRows - 1);
 
-            aOutput[aWidth * y + x] = (PRUint64(alphaSum)*reciprocal) >> 32;
+            aOutput[aWidth * y + x] = (uint64_t(alphaSum) * reciprocal) >> 32;
 
             alphaSum += aInput[aWidth * next + x] -
                         aInput[aWidth * last + x];
@@ -364,7 +331,8 @@ AlphaBoxBlur::AlphaBoxBlur(const Rect& aRect,
                            const Rect* aSkipRect)
  : mSpreadRadius(aSpreadRadius),
    mBlurRadius(aBlurRadius),
-   mData(NULL)
+   mData(nullptr),
+   mFreeData(true)
 {
   Rect rect(aRect);
   rect.Inflate(Size(aBlurRadius + aSpreadRadius));
@@ -382,7 +350,9 @@ AlphaBoxBlur::AlphaBoxBlur(const Rect& aRect,
     mHasDirtyRect = false;
   }
 
-  if (rect.IsEmpty()) {
+  mRect = IntRect(int32_t(rect.x), int32_t(rect.y),
+                  int32_t(rect.width), int32_t(rect.height));
+  if (mRect.IsEmpty()) {
     return;
   }
 
@@ -393,37 +363,51 @@ AlphaBoxBlur::AlphaBoxBlur(const Rect& aRect,
     Rect skipRect = *aSkipRect;
     skipRect.RoundIn();
     skipRect.Deflate(Size(aBlurRadius + aSpreadRadius));
-    mSkipRect = IntRect(skipRect.x, skipRect.y, skipRect.width, skipRect.height);
+    mSkipRect = IntRect(int32_t(skipRect.x), int32_t(skipRect.y),
+                        int32_t(skipRect.width), int32_t(skipRect.height));
 
-    IntRect shadowIntRect(rect.x, rect.y, rect.width, rect.height);
-    mSkipRect.IntersectRect(mSkipRect, shadowIntRect);
-
-    if (mSkipRect.IsEqualInterior(shadowIntRect))
+    mSkipRect = mSkipRect.Intersect(mRect);
+    if (mSkipRect.IsEqualInterior(mRect))
       return;
 
-    mSkipRect -= shadowIntRect.TopLeft();
+    mSkipRect -= mRect.TopLeft();
   } else {
     mSkipRect = IntRect(0, 0, 0, 0);
   }
 
-  mRect = IntRect(rect.x, rect.y, rect.width, rect.height);
-
   CheckedInt<int32_t> stride = RoundUpToMultipleOf4(mRect.width);
-  if (stride.valid()) {
+  if (stride.isValid()) {
     mStride = stride.value();
 
     CheckedInt<int32_t> size = CheckedInt<int32_t>(mStride) * mRect.height *
                                sizeof(unsigned char);
-    if (size.valid()) {
+    if (size.isValid()) {
       mData = static_cast<unsigned char*>(malloc(size.value()));
       memset(mData, 0, size.value());
     }
   }
 }
 
+AlphaBoxBlur::AlphaBoxBlur(uint8_t* aData,
+                           const Rect& aRect,
+                           int32_t aStride,
+                           float aSigma)
+  : mRect(int32_t(aRect.x), int32_t(aRect.y),
+          int32_t(aRect.width), int32_t(aRect.height)),
+    mSpreadRadius(),
+    mBlurRadius(CalculateBlurRadius(Point(aSigma, aSigma))),
+    mData(aData),
+    mFreeData(false),
+    mStride(aStride)
+{
+}
+
+
 AlphaBoxBlur::~AlphaBoxBlur()
 {
-  free(mData);
+  if (mFreeData) {
+    free(mData);
+  }
 }
 
 unsigned char*
@@ -458,7 +442,7 @@ AlphaBoxBlur::GetDirtyRect()
     return &mDirtyRect;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void
@@ -522,7 +506,7 @@ AlphaBoxBlur::Blur()
  *   http://www.w3.org/TR/SVG11/filters.html#feGaussianBlurElement
  *   https://bugzilla.mozilla.org/show_bug.cgi?id=590039#c19
  */
-static const Float GAUSSIAN_SCALE_FACTOR = (3 * sqrt(2 * M_PI) / 4) * 1.5;
+static const Float GAUSSIAN_SCALE_FACTOR = Float((3 * sqrt(2 * M_PI) / 4) * 1.5);
 
 IntSize
 AlphaBoxBlur::CalculateBlurRadius(const Point& aStd)

@@ -1,51 +1,14 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Bas Schouten <bschouten@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-#pragma once
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "PathD2D.h"
 #include "HelpersD2D.h"
 #include <math.h>
 #include "DrawTargetD2D.h"
 #include "Logging.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include "mozilla/Constants.h"
 
 namespace mozilla {
 namespace gfx {
@@ -273,7 +236,7 @@ PathBuilderD2D::Finish()
   HRESULT hr = mSink->Close();
   if (FAILED(hr)) {
     gfxDebug() << "Failed to close PathSink. Code: " << hr;
-    return NULL;
+    return nullptr;
   }
 
   return new PathD2D(mGeometry, mFigureActive, mCurrentPoint, mFillRule);
@@ -293,14 +256,14 @@ PathD2D::TransformedCopyToBuilder(const Matrix &aTransform, FillRule aFillRule) 
 
   if (FAILED(hr)) {
     gfxWarning() << "Failed to create PathGeometry. Code: " << hr;
-    return NULL;
+    return nullptr;
   }
 
   RefPtr<ID2D1GeometrySink> sink;
   hr = path->Open(byRef(sink));
   if (FAILED(hr)) {
     gfxWarning() << "Failed to open Geometry for writing. Code: " << hr;
-    return NULL;
+    return nullptr;
   }
 
   if (aFillRule == FILL_WINDING) {

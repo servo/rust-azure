@@ -1,39 +1,7 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Bas Schouten <bschouten@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "PathCG.h"
 #include <math.h>
@@ -51,7 +19,7 @@ PathBuilderCG::~PathBuilderCG()
 void
 PathBuilderCG::MoveTo(const Point &aPoint)
 {
-  CGPathMoveToPoint(mCGPath, NULL, aPoint.x, aPoint.y);
+  CGPathMoveToPoint(mCGPath, nullptr, aPoint.x, aPoint.y);
 }
 
 void
@@ -60,7 +28,7 @@ PathBuilderCG::LineTo(const Point &aPoint)
   if (CGPathIsEmpty(mCGPath))
     MoveTo(aPoint);
   else
-    CGPathAddLineToPoint(mCGPath, NULL, aPoint.x, aPoint.y);
+    CGPathAddLineToPoint(mCGPath, nullptr, aPoint.x, aPoint.y);
 }
 
 void
@@ -71,7 +39,7 @@ PathBuilderCG::BezierTo(const Point &aCP1,
 
   if (CGPathIsEmpty(mCGPath))
     MoveTo(aCP1);
-  CGPathAddCurveToPoint(mCGPath, NULL,
+  CGPathAddCurveToPoint(mCGPath, nullptr,
                           aCP1.x, aCP1.y,
                           aCP2.x, aCP2.y,
                           aCP3.x, aCP3.y);
@@ -84,7 +52,7 @@ PathBuilderCG::QuadraticBezierTo(const Point &aCP1,
 {
   if (CGPathIsEmpty(mCGPath))
     MoveTo(aCP1);
-  CGPathAddQuadCurveToPoint(mCGPath, NULL,
+  CGPathAddQuadCurveToPoint(mCGPath, nullptr,
                               aCP1.x, aCP1.y,
                               aCP2.x, aCP2.y);
 }
@@ -203,7 +171,7 @@ PathCG::ContainsPoint(const Point &aPoint, const Matrix &aTransform) const
 
   // The transform parameter of CGPathContainsPoint doesn't seem to work properly on OS X 10.5
   // so we transform aPoint ourselves.
-  return CGPathContainsPoint(mPath, NULL, point, mFillRule == FILL_EVEN_ODD);
+  return CGPathContainsPoint(mPath, nullptr, point, mFillRule == FILL_EVEN_ODD);
 }
 
 static size_t
@@ -216,9 +184,9 @@ PutBytesNull(void *info, const void *buffer, size_t count)
 static CGContextRef
 CreateScratchContext()
 {
-  CGDataConsumerCallbacks callbacks = {PutBytesNull, NULL};
-  CGDataConsumerRef consumer = CGDataConsumerCreate(NULL, &callbacks);
-  CGContextRef cg = CGPDFContextCreate(consumer, NULL, NULL);
+  CGDataConsumerCallbacks callbacks = {PutBytesNull, nullptr};
+  CGDataConsumerRef consumer = CGDataConsumerCreate(nullptr, &callbacks);
+  CGContextRef cg = CGPDFContextCreate(consumer, nullptr, nullptr);
   CGDataConsumerRelease(consumer);
   return cg;
 }

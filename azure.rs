@@ -260,7 +260,7 @@ pub fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
 
-pub fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t) -> AzDrawTargetRef;
+pub fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t, ++aSize: *AzIntSize) -> AzDrawTargetRef;
 
 pub fn AzRetainDrawTarget(++aTarget: AzDrawTargetRef);
 

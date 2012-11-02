@@ -244,8 +244,10 @@ impl DrawTarget {
 
 
 pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
+	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
     DrawTarget {
-        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
+        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
+														     to_unsafe_ptr(&size))
     }
 }
 
@@ -256,8 +258,10 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 }
 
 pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
+	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
     DrawTarget {
-        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface)
+        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
+														     to_unsafe_ptr(&size))
     }
 }
 

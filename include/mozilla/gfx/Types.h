@@ -1,44 +1,13 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Bas Schouten <bschouten@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #ifndef MOZILLA_GFX_TYPES_H_
 #define MOZILLA_GFX_TYPES_H_
 
 #include "mozilla/StandardInteger.h"
+#include "mozilla/NullPtr.h"
 
 #include <stddef.h>
 
@@ -57,7 +26,8 @@ enum SurfaceType
   SURFACE_COREGRAPHICS_IMAGE, /* Surface wrapping a CoreGraphics Image */
   SURFACE_COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
   SURFACE_SKIA, /* Surface wrapping a Skia bitmap */
-  SURFACE_DUAL_DT /* Snapshot of a dual drawtarget */
+  SURFACE_DUAL_DT, /* Snapshot of a dual drawtarget */
+  SURFACE_RECORDING /* Surface used for recording */
 };
 
 enum SurfaceFormat
@@ -70,11 +40,13 @@ enum SurfaceFormat
 
 enum BackendType
 {
-  BACKEND_NONE,
+  BACKEND_NONE = 0,
   BACKEND_DIRECT2D,
   BACKEND_COREGRAPHICS,
+  BACKEND_COREGRAPHICS_ACCELERATED,
   BACKEND_CAIRO,
-  BACKEND_SKIA
+  BACKEND_SKIA,
+  BACKEND_RECORDING
 };
 
 enum FontType
@@ -91,7 +63,8 @@ enum NativeSurfaceType
 {
   NATIVE_SURFACE_D3D10_TEXTURE,
   NATIVE_SURFACE_CAIRO_SURFACE,
-  NATIVE_SURFACE_CGCONTEXT
+  NATIVE_SURFACE_CGCONTEXT,
+  NATIVE_SURFACE_CGCONTEXT_ACCELERATED
 };
 
 enum NativeFontType
@@ -101,6 +74,14 @@ enum NativeFontType
   NATIVE_FONT_MAC_FONT_FACE,
   NATIVE_FONT_SKIA_FONT_FACE,
   NATIVE_FONT_CAIRO_FONT_FACE
+};
+
+enum FontStyle
+{
+  FONT_STYLE_NORMAL,
+  FONT_STYLE_ITALIC,
+  FONT_STYLE_BOLD,
+  FONT_STYLE_BOLD_ITALIC
 };
 
 enum CompositionOp { OP_OVER, OP_ADD, OP_ATOP, OP_OUT, OP_IN, OP_SOURCE, OP_DEST_IN, OP_DEST_OUT, OP_DEST_OVER, OP_DEST_ATOP, OP_XOR, OP_COUNT };
@@ -138,6 +119,12 @@ public:
     return newColor;
   }
 
+  uint32_t ToABGR() const
+  {
+    return uint32_t(r * 255.0f) | uint32_t(g * 255.0f) << 8 |
+           uint32_t(b * 255.0f) << 16 | uint32_t(a * 255.0f) << 24;
+  }
+
   Float r, g, b, a;
 };
 
@@ -153,6 +140,16 @@ struct GradientStop
 
 }
 }
+
+#if defined(XP_WIN) && defined(MOZ_GFX)
+#ifdef GFX2D_INTERNAL
+#define GFX2D_API __declspec(dllexport)
+#else
+#define GFX2D_API __declspec(dllimport)
+#endif
+#else
+#define GFX2D_API
+#endif
 
 // Side constants for use in various places
 namespace mozilla {

@@ -1,45 +1,14 @@
 /* -*- Mode: C++; tab-width: 20; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Corporation code.
- *
- * The Initial Developer of the Original Code is Mozilla Foundation.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Jeff Muizelaar <jmuizelaar@mozilla.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #include "DrawTargetCG.h"
 #include "SourceSurfaceCG.h"
 #include "Rect.h"
 #include "ScaledFontMac.h"
 #include "Tools.h"
 #include <vector>
+#include "QuartzSupport.h"
 
 //CG_EXTERN void CGContextSetCompositeOperation (CGContextRef, PrivateCGCompositeMode);
 
@@ -108,7 +77,7 @@ CGBlendMode ToBlendMode(CompositionOp op)
 
 
 
-DrawTargetCG::DrawTargetCG() : mSnapshot(NULL)
+DrawTargetCG::DrawTargetCG() : mSnapshot(nullptr)
 {
 }
 
@@ -124,11 +93,27 @@ DrawTargetCG::~DrawTargetCG()
   free(mData);
 }
 
+BackendType
+DrawTargetCG::GetType() const
+{
+  // It may be worth spliting Bitmap and IOSurface DrawTarget
+  // into seperate classes.
+  if (GetContextType(mCg) == CG_CONTEXT_TYPE_IOSURFACE) {
+    return BACKEND_COREGRAPHICS_ACCELERATED;
+  } else {
+    return BACKEND_COREGRAPHICS;
+  }
+}
+
 TemporaryRef<SourceSurface>
 DrawTargetCG::Snapshot()
 {
   if (!mSnapshot) {
-    mSnapshot = new SourceSurfaceCGBitmapContext(this);
+    if (GetContextType(mCg) == CG_CONTEXT_TYPE_IOSURFACE) {
+      return new SourceSurfaceCGIOSurfaceContext(this);
+    } else {
+      mSnapshot = new SourceSurfaceCGBitmapContext(this);
+    }
   }
 
   return mSnapshot;
@@ -140,10 +125,10 @@ DrawTargetCG::CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aForma
   // XXX: in thebes we use CGLayers to do this kind of thing. It probably makes sense
   // to add that in somehow, but at a higher level
   RefPtr<DrawTargetCG> newTarget = new DrawTargetCG();
-  if (newTarget->Init(aSize, aFormat)) {
+  if (newTarget->Init(GetType(), aSize, aFormat)) {
     return newTarget;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -156,7 +141,7 @@ DrawTargetCG::CreateSourceSurfaceFromData(unsigned char *aData,
   RefPtr<SourceSurfaceCG> newSurf = new SourceSurfaceCG();
 
  if (!newSurf->InitFromData(aData, aSize, aStride, aFormat)) {
-    return NULL;
+    return nullptr;
   }
 
   return newSurf;
@@ -168,7 +153,7 @@ GetImageFromSourceSurface(SourceSurface *aSurface)
   if (aSurface->GetType() == SURFACE_COREGRAPHICS_IMAGE)
     return static_cast<SourceSurfaceCG*>(aSurface)->GetImage();
   else if (aSurface->GetType() == SURFACE_COREGRAPHICS_CGCONTEXT)
-    return static_cast<SourceSurfaceCGBitmapContext*>(aSurface)->GetImage();
+    return static_cast<SourceSurfaceCGContext*>(aSurface)->GetImage();
   else if (aSurface->GetType() == SURFACE_DATA)
     return static_cast<DataSourceSurfaceCG*>(aSurface)->GetImage();
   abort();
@@ -177,7 +162,7 @@ GetImageFromSourceSurface(SourceSurface *aSurface)
 TemporaryRef<SourceSurface>
 DrawTargetCG::OptimizeSourceSurface(SourceSurface *aSurface) const
 {
-  return NULL;
+  return nullptr;
 }
 
 class UnboundnessFixer
@@ -186,7 +171,7 @@ class UnboundnessFixer
     CGLayerRef mLayer;
     CGContextRef mCg;
   public:
-    UnboundnessFixer() : mCg(NULL) {}
+    UnboundnessFixer() : mCg(nullptr) {}
 
     CGContextRef Check(CGContextRef baseCg, CompositionOp blend)
     {
@@ -197,8 +182,8 @@ class UnboundnessFixer
 
         //XXX: The size here is in default user space units, of the layer relative to the graphics context.
         // is the clip bounds still correct if, for example, we have a scale applied to the context?
-        mLayer = CGLayerCreateWithContext(baseCg, mClipBounds.size, NULL);
-        //XXX: if the size is 0x0 we get a NULL CGContext back from GetContext
+        mLayer = CGLayerCreateWithContext(baseCg, mClipBounds.size, nullptr);
+        //XXX: if the size is 0x0 we get a nullptr CGContext back from GetContext
         mCg = CGLayerGetContext(mLayer);
         // CGContext's default to have the origin at the bottom left
         // so flip it to the top left and adjust for the origin
@@ -234,7 +219,7 @@ DrawTargetCG::DrawSurface(SourceSurface *aSurface,
   MarkChanged();
 
   CGImageRef image;
-  CGImageRef subimage = NULL;
+  CGImageRef subimage = nullptr;
   CGContextSaveGState(mCg);
 
   CGContextSetBlendMode(mCg, ToBlendMode(aDrawOptions.mCompositionOp));
@@ -309,6 +294,8 @@ class GradientStopsCG : public GradientStops
   virtual ~GradientStopsCG() {
     CGGradientRelease(mGradient);
   }
+  // Will always report BACKEND_COREGRAPHICS, but it is compatible
+  // with BACKEND_COREGRAPHICS_ACCELERATED
   BackendType GetBackendType() const { return BACKEND_COREGRAPHICS; }
   CGGradientRef mGradient;
 };
@@ -442,7 +429,7 @@ SetFillFromPattern(CGContextRef cg, CGColorSpaceRef aColorSpace, const Pattern &
   } else if (aPattern.GetType() == PATTERN_SURFACE) {
 
     CGColorSpaceRef patternSpace;
-    patternSpace = CGColorSpaceCreatePattern (NULL);
+    patternSpace = CGColorSpaceCreatePattern (nullptr);
     CGContextSetFillColorSpace(cg, patternSpace);
     CGColorSpaceRelease(patternSpace);
 
@@ -465,7 +452,7 @@ SetStrokeFromPattern(CGContextRef cg, CGColorSpaceRef aColorSpace, const Pattern
     CGColorRelease(cgcolor);
   } else if (aPattern.GetType() == PATTERN_SURFACE) {
     CGColorSpaceRef patternSpace;
-    patternSpace = CGColorSpaceCreatePattern (NULL);
+    patternSpace = CGColorSpaceCreatePattern (nullptr);
     CGContextSetStrokeColorSpace(cg, patternSpace);
     CGColorSpaceRelease(patternSpace);
 
@@ -714,9 +701,7 @@ DrawTargetCG::FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer, const Pa
 
   CGContextConcatCTM(cg, GfxMatrixToCGAffineTransform(mTransform));
 
-  ScaledFontMac* cgFont = static_cast<ScaledFontMac*>(aFont);
-  CGContextSetFont(cg, cgFont->mFont);
-  CGContextSetFontSize(cg, cgFont->mSize);
+  ScaledFontMac* macFont = static_cast<ScaledFontMac*>(aFont);
 
   //XXX: we should use a stack vector here when we have a class like that
   std::vector<CGGlyph> glyphs;
@@ -724,14 +709,13 @@ DrawTargetCG::FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer, const Pa
   glyphs.resize(aBuffer.mNumGlyphs);
   positions.resize(aBuffer.mNumGlyphs);
 
-  CGFloat xprev = aBuffer.mGlyphs[0].mPosition.x;
-  CGFloat yprev = aBuffer.mGlyphs[0].mPosition.y;
-  CGContextSetTextPosition(cg, xprev, yprev);
-
   // Handle the flip
-  CGAffineTransform matrix = CGAffineTransformMakeScale(1, -1);//CGAffineTransformMake(1, 0, 0, -1, 0, -mSize.height);
-  // "Note that the text matrix is not a part of the graphics state"
-  CGContextSetTextMatrix(cg, matrix);
+  CGAffineTransform matrix = CGAffineTransformMakeScale(1, -1);
+  CGContextConcatCTM(cg, matrix);
+  // CGContextSetTextMatrix works differently with kCGTextClip && kCGTextFill
+  // It seems that it transforms the positions with TextFill and not with TextClip
+  // Therefore we'll avoid it. See also:
+  // http://cgit.freedesktop.org/cairo/commit/?id=9c0d761bfcdd28d52c83d74f46dd3c709ae0fa69
 
   for (unsigned int i = 0; i < aBuffer.mNumGlyphs; i++) {
     glyphs[i] = aBuffer.mGlyphs[i].mIndex;
@@ -743,14 +727,32 @@ DrawTargetCG::FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer, const Pa
   //XXX: CGContextShowGlyphsAtPositions is 10.5+ for older versions use CGContextShowGlyphsWithAdvances
   if (isGradient(aPattern)) {
     CGContextSetTextDrawingMode(cg, kCGTextClip);
-    CGContextShowGlyphsAtPositions(cg, &glyphs.front(), &positions.front(), aBuffer.mNumGlyphs);
+    if (ScaledFontMac::CTFontDrawGlyphsPtr != nullptr) {
+      ScaledFontMac::CTFontDrawGlyphsPtr(macFont->mCTFont, &glyphs.front(),
+                                         &positions.front(),
+                                         aBuffer.mNumGlyphs, cg);
+    } else {
+      CGContextSetFont(cg, macFont->mFont);
+      CGContextSetFontSize(cg, macFont->mSize);
+      CGContextShowGlyphsAtPositions(cg, &glyphs.front(), &positions.front(),
+                                     aBuffer.mNumGlyphs);
+    }
     DrawGradient(cg, aPattern);
   } else {
     //XXX: with CoreGraphics we can stroke text directly instead of going
     // through GetPath. It would be nice to add support for using that
     CGContextSetTextDrawingMode(cg, kCGTextFill);
     SetFillFromPattern(cg, mColorSpace, aPattern);
-    CGContextShowGlyphsAtPositions(cg, &glyphs.front(), &positions.front(), aBuffer.mNumGlyphs);
+    if (ScaledFontMac::CTFontDrawGlyphsPtr != nullptr) {
+      ScaledFontMac::CTFontDrawGlyphsPtr(macFont->mCTFont, &glyphs.front(),
+                                         &positions.front(),
+                                         aBuffer.mNumGlyphs, cg);
+    } else {
+      CGContextSetFont(cg, macFont->mFont);
+      CGContextSetFontSize(cg, macFont->mSize);
+      CGContextShowGlyphsAtPositions(cg, &glyphs.front(), &positions.front(),
+                                     aBuffer.mNumGlyphs);
+    }
   }
 
   fixer.Fix(mCg);
@@ -770,7 +772,7 @@ DrawTargetCG::CopySurface(SourceSurface *aSurface,
   MarkChanged();
 
   CGImageRef image;
-  CGImageRef subimage = NULL;
+  CGImageRef subimage = nullptr;
   if (aSurface->GetType() == SURFACE_COREGRAPHICS_IMAGE) {
     image = GetImageFromSourceSurface(aSurface);
     /* we have two options here:
@@ -807,7 +809,6 @@ DrawTargetCG::DrawSurfaceWithShadow(SourceSurface *aSurface, const Point &aDest,
   MarkChanged();
 
   CGImageRef image;
-  CGImageRef subimage = NULL;
   image = GetImageFromSourceSurface(aSurface);
 
   IntSize size = aSurface->GetSize();
@@ -830,56 +831,24 @@ DrawTargetCG::DrawSurfaceWithShadow(SourceSurface *aSurface, const Point &aDest,
 
   CGContextRestoreGState(mCg);
 
-  CGImageRelease(subimage);
 }
 
 bool
-DrawTargetCG::Init(CGContextRef cgContext, const IntSize &aSize)
+DrawTargetCG::Init(BackendType aType,
+                   unsigned char* aData,
+                   const IntSize &aSize,
+                   int32_t aStride,
+                   SurfaceFormat aFormat)
 {
   // XXX: we should come up with some consistent semantics for dealing
   // with zero area drawtargets
-  if (aSize.width == 0 || aSize.height == 0) {
-    mColorSpace = NULL;
-    mCg = NULL;
-    mData = NULL;
-    return false;
-  }
-
-  //XXX: handle SurfaceFormat
-
-  //XXX: we'd be better off reusing the Colorspace across draw targets
-  mColorSpace = CGColorSpaceCreateDeviceRGB();
-
-  mSize = aSize;
-
-  mCg = cgContext;
-
-  mData = NULL;
-
-  assert(mCg);
-  // CGContext's default to have the origin at the bottom left
-  // so flip it to the top left
-  CGContextTranslateCTM(mCg, 0, mSize.height);
-  CGContextScaleCTM(mCg, 1, -1);
-
-  //XXX: set correct format
-  mFormat = FORMAT_B8G8R8A8;
-
-  return true;
-}
-
-bool
-DrawTargetCG::Init(const IntSize &aSize, SurfaceFormat &)
-{
-  // XXX: we should come up with some consistent semantics for dealing
-  // with zero area drawtargets
-  if (aSize.width == 0 || aSize.height == 0 ||
+  if (aSize.width <= 0 || aSize.height <= 0 ||
       // 32767 is the maximum size supported by cairo
       // we clamp to that to make it easier to interoperate
       aSize.width > 32767 || aSize.height > 32767) {
-    mColorSpace = NULL;
-    mCg = NULL;
-    mData = NULL;
+    mColorSpace = nullptr;
+    mCg = nullptr;
+    mData = nullptr;
     return false;
   }
 
@@ -888,28 +857,41 @@ DrawTargetCG::Init(const IntSize &aSize, SurfaceFormat &)
   //XXX: we'd be better off reusing the Colorspace across draw targets
   mColorSpace = CGColorSpaceCreateDeviceRGB();
 
+  if (aData == nullptr && aType != BACKEND_COREGRAPHICS_ACCELERATED) {
+    // XXX: Currently, Init implicitly clears, that can often be a waste of time
+    mData = calloc(aSize.height * aStride, 1);
+    aData = static_cast<unsigned char*>(mData);  
+  } else {
+    // mData == nullptr means DrawTargetCG doesn't own the image data and will not
+    // delete it in the destructor
+    mData = nullptr;
+  }
+
   mSize = aSize;
 
-  int bitsPerComponent = 8;
-  int stride = mSize.width*4;
+  if (aType == BACKEND_COREGRAPHICS_ACCELERATED) {
+    RefPtr<MacIOSurface> ioSurface = MacIOSurface::CreateIOSurface(aSize.width, aSize.height);
+    mCg = ioSurface->CreateIOSurfaceContext();
+    // If we don't have the symbol for 'CreateIOSurfaceContext' mCg will be null
+    // and we will fallback to software below
+    mData = nullptr;
+  }
 
-  CGBitmapInfo bitinfo;
+  if (!mCg || aType == BACKEND_COREGRAPHICS) {
+    int bitsPerComponent = 8;
 
-  bitinfo = kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst;
+    CGBitmapInfo bitinfo;
+    bitinfo = kCGBitmapByteOrder32Host | kCGImageAlphaPremultipliedFirst;
 
-  // XXX: currently we allocate ourselves so that we can easily return a gfxImageSurface
-  // we might not need to later if once we don't need to support gfxImageSurface
-  //XXX: currently Init implicitly clears, that can often be a waste of time
-  mData = calloc(mSize.height * stride, 1);
-  // XXX: what should we do if this fails?
-  mCg = CGBitmapContextCreate (mData,
-                               mSize.width,
-                               mSize.height,
-                               bitsPerComponent,
-                               stride,
-                               mColorSpace,
-                               bitinfo);
-
+    // XXX: what should we do if this fails?
+    mCg = CGBitmapContextCreate (aData,
+                                 mSize.width,
+                                 mSize.height,
+                                 bitsPerComponent,
+                                 aStride,
+                                 mColorSpace,
+                                 bitinfo);
+  }
 
   assert(mCg);
   // CGContext's default to have the origin at the bottom left
@@ -925,10 +907,67 @@ DrawTargetCG::Init(const IntSize &aSize, SurfaceFormat &)
   //      use the default for content.
   CGContextSetInterpolationQuality(mCg, kCGInterpolationLow);
 
+  // XXX: set correct format
+  mFormat = FORMAT_B8G8R8A8;
+
+  if (aType == BACKEND_COREGRAPHICS_ACCELERATED) {
+    // The bitmap backend uses callac to clear, we can't do that without
+    // reading back the surface. This should trigger something equivilent
+    // to glClear.
+    ClearRect(Rect(0, 0, mSize.width, mSize.height));
+  }
+
+  return true;
+}
+
+void
+DrawTargetCG::Flush()
+{
+  CGContextFlush(mCg);
+}
+
+bool
+DrawTargetCG::Init(CGContextRef cgContext, const IntSize &aSize)
+{
+  // XXX: we should come up with some consistent semantics for dealing
+  // with zero area drawtargets
+  if (aSize.width == 0 || aSize.height == 0) {
+    mColorSpace = nullptr;
+    mCg = nullptr;
+    mData = nullptr;
+    return false;
+  }
+
+  //XXX: handle SurfaceFormat
+
+  //XXX: we'd be better off reusing the Colorspace across draw targets
+  mColorSpace = CGColorSpaceCreateDeviceRGB();
+
+  mSize = aSize;
+
+  mCg = cgContext;
+
+  mData = nullptr;
+
+  assert(mCg);
+  // CGContext's default to have the origin at the bottom left
+  // so flip it to the top left
+  CGContextTranslateCTM(mCg, 0, mSize.height);
+  CGContextScaleCTM(mCg, 1, -1);
+
   //XXX: set correct format
   mFormat = FORMAT_B8G8R8A8;
 
   return true;
+}
+
+bool
+DrawTargetCG::Init(BackendType aType, const IntSize &aSize, SurfaceFormat &aFormat)
+{
+  int stride = aSize.width*4;
+  
+  // Calling Init with aData == nullptr will allocate.
+  return Init(aType, nullptr, aSize, stride, aFormat);
 }
 
 TemporaryRef<PathBuilder>
@@ -941,10 +980,11 @@ DrawTargetCG::CreatePathBuilder(FillRule aFillRule) const
 void*
 DrawTargetCG::GetNativeSurface(NativeSurfaceType aType)
 {
-  if (aType == NATIVE_SURFACE_CGCONTEXT) {
+  if (aType == NATIVE_SURFACE_CGCONTEXT && GetContextType(mCg) == CG_CONTEXT_TYPE_BITMAP ||
+      aType == NATIVE_SURFACE_CGCONTEXT_ACCELERATED && GetContextType(mCg) == CG_CONTEXT_TYPE_IOSURFACE) {
     return mCg;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -1042,7 +1082,7 @@ DrawTargetCG::MarkChanged()
       // We only need to worry about snapshots that someone else knows about
       mSnapshot->DrawTargetWillChange();
     }
-    mSnapshot = NULL;
+    mSnapshot = nullptr;
   }
 }
 

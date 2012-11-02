@@ -23,22 +23,42 @@ MOZALLOC_CPP_SRC = \
 	$(NULL)
 
 AZURE_CPP_SRC = \
-	src/2d/Factory.cpp \
-        src/2d/Matrix.cpp \
-        src/2d/DrawTargetCairo.cpp \
-        src/2d/SourceSurfaceCairo.cpp \
-        src/2d/PathCairo.cpp \
-        src/2d/Blur.cpp \
-        src/2d/ScaledFontBase.cpp \
-        src/2d/DrawTargetDual.cpp \
-        $(NULL)
+	$(addprefix src/2d/,\
+		Blur.cpp \
+		DrawEventRecorder.cpp \
+		DrawTargetCairo.cpp \
+		DrawTargetRecording.cpp \
+		DrawTargetSkia.cpp \
+		Factory.cpp \
+		ImageScaling.cpp \
+		ImageScalingSSE2.cpp \
+		Matrix.cpp \
+		PathCairo.cpp \
+		PathRecording.cpp \
+		PathSkia.cpp \
+		RecordedEvent.cpp \
+		Rect.cpp \
+		Scale.cpp \
+		ScaledFontBase.cpp \
+		SourceSurfaceCairo.cpp \
+		SourceSurfaceRawData.cpp \
+		SourceSurfaceSkia.cpp \
+		convolver.cpp \
+		image_operations.cpp)
 
 AZURE_CPP_SRC += azure-c.cpp
 
 CXXFLAGS += \
 	-fPIC \
 	-I$(VPATH)/include \
-	-DMOZ_GFX -DUSE_CAIRO \
+	-I$(VPATH)/include/gl \
+	-I$(VPATH)/include/chromium \
+	-iquote $(VPATH)/include/mozilla/gfx \
+	-iquote $(VPATH)/../skia/include/core \
+	-iquote $(VPATH)/../skia/include/config \
+	-iquote $(VPATH)/../skia/include/effects \
+	-iquote $(VPATH)/../skia/include/ports \
+	-DMOZ_GFX -DUSE_CAIRO -DUSE_SKIA \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(NULL)
 
@@ -62,6 +82,7 @@ AZURE_CPP_SRC += \
 	src/2d/PathCG.cpp \
 	src/2d/SourceSurfaceCG.cpp \
 	$(NULL)
+AZURE_OBJCPP_SRC = src/2d/QuartzSupport.mm
 endif
 
 ifeq ($(OSTYPE),linux)
@@ -69,10 +90,12 @@ CXXFLAGS += \
 	-I/usr/include/cairo \
 	-DXP_UNIX \
 	$(NULL)
+AZURE_OBJCPP_SRC =
 endif
 
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
-ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o)
+ALL_OBJCPP_SRC = $(AZURE_OBJCPP_SRC)
+ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o) $(ALL_OBJCPP_SRC:%.mm=%.o)
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
@@ -81,6 +104,9 @@ all: libazure.dummy
 
 %.o: %.cpp
 	$(CXX) $< -o $@ -c $(CXXFLAGS)
+
+%.o: %.mm
+	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@
