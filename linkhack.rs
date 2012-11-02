@@ -1,7 +1,7 @@
 // Some crumminess to make sure we link correctly
 
 #[cfg(target_os = "linux")]
-#[link_args = "-L. -lcairo -lazure -lstdc++"]
+#[link_args = "-L. -lcairo -lazure -lstdc++ -lskia"]
 #[nolink]
 extern mod m { }
 
