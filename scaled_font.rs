@@ -63,7 +63,7 @@ impl ScaledFont {
         };
 
         match backend {
-            CoreGraphicsBackend | CoreGraphicsAcceleratedBackend => {
+            CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
 
                 unsafe {
@@ -82,15 +82,6 @@ impl ScaledFont {
 
                 unsafe {
                     azure_native_font.mFont = cast::transmute(cairo_font);
-                }
-            }
-            SkiaBackend => {
-                azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
-                let skia_typeface = _Z26SkCreateTypefaceFromCTFontPK8__CTFont(
-                    native_font.get_ref());
-
-                unsafe {
-                    azure_native_font.mFont = cast::transmute(skia_typeface);
                 }
             }
             NoBackend | Direct2DBackend | RecordingBackend => {
