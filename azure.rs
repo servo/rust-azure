@@ -29,8 +29,12 @@ pub type enum_AzBackendType = c_uint;
 pub const AZ_BACKEND_NONE: u32 = 0_u32;
 pub const AZ_BACKEND_DIRECT2D: u32 = 1_u32;
 pub const AZ_BACKEND_COREGRAPHICS: u32 = 2_u32;
-pub const AZ_BACKEND_CAIRO: u32 = 3_u32;
-pub const AZ_BACKEND_SKIA: u32 = 4_u32;
+pub const AZ_BACKEND_COREGRAPHICS_ACCELERATED: u32 = 3_u32;
+pub const AZ_BACKEND_CAIRO: u32 = 4_u32;
+pub const AZ_BACKEND_SKIA: u32 = 5_u32;
+pub const AZ_BACKEND_RECORDING: u32 = 6_u32;
+
+pub type AzBackendType = enum_AzBackendType;
 
 pub type enum_AzFontType = c_uint;
 pub const AZ_FONT_DWRITE: u32 = 0_u32;
@@ -249,6 +253,8 @@ pub type AzGlyphRenderingOptionsRef = *c_void;
 
 pub type AzSourceSurfaceRef = *c_void;
 
+pub type AzDataSourceSurfaceRef = *c_void;
+
 pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
 #[link_name="azure"]
@@ -259,6 +265,10 @@ pub fn AzSanityCheck(/* FIXME: variadic function */);
 pub fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
+
+pub fn AzCreateDrawTarget(++aBackend: AzBackendType, ++aSize: *AzIntSize, ++aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+
+pub fn AzCreateDrawTargetForData(++aBackend: AzBackendType, ++aData: *c_uchar, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t, ++aSize: *AzIntSize) -> AzDrawTargetRef;
 
@@ -282,9 +292,23 @@ pub fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledF
 
 pub fn AzDrawTargetDrawSurface(++aDrawTarget: AzDrawTargetRef, ++aSurface: AzSourceSurfaceRef, ++aDest: *AzRect, ++aSource: *AzRect, ++aSurfOptions: AzDrawSurfaceOptionsRef, ++aOptions: *AzDrawOptions);
 
+pub fn AzDrawTargetGetSnapshot(++aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
+
 pub fn AzDrawTargetCreateSourceSurfaceFromData(++aDrawTarget: AzDrawTargetRef, ++aData: *u8, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
 
 pub fn AzReleaseSourceSurface(++aSurface: AzSourceSurfaceRef);
+
+pub fn AzSourceSurfaceGetSize(++aSurface: AzSourceSurfaceRef) -> AzIntSize;
+
+pub fn AzSourceSurfaceGetFormat(++aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat;
+
+pub fn AzSourceSurfaceGetDataSurface(++aSurface: AzSourceSurfaceRef) -> AzDataSourceSurfaceRef;
+
+pub fn AzDataSourceSurfaceGetData(++aSurface: AzDataSourceSurfaceRef) -> *u8;
+
+pub fn AzDataSourceSurfaceGetStride(++aSurface: AzDataSourceSurfaceRef) -> i32;
+
+pub fn AzCreateScaledFontForNativeFont(++aNativeFont: *AzNativeFont, ++aSize: AzFloat) -> AzScaledFontRef;
 
 pub fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 

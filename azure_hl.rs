@@ -1,17 +1,16 @@
 // High-level bindings to Azure.
 use cairo_hl = cairo::cairo_hl;
 
-use bindgen::{AzCreateColorPattern, AzCreateDrawTargetForCairoSurface};
-//use bindgen::AzDrawSurfaceOptions;
+use bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForCairoSurface};
+use bindgen::{AzCreateDrawTargetForData, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
 use bindgen::AzDrawTargetClearRect;
 use bindgen::AzDrawTargetCreateSourceSurfaceFromData;
 use bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use bindgen::{AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
-//use bindgen::AzFilter;
+use bindgen::{AzDrawTargetGetSnapshot, AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
 use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use bindgen::AzReleaseSourceSurface;
 use bindgen::AzRetainDrawTarget;
-//use bindgen::AzSurfaceFormat;
+use bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
 pub use cairo_hl::ImageSurface;
 use geom::matrix2d::Matrix2D;
 use geom::rect::Rect;
@@ -142,6 +141,16 @@ impl SurfaceFormat {
     fn as_azure_surface_format() -> AzSurfaceFormat {
         self as AzSurfaceFormat
     }
+
+    static pub fn new(azure_surface_format: AzSurfaceFormat) -> SurfaceFormat {
+        match azure_surface_format {
+            0 => B8G8R8A8,
+            1 => R8G8R8X8,
+            2 => R5G6B5,
+            3 => A8,
+            _ => fail ~"SurfaceFormat::new(): unknown Azure surface format"
+        }
+    }
 }
 
 pub enum Filter {
@@ -175,6 +184,31 @@ pub fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceO
 }
 
 
+pub enum BackendType {
+    NoBackend,
+    Direct2DBackend,
+    CoreGraphicsBackend,
+    CoreGraphicsAcceleratedBackend,
+    CairoBackend,
+    SkiaBackend,
+    RecordingBackend
+}
+
+impl BackendType {
+    pub fn as_azure_backend_type(self) -> AzBackendType {
+        match self {
+            NoBackend                      => 0,
+            Direct2DBackend                => 1,
+            CoreGraphicsBackend            => 2,
+            CoreGraphicsAcceleratedBackend => 3,
+            CairoBackend                   => 4,
+            SkiaBackend                    => 5,
+            RecordingBackend               => 6,
+        }
+    }
+}
+
+
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
 
@@ -183,7 +217,29 @@ pub struct DrawTarget {
     }
 }
 
-impl DrawTarget {
+pub impl DrawTarget {
+    static pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
+                   -> DrawTarget {
+        let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
+                                                   to_unsafe_ptr(&size.as_azure_int_size()),
+                                                   format.as_azure_surface_format());
+        if azure_draw_target == ptr::null() { fail; }
+        DrawTarget { azure_draw_target: move azure_draw_target }
+    }
+
+    static pub fn new_with_data(backend: BackendType, data: &[u8], size: Size2D<i32>, stride: i32,
+                                format: SurfaceFormat) -> DrawTarget {
+        assert data.len() as i32 == stride * size.height;
+        let azure_draw_target =
+            AzCreateDrawTargetForData(backend.as_azure_backend_type(),
+                                      to_unsafe_ptr(&data[0]),
+                                      to_unsafe_ptr(&size.as_azure_int_size()),
+                                      stride,
+                                      format.as_azure_surface_format());
+        if azure_draw_target == ptr::null() { fail; }
+        DrawTarget { azure_draw_target: move azure_draw_target }
+    }
+
     fn clone() -> DrawTarget {
         return new_draw_target_from_azure_draw_target(self.azure_draw_target);
     }
@@ -213,13 +269,17 @@ impl DrawTarget {
 
     fn draw_surface(surface: SourceSurface, dest: Rect<AzFloat>, source: Rect<AzFloat>,
                     surf_options: DrawSurfaceOptions, options: DrawOptions) {
-
         AzDrawTargetDrawSurface(self.azure_draw_target,
                                 surface.azure_source_surface,
                                 to_unsafe_ptr(&dest.as_azure_rect()),
                                 to_unsafe_ptr(&source.as_azure_rect()),
                                 to_unsafe_ptr(&surf_options.as_azure_draw_surface_options()),
                                 to_unsafe_ptr(&options.as_azure_draw_options()));
+    }
+
+    fn snapshot(&const self) -> SourceSurface {
+        let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
+        SourceSurface(azure_surface)
     }
 
     fn create_source_surface_from_data(data: &[u8], size: Size2D<i32>, stride: i32,
@@ -273,7 +333,7 @@ pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef
 }
 
 pub struct SourceSurface {
-    azure_source_surface: AzSourceSurfaceRef,
+    priv azure_source_surface: AzSourceSurfaceRef,
 
     drop {
         AzReleaseSourceSurface(self.azure_source_surface);
@@ -281,8 +341,66 @@ pub struct SourceSurface {
 }
 
 pub fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
-    return SourceSurface {
-        azure_source_surface:  azure_source_surface
+    SourceSurface {
+        azure_source_surface: azure_source_surface
+    }
+}
+
+pub trait SourceSurfaceMethods {
+    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef;
+
+    fn size(&const self) -> Size2D<i32> {
+        let size = AzSourceSurfaceGetSize(self.get_azure_source_surface());
+        Size2D { width: size.width, height: size.height }
+    }
+
+    fn format(&const self) -> SurfaceFormat {
+        SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
+    }
+}
+
+impl SourceSurface {
+    pub fn get_data_surface(&const self) -> DataSourceSurface {
+        DataSourceSurface {
+            azure_data_source_surface: AzSourceSurfaceGetDataSurface(self.azure_source_surface)
+        }
+    }
+}
+
+impl SourceSurface : SourceSurfaceMethods {
+    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef { self.azure_source_surface }
+}
+
+pub struct DataSourceSurface {
+    priv azure_data_source_surface: AzDataSourceSurfaceRef,
+
+    drop {
+        AzReleaseSourceSurface(self.azure_data_source_surface);
+    }
+}
+
+impl DataSourceSurface {
+    pub fn with_data(&const self, f: &fn(&[u8])) {
+        unsafe {
+            let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface);
+            let len = self.stride() * self.size().height;
+            vec::raw::buf_as_slice(buf, len as uint, f);
+        }
+    }
+
+    pub fn stride(&const self) -> i32 {
+        AzDataSourceSurfaceGetStride(self.azure_data_source_surface)
+    }
+
+    // FIXME: Workaround for lack of working cross-crate default methods.
+    pub fn get_size(&const self) -> Size2D<i32> {
+        self.size()
+    }
+}
+
+impl DataSourceSurface : SourceSurfaceMethods {
+    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef {
+        self.azure_data_source_surface
     }
 }
 

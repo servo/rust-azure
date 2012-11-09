@@ -136,6 +136,10 @@ public:
 
   bool Init(cairo_surface_t* aSurface, const IntSize& aSize);
 
+  bool Init(const IntSize& aSize, SurfaceFormat aFormat);
+
+  bool Init(unsigned char* aData, const IntSize& aSize, int32_t aStride, SurfaceFormat aFormat);
+
   void SetPathObserver(CairoPathContext* aPathObserver);
 
   virtual void SetTransform(const Matrix& aTransform);

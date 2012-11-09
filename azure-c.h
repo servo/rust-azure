@@ -261,9 +261,18 @@ typedef void* AzScaledFontRef;
 typedef void* AzGlyphRenderingOptionsRef;
 typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
+typedef void* AzDataSourceSurfaceRef;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
+AzDrawTargetRef AzCreateDrawTarget(AzBackendType aBackend,
+                                   AzIntSize *aSize,
+                                   AzSurfaceFormat aFormat);
+AzDrawTargetRef AzCreateDrawTargetForData(AzBackendType aBackend,
+                                          unsigned char *aData,
+                                          AzIntSize *aSize,
+                                          int32_t aStride,
+                                          AzSurfaceFormat aFormat);
 
 #ifdef USE_CAIRO
 AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface,
@@ -303,12 +312,18 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzRect *aSource,
                              AzDrawSurfaceOptionsRef aSurfOptions,
                              AzDrawOptions *aOptions);
+AzSourceSurfaceRef AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget);
 AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
                                                            unsigned char *aData,
                                                            AzIntSize *aSize,
                                                            int32_t aStride,
                                                            AzSurfaceFormat aFormat);
 void AzReleaseSourceSurface(AzSourceSurfaceRef aSurface);
+AzIntSize AzSourceSurfaceGetSize(AzSourceSurfaceRef aSurface);
+AzSurfaceFormat AzSourceSurfaceGetFormat(AzSourceSurfaceRef aSurface);
+AzDataSourceSurfaceRef AzSourceSurfaceGetDataSurface(AzSourceSurfaceRef aSurface);
+uint8_t *AzDataSourceSurfaceGetData(AzDataSourceSurfaceRef aSurface);
+int32_t AzDataSourceSurfaceGetStride(AzDataSourceSurfaceRef aSurface);
 
 
 /* Factory.h */
