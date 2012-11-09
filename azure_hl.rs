@@ -211,6 +211,7 @@ impl BackendType {
 
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
+    data: Option<~[u8]>,
 
     drop {
         AzReleaseDrawTarget(self.azure_draw_target);
@@ -224,10 +225,10 @@ pub impl DrawTarget {
                                                    to_unsafe_ptr(&size.as_azure_int_size()),
                                                    format.as_azure_surface_format());
         if azure_draw_target == ptr::null() { fail; }
-        DrawTarget { azure_draw_target: move azure_draw_target }
+        DrawTarget { azure_draw_target: move azure_draw_target, data: None }
     }
 
-    static pub fn new_with_data(backend: BackendType, data: &[u8], size: Size2D<i32>, stride: i32,
+    static pub fn new_with_data(backend: BackendType, data: ~[u8], size: Size2D<i32>, stride: i32,
                                 format: SurfaceFormat) -> DrawTarget {
         assert data.len() as i32 == stride * size.height;
         let azure_draw_target =
@@ -237,7 +238,7 @@ pub impl DrawTarget {
                                       stride,
                                       format.as_azure_surface_format());
         if azure_draw_target == ptr::null() { fail; }
-        DrawTarget { azure_draw_target: move azure_draw_target }
+        DrawTarget { azure_draw_target: move azure_draw_target, data: Some(move data) }
     }
 
     fn clone() -> DrawTarget {
@@ -307,7 +308,8 @@ pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
 	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
-														     to_unsafe_ptr(&size))
+														     to_unsafe_ptr(&size)),
+        data: None
     }
 }
 
@@ -321,14 +323,16 @@ pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
 	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
     DrawTarget {
         azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
-														     to_unsafe_ptr(&size))
+														     to_unsafe_ptr(&size)),
+        data: None
     }
 }
 
 pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {
     AzRetainDrawTarget(azure_draw_target);
     DrawTarget {
-        azure_draw_target: azure_draw_target
+        azure_draw_target: azure_draw_target,
+        data: None
     }
 }
 

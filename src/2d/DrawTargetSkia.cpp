@@ -665,7 +665,7 @@ DrawTargetSkia::Init(const IntSize &aSize, SurfaceFormat aFormat)
   if (!mBitmap.allocPixels()) {
     return false;
   }
-  mBitmap.eraseARGB(0, 0, 0, 0);
+  // mBitmap.eraseARGB(0, 0, 0, 0);     Doesn't seem necessary. --pcwalton
   SkAutoTUnref<SkDevice> device(new SkDevice(mBitmap));
   SkAutoTUnref<SkCanvas> canvas(new SkCanvas(device.get()));
   mSize = aSize;
