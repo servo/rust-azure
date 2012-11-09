@@ -67,13 +67,15 @@ impl ScaledFont {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
 
                 unsafe {
-                    azure_native_font.mFont = cast::transmute(native_font.copy_cg_font());
+                    azure_native_font.mFont = cast::transmute(native_font.copy_to_CGFont());
                 }
             }
             CairoBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_CAIRO_FONT_FACE;
 
-                let cg_font = native_font.copy_cg_font();
+                // TODO(Issue #184): may want to just reuse CGFont stored in servo's QuartzFontHandle.
+                // This would require creating some trait like CGFontProvider with .get_CGFont().
+                let cg_font = native_font.copy_to_CGFont();
                 let face = cairo_quartz_font_face_create_for_cgfont(cg_font);
                 if face == ptr::null() { fail; }
 
