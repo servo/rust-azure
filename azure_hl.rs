@@ -12,11 +12,14 @@ use bindgen::AzReleaseSourceSurface;
 use bindgen::AzRetainDrawTarget;
 use bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
 pub use cairo_hl::ImageSurface;
+
+use core::cast::transmute;
+use core::ptr::{null, to_unsafe_ptr};
 use geom::matrix2d::Matrix2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use ptr::{null, to_unsafe_ptr};
-use cast::transmute;
+use std::arc::ARC;
+use std::arc;
 
 pub trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
@@ -211,7 +214,7 @@ impl BackendType {
 
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
-    data: Option<~[u8]>,
+    data: Option<ARC<~[u8]>>,
 
     drop {
         AzReleaseDrawTarget(self.azure_draw_target);
@@ -242,11 +245,23 @@ pub impl DrawTarget {
                                       stride,
                                       format.as_azure_surface_format());
         if azure_draw_target == ptr::null() { fail; }
-        DrawTarget { azure_draw_target: move azure_draw_target, data: Some(move data) }
+        DrawTarget { azure_draw_target: move azure_draw_target, data: Some(ARC(move data)) }
     }
 
-    fn clone() -> DrawTarget {
-        return new_draw_target_from_azure_draw_target(self.azure_draw_target);
+    fn clone(&const self) -> DrawTarget {
+        AzRetainDrawTarget(self.azure_draw_target);
+        DrawTarget {
+            azure_draw_target: self.azure_draw_target,
+            data: match self.data {
+                None => None,
+                Some(ref arc) => {
+                    // FIXME: Workaround for the fact that arc::clone doesn't take const.
+                    unsafe {
+                        Some(arc::clone(cast::transmute(arc)))
+                    }
+                }
+            }
+        }
     }
 
     fn flush() {
@@ -320,7 +335,7 @@ pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
 
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
-    return new_draw_target_from_azure_draw_target(draw_target.azure_draw_target);
+    return draw_target.clone();
 }
 
 pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
