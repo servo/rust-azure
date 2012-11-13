@@ -1,6 +1,4 @@
 extern mod cairo;
-extern mod core_graphics;
-extern mod core_text;
 
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
 use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
@@ -9,9 +7,6 @@ use cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
 use cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
 use cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
 use cairo::bindgen::{cairo_scaled_font_create};
-use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
-use core_graphics::font::CGFontRef;
-use core_text::font::{CTFont, CTFontRef};
 
 #[cfg(target_os="macos")]
 type NativeFont = CTFont;
@@ -57,6 +52,10 @@ impl ScaledFont {
     #[cfg(target_os="macos")]
     static pub fn new(backend: BackendType, native_font: &const CTFont, size: AzFloat)
                    -> ScaledFont {
+        use core_graphics::font::CGFontRef;
+        use core_text::font::{CTFont, CTFontRef};
+        use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
+
         let mut azure_native_font = {
             mType: 0,
             mFont: ptr::null()
