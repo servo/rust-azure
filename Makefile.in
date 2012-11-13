@@ -48,8 +48,10 @@ AZURE_CPP_SRC = \
 
 AZURE_CPP_SRC += azure-c.cpp
 
+#SSE2 instruction support required.
 CXXFLAGS += \
 	-fPIC \
+	-msse2 \
 	-I$(VPATH)/include \
 	-I$(VPATH)/include/gl \
 	-I$(VPATH)/include/chromium \
