@@ -9,7 +9,17 @@ use cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cai
 use cairo::bindgen::{cairo_scaled_font_create};
 
 #[cfg(target_os="macos")]
-type NativeFont = CTFont;
+priv mod macos {
+    extern mod core_graphics;
+    extern mod core_text;
+    use core_graphics::font::CGFontRef;
+    use core_text::font::{CTFont, CTFontRef};
+    use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
+
+    type NativeFont = CTFont;
+}
+#[cfg(target_os="macos")]
+priv use macos::*;
 
 type SkTypeface = *c_void;
 
@@ -52,10 +62,6 @@ impl ScaledFont {
     #[cfg(target_os="macos")]
     static pub fn new(backend: BackendType, native_font: &const CTFont, size: AzFloat)
                    -> ScaledFont {
-        use core_graphics::font::CGFontRef;
-        use core_text::font::{CTFont, CTFontRef};
-        use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
-
         let mut azure_native_font = {
             mType: 0,
             mFont: ptr::null()
