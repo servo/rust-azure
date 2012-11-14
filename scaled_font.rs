@@ -42,6 +42,10 @@ pub struct ScaledFont {
 }
 
 impl ScaledFont {
+    pub pure fn get_ref() -> AzScaledFontRef {
+        self.azure_scaled_font
+    }
+
     static priv fn create_cairo_font(face: *cairo_font_face_t, size: AzFloat)
                                   -> *cairo_scaled_font_t {
         // FIXME: error handling
