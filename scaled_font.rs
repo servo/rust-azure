@@ -21,6 +21,16 @@ priv mod macos {
 #[cfg(target_os="macos")]
 priv use macos::*;
 
+#[cfg(target_os="linux")]
+priv mod linux {
+    extern mod freetype;
+    use cairo::cairo_ft::bindgen::cairo_ft_font_face_create_for_ft_face;
+    use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+}
+#[cfg(target_os="linux")]
+priv use linux::*;
+
+
 type SkTypeface = *c_void;
 
 pub struct ScaledFont {
@@ -56,6 +66,38 @@ impl ScaledFont {
         cairo_font_options_destroy(options);
 
         return cfont;
+    }
+
+    #[cfg(target_os="linux")]
+    static pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
+        -> ScaledFont {
+        let mut azure_native_font = {
+            mType: 0,
+            mFont: ptr::null()
+        };
+        
+        match backend {
+            CairoBackend => {
+                azure_native_font.mType = AZ_NATIVE_FONT_CAIRO_FONT_FACE;
+
+                unsafe {
+                    let cairo_face = cairo_ft_font_face_create_for_ft_face(native_font, FT_LOAD_DEFAULT as c_int);
+                    if cairo_face.is_null() { fail; }
+
+                    let cairo_font = ScaledFont::create_cairo_font(cairo_face, size);
+                    cairo_font_face_destroy(cairo_face);
+ 
+                    unsafe {
+                        azure_native_font.mFont = cast::transmute(cairo_font);
+                    }
+                }
+            },
+            _ => { fail ~"don't know how to make a scaled font for this backend"; }
+        }
+
+        let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
+        let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
+        ScaledFont { azure_scaled_font: move azure_scaled_font }
     }
 
     /// Mac-specific function to create a font for the given backend.
