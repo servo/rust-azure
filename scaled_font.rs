@@ -12,11 +12,9 @@ use cairo::bindgen::{cairo_scaled_font_create};
 priv mod macos {
     extern mod core_graphics;
     extern mod core_text;
-    use core_graphics::font::CGFontRef;
-    use core_text::font::{CTFont, CTFontRef};
+    use core_text::font::CTFontRef;
+    use core_graphics::font::{CGFont, CGFontRef};
     use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
-
-    type NativeFont = CTFont;
 }
 #[cfg(target_os="macos")]
 priv use macos::*;
@@ -106,7 +104,7 @@ impl ScaledFont {
 
     /// Mac-specific function to create a font for the given backend.
     #[cfg(target_os="macos")]
-    static pub fn new(backend: BackendType, native_font: &const CTFont, size: AzFloat)
+    static pub fn new(backend: BackendType, native_font: &const CGFont, size: AzFloat)
                    -> ScaledFont {
         let mut azure_native_font = {
             mType: 0,
@@ -116,18 +114,14 @@ impl ScaledFont {
         match backend {
             CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
-
                 unsafe {
-                    azure_native_font.mFont = cast::transmute(native_font.copy_to_CGFont());
+                    azure_native_font.mFont = cast::transmute(*native_font.borrow_ref());
                 }
             }
             CairoBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_CAIRO_FONT_FACE;
+                let face = unsafe { cairo_quartz_font_face_create_for_cgfont(*native_font.borrow_ref()) };
 
-                // TODO(Issue #184): may want to just reuse CGFont stored in servo's QuartzFontHandle.
-                // This would require creating some trait like CGFontProvider with .get_CGFont().
-                let cg_font = native_font.copy_to_CGFont();
-                let face = cairo_quartz_font_face_create_for_cgfont(cg_font);
                 if face == ptr::null() { fail; }
 
                 let cairo_font = ScaledFont::create_cairo_font(face, size);
