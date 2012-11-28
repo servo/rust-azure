@@ -1,4 +1,6 @@
 VPATH=%VPATH%
+USE_SKIA=%USE_SKIA%
+USE_CAIRO=%USE_CAIRO%
 
 CC ?= gcc
 CXX ?= g++
@@ -26,23 +28,17 @@ AZURE_CPP_SRC = \
 	$(addprefix src/2d/,\
 		Blur.cpp \
 		DrawEventRecorder.cpp \
-		DrawTargetCairo.cpp \
 		DrawTargetRecording.cpp \
-		DrawTargetSkia.cpp \
 		Factory.cpp \
 		ImageScaling.cpp \
 		ImageScalingSSE2.cpp \
 		Matrix.cpp \
-		PathCairo.cpp \
 		PathRecording.cpp \
-		PathSkia.cpp \
 		RecordedEvent.cpp \
 		Rect.cpp \
 		Scale.cpp \
 		ScaledFontBase.cpp \
-		SourceSurfaceCairo.cpp \
 		SourceSurfaceRawData.cpp \
-		SourceSurfaceSkia.cpp \
 		convolver.cpp \
 		image_operations.cpp)
 
@@ -56,16 +52,41 @@ CXXFLAGS += \
 	-I$(VPATH)/include/gl \
 	-I$(VPATH)/include/chromium \
 	-iquote $(VPATH)/include/mozilla/gfx \
+	-DMOZ_GFX \
+	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
+	$(NULL)
+
+ifeq ($(USE_SKIA),1)
+AZURE_CPP_SRC += \
+	$(addprefix src/2d/,\
+		DrawTargetSkia.cpp \
+		PathSkia.cpp \
+		SourceSurfaceSkia.cpp)
+
+CXXFLAGS += \
 	-iquote $(VPATH)/../skia/include/core \
 	-iquote $(VPATH)/../skia/include/config \
 	-iquote $(VPATH)/../skia/include/effects \
 	-iquote $(VPATH)/../skia/include/ports \
-	-DMOZ_GFX -DUSE_CAIRO -DUSE_SKIA \
-	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
+	-DUSE_SKIA \
 	$(NULL)
+endif
+
+ifeq ($(USE_CAIRO),1)
+AZURE_CPP_SRC += \
+	$(addprefix src/2d/,\
+		DrawTargetCairo.cpp \
+		PathCairo.cpp \
+		SourceSurfaceCairo.cpp)
+
+CXXFLAGS += \
+	-DUSE_CAIRO \
+	$(NULL)
+endif
 
 ifeq ($(OSTYPE),darwin)
 
+ifeq ($(USE_CAIRO),1)
 # FIXME: This is not the right way to set up the lib location
 RUSTFLAGS += -L/opt/local/lib \
 	-L /usr/local/Cellar/cairo/1.10.2/lib \
@@ -74,10 +95,15 @@ RUSTFLAGS += -L/opt/local/lib \
 CXXFLAGS += \
 	-I/usr/local/Cellar/cairo/1.10.2/include/cairo \
 	-I/opt/local/include/cairo \
+	$(NULL)
+endif
+
+CXXFLAGS += \
 	-DXP_MACOSX \
 	-DXP_UNIX \
 	-DMALLOC_H="<malloc/malloc.h>" \
 	$(NULL)
+
 AZURE_CPP_SRC += \
 	src/2d/ScaledFontMac.cpp \
 	src/2d/DrawTargetCG.cpp \
