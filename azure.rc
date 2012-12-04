@@ -17,3 +17,6 @@ pub mod test;
 
 pub mod linkhack;
 
+pub mod azure;
+
+pub use azure::*;

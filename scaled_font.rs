@@ -3,10 +3,10 @@ extern mod cairo;
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
 use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
 use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
-use cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
-use cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
-use cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
-use cairo::bindgen::{cairo_scaled_font_create};
+use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
+use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
+use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
+use cairo::cairo::bindgen::{cairo_scaled_font_create};
 
 #[cfg(target_os="macos")]
 priv mod macos {
