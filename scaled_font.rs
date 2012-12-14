@@ -9,24 +9,24 @@ use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identi
 use cairo::cairo::bindgen::{cairo_scaled_font_create};
 
 #[cfg(target_os="macos")]
-priv mod macos {
+pub mod macos {
     extern mod core_graphics;
     extern mod core_text;
-    use core_text::font::CTFontRef;
-    use core_graphics::font::{CGFont, CGFontRef};
+    use scaled_font::macos::core_text::font::CTFontRef;
+    use scaled_font::macos::core_graphics::font::{CGFont, CGFontRef};
     use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
 }
 #[cfg(target_os="macos")]
-priv use macos::*;
+priv use scaled_font::macos::*;
 
 #[cfg(target_os="linux")]
-priv mod linux {
+pub mod linux {
     extern mod freetype;
     use cairo::cairo_ft::bindgen::cairo_ft_font_face_create_for_ft_face;
-    use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+    use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 #[cfg(target_os="linux")]
-priv use linux::*;
+priv use scaled_font::linux::*;
 
 
 type SkTypeface = *c_void;

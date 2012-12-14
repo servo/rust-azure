@@ -1,6 +1,4 @@
 // High-level bindings to Azure.
-use cairo_hl = cairo::cairo_hl;
-
 use bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForCairoSurface};
 use bindgen::{AzCreateDrawTargetForData, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
 use bindgen::AzDrawTargetClearRect;
@@ -11,7 +9,7 @@ use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use bindgen::AzReleaseSourceSurface;
 use bindgen::AzRetainDrawTarget;
 use bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
-pub use cairo_hl::ImageSurface;
+pub use cairo::cairo_hl::ImageSurface;
 
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
