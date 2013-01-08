@@ -370,3 +370,15 @@ AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
     gfxDrawTarget->SetTransform(*gfxMatrix);
 }
 
+AzFontOptions*
+AzCreateFontOptions(char *aName, AzFontStyle aStyle) {
+  gfx::FontOptions *options = new gfx::FontOptions;
+  options->mName = std::string(aName);
+  options->mStyle = static_cast<gfx::FontStyle>(aStyle);
+  return options;
+}
+
+void AzDestroyFontOptions(AzFontOptions* aOptions) {
+  delete aOptions;
+}
+

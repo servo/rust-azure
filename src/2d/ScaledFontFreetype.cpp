@@ -6,10 +6,10 @@
 #include "ScaledFontFreetype.h"
 #include "Logging.h"
 
-#include "gfxFont.h"
+//#include "gfxFont.h"
 
 #ifdef USE_SKIA
-#include "skia/SkTypeface.h"
+#include "SkTypeface.h"
 #endif
 
 #include <string>

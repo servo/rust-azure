@@ -4,6 +4,7 @@ use core::libc::*;
 
 use cairo::cairo::{cairo_surface_t, cairo_scaled_font_t};
 
+pub type AzFontOptions = *c_void;
 pub type AzFloat = c_float;
 
 pub type enum_AzSurfaceType = c_uint;
@@ -55,6 +56,12 @@ pub const AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
 pub const AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
 pub const AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
 pub const AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
+
+pub type enum_AzFontStyle = c_uint;
+pub const AZ_FONT_STYLE_NORMAL: u32 = 0_u32;
+pub const AZ_FONT_STYLE_ITALIC: u32 = 1_u32;
+pub const AZ_FONT_STYLE_BOLD: u32 = 2_u32;
+pub const AZ_FONT_STYLE_BOLD_ITALIC: u32 = 3_u32;
 
 pub type enum_AzCompositionOp = c_uint;
 pub const AZ_OP_OVER: u32 = 0_u32;
@@ -315,5 +322,9 @@ pub fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloa
 pub fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
 
 pub fn AzDrawTargetSetTransform(++aDrawTarget: AzDrawTargetRef, ++aTransform: *AzMatrix);
+
+pub fn AzCreateFontOptions(++aName: *c_char, ++aStyle: enum_AzFontStyle) -> *AzFontOptions;
+
+pub fn AzDestroyFontOptions(++aOptions: *AzFontOptions);
 
 }

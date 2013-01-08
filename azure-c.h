@@ -79,6 +79,14 @@ enum AzNativeFontType
   AZ_NATIVE_FONT_CAIRO_FONT_FACE
 };
 
+enum AzFontStyle
+{
+  AZ_FONT_STYLE_NORMAL,
+  AZ_FONT_STYLE_ITALIC,
+  AZ_FONT_STYLE_BOLD,
+  AZ_FONT_STYLE_BOLD_ITALIC
+};
+
 enum AzCompositionOp {
   AZ_OP_OVER,
   AZ_OP_ADD,
@@ -335,6 +343,11 @@ AzScaledFontRef AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
 #endif
 
 void AzReleaseScaledFont(AzScaledFontRef aFont);
+
+/* Helpers */
+typedef void AzFontOptions;
+AzFontOptions* AzCreateFontOptions(char *aName, AzFontStyle aStyle);
+void AzDestroyFontOptions(AzFontOptions* aOptions);
 
 
 #ifdef __cplusplus

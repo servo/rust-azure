@@ -2,7 +2,7 @@ extern mod cairo;
 
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
 use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
-use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
+use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
 use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
 use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
 use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
@@ -79,6 +79,14 @@ impl ScaledFont {
         };
         
         match backend {
+            SkiaBackend => {
+                unsafe {
+                    let options = AzCreateFontOptions((*native_font).family_name, AZ_FONT_STYLE_NORMAL);
+                    azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
+                    azure_native_font.mFont = cast::transmute(options);
+                    AzDestroyFontOptions(options)
+                }
+            }
             CairoBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_CAIRO_FONT_FACE;
 

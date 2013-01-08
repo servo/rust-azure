@@ -119,6 +119,11 @@ CXXFLAGS += \
 	-DXP_UNIX \
 	$(NULL)
 AZURE_OBJCPP_SRC =
+
+CXXFLAGS += -DMOZ_ENABLE_FREETYPE
+AZURE_CPP_SRC += \
+	$(addprefix src/2d/,\
+		ScaledFontFreetype.cpp)
 endif
 
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
