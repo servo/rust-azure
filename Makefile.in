@@ -80,23 +80,13 @@ AZURE_CPP_SRC += \
 		SourceSurfaceCairo.cpp)
 
 CXXFLAGS += \
+	-iquote $(VPATH)/../cairo/src \
+	-iquote ../cairo/src \
 	-DUSE_CAIRO \
 	$(NULL)
 endif
 
 ifeq ($(OSTYPE),darwin)
-
-ifeq ($(USE_CAIRO),1)
-# FIXME: This is not the right way to set up the lib location
-RUSTFLAGS += -L/opt/local/lib \
-	-L /usr/local/Cellar/cairo/1.12.6/lib \
-	$(NULL)
-
-CXXFLAGS += \
-	-I/usr/local/Cellar/cairo/1.12.6/include/cairo \
-	-I/opt/local/include/cairo \
-	$(NULL)
-endif
 
 CXXFLAGS += \
 	-DXP_MACOSX \
@@ -115,7 +105,6 @@ endif
 
 ifeq ($(OSTYPE),linux)
 CXXFLAGS += \
-	-I/usr/include/cairo \
 	-DXP_UNIX \
 	$(NULL)
 AZURE_OBJCPP_SRC =
