@@ -1,16 +1,21 @@
 // High-level bindings to Azure.
-use bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForCairoSurface};
-use bindgen::{AzCreateDrawTargetForData, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use bindgen::AzDrawTargetClearRect;
-use bindgen::AzDrawTargetCreateSourceSurfaceFromData;
-use bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use bindgen::{AzDrawTargetGetSnapshot, AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
-use bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
-use bindgen::AzReleaseSourceSurface;
-use bindgen::AzRetainDrawTarget;
-use bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
+use azure::{AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
+use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
+use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
+use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForCairoSurface};
+use azure::bindgen::{AzCreateDrawTargetForData, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use azure::bindgen::AzDrawTargetClearRect;
+use azure::bindgen::AzDrawTargetCreateSourceSurfaceFromData;
+use azure::bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use azure::bindgen::{AzDrawTargetGetSnapshot, AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
+use azure::bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
+use azure::bindgen::AzReleaseSourceSurface;
+use azure::bindgen::AzRetainDrawTarget;
+use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
 pub use cairo::cairo_hl::ImageSurface;
 
+use libc::c_void;
+use libc::types::common::c99::uint16_t;
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
 use geom::matrix2d::Matrix2D;

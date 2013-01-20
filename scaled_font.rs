@@ -1,5 +1,8 @@
 extern mod cairo;
 
+use azure::{AzScaledFontRef, AzFloat};
+use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE, AZ_NATIVE_FONT_CAIRO_FONT_FACE};
+
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
 use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
 use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
@@ -7,6 +10,8 @@ use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
 use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
 use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
 use cairo::cairo::bindgen::{cairo_scaled_font_create};
+
+use core::libc::{c_void, c_double, c_int};
 
 #[cfg(target_os="macos")]
 pub mod macos {

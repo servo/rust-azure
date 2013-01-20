@@ -1,17 +1,20 @@
 extern mod xlib;
 extern mod cairo;
 
+use azure::{AzDrawTargetRef, AzFloat};
 use test::xlib::xlib::XExposeEvent;
 use test::xlib::xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
 use test::xlib::xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};
 use test::xlib::xlib::bindgen::{XSelectInput, XCloseDisplay, XNextEvent, XDefaultVisual};
 use test::xlib::xlib::bindgen::{XMapWindow};
-use bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
-use bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTarget};
-use bindgen::{AzDrawTargetGetSize};
+use azure::bindgen::{AzCreateColorPattern, AzDrawTargetFillRect, AzReleaseColorPattern};
+use azure::bindgen::{AzSanityCheck, AzCreateDrawTargetForCairoSurface, AzReleaseDrawTarget};
+use azure::bindgen::{AzDrawTargetGetSize};
 use test::cairo::cairo::{CAIRO_FORMAT_RGB24};
 use test::cairo::cairo::bindgen::{cairo_image_surface_create, cairo_surface_destroy};
 use test::cairo::cairo_xlib::bindgen::{cairo_xlib_surface_create};
+
+use core::libc::{c_uint, c_long, c_int};
 
 #[test]
 fn sanity_check() {

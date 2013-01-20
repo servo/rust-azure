@@ -6,9 +6,6 @@ extern mod std;
 extern mod geom;
 extern mod cairo;
 
-use libc::types::common::c99::*;
-use libc::types::os::arch::c95::wchar_t;
-
 pub mod azure_hl;
 pub mod scaled_font;
 
