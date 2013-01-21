@@ -1,7 +1,7 @@
 extern mod cairo;
 
 use azure::{AzScaledFontRef, AzFloat};
-use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE, AZ_NATIVE_FONT_CAIRO_FONT_FACE};
+use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE, AZ_NATIVE_FONT_CAIRO_FONT_FACE, AZ_NATIVE_FONT_MAC_FONT_FACE};
 
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
 use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
@@ -119,6 +119,7 @@ impl ScaledFont {
     #[cfg(target_os="macos")]
     static pub fn new(backend: BackendType, native_font: &const CGFont, size: AzFloat)
                    -> ScaledFont {
+
         let mut azure_native_font = {
             mType: 0,
             mFont: ptr::null()
