@@ -77,7 +77,7 @@ fn cairo_it_up() {
     };
     let ep = ptr::addr_of(&e);
 
-    let dt = AzCreateDrawTargetForCairoSurface(cs, { width: SIZEX, height: SIZEY });
+    let dt = AzCreateDrawTargetForCairoSurface(cs, ptr::to_unsafe_ptr(&{ width: SIZEX as c_int, height: SIZEY as c_int }));
 
     loop {
         unsafe {
@@ -124,10 +124,11 @@ fn paint(dt: AzDrawTargetRef) {
 #[test]
 #[ignore(reason="busted on linux 32 bit")]
 fn test_draw_target_get_size() {
+    use libc::types::common::c99::int32_t;
     let surface = cairo_image_surface_create(
         CAIRO_FORMAT_RGB24, 100 as c_int, 200 as c_int);
     assert surface.is_not_null();
-    let dt = AzCreateDrawTargetForCairoSurface(surface);
+    let dt = AzCreateDrawTargetForCairoSurface(surface, ptr::to_unsafe_ptr(&{ width: SIZEX as c_int, height: SIZEY as c_int }));
     assert dt.is_not_null();
     let size = AzDrawTargetGetSize(dt);
     assert size.width == 100 as int32_t;
@@ -139,8 +140,9 @@ fn test_draw_target_get_size() {
 #[test]
 #[ignore]
 fn fonts() {
-    use cairo::*;
-    use cairo::bindgen::*;
+    use cairo;
+    use cairo::cairo::*;
+    use cairo::cairo::bindgen::*;
 
     let dpy = XOpenDisplay(ptr::null());
     assert(ptr::is_not_null(dpy));
@@ -188,8 +190,9 @@ fn fonts() {
 
     fn paint(surf: *cairo_surface_t) {
         use libc::c_double;
-        use cairo::*;
-        use cairo::bindgen::*;
+        use cairo;
+        use cairo::cairo::*;
+        use cairo::cairo::bindgen::*;
 
         let cr: *cairo_t = cairo_create(surf);
         assert cr.is_not_null();
