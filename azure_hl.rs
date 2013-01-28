@@ -75,13 +75,13 @@ pub struct ColorPattern {
     azure_color_pattern: AzColorPatternRef,
 
     drop {
-        AzReleaseColorPattern(self.azure_color_pattern);
+        unsafe { AzReleaseColorPattern(self.azure_color_pattern); }
     }
 }
 
 pub fn ColorPattern(color: Color) -> ColorPattern {
     ColorPattern { 
-        azure_color_pattern: AzCreateColorPattern(to_unsafe_ptr(&color.as_azure_color()))
+        azure_color_pattern: unsafe { AzCreateColorPattern(to_unsafe_ptr(&color.as_azure_color())) }
     }
 }
 
@@ -220,18 +220,20 @@ pub struct DrawTarget {
     data: Option<ARC<~[u8]>>,
 
     drop {
-        AzReleaseDrawTarget(self.azure_draw_target);
+        unsafe { AzReleaseDrawTarget(self.azure_draw_target); }
     }
 }
 
 pub impl DrawTarget {
     static pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
                    -> DrawTarget {
-        let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
-                                                   to_unsafe_ptr(&size.as_azure_int_size()),
-                                                   format.as_azure_surface_format());
-        if azure_draw_target == ptr::null() { fail; }
-        DrawTarget { azure_draw_target: move azure_draw_target, data: None }
+        unsafe {
+            let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
+                                                       to_unsafe_ptr(&size.as_azure_int_size()),
+                                                       format.as_azure_surface_format());
+            if azure_draw_target == ptr::null() { fail; }
+            DrawTarget { azure_draw_target: move azure_draw_target, data: None }
+        }
     }
 
     static pub fn new_with_data(backend: BackendType,
@@ -242,17 +244,19 @@ pub impl DrawTarget {
                                 format: SurfaceFormat) -> DrawTarget {
         assert (data.len() - offset) as i32 >= stride * size.height;
         let azure_draw_target =
-            AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                      to_unsafe_ptr(&data[offset]),
-                                      to_unsafe_ptr(&size.as_azure_int_size()),
-                                      stride,
-                                      format.as_azure_surface_format());
+            unsafe {
+                AzCreateDrawTargetForData(backend.as_azure_backend_type(),
+                                          to_unsafe_ptr(&data[offset]),
+                                          to_unsafe_ptr(&size.as_azure_int_size()),
+                                          stride,
+                                          format.as_azure_surface_format())
+        };
         if azure_draw_target == ptr::null() { fail; }
         DrawTarget { azure_draw_target: move azure_draw_target, data: Some(ARC(move data)) }
     }
 
     fn clone(&const self) -> DrawTarget {
-        AzRetainDrawTarget(self.azure_draw_target);
+        unsafe { AzRetainDrawTarget(self.azure_draw_target); }
         DrawTarget {
             azure_draw_target: self.azure_draw_target,
             data: match self.data {
@@ -268,54 +272,63 @@ pub impl DrawTarget {
     }
 
     fn flush() {
-        AzDrawTargetFlush(self.azure_draw_target);
+        unsafe { AzDrawTargetFlush(self.azure_draw_target); }
     }
 
     fn clear_rect(rect: &Rect<AzFloat>) {
-        AzDrawTargetClearRect(self.azure_draw_target, to_unsafe_ptr(&rect.as_azure_rect()));
+        unsafe { AzDrawTargetClearRect(self.azure_draw_target, to_unsafe_ptr(&rect.as_azure_rect())); }
     }
 
     fn fill_rect(rect: &Rect<AzFloat>, pattern: &ColorPattern) {
-        AzDrawTargetFillRect(self.azure_draw_target,
-                             to_unsafe_ptr(&rect.as_azure_rect()),
-                             pattern.azure_color_pattern);
+        unsafe {
+            AzDrawTargetFillRect(self.azure_draw_target,
+                                 to_unsafe_ptr(&rect.as_azure_rect()),
+                                 pattern.azure_color_pattern);
+        }
     }
 
     fn stroke_rect(rect: &Rect<AzFloat>, pattern: &ColorPattern, stroke_options: &StrokeOptions,
                    draw_options: &DrawOptions) {
-        AzDrawTargetStrokeRect(self.azure_draw_target,
-                               to_unsafe_ptr(&rect.as_azure_rect()),
-                               pattern.azure_color_pattern,
-                               to_unsafe_ptr(&stroke_options.as_azure_stroke_options()),
-                               to_unsafe_ptr(&draw_options.as_azure_draw_options()));
+        unsafe {
+            AzDrawTargetStrokeRect(self.azure_draw_target,
+                                   to_unsafe_ptr(&rect.as_azure_rect()),
+                                   pattern.azure_color_pattern,
+                                   to_unsafe_ptr(&stroke_options.as_azure_stroke_options()),
+                                   to_unsafe_ptr(&draw_options.as_azure_draw_options()));
+        }
     }
 
     fn draw_surface(surface: SourceSurface, dest: Rect<AzFloat>, source: Rect<AzFloat>,
                     surf_options: DrawSurfaceOptions, options: DrawOptions) {
-        AzDrawTargetDrawSurface(self.azure_draw_target,
-                                surface.azure_source_surface,
-                                to_unsafe_ptr(&dest.as_azure_rect()),
-                                to_unsafe_ptr(&source.as_azure_rect()),
-                                to_unsafe_ptr(&surf_options.as_azure_draw_surface_options()),
-                                to_unsafe_ptr(&options.as_azure_draw_options()));
+        unsafe {
+            AzDrawTargetDrawSurface(self.azure_draw_target,
+                                    surface.azure_source_surface,
+                                    to_unsafe_ptr(&dest.as_azure_rect()),
+                                    to_unsafe_ptr(&source.as_azure_rect()),
+                                    to_unsafe_ptr(&surf_options.as_azure_draw_surface_options()),
+                                    to_unsafe_ptr(&options.as_azure_draw_options()));
+        }
     }
 
     fn snapshot(&const self) -> SourceSurface {
-        let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
-        SourceSurface(azure_surface)
+        unsafe {
+            let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
+            SourceSurface(azure_surface)
+        }
     }
 
     fn create_source_surface_from_data(data: &[u8], size: Size2D<i32>, stride: i32,
                                        format: SurfaceFormat) -> SourceSurface {
-
-        assert data.len() as i32 == stride * size.height;
-        let azure_surface =
-            AzDrawTargetCreateSourceSurfaceFromData(self.azure_draw_target,
-                                                    to_unsafe_ptr(&data[0]),
-                                                    to_unsafe_ptr(&size.as_azure_int_size()),
-                                                    stride,
-                                                    format.as_azure_surface_format());
-        SourceSurface(azure_surface)
+        unsafe {
+            assert data.len() as i32 == stride * size.height;
+            let azure_surface =
+                AzDrawTargetCreateSourceSurfaceFromData(self.azure_draw_target,
+                                                        to_unsafe_ptr(&data[0]),
+                                                        to_unsafe_ptr(&size.as_azure_int_size()),
+                                                        stride,
+                                                        format.as_azure_surface_format());
+            SourceSurface(azure_surface)
+        }
     }
 
     fn set_transform(matrix: &Matrix2D<AzFloat>) {
@@ -327,11 +340,13 @@ pub impl DrawTarget {
 
 
 pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
+    unsafe {
 	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
-    DrawTarget {
-        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
-														     to_unsafe_ptr(&size)),
-        data: None
+        DrawTarget {
+            azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
+								 to_unsafe_ptr(&size)),
+            data: None
+        }
     }
 }
 
@@ -342,16 +357,20 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 }
 
 pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
+    unsafe {
 	let size = { width: cairo_surface.width(), height: cairo_surface.height() };
-    DrawTarget {
-        azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
-														     to_unsafe_ptr(&size)),
-        data: None
+        DrawTarget {
+            azure_draw_target: AzCreateDrawTargetForCairoSurface(cairo_surface.cairo_surface,
+								 to_unsafe_ptr(&size)),
+            data: None
+        }
     }
 }
 
 pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {
-    AzRetainDrawTarget(azure_draw_target);
+    unsafe {
+        AzRetainDrawTarget(azure_draw_target);
+    }
     DrawTarget {
         azure_draw_target: azure_draw_target,
         data: None
@@ -362,7 +381,7 @@ pub struct SourceSurface {
     priv azure_source_surface: AzSourceSurfaceRef,
 
     drop {
-        AzReleaseSourceSurface(self.azure_source_surface);
+        unsafe { AzReleaseSourceSurface(self.azure_source_surface); }
     }
 }
 
@@ -376,19 +395,23 @@ pub trait SourceSurfaceMethods {
     fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef;
 
     fn size(&const self) -> Size2D<i32> {
-        let size = AzSourceSurfaceGetSize(self.get_azure_source_surface());
+        let size = unsafe { AzSourceSurfaceGetSize(self.get_azure_source_surface()) };
         Size2D { width: size.width, height: size.height }
     }
 
     fn format(&const self) -> SurfaceFormat {
-        SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
+        unsafe {
+            SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
+        }
     }
 }
 
 impl SourceSurface {
     pub fn get_data_surface(&const self) -> DataSourceSurface {
-        DataSourceSurface {
-            azure_data_source_surface: AzSourceSurfaceGetDataSurface(self.azure_source_surface)
+        unsafe {
+            DataSourceSurface {
+                azure_data_source_surface: AzSourceSurfaceGetDataSurface(self.azure_source_surface)
+            }
         }
     }
 }
@@ -401,7 +424,7 @@ pub struct DataSourceSurface {
     priv azure_data_source_surface: AzDataSourceSurfaceRef,
 
     drop {
-        AzReleaseSourceSurface(self.azure_data_source_surface);
+        unsafe { AzReleaseSourceSurface(self.azure_data_source_surface); }
     }
 }
 
@@ -415,7 +438,7 @@ impl DataSourceSurface {
     }
 
     pub fn stride(&const self) -> i32 {
-        AzDataSourceSurfaceGetStride(self.azure_data_source_surface)
+        unsafe { AzDataSourceSurfaceGetStride(self.azure_data_source_surface) }
     }
 
     // FIXME: Workaround for lack of working cross-crate default methods.

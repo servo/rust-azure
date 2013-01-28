@@ -44,8 +44,8 @@ type XEventStub = {
     )
 };
 
-fn xexpose(event: *XEventStub) -> *XExposeEvent unsafe {
-    cast::reinterpret_cast(&ptr::addr_of(&(*event).padding))
+fn xexpose(event: *XEventStub) -> *XExposeEvent {
+    unsafe { cast::reinterpret_cast(&ptr::addr_of(&(*event).padding)) }
 }
 
 #[test]
@@ -113,12 +113,14 @@ fn paint(dt: AzDrawTargetRef) {
         b: 0f as AzFloat,
         a: 1f as AzFloat
     };
-    let pattern = AzCreateColorPattern(ptr::addr_of(&color));
-    AzDrawTargetFillRect(
-        dt,
-        ptr::addr_of(&rect),
-        unsafe { cast::reinterpret_cast(&pattern) });
-    AzReleaseColorPattern(pattern);
+    unsafe {
+        let pattern = AzCreateColorPattern(ptr::addr_of(&color));
+        AzDrawTargetFillRect(
+            dt,
+            ptr::addr_of(&rect),
+            cast::reinterpret_cast(&pattern));
+        AzReleaseColorPattern(pattern);
+    }
 }
 
 #[test]
