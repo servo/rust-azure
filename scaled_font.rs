@@ -153,7 +153,7 @@ impl ScaledFont {
         }
 
         let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
-        let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
+        let azure_scaled_font = unsafe { AzCreateScaledFontForNativeFont(azure_native_font_ptr, size) };
         ScaledFont { azure_scaled_font: move azure_scaled_font }
     }
 }
