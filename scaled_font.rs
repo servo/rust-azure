@@ -1,12 +1,16 @@
 extern mod cairo;
 
 use azure::{AzScaledFontRef, AzFloat};
-use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE, AZ_NATIVE_FONT_CAIRO_FONT_FACE, AZ_NATIVE_FONT_MAC_FONT_FACE};
+use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE};
+use azure::{AZ_NATIVE_FONT_CAIRO_FONT_FACE, AZ_NATIVE_FONT_MAC_FONT_FACE};
+use azure::{struct__AzNativeFont};
 
-use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend, CoreGraphicsBackend};
-use azure_hl::{Direct2DBackend, NoBackend, RecordingBackend, SkiaBackend};
+use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend};
+use azure_hl::{CoreGraphicsBackend, Direct2DBackend, NoBackend, RecordingBackend};
+use azure_hl::{SkiaBackend};
 use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
 use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
+use cairo::cairo::{struct__cairo_matrix};
 use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
 use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
 use cairo::cairo::bindgen::{cairo_scaled_font_create};
@@ -40,7 +44,9 @@ pub struct ScaledFont {
     azure_scaled_font: AzScaledFontRef,
 
     drop {
-        unsafe { AzReleaseScaledFont(self.azure_scaled_font); }
+        unsafe {
+            AzReleaseScaledFont(self.azure_scaled_font);
+        }
     }
 }
 
@@ -53,7 +59,7 @@ impl ScaledFont {
                                   -> *cairo_scaled_font_t {
         // FIXME: error handling
 
-        let idmatrix: cairo_matrix_t = {
+        let idmatrix: cairo_matrix_t = struct__cairo_matrix {
             xx: 0 as c_double,
             yx: 0 as c_double,
             xy: 0 as c_double,
@@ -97,7 +103,7 @@ impl ScaledFont {
 
                 unsafe {
                     let cairo_face = cairo_ft_font_face_create_for_ft_face(native_font, FT_LOAD_DEFAULT as c_int);
-                    if cairo_face.is_null() { fail; }
+                    if cairo_face.is_null() { fail!("null cairo face"); }
 
                     let cairo_font = ScaledFont::create_cairo_font(cairo_face, size);
                     cairo_font_face_destroy(cairo_face);
@@ -107,7 +113,7 @@ impl ScaledFont {
                     }
                 }
             },
-            _ => { fail ~"don't know how to make a scaled font for this backend"; }
+            _ => { fail!(~"don't know how to make a scaled font for this backend"); }
         }
 
         let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
@@ -122,7 +128,7 @@ impl ScaledFont {
     static pub fn new(backend: BackendType, native_font: &const CGFont, size: AzFloat)
                    -> ScaledFont {
 
-        let mut azure_native_font = {
+        let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
             mFont: ptr::null()
         };
@@ -136,9 +142,11 @@ impl ScaledFont {
             }
             CairoBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_CAIRO_FONT_FACE;
-                let face = unsafe { cairo_quartz_font_face_create_for_cgfont(*native_font.borrow_ref()) };
+                let face = unsafe {
+                    cairo_quartz_font_face_create_for_cgfont(*native_font.borrow_ref())
+                };
 
-                if face == ptr::null() { fail; }
+                if face == ptr::null() { fail!(~"null cairo face"); }
 
                 let cairo_font = ScaledFont::create_cairo_font(face, size);
                 cairo_font_face_destroy(face);
@@ -148,13 +156,15 @@ impl ScaledFont {
                 }
             }
             NoBackend | Direct2DBackend | RecordingBackend => {
-                fail ~"don't know how to make a scaled font for this backend";
+                fail!(~"don't know how to make a scaled font for this backend");
             }
         }
 
-        let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
-        let azure_scaled_font = unsafe { AzCreateScaledFontForNativeFont(azure_native_font_ptr, size) };
-        ScaledFont { azure_scaled_font: move azure_scaled_font }
+        unsafe {
+            let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
+            let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
+            ScaledFont { azure_scaled_font: move azure_scaled_font }
+        }
     }
 }
 

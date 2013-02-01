@@ -128,12 +128,12 @@ pub const AZ_eSideRight: u32 = 1_u32;
 pub const AZ_eSideBottom: u32 = 2_u32;
 pub const AZ_eSideLeft: u32 = 3_u32;
 
-pub type struct__AzColor = {
+pub struct struct__AzColor {
     r: AzFloat,
     g: AzFloat,
     b: AzFloat,
     a: AzFloat,
-};
+}
 
 pub type AzColor = struct__AzColor;
 
@@ -153,96 +153,96 @@ pub type struct__AzIntRect = {
 
 pub type AzIntRect = struct__AzIntRect;
 
-pub type struct__AzRect = {
+pub struct struct__AzRect {
     x: AzFloat,
     y: AzFloat,
     width: AzFloat,
     height: AzFloat,
-};
+}
 
 pub type AzRect = struct__AzRect;
 
-pub type struct__AzIntPoint = {
+pub struct struct__AzIntPoint {
     x: int32_t,
     y: int32_t,
-};
+}
 
 pub type AzIntPoint = struct__AzIntPoint;
 
-pub type struct__AzPoint = {
+pub struct struct__AzPoint {
     x: AzFloat,
     y: AzFloat,
-};
+}
 
 pub type AzPoint = struct__AzPoint;
 
-pub type struct__AzIntSize = {
+pub struct struct__AzIntSize {
     width: int32_t,
     height: int32_t,
-};
+}
 
 pub type AzIntSize = struct__AzIntSize;
 
-pub type struct__AzSize = {
+pub struct struct__AzSize {
     width: AzFloat,
     height: AzFloat,
-};
+}
 
 pub type AzSize = struct__AzSize;
 
-pub type struct__AzMatrix = {
+pub struct struct__AzMatrix {
     _11: AzFloat,
     _12: AzFloat,
     _21: AzFloat,
     _22: AzFloat,
     _31: AzFloat,
     _32: AzFloat,
-};
+}
 
 pub type AzMatrix = struct__AzMatrix;
 
-pub type struct__AzDrawOptions = {
+pub struct struct__AzDrawOptions {
     mAlpha: AzFloat,
     fields: uint16_t,
-};
+}
 
 pub type AzDrawOptions = struct__AzDrawOptions;
 
-pub type struct__AzStrokeOptions = {
+pub struct struct__AzStrokeOptions {
     mLineWidth: AzFloat,
     mMiterLimit: AzFloat,
     mDashPattern: *AzFloat,
     mDashLength: size_t,
     mDashOffset: AzFloat,
     fields: uint16_t,
-};
+}
 
 pub type AzStrokeOptions = struct__AzStrokeOptions;
 
-pub type struct__AzDrawSurfaceOptions = {
+pub struct struct__AzDrawSurfaceOptions {
     fields: uint32_t,
-};
+}
 
 pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
-pub type struct__AzGlyph = {
+pub struct struct__AzGlyph {
     mIndex: uint32_t,
     mPosition: AzPoint,
-};
+}
 
 pub type AzGlyph = struct__AzGlyph;
 
-pub type struct__AzGlyphBuffer = {
+pub struct struct__AzGlyphBuffer {
     mGlyphs: *AzGlyph,
     mNumGlyphs: uint32_t,
-};
+}
 
 pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
-pub type struct__AzNativeFont = {
+pub struct struct__AzNativeFont {
     mType: enum_AzNativeFontType,
     mFont: *c_void,
-};
+}
 
 pub type AzNativeFont = struct__AzNativeFont;
 

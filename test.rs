@@ -45,7 +45,9 @@ type XEventStub = {
 };
 
 fn xexpose(event: *XEventStub) -> *XExposeEvent {
-    unsafe { cast::reinterpret_cast(&ptr::addr_of(&(*event).padding)) }
+    unsafe {
+        cast::reinterpret_cast(&ptr::addr_of(&(*event).padding))
+    }
 }
 
 #[test]
