@@ -1,7 +1,7 @@
 extern mod xlib;
 extern mod cairo;
 
-use azure::{AzDrawTargetRef, AzFloat};
+use azure::{AzDrawTargetRef, AzFloat, struct__AzRect, struct__AzColor};
 use test::xlib::xlib::XExposeEvent;
 use test::xlib::xlib::bindgen::{XOpenDisplay, XDefaultScreen, XRootWindow};
 use test::xlib::xlib::bindgen::{XBlackPixel, XCreateSimpleWindow, XStoreName};
@@ -103,13 +103,13 @@ fn cairo_it_up() {
 
 fn paint(dt: AzDrawTargetRef) {
     log(error, "painting");
-    let rect = {
+    let rect = struct__AzRect {
         x: 200f as AzFloat,
         y: 200f as AzFloat,
         width: 100f as AzFloat,
         height: 100f as AzFloat
     };
-    let color = {
+    let color = struct__AzColor {
         r: 0f as AzFloat,
         g: 1f as AzFloat,
         b: 0f as AzFloat,

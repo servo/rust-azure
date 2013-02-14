@@ -84,7 +84,7 @@ impl ScaledFont {
     #[cfg(target_os="linux")]
     static pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
-        let mut azure_native_font = {
+        let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
             mFont: ptr::null()
         };
@@ -103,7 +103,7 @@ impl ScaledFont {
 
                 unsafe {
                     let cairo_face = cairo_ft_font_face_create_for_ft_face(native_font, FT_LOAD_DEFAULT as c_int);
-                    if cairo_face.is_null() { fail!("null cairo face"); }
+                    if cairo_face.is_null() { fail!(~"null cairo face"); }
 
                     let cairo_font = ScaledFont::create_cairo_font(cairo_face, size);
                     cairo_font_face_destroy(cairo_face);
