@@ -9,6 +9,11 @@
 #[nolink]
 extern { }
 
+#[cfg(target_os = "android")]
+#[link_args = "-L. -lazure -lstdc++ -lskia -lexpat -lfontconfig -lEGL"]
+#[nolink]
+extern { }
+
 #[cfg(target_os = "macos")]
 #[link_args = "-L. -lazure -lstdc++ -framework ApplicationServices \
 			   -lskia -framework IOSurface -lobjc -framework OpenGL \
