@@ -32,7 +32,7 @@ pub trait AsAzureRect {
     fn as_azure_rect() -> AzRect;
 }
 
-impl Rect<AzFloat> : AsAzureRect {
+impl AsAzureRect for Rect<AzFloat> {
     fn as_azure_rect() -> AzRect {
         struct__AzRect {
             x: self.origin.x,
@@ -47,7 +47,7 @@ pub trait AsAzureIntSize {
     fn as_azure_int_size() -> AzIntSize;
 }
 
-impl Size2D<i32> : AsAzureIntSize {
+impl AsAzureIntSize for Size2D<i32> {
     fn as_azure_int_size() -> AzIntSize {
         struct__AzIntSize {
             width: self.width,
@@ -244,7 +244,7 @@ pub impl DrawTarget {
                                                        to_unsafe_ptr(&size.as_azure_int_size()),
                                                        format.as_azure_surface_format());
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
-            DrawTarget { azure_draw_target: move azure_draw_target, data: None }
+            DrawTarget { azure_draw_target: azure_draw_target, data: None }
         }
     }
 
@@ -264,8 +264,8 @@ pub impl DrawTarget {
                                           format.as_azure_surface_format());
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
             DrawTarget {
-                azure_draw_target: move azure_draw_target,
-                data: Some(ARC(move data))
+                azure_draw_target: azure_draw_target,
+                data: Some(ARC(data))
             }
         }
     }
@@ -458,7 +458,7 @@ impl SourceSurface {
     }
 }
 
-impl SourceSurface : SourceSurfaceMethods {
+impl SourceSurfaceMethods for SourceSurface {
     fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef { self.azure_source_surface }
 }
 
@@ -493,7 +493,7 @@ impl DataSourceSurface {
     }
 }
 
-impl DataSourceSurface : SourceSurfaceMethods {
+impl SourceSurfaceMethods for DataSourceSurface {
     fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
     }
