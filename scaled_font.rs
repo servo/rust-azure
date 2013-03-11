@@ -31,12 +31,11 @@ priv use scaled_font::macos::*;
 #[cfg(target_os="linux")]
 pub mod linux {
     extern mod freetype;
-    use cairo::cairo_ft::bindgen::cairo_ft_font_face_create_for_ft_face;
-    use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+    pub use cairo::cairo_ft::bindgen::cairo_ft_font_face_create_for_ft_face;
+    pub use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 #[cfg(target_os="linux")]
 priv use scaled_font::linux::*;
-
 
 type SkTypeface = *c_void;
 

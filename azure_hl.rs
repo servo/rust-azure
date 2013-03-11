@@ -18,8 +18,8 @@ use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::bindgen::{AzSourceSurfaceGetSize};
 pub use cairo::cairo_hl::ImageSurface;
 
-use libc::c_void;
-use libc::types::common::c99::uint16_t;
+use core::libc::c_void;
+use core::libc::types::common::c99::uint16_t;
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
 use geom::matrix2d::Matrix2D;
@@ -29,11 +29,11 @@ use std::arc::ARC;
 use std::arc;
 
 pub trait AsAzureRect {
-    fn as_azure_rect() -> AzRect;
+    fn as_azure_rect(&self) -> AzRect;
 }
 
 impl AsAzureRect for Rect<AzFloat> {
-    fn as_azure_rect() -> AzRect {
+    fn as_azure_rect(&self) -> AzRect {
         struct__AzRect {
             x: self.origin.x,
             y: self.origin.y,
@@ -44,11 +44,11 @@ impl AsAzureRect for Rect<AzFloat> {
 }
 
 pub trait AsAzureIntSize {
-    fn as_azure_int_size() -> AzIntSize;
+    fn as_azure_int_size(&self) -> AzIntSize;
 }
 
 impl AsAzureIntSize for Size2D<i32> {
-    fn as_azure_int_size() -> AzIntSize {
+    fn as_azure_int_size(&self) -> AzIntSize {
         struct__AzIntSize {
             width: self.width,
             height: self.height
@@ -64,7 +64,7 @@ pub struct Color {
 }
 
 impl Color {
-    fn as_azure_color() -> AzColor {
+    fn as_azure_color(&self) -> AzColor {
         struct__AzColor { r: self.r, g: self.g, b: self.b, a: self.a }
     }
 }
@@ -100,7 +100,7 @@ pub struct StrokeOptions {
 }
 
 impl StrokeOptions {
-    fn as_azure_stroke_options() -> AzStrokeOptions {
+    fn as_azure_stroke_options(&self) -> AzStrokeOptions {
         struct__AzStrokeOptions {
             mLineWidth: self.line_width,
             mMiterLimit: self.miter_limit,
@@ -128,7 +128,7 @@ pub struct DrawOptions {
 }
 
 impl DrawOptions {
-    fn as_azure_draw_options() -> AzDrawOptions {
+    fn as_azure_draw_options(&self) -> AzDrawOptions {
         struct__AzDrawOptions {
             mAlpha: self.alpha,
             fields: self.fields
@@ -152,7 +152,7 @@ pub enum SurfaceFormat {
 }
 
 impl SurfaceFormat {
-    fn as_azure_surface_format() -> AzSurfaceFormat {
+    fn as_azure_surface_format(self) -> AzSurfaceFormat {
         self as AzSurfaceFormat
     }
 
@@ -173,7 +173,7 @@ pub enum Filter {
 }
 
 impl Filter {
-    fn as_azure_filter() -> AzFilter {
+    fn as_azure_filter(self) -> AzFilter {
         self as AzFilter
     }
 }
@@ -184,7 +184,7 @@ pub struct DrawSurfaceOptions {
 }
 
 impl DrawSurfaceOptions {
-    fn as_azure_draw_surface_options() -> AzDrawSurfaceOptions {
+    fn as_azure_draw_surface_options(&self) -> AzDrawSurfaceOptions {
         struct__AzDrawSurfaceOptions {
             fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32
         }
@@ -287,19 +287,19 @@ pub impl DrawTarget {
         }
     }
 
-    fn flush() {
+    fn flush(&self) {
         unsafe {
             AzDrawTargetFlush(self.azure_draw_target);
         }
     }
 
-    fn clear_rect(rect: &Rect<AzFloat>) {
+    fn clear_rect(&self, rect: &Rect<AzFloat>) {
         unsafe {
             AzDrawTargetClearRect(self.azure_draw_target, &rect.as_azure_rect());
         }
     }
 
-    fn fill_rect(rect: &Rect<AzFloat>, pattern: &ColorPattern) {
+    fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
                                  to_unsafe_ptr(&rect.as_azure_rect()),
@@ -307,7 +307,8 @@ pub impl DrawTarget {
         }
     }
 
-    fn stroke_rect(rect: &Rect<AzFloat>,
+    fn stroke_rect(&self,
+                   rect: &Rect<AzFloat>,
                    pattern: &ColorPattern,
                    stroke_options: &StrokeOptions,
                    draw_options: &DrawOptions) {
@@ -320,7 +321,8 @@ pub impl DrawTarget {
         }
     }
 
-    fn draw_surface(surface: SourceSurface,
+    fn draw_surface(&self,
+                    surface: SourceSurface,
                     dest: Rect<AzFloat>,
                     source: Rect<AzFloat>,
                     surf_options: DrawSurfaceOptions,
@@ -342,7 +344,8 @@ pub impl DrawTarget {
         }
     }
 
-    fn create_source_surface_from_data(data: &[u8],
+    fn create_source_surface_from_data(&self,
+                                       data: &[u8],
                                        size: Size2D<i32>,
                                        stride: i32,
                                        format: SurfaceFormat)
@@ -359,7 +362,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn set_transform(matrix: &Matrix2D<AzFloat>) {
+    fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
         }
