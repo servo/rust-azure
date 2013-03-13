@@ -18,7 +18,6 @@ use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::bindgen::{AzSourceSurfaceGetSize};
 pub use cairo::cairo_hl::ImageSurface;
 
-use core::libc::c_void;
 use core::libc::types::common::c99::uint16_t;
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
@@ -77,8 +76,10 @@ pub fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
 // FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
     azure_color_pattern: AzColorPatternRef,
+}
 
-    drop {
+impl Drop for ColorPattern {
+    fn finalize(&self) {
         unsafe {
             AzReleaseColorPattern(self.azure_color_pattern);
         }
@@ -228,8 +229,10 @@ impl BackendType {
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
     data: Option<ARC<~[u8]>>,
+}
 
-    drop {
+impl Drop for DrawTarget {
+    fn finalize(&self) {
         unsafe {
             AzReleaseDrawTarget(self.azure_draw_target);
         }
@@ -255,7 +258,7 @@ pub impl DrawTarget {
                                 stride: i32,
                                 format: SurfaceFormat) -> DrawTarget {
         unsafe {
-            assert (data.len() - offset) as i32 >= stride * size.height;
+            fail_unless!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
                 AzCreateDrawTargetForData(backend.as_azure_backend_type(),
                                           to_unsafe_ptr(&data[offset]),
@@ -350,7 +353,7 @@ pub impl DrawTarget {
                                        stride: i32,
                                        format: SurfaceFormat)
                                     -> SourceSurface {
-        assert data.len() as i32 == stride * size.height;
+        fail_unless!(data.len() as i32 == stride * size.height);
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
@@ -418,8 +421,10 @@ pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef
 
 pub struct SourceSurface {
     priv azure_source_surface: AzSourceSurfaceRef,
+}
 
-    drop {
+impl Drop for SourceSurface {
+    fn finalize(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_source_surface);
         }
@@ -467,8 +472,10 @@ impl SourceSurfaceMethods for SourceSurface {
 
 pub struct DataSourceSurface {
     priv azure_data_source_surface: AzDataSourceSurfaceRef,
+}
 
-    drop {
+impl Drop for DataSourceSurface {
+    fn finalize(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_data_source_surface);
         }

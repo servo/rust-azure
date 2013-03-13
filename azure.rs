@@ -137,19 +137,19 @@ pub struct struct__AzColor {
 
 pub type AzColor = struct__AzColor;
 
-pub type struct__AzGradientStop = {
+pub struct struct__AzGradientStop {
     offset: AzFloat,
     color: AzColor,
-};
+}
 
 pub type AzGradientStop = struct__AzGradientStop;
 
-pub type struct__AzIntRect = {
+pub struct struct__AzIntRect {
     x: int32_t,
     y: int32_t,
     width: int32_t,
     height: int32_t,
-};
+}
 
 pub type AzIntRect = struct__AzIntRect;
 

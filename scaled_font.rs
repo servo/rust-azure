@@ -41,8 +41,10 @@ type SkTypeface = *c_void;
 
 pub struct ScaledFont {
     azure_scaled_font: AzScaledFontRef,
+}
 
-    drop {
+impl Drop for ScaledFont {
+    fn finalize(&self) {
         unsafe {
             AzReleaseScaledFont(self.azure_scaled_font);
         }
@@ -50,7 +52,7 @@ pub struct ScaledFont {
 }
 
 impl ScaledFont {
-    pub pure fn get_ref() -> AzScaledFontRef {
+    pub pure fn get_ref(&self) -> AzScaledFontRef {
         self.azure_scaled_font
     }
 
@@ -169,9 +171,9 @@ impl ScaledFont {
 
 // FIXME: Move this stuff to a rust-skia?
 // FIXME: Demangle the names!!!
+#[cfg(target_os="macos")]
 #[link_args="-lskia"]
 extern {
-    #[cfg(target_os="macos")]
     pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *SkTypeface;
 }
 
