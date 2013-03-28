@@ -1,14 +1,13 @@
 extern mod cairo;
 
 use azure::{AzScaledFontRef, AzFloat};
-use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE};
 use azure::{AZ_NATIVE_FONT_CAIRO_FONT_FACE, AZ_NATIVE_FONT_MAC_FONT_FACE};
 use azure::{struct__AzNativeFont};
 
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend};
 use azure_hl::{CoreGraphicsBackend, Direct2DBackend, NoBackend, RecordingBackend};
 use azure_hl::{SkiaBackend};
-use bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
+use azure::bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
 use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
 use cairo::cairo::{struct__cairo_matrix};
 use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
@@ -18,15 +17,19 @@ use cairo::cairo::bindgen::{cairo_scaled_font_create};
 use core::libc::{c_void, c_double, c_int};
 
 #[cfg(target_os="macos")]
+priv use scaled_font::macos::*;
+
+#[cfg(target_os="linux")]
+priv use scaled_font::linux::*;
+
+#[cfg(target_os="macos")]
 pub mod macos {
     extern mod core_graphics;
     extern mod core_text;
-    use scaled_font::macos::core_text::font::CTFontRef;
-    use scaled_font::macos::core_graphics::font::{CGFont, CGFontRef};
-    use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
+    pub use scaled_font::macos::core_text::font::CTFontRef;
+    pub use scaled_font::macos::core_graphics::font::{CGFont, CGFontRef};
+    pub use cairo::cairo_quartz::bindgen::cairo_quartz_font_face_create_for_cgfont;
 }
-#[cfg(target_os="macos")]
-priv use scaled_font::macos::*;
 
 #[cfg(target_os="linux")]
 pub mod linux {
@@ -34,8 +37,6 @@ pub mod linux {
     pub use cairo::cairo_ft::bindgen::cairo_ft_font_face_create_for_ft_face;
     pub use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
-#[cfg(target_os="linux")]
-priv use scaled_font::linux::*;
 
 type SkTypeface = *c_void;
 
@@ -52,11 +53,11 @@ impl Drop for ScaledFont {
 }
 
 impl ScaledFont {
-    pub pure fn get_ref(&self) -> AzScaledFontRef {
+    pub fn get_ref(&self) -> AzScaledFontRef {
         self.azure_scaled_font
     }
 
-    static priv fn create_cairo_font(face: *cairo_font_face_t, size: AzFloat)
+    priv fn create_cairo_font(face: *cairo_font_face_t, size: AzFloat)
                                   -> *cairo_scaled_font_t {
         // FIXME: error handling
 
@@ -83,7 +84,7 @@ impl ScaledFont {
     }
 
     #[cfg(target_os="linux")]
-    static pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
+    pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
@@ -126,7 +127,7 @@ impl ScaledFont {
 
     /// Mac-specific function to create a font for the given backend.
     #[cfg(target_os="macos")]
-    static pub fn new(backend: BackendType, native_font: &const CGFont, size: AzFloat)
+    pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat)
                    -> ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {

@@ -157,7 +157,7 @@ impl SurfaceFormat {
         self as AzSurfaceFormat
     }
 
-    static pub fn new(azure_surface_format: AzSurfaceFormat) -> SurfaceFormat {
+    pub fn new(azure_surface_format: AzSurfaceFormat) -> SurfaceFormat {
         match azure_surface_format {
             0 => B8G8R8A8,
             1 => R8G8R8X8,
@@ -240,7 +240,7 @@ impl Drop for DrawTarget {
 }
 
 pub impl DrawTarget {
-    static pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
+    pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
                    -> DrawTarget {
         unsafe {
             let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
@@ -251,12 +251,12 @@ pub impl DrawTarget {
         }
     }
 
-    static pub fn new_with_data(backend: BackendType,
-                                data: ~[u8],
-                                offset: uint,
-                                size: Size2D<i32>,
-                                stride: i32,
-                                format: SurfaceFormat) -> DrawTarget {
+    pub fn new_with_data(backend: BackendType,
+                         data: ~[u8],
+                         offset: uint,
+                         size: Size2D<i32>,
+                         stride: i32,
+                         format: SurfaceFormat) -> DrawTarget {
         unsafe {
             fail_unless!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
