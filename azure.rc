@@ -6,6 +6,8 @@ extern mod std;
 extern mod geom;
 extern mod cairo;
 
+pub use azure::*;
+
 pub mod azure_hl;
 pub mod scaled_font;
 
@@ -15,5 +17,3 @@ pub mod test;
 pub mod linkhack;
 
 pub mod azure;
-
-pub use azure::*;

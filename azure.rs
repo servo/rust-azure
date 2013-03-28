@@ -8,125 +8,125 @@ pub type AzFontOptions = *c_void;
 pub type AzFloat = c_float;
 
 pub type enum_AzSurfaceType = c_uint;
-pub const AZ_SURFACE_DATA: u32 = 0_u32;
-pub const AZ_SURFACE_D2D1_BITMAP: u32 = 1_u32;
-pub const AZ_SURFACE_D2D1_DRAWTARGET: u32 = 2_u32;
-pub const AZ_SURFACE_CAIRO: u32 = 3_u32;
-pub const AZ_SURFACE_CAIRO_IMAGE: u32 = 4_u32;
-pub const AZ_SURFACE_COREGRAPHICS_IMAGE: u32 = 5_u32;
-pub const AZ_SURFACE_COREGRAPHICS_CGCONTEXT: u32 = 6_u32;
-pub const AZ_SURFACE_SKIA: u32 = 7_u32;
-pub const AZ_SURFACE_DUAL_DT: u32 = 8_u32;
+pub static AZ_SURFACE_DATA: u32 = 0_u32;
+pub static AZ_SURFACE_D2D1_BITMAP: u32 = 1_u32;
+pub static AZ_SURFACE_D2D1_DRAWTARGET: u32 = 2_u32;
+pub static AZ_SURFACE_CAIRO: u32 = 3_u32;
+pub static AZ_SURFACE_CAIRO_IMAGE: u32 = 4_u32;
+pub static AZ_SURFACE_COREGRAPHICS_IMAGE: u32 = 5_u32;
+pub static AZ_SURFACE_COREGRAPHICS_CGCONTEXT: u32 = 6_u32;
+pub static AZ_SURFACE_SKIA: u32 = 7_u32;
+pub static AZ_SURFACE_DUAL_DT: u32 = 8_u32;
 
 pub type enum_AzSurfaceFormat = c_uint;
-pub const AZ_FORMAT_B8G8R8A8: u32 = 0_u32;
-pub const AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
-pub const AZ_FORMAT_R5G6B5: u32 = 2_u32;
-pub const AZ_FORMAT_A8: u32 = 3_u32;
+pub static AZ_FORMAT_B8G8R8A8: u32 = 0_u32;
+pub static AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
+pub static AZ_FORMAT_R5G6B5: u32 = 2_u32;
+pub static AZ_FORMAT_A8: u32 = 3_u32;
 
 pub type AzSurfaceFormat = enum_AzSurfaceFormat;
 
 pub type enum_AzBackendType = c_uint;
-pub const AZ_BACKEND_NONE: u32 = 0_u32;
-pub const AZ_BACKEND_DIRECT2D: u32 = 1_u32;
-pub const AZ_BACKEND_COREGRAPHICS: u32 = 2_u32;
-pub const AZ_BACKEND_COREGRAPHICS_ACCELERATED: u32 = 3_u32;
-pub const AZ_BACKEND_CAIRO: u32 = 4_u32;
-pub const AZ_BACKEND_SKIA: u32 = 5_u32;
-pub const AZ_BACKEND_RECORDING: u32 = 6_u32;
+pub static AZ_BACKEND_NONE: u32 = 0_u32;
+pub static AZ_BACKEND_DIRECT2D: u32 = 1_u32;
+pub static AZ_BACKEND_COREGRAPHICS: u32 = 2_u32;
+pub static AZ_BACKEND_COREGRAPHICS_ACCELERATED: u32 = 3_u32;
+pub static AZ_BACKEND_CAIRO: u32 = 4_u32;
+pub static AZ_BACKEND_SKIA: u32 = 5_u32;
+pub static AZ_BACKEND_RECORDING: u32 = 6_u32;
 
 pub type AzBackendType = enum_AzBackendType;
 
 pub type enum_AzFontType = c_uint;
-pub const AZ_FONT_DWRITE: u32 = 0_u32;
-pub const AZ_FONT_GDI: u32 = 1_u32;
-pub const AZ_FONT_MAC: u32 = 2_u32;
-pub const AZ_FONT_SKIA: u32 = 3_u32;
-pub const AZ_FONT_CAIRO: u32 = 4_u32;
-pub const AZ_FONT_COREGRAPHICS: u32 = 5_u32;
+pub static AZ_FONT_DWRITE: u32 = 0_u32;
+pub static AZ_FONT_GDI: u32 = 1_u32;
+pub static AZ_FONT_MAC: u32 = 2_u32;
+pub static AZ_FONT_SKIA: u32 = 3_u32;
+pub static AZ_FONT_CAIRO: u32 = 4_u32;
+pub static AZ_FONT_COREGRAPHICS: u32 = 5_u32;
 
 pub type enum_AzNativeSurfaceType = c_uint;
-pub const AZ_NATIVE_SURFACE_D3D10_TEXTURE: u32 = 0_u32;
-pub const AZ_NATIVE_SURFACE_CAIRO_SURFACE: u32 = 1_u32;
-pub const AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 2_u32;
+pub static AZ_NATIVE_SURFACE_D3D10_TEXTURE: u32 = 0_u32;
+pub static AZ_NATIVE_SURFACE_CAIRO_SURFACE: u32 = 1_u32;
+pub static AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 2_u32;
 
 pub type enum_AzNativeFontType = c_uint;
-pub const AZ_NATIVE_FONT_DWRITE_FONT_FACE: u32 = 0_u32;
-pub const AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
-pub const AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
-pub const AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
-pub const AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
+pub static AZ_NATIVE_FONT_DWRITE_FONT_FACE: u32 = 0_u32;
+pub static AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
+pub static AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
+pub static AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
+pub static AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
 
 pub type enum_AzFontStyle = c_uint;
-pub const AZ_FONT_STYLE_NORMAL: u32 = 0_u32;
-pub const AZ_FONT_STYLE_ITALIC: u32 = 1_u32;
-pub const AZ_FONT_STYLE_BOLD: u32 = 2_u32;
-pub const AZ_FONT_STYLE_BOLD_ITALIC: u32 = 3_u32;
+pub static AZ_FONT_STYLE_NORMAL: u32 = 0_u32;
+pub static AZ_FONT_STYLE_ITALIC: u32 = 1_u32;
+pub static AZ_FONT_STYLE_BOLD: u32 = 2_u32;
+pub static AZ_FONT_STYLE_BOLD_ITALIC: u32 = 3_u32;
 
 pub type enum_AzCompositionOp = c_uint;
-pub const AZ_OP_OVER: u32 = 0_u32;
-pub const AZ_OP_ADD: u32 = 1_u32;
-pub const AZ_OP_ATOP: u32 = 2_u32;
-pub const AZ_OP_OUT: u32 = 3_u32;
-pub const AZ_OP_IN: u32 = 4_u32;
-pub const AZ_OP_SOURCE: u32 = 5_u32;
-pub const AZ_OP_DEST_IN: u32 = 6_u32;
-pub const AZ_OP_DEST_OUT: u32 = 7_u32;
-pub const AZ_OP_DEST_OVER: u32 = 8_u32;
-pub const AZ_OP_DEST_ATOP: u32 = 9_u32;
-pub const AZ_OP_XOR: u32 = 10_u32;
-pub const AZ_OP_COUNT: u32 = 11_u32;
+pub static AZ_OP_OVER: u32 = 0_u32;
+pub static AZ_OP_ADD: u32 = 1_u32;
+pub static AZ_OP_ATOP: u32 = 2_u32;
+pub static AZ_OP_OUT: u32 = 3_u32;
+pub static AZ_OP_IN: u32 = 4_u32;
+pub static AZ_OP_SOURCE: u32 = 5_u32;
+pub static AZ_OP_DEST_IN: u32 = 6_u32;
+pub static AZ_OP_DEST_OUT: u32 = 7_u32;
+pub static AZ_OP_DEST_OVER: u32 = 8_u32;
+pub static AZ_OP_DEST_ATOP: u32 = 9_u32;
+pub static AZ_OP_XOR: u32 = 10_u32;
+pub static AZ_OP_COUNT: u32 = 11_u32;
 
 pub type enum_AzExtendMode = c_uint;
-pub const AZ_EXTEND_CLAMP: u32 = 0_u32;
-pub const AZ_EXTEND_REPEAT: u32 = 1_u32;
-pub const AZ_EXTEND_REFLECT: u32 = 2_u32;
+pub static AZ_EXTEND_CLAMP: u32 = 0_u32;
+pub static AZ_EXTEND_REPEAT: u32 = 1_u32;
+pub static AZ_EXTEND_REFLECT: u32 = 2_u32;
 
 pub type enum_AzFillRule = c_uint;
-pub const AZ_FILL_WINDING: u32 = 0_u32;
-pub const AZ_FILL_EVEN_ODD: u32 = 1_u32;
+pub static AZ_FILL_WINDING: u32 = 0_u32;
+pub static AZ_FILL_EVEN_ODD: u32 = 1_u32;
 
 pub type enum_AzAntialiasMode = c_uint;
-pub const AZ_AA_NONE: u32 = 0_u32;
-pub const AZ_AA_GRAY: u32 = 1_u32;
-pub const AZ_AA_SUBPIXEL: u32 = 2_u32;
+pub static AZ_AA_NONE: u32 = 0_u32;
+pub static AZ_AA_GRAY: u32 = 1_u32;
+pub static AZ_AA_SUBPIXEL: u32 = 2_u32;
 
 pub type enum_AzSnapping = c_uint;
-pub const AZ_SNAP_NONE: u32 = 0_u32;
-pub const AZ_SNAP_ALIGNED: u32 = 1_u32;
+pub static AZ_SNAP_NONE: u32 = 0_u32;
+pub static AZ_SNAP_ALIGNED: u32 = 1_u32;
 
 pub type enum_AzFilter = c_uint;
-pub const AZ_FILTER_LINEAR: u32 = 0_u32;
-pub const AZ_FILTER_POINT: u32 = 1_u32;
+pub static AZ_FILTER_LINEAR: u32 = 0_u32;
+pub static AZ_FILTER_POINT: u32 = 1_u32;
 
 pub type AzFilter = enum_AzFilter;
 
 pub type enum_AzPatternType = c_uint;
-pub const AZ_PATTERN_COLOR: u32 = 0_u32;
-pub const AZ_PATTERN_SURFACE: u32 = 1_u32;
-pub const AZ_PATTERN_LINEAR_GRADIENT: u32 = 2_u32;
-pub const AZ_PATTERN_RADIAL_GRADIENT: u32 = 3_u32;
+pub static AZ_PATTERN_COLOR: u32 = 0_u32;
+pub static AZ_PATTERN_SURFACE: u32 = 1_u32;
+pub static AZ_PATTERN_LINEAR_GRADIENT: u32 = 2_u32;
+pub static AZ_PATTERN_RADIAL_GRADIENT: u32 = 3_u32;
 
 pub type enum_AzJoinStyle = c_uint;
-pub const AZ_JOIN_BEVEL: u32 = 0_u32;
-pub const AZ_JOIN_ROUND: u32 = 1_u32;
-pub const AZ_JOIN_MITER: u32 = 2_u32;
-pub const AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
+pub static AZ_JOIN_BEVEL: u32 = 0_u32;
+pub static AZ_JOIN_ROUND: u32 = 1_u32;
+pub static AZ_JOIN_MITER: u32 = 2_u32;
+pub static AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
 
 pub type enum_AzCapStyle = c_uint;
-pub const AZ_CAP_BUTT: u32 = 0_u32;
-pub const AZ_CAP_ROUND: u32 = 1_u32;
-pub const AZ_CAP_SQUARE: u32 = 2_u32;
+pub static AZ_CAP_BUTT: u32 = 0_u32;
+pub static AZ_CAP_ROUND: u32 = 1_u32;
+pub static AZ_CAP_SQUARE: u32 = 2_u32;
 
 pub type enum_AzSamplingBounds = c_uint;
-pub const AZ_SAMPLING_UNBOUNDED: u32 = 0_u32;
-pub const AZ_SAMPLING_BOUNDED: u32 = 1_u32;
+pub static AZ_SAMPLING_UNBOUNDED: u32 = 0_u32;
+pub static AZ_SAMPLING_BOUNDED: u32 = 1_u32;
 
 pub type enum_AzSide = c_uint;
-pub const AZ_eSideTop: u32 = 0_u32;
-pub const AZ_eSideRight: u32 = 1_u32;
-pub const AZ_eSideBottom: u32 = 2_u32;
-pub const AZ_eSideLeft: u32 = 3_u32;
+pub static AZ_eSideTop: u32 = 0_u32;
+pub static AZ_eSideRight: u32 = 1_u32;
+pub static AZ_eSideBottom: u32 = 2_u32;
+pub static AZ_eSideLeft: u32 = 3_u32;
 
 pub struct struct__AzColor {
     r: AzFloat,
