@@ -7,14 +7,14 @@ use azure::{struct__AzNativeFont};
 use azure_hl::{BackendType, CairoBackend, CoreGraphicsAcceleratedBackend};
 use azure_hl::{CoreGraphicsBackend, Direct2DBackend, NoBackend, RecordingBackend};
 use azure_hl::{SkiaBackend};
-use azure::bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzCreateFontOptions, AzDestroyFontOptions};
+use azure::bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 use cairo::cairo::{cairo_font_face_t, cairo_matrix_t, cairo_scaled_font_t};
 use cairo::cairo::{struct__cairo_matrix};
 use cairo::cairo::bindgen::{cairo_font_face_destroy, cairo_font_options_create};
 use cairo::cairo::bindgen::{cairo_font_options_destroy, cairo_matrix_init_identity, cairo_matrix_scale};
 use cairo::cairo::bindgen::{cairo_scaled_font_create};
 
-use core::libc::{c_void, c_double, c_int};
+use core::libc::{c_void, c_double};
 
 #[cfg(target_os="macos")]
 priv use scaled_font::macos::*;
