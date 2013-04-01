@@ -258,7 +258,7 @@ pub impl DrawTarget {
                          stride: i32,
                          format: SurfaceFormat) -> DrawTarget {
         unsafe {
-            fail_unless!((data.len() - offset) as i32 >= stride * size.height);
+            assert!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
                 AzCreateDrawTargetForData(backend.as_azure_backend_type(),
                                           to_unsafe_ptr(&data[offset]),
@@ -353,7 +353,7 @@ pub impl DrawTarget {
                                        stride: i32,
                                        format: SurfaceFormat)
                                     -> SourceSurface {
-        fail_unless!(data.len() as i32 == stride * size.height);
+        assert!(data.len() as i32 == stride * size.height);
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
