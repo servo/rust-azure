@@ -207,6 +207,7 @@ Factory::CreateDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFor
       break;
     }
 #endif
+#ifdef USE_CAIRO
   case BACKEND_CAIRO:
     {
       RefPtr<DrawTargetCairo> newTarget;
@@ -216,6 +217,7 @@ Factory::CreateDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFor
       }
       break;
     }
+#endif
   default:
     gfxDebug() << "Invalid draw target type specified.";
     return nullptr;
@@ -269,6 +271,7 @@ Factory::CreateDrawTargetForData(BackendType aBackend,
       break;
     }
 #endif
+#ifdef USE_CAIRO
   case BACKEND_CAIRO:
     {
       RefPtr<DrawTargetCairo> newTarget = new DrawTargetCairo();
@@ -276,6 +279,7 @@ Factory::CreateDrawTargetForData(BackendType aBackend,
         return newTarget;
       break;
     }
+#endif
   default:
     gfxDebug() << "Invalid draw target type specified.";
     return nullptr;

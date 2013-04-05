@@ -1,26 +1,25 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// High-level bindings to Azure.
+//! High-level bindings to Azure.
+
 use azure::{AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{struct__AzColor};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzRect, struct__AzStrokeOptions};
-use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForCairoSurface};
-use azure::bindgen::{AzCreateDrawTargetForData, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use azure::bindgen::AzDrawTargetClearRect;
-use azure::bindgen::AzDrawTargetCreateSourceSurfaceFromData;
+use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
+use azure::bindgen::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use azure::bindgen::{AzDrawTargetClearRect};
+use azure::bindgen::{AzDrawTargetCreateSourceSurfaceFromData};
 use azure::bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::bindgen::{AzDrawTargetGetSnapshot, AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
 use azure::bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
-use azure::bindgen::AzReleaseSourceSurface;
-use azure::bindgen::AzRetainDrawTarget;
+use azure::bindgen::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::bindgen::{AzSourceSurfaceGetSize};
-pub use cairo::cairo_hl::ImageSurface;
 
 use core::libc::types::common::c99::uint16_t;
 use core::cast::transmute;
@@ -377,40 +376,9 @@ pub impl DrawTarget {
 }
 
 
-pub fn DrawTarget(cairo_surface: &ImageSurface) -> DrawTarget {
-    unsafe {
-        let size = struct__AzIntSize {
-            width: cairo_surface.width(),
-            height: cairo_surface.height()
-        };
-        DrawTarget {
-            azure_draw_target: AzCreateDrawTargetForCairoSurface(
-                cairo_surface.cairo_surface,
-                &size),
-            data: None
-        }
-    }
-}
-
-
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
     return draw_target.clone();
-}
-
-pub fn new_draw_target(cairo_surface: &ImageSurface) -> DrawTarget {
-	let size = struct__AzIntSize {
-        width: cairo_surface.width(),
-        height: cairo_surface.height()
-    };
-    unsafe {
-        DrawTarget {
-            azure_draw_target: AzCreateDrawTargetForCairoSurface(
-                cairo_surface.cairo_surface,
-                &size),
-            data: None
-        }
-    }
 }
 
 pub fn new_draw_target_from_azure_draw_target(azure_draw_target: AzDrawTargetRef) -> DrawTarget {

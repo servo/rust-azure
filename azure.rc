@@ -8,7 +8,6 @@
 
 extern mod std;
 extern mod geom;
-extern mod cairo;
 
 pub use azure::*;
 
