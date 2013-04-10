@@ -32,8 +32,10 @@ namespace gfx {
 SkColor ColorToSkColor(const Color &color, Float aAlpha)
 {
   //XXX: do a better job converting to int
-  return SkColorSetARGB(U8CPU(color.a*aAlpha*255.0), U8CPU(color.r*255.0),
-                        U8CPU(color.g*255.0), U8CPU(color.b*255.0));
+
+  // expected ARGB but must be filled with ABGR since Skia backend is broken swapped with red and blue
+  return SkColorSetARGB(U8CPU(color.a*aAlpha*255.0), U8CPU(color.b*255.0),
+                        U8CPU(color.g*255.0), U8CPU(color.r*255.0));
 }
 
 class GradientStopsSkia : public GradientStops
