@@ -69,6 +69,7 @@ CXXFLAGS += \
 	-iquote $(VPATH)/../skia/include/effects \
 	-iquote $(VPATH)/../skia/include/ports \
 	-DUSE_SKIA \
+	-Wno-c++11-extensions \
 	$(NULL)
 endif
 
