@@ -8,10 +8,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef USE_CAIRO
-#include "cairo.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -287,11 +283,6 @@ AzDrawTargetRef AzCreateDrawTargetForData(AzBackendType aBackend,
                                           int32_t aStride,
                                           AzSurfaceFormat aFormat);
 
-#ifdef USE_CAIRO
-AzDrawTargetRef AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface,
-												  AzIntSize *aSize);
-#endif
-
 void AzRetainDrawTarget(AzDrawTargetRef aTarget);
 
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
@@ -340,12 +331,6 @@ int32_t AzDataSourceSurfaceGetStride(AzDataSourceSurfaceRef aSurface);
 
 
 /* Factory.h */
-
-#ifdef USE_CAIRO
-AzScaledFontRef AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
-                                            AzFloat aSize,
-                                            cairo_scaled_font_t *aScaledFont);
-#endif
 
 void AzReleaseScaledFont(AzScaledFontRef aFont);
 

@@ -15,6 +15,6 @@ done
 
 sed -e "s#%VPATH%#${SRCDIR}#" -e "s#%USE_CAIRO%#${USE_CAIRO}#" -e "s#%USE_SKIA%#${USE_SKIA}#" ${SRCDIR}/Makefile.in > Makefile
 
-mkdir -p src/2d
+mkdir -p src/gfx/2d
 mkdir -p src/memory/mozalloc
 

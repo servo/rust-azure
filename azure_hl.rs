@@ -150,7 +150,7 @@ pub fn DrawOptions(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
 
 pub enum SurfaceFormat {
     B8G8R8A8,
-    R8G8R8X8,
+    B8G8R8X8,
     R5G6B5,
     A8
 }
@@ -163,7 +163,7 @@ impl SurfaceFormat {
     pub fn new(azure_surface_format: AzSurfaceFormat) -> SurfaceFormat {
         match azure_surface_format {
             0 => B8G8R8A8,
-            1 => R8G8R8X8,
+            1 => B8G8R8X8,
             2 => R5G6B5,
             3 => A8,
             _ => fail!(~"SurfaceFormat::new(): unknown Azure surface format")
