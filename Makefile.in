@@ -1,6 +1,4 @@
 VPATH=%VPATH%
-USE_SKIA=%USE_SKIA%
-USE_CAIRO=%USE_CAIRO%
 
 CC ?= gcc
 CXX ?= g++
@@ -25,7 +23,7 @@ MOZALLOC_CPP_SRC = \
 	$(NULL)
 
 AZURE_CPP_SRC = \
-	$(addprefix src/2d/,\
+	$(addprefix src/gfx/2d/,\
 		Blur.cpp \
 		DrawEventRecorder.cpp \
 		DrawTargetRecording.cpp \
@@ -49,16 +47,18 @@ CXXFLAGS += \
 	-fPIC \
 	-msse2 \
 	-I$(VPATH)/include \
-	-I$(VPATH)/include/gl \
-	-I$(VPATH)/include/chromium \
-	-iquote $(VPATH)/include/mozilla/gfx \
+	-I$(VPATH)/include/mozilla/gfx \
+	-I$(VPATH)/include/mozilla/ipc/chromium/src \
+	-I$(VPATH)/include/mozilla/xpcom/base \
+	-I$(VPATH)/include/mozilla/xpcom/build \
+	-I$(VPATH)/include/mozilla/xpcom/glue \
+	-I$(VPATH)/include/mozilla/xpcom/string/public \
 	-DMOZ_GFX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(NULL)
 
-ifeq ($(USE_SKIA),1)
 AZURE_CPP_SRC += \
-	$(addprefix src/2d/,\
+	$(addprefix src/gfx/2d/,\
 		DrawTargetSkia.cpp \
 		PathSkia.cpp \
 		SourceSurfaceSkia.cpp)
@@ -68,40 +68,30 @@ CXXFLAGS += \
 	-iquote $(VPATH)/../skia/include/config \
 	-iquote $(VPATH)/../skia/include/effects \
 	-iquote $(VPATH)/../skia/include/ports \
+	-iquote $(VPATH)/../skia/include/utils \
+	-iquote $(VPATH)/../skia/include/gpu \
+	-iquote $(VPATH)/../skia/include/gpu/gl \
 	-DUSE_SKIA \
+	-DUSE_SKIA_GPU \
 	-Wno-c++11-extensions \
 	$(NULL)
-endif
-
-ifeq ($(USE_CAIRO),1)
-AZURE_CPP_SRC += \
-	$(addprefix src/2d/,\
-		DrawTargetCairo.cpp \
-		PathCairo.cpp \
-		SourceSurfaceCairo.cpp)
-
-CXXFLAGS += \
-	-iquote $(VPATH)/../cairo/src \
-	-iquote ../cairo/src \
-	-DUSE_CAIRO \
-	$(NULL)
-endif
 
 ifeq ($(OSTYPE),darwin)
-
 CXXFLAGS += \
 	-DXP_MACOSX \
 	-DXP_UNIX \
 	-DMALLOC_H="<malloc/malloc.h>" \
+	-I$(VPATH)/include/mozilla/gfx/gl \
 	$(NULL)
 
 AZURE_CPP_SRC += \
-	src/2d/ScaledFontMac.cpp \
-	src/2d/DrawTargetCG.cpp \
-	src/2d/PathCG.cpp \
-	src/2d/SourceSurfaceCG.cpp \
+	src/gfx/2d/ScaledFontMac.cpp \
+	src/gfx/2d/DrawTargetCG.cpp \
+	src/gfx/2d/PathCG.cpp \
+	src/gfx/2d/SourceSurfaceCG.cpp \
 	$(NULL)
-AZURE_OBJCPP_SRC = src/2d/QuartzSupport.mm
+
+AZURE_OBJCPP_SRC = src/gfx/2d/QuartzSupport.mm
 endif
 
 ifeq ($(OSTYPE),linux)
@@ -112,7 +102,7 @@ AZURE_OBJCPP_SRC =
 
 CXXFLAGS += -DMOZ_ENABLE_FREETYPE
 AZURE_CPP_SRC += \
-	$(addprefix src/2d/,\
+	$(addprefix src/gfx/2d/,\
 		ScaledFontFreetype.cpp)
 endif
 

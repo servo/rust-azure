@@ -1,52 +1,14 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
- * vim: set ts=8 sw=4 et tw=99 ft=cpp:
- *
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at:
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Code.
- *
- * The Initial Developer of the Original Code is
- *   The Mozilla Foundation
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Jeff Walden <jwalden+code@mit.edu> (original author)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* Implementations of various class and method modifier attributes. */
 
 #ifndef mozilla_Attributes_h_
 #define mozilla_Attributes_h_
 
-/*
- * This header does not include any other headers so that it can be included by
- * code that is (only currently) mfbt-incompatible.
- */
+#include "mozilla/Compiler.h"
 
 /*
  * MOZ_INLINE is a macro which expands to tell the compiler that the method
@@ -71,9 +33,7 @@
  * compilers are not guaranteed to respect it (although they're much more likely
  * to do so).
  */
-#if defined(DEBUG)
-#  define MOZ_ALWAYS_INLINE     MOZ_INLINE
-#elif defined(_MSC_VER)
+#if defined(_MSC_VER)
 #  define MOZ_ALWAYS_INLINE     __forceinline
 #elif defined(__GNUC__)
 #  define MOZ_ALWAYS_INLINE     __attribute__((always_inline)) MOZ_INLINE
@@ -98,6 +58,9 @@
 #  ifndef __has_extension
 #    define __has_extension __has_feature /* compatibility, for older versions of clang */
 #  endif
+#  if __has_extension(cxx_constexpr)
+#    define MOZ_HAVE_CXX11_CONSTEXPR
+#  endif
 #  if __has_extension(cxx_deleted_functions)
 #    define MOZ_HAVE_CXX11_DELETE
 #  endif
@@ -113,39 +76,43 @@
 #  endif
 #elif defined(__GNUC__)
 #  if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#    if __GNUC__ > 4
-#      define MOZ_HAVE_CXX11_DELETE
+#    if MOZ_GCC_VERSION_AT_LEAST(4, 7, 0)
 #      define MOZ_HAVE_CXX11_OVERRIDE
 #      define MOZ_HAVE_CXX11_FINAL       final
-#    elif __GNUC__ == 4
-#      if __GNUC_MINOR__ >= 7
-#        define MOZ_HAVE_CXX11_OVERRIDE
-#        define MOZ_HAVE_CXX11_FINAL     final
-#      endif
-#      if __GNUC_MINOR__ >= 4
-#        define MOZ_HAVE_CXX11_DELETE
-#      endif
 #    endif
+#    if MOZ_GCC_VERSION_AT_LEAST(4, 6, 0)
+#      define MOZ_HAVE_CXX11_CONSTEXPR
+#    endif
+#    define MOZ_HAVE_CXX11_DELETE
 #  else
      /* __final is a non-C++11 GCC synonym for 'final', per GCC r176655. */
-#    if __GNUC__ > 4
+#    if MOZ_GCC_VERSION_AT_LEAST(4, 7, 0)
 #      define MOZ_HAVE_CXX11_FINAL       __final
-#    elif __GNUC__ == 4
-#      if __GNUC_MINOR__ >= 7
-#        define MOZ_HAVE_CXX11_FINAL     __final
-#      endif
 #    endif
 #  endif
 #  define MOZ_HAVE_NEVER_INLINE          __attribute__((noinline))
 #  define MOZ_HAVE_NORETURN              __attribute__((noreturn))
 #elif defined(_MSC_VER)
-#  if _MSC_VER >= 1400
-#    define MOZ_HAVE_CXX11_OVERRIDE
-     /* MSVC currently spells "final" as "sealed". */
+#  if _MSC_VER >= 1700
+#    define MOZ_HAVE_CXX11_FINAL         final
+#  else
+     /* MSVC <= 10 used to spell "final" as "sealed". */
 #    define MOZ_HAVE_CXX11_FINAL         sealed
 #  endif
+#  define MOZ_HAVE_CXX11_OVERRIDE
 #  define MOZ_HAVE_NEVER_INLINE          __declspec(noinline)
 #  define MOZ_HAVE_NORETURN              __declspec(noreturn)
+#endif
+
+/*
+ * The MOZ_CONSTEXPR specifier declares that a C++11 compiler can evaluate a
+ * function at compile time. A constexpr function cannot examine any values
+ * except its arguments and can have no side effects except its return value.
+ */
+#ifdef MOZ_HAVE_CXX11_CONSTEXPR
+#  define MOZ_CONSTEXPR         constexpr
+#else
+#  define MOZ_CONSTEXPR         /* no support */
 #endif
 
 /*
@@ -179,6 +146,19 @@
 #else
 #  define MOZ_NORETURN          /* no support */
 #endif
+
+/*
+ * MOZ_ASAN_BLACKLIST is a macro to tell AddressSanitizer (a compile-time
+ * instrumentation shipped with Clang) to not instrument the annotated function.
+ * Furthermore, it will prevent the compiler from inlining the function because
+ * inlining currently breaks the blacklisting mechanism of AddressSanitizer.
+ */
+#if defined(MOZ_ASAN)
+#  define MOZ_ASAN_BLACKLIST MOZ_NEVER_INLINE __attribute__((no_address_safety_analysis))
+# else
+#  define MOZ_ASAN_BLACKLIST
+#endif
+
 
 #ifdef __cplusplus
 
@@ -338,6 +318,64 @@
 #else
 #  define MOZ_WARN_UNUSED_RESULT
 #endif
+
+/*
+ * The following macros are attributes that support the static analysis plugin
+ * included with Mozilla, and will be implemented (when such support is enabled)
+ * as C++11 attributes. Since such attributes are legal pretty much everywhere
+ * and have subtly different semantics depending on their placement, the
+ * following is a guide on where to place the attributes.
+ *
+ * Attributes that apply to a struct or class precede the name of the class:
+ * (Note that this is different from the placement of MOZ_FINAL for classes!)
+ *
+ *   class MOZ_CLASS_ATTRIBUTE SomeClass {};
+ *
+ * Attributes that apply to functions follow the parentheses and const
+ * qualifiers but precede MOZ_FINAL, MOZ_OVERRIDE and the function body:
+ *
+ *   void DeclaredFunction() MOZ_FUNCTION_ATTRIBUTE;
+ *   void SomeFunction() MOZ_FUNCTION_ATTRIBUTE {}
+ *   void PureFunction() const MOZ_FUNCTION_ATTRIBUTE = 0;
+ *   void OverriddenFunction() MOZ_FUNCTION_ATTIRBUTE MOZ_OVERRIDE;
+ *
+ * Attributes that apply to variables or parameters follow the variable's name:
+ *
+ *   int variable MOZ_VARIABLE_ATTRIBUTE;
+ *
+ * Attributes that apply to types follow the type name:
+ *
+ *   typedef int MOZ_TYPE_ATTRIBUTE MagicInt;
+ *   int MOZ_TYPE_ATTRIBUTE someVariable;
+ *   int * MOZ_TYPE_ATTRIBUTE magicPtrInt;
+ *   int MOZ_TYPE_ATTRIBUTE * ptrToMagicInt;
+ *
+ * Attributes that apply to statements precede the statement:
+ *
+ *   MOZ_IF_ATTRIBUTE if (x == 0)
+ *   MOZ_DO_ATTRIBUTE do { } while(0);
+ *
+ * Attributes that apply to labels precede the label:
+ *
+ *   MOZ_LABEL_ATTRIBUTE target:
+ *     goto target;
+ *   MOZ_CASE_ATTRIBUTE case 5:
+ *   MOZ_DEFAULT_ATTRIBUTE default:
+ *
+ * The static analyses that are performed by the plugin are as follows:
+ *
+ * MOZ_MUST_OVERRIDE: Applies to all C++ member functions. All immediate
+ *   subclasses must provide an exact override of this method; if a subclass
+ *   does not override this method, the compiler will emit an error. This
+ *   attribute is not limited to virtual methods, so if it is applied to a
+ *   nonvirtual method and the subclass does not provide an equivalent
+ *   definition, the compiler will emit an error.
+ */
+#ifdef MOZ_CLANG_PLUGIN
+# define MOZ_MUST_OVERRIDE __attribute__((annotate("moz_must_override")))
+#else
+# define MOZ_MUST_OVERRIDE /* nothing */
+#endif /* MOZ_CLANG_PLUGIN */
 
 #endif /* __cplusplus */
 

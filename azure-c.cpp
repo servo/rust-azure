@@ -173,16 +173,6 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
     return target;
 }
 
-#ifdef USE_CAIRO
-extern "C" AzDrawTargetRef
-AzCreateDrawTargetForCairoSurface(cairo_surface_t* aSurface, AzIntSize *aSize) {
-	gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
-    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetForCairoSurface(aSurface, *size);
-    target->AddRef();
-    return target;
-}
-#endif
-
 extern "C" void
 AzRetainDrawTarget(AzDrawTargetRef aTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
@@ -347,18 +337,6 @@ AzCreateScaledFontForNativeFont(AzNativeFont *aNativeFont, AzFloat aSize) {
     font->AddRef();
     return font;
 }
-
-#ifdef USE_CAIRO
-extern "C" AzScaledFontRef
-AzCreateScaledFontWithCairo(AzNativeFont *aNativeFont,
-                            AzFloat aSize,
-                            cairo_scaled_font_t *aScaledFont) {
-    gfx::NativeFont *gfxNativeFont = reinterpret_cast<gfx::NativeFont*>(aNativeFont);
-    RefPtr<gfx::ScaledFont> font = gfx::Factory::CreateScaledFontWithCairo(*gfxNativeFont, aSize, aScaledFont);
-    font->AddRef();
-    return font;
-}
-#endif
 
 extern "C" void
 AzReleaseScaledFont(AzScaledFontRef aFont) {
