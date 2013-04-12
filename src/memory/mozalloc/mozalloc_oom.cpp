@@ -1,42 +1,9 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
  * vim: sw=4 ts=4 et :
  */
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is mozilla.org code.
- *
- * The Initial Developer of the Original Code is
- * Mozilla Foundation
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *  Chris Jones <jones.chris.g@gmail.com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either of the GNU General Public License Version 2 or later (the "GPL"),
- * or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if defined(XP_WIN) || defined(XP_OS2)
 #  define MOZALLOC_EXPORT __declspec(dllexport)
@@ -44,12 +11,25 @@
 
 #include "mozilla/mozalloc_abort.h"
 #include "mozilla/mozalloc_oom.h"
+#include "mozilla/Assertions.h"
 
 static mozalloc_oom_abort_handler gAbortHandler;
+
+#define OOM_MSG_LEADER "out of memory: 0x"
+#define OOM_MSG_DIGITS "0000000000000000" // large enough for 2^64
+#define OOM_MSG_TRAILER " bytes requested"
+#define OOM_MSG_FIRST_DIGIT_OFFSET sizeof(OOM_MSG_LEADER) - 1
+#define OOM_MSG_LAST_DIGIT_OFFSET sizeof(OOM_MSG_LEADER) + \
+                                  sizeof(OOM_MSG_DIGITS) - 3
+
+static const char *hex = "0123456789ABCDEF";
 
 void
 mozalloc_handle_oom(size_t size)
 {
+    char oomMsg[] = OOM_MSG_LEADER OOM_MSG_DIGITS OOM_MSG_TRAILER;
+    size_t i;
+
     // NB: this is handle_oom() stage 1, which simply aborts on OOM.
     // we might proceed to a stage 2 in which an attempt is made to
     // reclaim memory
@@ -57,7 +37,17 @@ mozalloc_handle_oom(size_t size)
     if (gAbortHandler)
         gAbortHandler(size);
 
-    mozalloc_abort("out of memory");
+    MOZ_STATIC_ASSERT(OOM_MSG_FIRST_DIGIT_OFFSET > 0,
+                      "Loop below will never terminate (i can't go below 0)");
+
+    // Insert size into the diagnostic message using only primitive operations
+    for (i = OOM_MSG_LAST_DIGIT_OFFSET;
+         size && i >= OOM_MSG_FIRST_DIGIT_OFFSET; i--) {
+      oomMsg[i] = hex[size % 16];
+      size /= 16;
+    }
+
+    mozalloc_abort(oomMsg);
 }
 
 void

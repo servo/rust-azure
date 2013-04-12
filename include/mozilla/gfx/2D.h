@@ -30,7 +30,10 @@ struct ID3D10Device1;
 struct ID3D10Texture2D;
 struct IDWriteRenderingParams;
 
+class GrContext;
+
 namespace mozilla {
+
 namespace gfx {
 
 class SourceSurface;
@@ -63,7 +66,7 @@ struct NativeFont {
 struct DrawOptions {
   DrawOptions(Float aAlpha = 1.0f,
               CompositionOp aCompositionOp = OP_OVER,
-              AntialiasMode aAntialiasMode = AA_GRAY,
+              AntialiasMode aAntialiasMode = AA_DEFAULT,
               Snapping aSnapping = SNAP_NONE)
     : mAlpha(aAlpha)
     , mCompositionOp(aCompositionOp)
@@ -73,7 +76,7 @@ struct DrawOptions {
 
   Float mAlpha;
   CompositionOp mCompositionOp : 8;
-  AntialiasMode mAntialiasMode : 2;
+  AntialiasMode mAntialiasMode : 3;
   Snapping mSnapping : 1;
 };
 
@@ -323,11 +326,16 @@ class DataSourceSurface : public SourceSurface
 {
 public:
   virtual SurfaceType GetType() const { return SURFACE_DATA; }
-  /* Get the raw bitmap data of the surface */
+  /*
+   * Get the raw bitmap data of the surface.
+   * Can return null if there was OOM allocating surface data.
+   */
   virtual uint8_t *GetData() = 0;
+
   /*
    * Stride of the surface, distance in bytes between the start of the image
    * data belonging to row y and row y+1. This may be negative.
+   * Can return 0 if there was OOM allocating surface data.
    */
   virtual int32_t Stride() = 0;
 
@@ -397,6 +405,15 @@ public:
    * aPoint is given.
    */
   virtual bool ContainsPoint(const Point &aPoint, const Matrix &aTransform) const = 0;
+
+
+  /* This function checks if a point lies within the stroke of a path using the
+   * specified strokeoptions. It allows passing a transform that will transform
+   * the path to the coordinate space in which aPoint is given.
+   */
+  virtual bool StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
+                                   const Point &aPoint,
+                                   const Matrix &aTransform) const = 0;
 
   /* This functions gets the bounds of this path. These bounds are not
    * guaranteed to be tight. A transform may be specified that gives the bounds
@@ -902,6 +919,11 @@ public:
 
   static void SetGlobalEventRecorder(DrawEventRecorder *aRecorder);
 
+#ifdef USE_SKIA_GPU
+  static TemporaryRef<DrawTarget>
+    CreateSkiaDrawTargetForFBO(unsigned int aFBOID, GrContext *aContext, const IntSize &aSize, SurfaceFormat aFormat);
+#endif
+
 #ifdef WIN32
   static TemporaryRef<DrawTarget> CreateDrawTargetForD3D10Texture(ID3D10Texture2D *aTexture, SurfaceFormat aFormat);
   static TemporaryRef<DrawTarget>
@@ -917,6 +939,7 @@ public:
 
   static uint64_t GetD2DVRAMUsageDrawTarget();
   static uint64_t GetD2DVRAMUsageSourceSurface();
+  static void D2DCleanup();
 
 private:
   static ID3D10Device1 *mD3D10Device;

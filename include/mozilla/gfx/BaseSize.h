@@ -24,6 +24,10 @@ struct BaseSize {
 
   void SizeTo(T aWidth, T aHeight) { width = aWidth; height = aHeight; }
 
+  bool IsEmpty() const {
+    return width == 0 || height == 0;
+  }
+
   // Note that '=' isn't defined so we'll get the
   // compiler generated default assignment operator
 
@@ -62,6 +66,13 @@ struct BaseSize {
   }
   Sub operator/(T aScale) const {
     return Sub(width / aScale, height / aScale);
+  }
+
+  Sub operator*(const Sub& aSize) const {
+    return Sub(width * aSize.width, height * aSize.height);
+  }
+  Sub operator/(const Sub& aSize) const {
+    return Sub(width / aSize.width, height / aSize.height);
   }
 };
 
