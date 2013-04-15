@@ -248,7 +248,7 @@ Factory::CreateDrawTargetForData(BackendType aBackend,
       RefPtr<DrawTargetSkia> newTarget;
       newTarget = new DrawTargetSkia();
       newTarget->Init(aData, aSize, aStride, aFormat);
-      retVal = newTarget;
+      return newTarget;
     }
 #endif
 #ifdef XP_MACOSX

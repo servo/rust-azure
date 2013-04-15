@@ -6,8 +6,6 @@
 #include "ScaledFontFreetype.h"
 #include "Logging.h"
 
-#include "gfxFont.h"
-
 #ifdef USE_SKIA
 #include "SkTypeface.h"
 #endif
