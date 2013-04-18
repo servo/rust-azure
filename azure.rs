@@ -6,8 +6,6 @@
 
 use core::libc::*;
 
-pub type cairo_surface_t = *c_void;
-pub type cairo_scaled_font_t = *c_void;
 pub type AzFontOptions = *c_void;
 pub type AzFloat = c_float;
 
@@ -281,9 +279,6 @@ pub fn AzCreateDrawTarget(++aBackend: AzBackendType, ++aSize: *AzIntSize, ++aFor
 
 pub fn AzCreateDrawTargetForData(++aBackend: AzBackendType, ++aData: *c_uchar, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-#[cfg(cairo)]
-pub fn AzCreateDrawTargetForCairoSurface(++aSurface: *cairo_surface_t, ++aSize: *AzIntSize) -> AzDrawTargetRef;
-
 pub fn AzRetainDrawTarget(++aTarget: AzDrawTargetRef);
 
 pub fn AzReleaseDrawTarget(++aTarget: AzDrawTargetRef);
@@ -321,9 +316,6 @@ pub fn AzDataSourceSurfaceGetData(++aSurface: AzDataSourceSurfaceRef) -> *u8;
 pub fn AzDataSourceSurfaceGetStride(++aSurface: AzDataSourceSurfaceRef) -> i32;
 
 pub fn AzCreateScaledFontForNativeFont(++aNativeFont: *AzNativeFont, ++aSize: AzFloat) -> AzScaledFontRef;
-
-#[cfg(cairo)]
-pub fn AzCreateScaledFontWithCairo(++aNativeFont: *AzNativeFont, ++aSize: AzFloat, ++aScaledFont: *cairo_scaled_font_t) -> AzScaledFontRef;
 
 pub fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
 
