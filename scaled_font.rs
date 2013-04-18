@@ -94,7 +94,7 @@ impl ScaledFont {
                     azure_native_font.mFont = cast::transmute(*native_font.borrow_ref());
                 }
             }
-            NoBackend | Direct2DBackend | RecordingBackend => {
+            _ => {
                 fail!(~"don't know how to make a scaled font for this backend");
             }
         }
