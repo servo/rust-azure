@@ -3,16 +3,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 use azure::{AzScaledFontRef, AzFloat};
-use azure::{AZ_FONT_STYLE_NORMAL, AZ_NATIVE_FONT_SKIA_FONT_FACE, AZ_NATIVE_FONT_MAC_FONT_FACE};
 use azure::{struct__AzNativeFont};
 
-use azure_hl::{BackendType, CoreGraphicsAcceleratedBackend};
-use azure_hl::{CoreGraphicsBackend, Direct2DBackend, NoBackend, RecordingBackend};
-use azure_hl::{SkiaBackend};
+use azure_hl::{BackendType,SkiaBackend};
 use azure::bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
-use azure::bindgen::{AzCreateFontOptions, AzDestroyFontOptions};
 
-use core::libc::{c_void, c_double, c_int};
+use core::libc::c_void;
 
 #[cfg(target_os="macos")]
 priv use scaled_font::macos::*;
@@ -58,6 +54,9 @@ impl ScaledFont {
     #[cfg(target_os="linux")]
     pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
+        use azure::{AZ_FONT_STYLE_NORMAL,AZ_NATIVE_FONT_SKIA_FONT_FACE};
+        use azure::bindgen::{AzCreateFontOptions, AzDestroyFontOptions};
+
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
             mFont: ptr::null()
@@ -82,6 +81,9 @@ impl ScaledFont {
     /// Mac-specific function to create a font for the given backend.
     #[cfg(target_os="macos")]
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
+        use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
+        use azure_hl::{CoreGraphicsBackend,CoreGraphicsAcceleratedBackend};
+
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
             mFont: ptr::null()
