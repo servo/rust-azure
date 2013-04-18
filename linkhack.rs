@@ -5,7 +5,7 @@
 // Some crumminess to make sure we link correctly
 
 #[cfg(target_os = "linux")]
-#[link_args = "-L. -lazure -lstdc++ -lskia"]
+#[link_args = "-L. -lazure -lstdc++ -lskia -lfontconfig"]
 #[nolink]
 extern mod m { }
 
