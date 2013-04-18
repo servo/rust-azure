@@ -2,18 +2,7 @@
 
 SRCDIR="$(cd $(dirname $0) && pwd)"
 
-USE_CAIRO=0
-USE_SKIA=0
-for arg in "$@"; do
-	if test "$arg" = "--enable-cairo"; then
-		USE_CAIRO=1
-	fi
-	if test "$arg" = "--enable-skia"; then
-		USE_SKIA=1
-	fi
-done
-
-sed -e "s#%VPATH%#${SRCDIR}#" -e "s#%USE_CAIRO%#${USE_CAIRO}#" -e "s#%USE_SKIA%#${USE_SKIA}#" ${SRCDIR}/Makefile.in > Makefile
+sed -e "s#%VPATH%#${SRCDIR}#" ${SRCDIR}/Makefile.in > Makefile
 
 mkdir -p src/gfx/2d
 mkdir -p src/memory/mozalloc
