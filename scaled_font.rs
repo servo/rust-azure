@@ -54,7 +54,7 @@ impl ScaledFont {
     #[cfg(target_os="linux")]
     pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
-        use azure::{AZ_FONT_STYLE_NORMAL,AZ_NATIVE_FONT_SKIA_FONT_FACE};
+        use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
         use azure::bindgen::{AzCreateFontOptions, AzDestroyFontOptions};
 
         let mut azure_native_font = struct__AzNativeFont {
@@ -65,7 +65,9 @@ impl ScaledFont {
         match backend {
             SkiaBackend => {
                 unsafe {
-                    let options = AzCreateFontOptions((*native_font).family_name, AZ_FONT_STYLE_NORMAL);
+                    // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
+                    let style = ((*native_font).style_flags & 3) as u32;
+                    let options = AzCreateFontOptions((*native_font).family_name, style);
                     azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
                     azure_native_font.mFont = cast::transmute(options);
                     let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
