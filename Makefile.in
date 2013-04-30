@@ -73,8 +73,13 @@ CXXFLAGS += \
 	-iquote $(VPATH)/../skia/include/gpu/gl \
 	-DUSE_SKIA \
 	-DUSE_SKIA_GPU \
-	-Wno-c++11-extensions \
 	$(NULL)
+
+USE_CLANG = $(shell $(CXX) --version|grep -c 'clang')
+
+ifeq ($(USE_CLANG),1)
+    CXXFLAGS += -Wno-c++11-extensions
+endif
 
 ifeq ($(OSTYPE),darwin)
 CXXFLAGS += \
