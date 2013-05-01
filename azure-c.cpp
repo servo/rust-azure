@@ -151,6 +151,62 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     delete gfxColorPattern;
 }
 
+extern "C" AzSkiaSharedGLContextRef
+AzCreateSkiaSharedGLContext(AzGLContext aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
+    if (sharedGLContext == NULL) {
+        return NULL;
+    }
+    static const int kBogusSize = 1;
+    if (!sharedGLContext->init(800, 600)) {
+        return NULL;
+    }
+    sharedGLContext->AddRef();
+    return sharedGLContext;
+}
+
+extern "C" void
+AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    sharedGLContext->AddRef();
+}
+
+extern "C" void
+AzReleaseSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    sharedGLContext->Release();
+}
+
+extern "C" unsigned int
+AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext) {
+   SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+   return sharedGLContext->getFBOID();
+}
+
+extern "C" unsigned int
+AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLContext) {
+   SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+   return sharedGLContext->getTextureID();
+}
+
+extern "C" AzSkiaGrContextRef
+AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    return sharedGLContext->getGrContext();
+}
+
+extern "C" void
+AzSkiaSharedGLContextMakeCurrent(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    sharedGLContext->makeCurrent();
+}
+
+extern "C" void
+AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    sharedGLContext->flush();
+}
+
 extern "C" AzDrawTargetRef
 AzCreateDrawTarget(AzBackendType aBackend, AzIntSize *aSize, AzSurfaceFormat aFormat) {
     gfx::BackendType backendType = static_cast<gfx::BackendType>(aBackend);
@@ -174,6 +230,21 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
                                                                            *size,
                                                                            aStride,
                                                                            surfaceFormat);
+    target->AddRef();
+    return target;
+}
+
+extern "C" AzDrawTargetRef
+AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSize, AzSurfaceFormat aFormat) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    GrContext *grContext = sharedGLContext->getGrContext();
+    grContext->AddRef();
+    gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
+    gfx::SurfaceFormat surfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
+    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateSkiaDrawTargetForFBO(sharedGLContext->getFBOID(),
+                                                                              grContext,
+                                                                              *size,
+                                                                              surfaceFormat);
     target->AddRef();
     return target;
 }
@@ -357,7 +428,7 @@ AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
     gfxDrawTarget->SetTransform(*gfxMatrix);
 }
 
-AzFontOptions*
+extern "C" AzFontOptions*
 AzCreateFontOptions(char *aName, AzFontStyle aStyle) {
     #ifdef MOZ_ENABLE_FREETYPE
     gfx::FontOptions *options = new gfx::FontOptions;
@@ -369,14 +440,17 @@ AzCreateFontOptions(char *aName, AzFontStyle aStyle) {
     #endif
 }
 
-void AzDestroyFontOptions(AzFontOptions* aOptions) {
+extern "C" void
+AzDestroyFontOptions(AzFontOptions* aOptions) {
     #ifdef MOZ_ENABLE_FREETYPE
-    gfx::FontOptions *options = static_cast<gfx::FontOptions*>(aOptions);
-    delete options;
+    gfx::FontOptions *fontOptions = reinterpret_cast<gfx::FontOptions*>(aOptions);
+    delete fontOptions;
     #else
     abort();
     #endif
 }
 
-
-
+extern "C" AzGLContext
+AzSkiaGetCurrentGLContext() {
+    return SkNativeSharedGLContext::GetCurrent();
+}

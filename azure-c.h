@@ -5,6 +5,9 @@
 #ifndef MOZILLA_GFX_AZURE_C_H_
 #define MOZILLA_GFX_AZURE_C_H_
 
+#include "GrContext.h"
+#include "SkNativeSharedGLContext.h"
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -278,6 +281,8 @@ typedef struct _AzNativeFont {
 } AzNativeFont;
 
 typedef void* AzGradientStopsRef;
+typedef void* AzSkiaSharedGLContextRef;
+typedef void* AzSkiaGrContextRef;
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
@@ -287,8 +292,20 @@ typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
 
+typedef GrGLSharedContext AzGLContext;
+
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
+
+AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext);
+void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
+void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
+unsigned int AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext);
+unsigned int AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLContext);
+AzSkiaGrContextRef AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext);
+void AzSkiaSharedGLContextMakeCurrent(AzSkiaSharedGLContextRef aGLContext);
+void AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext);
+
 AzDrawTargetRef AzCreateDrawTarget(AzBackendType aBackend,
                                    AzIntSize *aSize,
                                    AzSurfaceFormat aFormat);
@@ -297,6 +314,9 @@ AzDrawTargetRef AzCreateDrawTargetForData(AzBackendType aBackend,
                                           AzIntSize *aSize,
                                           int32_t aStride,
                                           AzSurfaceFormat aFormat);
+AzDrawTargetRef AzCreateSkiaDrawTragetForFBO(AzSkiaSharedGLContextRef aGLContext,
+                                             AzIntSize *aSize,
+                                             AzSurfaceFormat aFormat);
 
 void AzRetainDrawTarget(AzDrawTargetRef aTarget);
 
@@ -354,6 +374,7 @@ typedef void AzFontOptions;
 AzFontOptions* AzCreateFontOptions(char *aName, AzFontStyle aStyle);
 void AzDestroyFontOptions(AzFontOptions* aOptions);
 
+AzGLContext AzSkiaGetCurrentGLContext();
 
 #ifdef __cplusplus
 }
