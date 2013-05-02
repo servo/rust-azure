@@ -95,7 +95,7 @@ impl ScaledFont {
             CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
                 unsafe {
-                    azure_native_font.mFont = cast::transmute(*native_font.borrow_ref());
+                    azure_native_font.mFont = cast::transmute(*native_font.contents.borrow_ref());
                 }
             }
             _ => {
