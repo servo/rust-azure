@@ -277,17 +277,13 @@ pub impl DrawTarget {
     }
 
     fn clone(&self) -> DrawTarget {
-        unsafe {
-            AzRetainDrawTarget(self.azure_draw_target);
-            DrawTarget {
-                azure_draw_target: self.azure_draw_target,
-                data: match self.data {
-                    None => None,
-                    Some(ref arc) => {
-                        // FIXME: Workaround for the fact that arc::clone doesn't
-                        // take const.
-                        Some(arc::clone(cast::transmute(arc)))
-                    }
+        unsafe { AzRetainDrawTarget(self.azure_draw_target); }
+        DrawTarget {
+            azure_draw_target: self.azure_draw_target,
+            data: match self.data {
+                None => None,
+                Some(ref arc) => {
+                    Some(arc::clone(arc))
                 }
             }
         }
