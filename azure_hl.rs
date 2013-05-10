@@ -276,7 +276,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn clone(&const self) -> DrawTarget {
+    fn clone(&self) -> DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
             DrawTarget {
@@ -343,7 +343,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn snapshot(&const self) -> SourceSurface {
+    fn snapshot(&self) -> SourceSurface {
         unsafe {
             let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
             SourceSurface(azure_surface)
@@ -410,16 +410,16 @@ pub fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface 
 }
 
 pub trait SourceSurfaceMethods {
-    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef;
+    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef;
 
-    fn size(&const self) -> Size2D<i32> {
+    fn size(&self) -> Size2D<i32> {
         unsafe {
             let size = AzSourceSurfaceGetSize(self.get_azure_source_surface());
             Size2D { width: size.width, height: size.height }
         }
     }
 
-    fn format(&const self) -> SurfaceFormat {
+    fn format(&self) -> SurfaceFormat {
         unsafe {
             SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
         }
@@ -427,7 +427,7 @@ pub trait SourceSurfaceMethods {
 }
 
 impl SourceSurface {
-    pub fn get_data_surface(&const self) -> DataSourceSurface {
+    pub fn get_data_surface(&self) -> DataSourceSurface {
         unsafe {
             let data_source_surface = AzSourceSurfaceGetDataSurface(
                 self.azure_source_surface);
@@ -439,7 +439,7 @@ impl SourceSurface {
 }
 
 impl SourceSurfaceMethods for SourceSurface {
-    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef { self.azure_source_surface }
+    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef { self.azure_source_surface }
 }
 
 pub struct DataSourceSurface {
@@ -455,7 +455,7 @@ impl Drop for DataSourceSurface {
 }
 
 impl DataSourceSurface {
-    pub fn with_data(&const self, f: &fn(&[u8])) {
+    pub fn with_data(&self, f: &fn(&[u8])) {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface);
             let len = self.stride() * self.size().height;
@@ -463,20 +463,20 @@ impl DataSourceSurface {
         }
     }
 
-    pub fn stride(&const self) -> i32 {
+    pub fn stride(&self) -> i32 {
         unsafe {
             AzDataSourceSurfaceGetStride(self.azure_data_source_surface)
         }
     }
 
     // FIXME: Workaround for lack of working cross-crate default methods.
-    pub fn get_size(&const self) -> Size2D<i32> {
+    pub fn get_size(&self) -> Size2D<i32> {
         self.size()
     }
 }
 
 impl SourceSurfaceMethods for DataSourceSurface {
-    fn get_azure_source_surface(&const self) -> AzSourceSurfaceRef {
+    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
     }
 }
