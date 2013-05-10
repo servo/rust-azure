@@ -271,58 +271,58 @@ pub extern mod bindgen {
 
 pub fn AzSanityCheck(/* FIXME: variadic function */);
 
-pub fn AzCreateColorPattern(++aColor: *AzColor) -> AzColorPatternRef;
+pub fn AzCreateColorPattern(aColor: *AzColor) -> AzColorPatternRef;
 
-pub fn AzReleaseColorPattern(++aColorPattern: AzColorPatternRef);
+pub fn AzReleaseColorPattern(aColorPattern: AzColorPatternRef);
 
-pub fn AzCreateDrawTarget(++aBackend: AzBackendType, ++aSize: *AzIntSize, ++aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzCreateDrawTargetForData(++aBackend: AzBackendType, ++aData: *c_uchar, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *c_uchar, aSize: *AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzRetainDrawTarget(++aTarget: AzDrawTargetRef);
+pub fn AzRetainDrawTarget(aTarget: AzDrawTargetRef);
 
-pub fn AzReleaseDrawTarget(++aTarget: AzDrawTargetRef);
+pub fn AzReleaseDrawTarget(aTarget: AzDrawTargetRef);
 
-pub fn AzDrawTargetGetSize(++aDrawTarget: AzDrawTargetRef) -> AzIntSize;
+pub fn AzDrawTargetGetSize(aDrawTarget: AzDrawTargetRef) -> AzIntSize;
 
-pub fn AzDrawTargetFlush(++aDrawTarget: AzDrawTargetRef);
+pub fn AzDrawTargetFlush(aDrawTarget: AzDrawTargetRef);
 
-pub fn AzDrawTargetClearRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect);
+pub fn AzDrawTargetClearRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect);
 
-pub fn AzDrawTargetFillRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef);
+pub fn AzDrawTargetFillRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPattern: AzPatternRef);
 
-pub fn AzDrawTargetStrokeRect(++aDrawTarget: AzDrawTargetRef, ++aRect: *AzRect, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
-pub fn AzDrawTargetStrokeLine(++aDrawTarget: AzDrawTargetRef, ++aStart: *AzPoint, ++aEnd: *AzPoint, ++aPattern: AzPatternRef, ++aStrokeOptions: *AzStrokeOptions, ++aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *AzPoint, aEnd: *AzPoint, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
-pub fn AzDrawTargetFillGlyphs(++aDrawTarget: AzDrawTargetRef, ++aFont: AzScaledFontRef, ++aGlyphBuffer: *AzGlyphBuffer, ++aPattern: AzPatternRef, ++aOptions: *AzDrawOptions, ++aRenderingOptions: AzGlyphRenderingOptionsRef);
+pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
-pub fn AzDrawTargetDrawSurface(++aDrawTarget: AzDrawTargetRef, ++aSurface: AzSourceSurfaceRef, ++aDest: *AzRect, ++aSource: *AzRect, ++aSurfOptions: AzDrawSurfaceOptionsRef, ++aOptions: *AzDrawOptions);
+pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *AzRect, aSource: *AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *AzDrawOptions);
 
-pub fn AzDrawTargetGetSnapshot(++aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
+pub fn AzDrawTargetGetSnapshot(aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
 
-pub fn AzDrawTargetCreateSourceSurfaceFromData(++aDrawTarget: AzDrawTargetRef, ++aData: *u8, ++aSize: *AzIntSize, ++aStride: i32, ++aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
+pub fn AzDrawTargetCreateSourceSurfaceFromData(aDrawTarget: AzDrawTargetRef, aData: *u8, aSize: *AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
 
-pub fn AzReleaseSourceSurface(++aSurface: AzSourceSurfaceRef);
+pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 
-pub fn AzSourceSurfaceGetSize(++aSurface: AzSourceSurfaceRef) -> AzIntSize;
+pub fn AzSourceSurfaceGetSize(aSurface: AzSourceSurfaceRef) -> AzIntSize;
 
-pub fn AzSourceSurfaceGetFormat(++aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat;
+pub fn AzSourceSurfaceGetFormat(aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat;
 
-pub fn AzSourceSurfaceGetDataSurface(++aSurface: AzSourceSurfaceRef) -> AzDataSourceSurfaceRef;
+pub fn AzSourceSurfaceGetDataSurface(aSurface: AzSourceSurfaceRef) -> AzDataSourceSurfaceRef;
 
-pub fn AzDataSourceSurfaceGetData(++aSurface: AzDataSourceSurfaceRef) -> *u8;
+pub fn AzDataSourceSurfaceGetData(aSurface: AzDataSourceSurfaceRef) -> *u8;
 
-pub fn AzDataSourceSurfaceGetStride(++aSurface: AzDataSourceSurfaceRef) -> i32;
+pub fn AzDataSourceSurfaceGetStride(aSurface: AzDataSourceSurfaceRef) -> i32;
 
-pub fn AzCreateScaledFontForNativeFont(++aNativeFont: *AzNativeFont, ++aSize: AzFloat) -> AzScaledFontRef;
+pub fn AzCreateScaledFontForNativeFont(aNativeFont: *AzNativeFont, aSize: AzFloat) -> AzScaledFontRef;
 
-pub fn AzReleaseScaledFont(++aFont: AzScaledFontRef);
+pub fn AzReleaseScaledFont(aFont: AzScaledFontRef);
 
-pub fn AzDrawTargetSetTransform(++aDrawTarget: AzDrawTargetRef, ++aTransform: *AzMatrix);
+pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *AzMatrix);
 
-pub fn AzCreateFontOptions(++aName: *c_char, ++aStyle: enum_AzFontStyle) -> *AzFontOptions;
+pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontOptions;
 
-pub fn AzDestroyFontOptions(++aOptions: *AzFontOptions);
+pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
 
 }
