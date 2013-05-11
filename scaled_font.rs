@@ -16,6 +16,9 @@ priv use scaled_font::macos::*;
 #[cfg(target_os="linux")]
 priv use scaled_font::linux::*;
 
+#[cfg(target_os="android")]
+priv use scaled_font::android::*;
+
 #[cfg(target_os="macos")]
 pub mod macos {
     extern mod core_graphics;
@@ -30,6 +33,14 @@ pub mod linux {
     extern mod freetype;
 
     pub use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+}
+
+
+#[cfg(target_os="android")]
+pub mod android {
+    extern mod freetype;
+
+    pub use scaled_font::android::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 type SkTypeface = *c_void;
@@ -108,6 +119,35 @@ impl ScaledFont {
             ScaledFont {
                 azure_scaled_font: azure_scaled_font
             }
+        }
+    }
+
+    #[cfg(target_os="android")]
+    pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
+        -> ScaledFont {
+        use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
+        use azure::bindgen::{AzCreateFontOptions, AzDestroyFontOptions};
+
+        let mut azure_native_font = struct__AzNativeFont {
+            mType: 0,
+            mFont: ptr::null()
+        };
+        
+        match backend {
+            SkiaBackend => {
+                unsafe {
+                    // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
+                    let style = ((*native_font).style_flags & 3) as u32;
+                    let options = AzCreateFontOptions((*native_font).family_name, style);
+                    azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
+                    azure_native_font.mFont = cast::transmute(options);
+                    let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
+                    let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
+                    AzDestroyFontOptions(options);
+                    ScaledFont { azure_scaled_font: azure_scaled_font }
+                }
+            }
+            _ => { fail!(~"don't know how to make a scaled font for this backend"); }
         }
     }
 }
