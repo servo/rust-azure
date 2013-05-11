@@ -1,9 +1,7 @@
 #!/bin/bash
 
 SRCDIR="$(cd $(dirname $0) && pwd)"
-
 sed -e "s#%VPATH%#${SRCDIR}#" ${SRCDIR}/Makefile.in > Makefile
 
 mkdir -p src/gfx/2d
 mkdir -p src/memory/mozalloc
-

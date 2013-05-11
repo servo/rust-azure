@@ -1,18 +1,12 @@
 VPATH=%VPATH%
 
-CC ?= gcc
-CXX ?= g++
-CXXFLAGS ?= -g
-AR ?= ar
-RUSTC ?= rustc
-RUSTFLAGS ?=
-
-UNAME=$(shell uname)
-
-ifeq ($(UNAME),Darwin)
+ifeq ($(CFG_OSTYPE),apple-darwin)
     OSTYPE=darwin
 endif
-ifeq ($(UNAME),Linux)
+ifeq ($(CFG_OSTYPE),unknown-linux-gnu)
+    OSTYPE=linux
+endif
+ifeq ($(CFG_OSTYPE),linux-androideabi)
     OSTYPE=linux
 endif
 
@@ -29,7 +23,6 @@ AZURE_CPP_SRC = \
 		DrawTargetRecording.cpp \
 		Factory.cpp \
 		ImageScaling.cpp \
-		ImageScalingSSE2.cpp \
 		Matrix.cpp \
 		PathRecording.cpp \
 		RecordedEvent.cpp \
@@ -40,12 +33,17 @@ AZURE_CPP_SRC = \
 		convolver.cpp \
 		image_operations.cpp)
 
+ifeq ($(CFG_CPUTYPE), i686)
+    AZURE_CPP_SRC += $(addprefix src/gfx/2d/, ImageScalingSSE2.cpp)
+endif
+ifeq ($(CFG_CPUTYPE), x86_64)
+    AZURE_CPP_SRC += $(addprefix src/gfx/2d/, ImageScalingSSE2.cpp)
+endif
+
 AZURE_CPP_SRC += azure-c.cpp
 
-#SSE2 instruction support required.
 CXXFLAGS += \
 	-fPIC \
-	-msse2 \
 	-I$(VPATH)/include \
 	-I$(VPATH)/include/mozilla/gfx \
 	-I$(VPATH)/include/mozilla/ipc/chromium/src \
@@ -56,6 +54,14 @@ CXXFLAGS += \
 	-DMOZ_GFX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(NULL)
+
+#SSE2 instruction support required.
+ifeq ($(CFG_CPUTYPE), i686)
+    CXXFLAGS += -msse2
+endif
+ifeq ($(CFG_CPUTYPE), x86_64)
+    CXXFLAGS += -msse2
+endif
 
 AZURE_CPP_SRC += \
 	$(addprefix src/gfx/2d/,\
