@@ -15,3 +15,9 @@ extern mod m { }
 			   -framework Foundation -framework QuartzCore"]
 #[nolink]
 extern mod m { }
+
+#[cfg(target_os = "android")]
+#[link_args = "-L. -lazure -lstdc++ -lskia -L./../libexpat/.libs -lexpat -L./../libfreetype2/.libs -lfreetype"]
+#[nolink]
+extern mod m { }
+
