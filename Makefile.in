@@ -64,13 +64,13 @@ AZURE_CPP_SRC += \
 		SourceSurfaceSkia.cpp)
 
 CXXFLAGS += \
-	-iquote $(VPATH)/../skia/include/core \
-	-iquote $(VPATH)/../skia/include/config \
-	-iquote $(VPATH)/../skia/include/effects \
-	-iquote $(VPATH)/../skia/include/ports \
-	-iquote $(VPATH)/../skia/include/utils \
-	-iquote $(VPATH)/../skia/include/gpu \
-	-iquote $(VPATH)/../skia/include/gpu/gl \
+	-iquote $(VPATH)/../../skia/skia/include/core \
+	-iquote $(VPATH)/../../skia/skia/include/config \
+	-iquote $(VPATH)/../../skia/skia/include/effects \
+	-iquote $(VPATH)/../../skia/skia/include/ports \
+	-iquote $(VPATH)/../../skia/skia/include/utils \
+	-iquote $(VPATH)/../../skia/skia/include/gpu \
+	-iquote $(VPATH)/../../skia/skia/include/gpu/gl \
 	-DUSE_SKIA \
 	-DUSE_SKIA_GPU \
 	$(NULL)
