@@ -359,18 +359,24 @@ AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
 
 AzFontOptions*
 AzCreateFontOptions(char *aName, AzFontStyle aStyle) {
-  #ifdef MOZ_ENABLE_FREETYPE
-  gfx::FontOptions *options = new gfx::FontOptions;
-  options->mName = std::string(aName);
-  options->mStyle = static_cast<gfx::FontStyle>(aStyle);
-  return options;
-  #else
-  abort();
-  #endif
+    #ifdef MOZ_ENABLE_FREETYPE
+    gfx::FontOptions *options = new gfx::FontOptions;
+    options->mName = std::string(aName);
+    options->mStyle = static_cast<gfx::FontStyle>(aStyle);
+    return options;
+    #else
+    abort();
+    #endif
 }
 
 void AzDestroyFontOptions(AzFontOptions* aOptions) {
-  delete aOptions;
+    #ifdef MOZ_ENABLE_FREETYPE
+    gfx::FontOptions *options = static_cast<gfx::FontOptions*>(aOptions);
+    delete options;
+    #else
+    abort();
+    #endif
 }
+
 
 
