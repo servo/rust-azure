@@ -151,6 +151,7 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     delete gfxColorPattern;
 }
 
+#ifdef SK_BUILD_FOR_MAC
 extern "C" AzSkiaSharedGLContextRef
 AzCreateSkiaSharedGLContext(AzGLContext aGLContext) {
     SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
@@ -206,6 +207,7 @@ AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
     sharedGLContext->flush();
 }
+#endif
 
 extern "C" AzDrawTargetRef
 AzCreateDrawTarget(AzBackendType aBackend, AzIntSize *aSize, AzSurfaceFormat aFormat) {
@@ -234,6 +236,7 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
     return target;
 }
 
+#ifdef SK_BUILD_FOR_MAC
 extern "C" AzDrawTargetRef
 AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSize, AzSurfaceFormat aFormat) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
@@ -248,6 +251,7 @@ AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSi
     target->AddRef();
     return target;
 }
+#endif
 
 extern "C" void
 AzRetainDrawTarget(AzDrawTargetRef aTarget) {
@@ -450,7 +454,9 @@ AzDestroyFontOptions(AzFontOptions* aOptions) {
     #endif
 }
 
+#ifdef SK_BUILD_FOR_MAC
 extern "C" AzGLContext
 AzSkiaGetCurrentGLContext() {
     return SkNativeSharedGLContext::GetCurrent();
 }
+#endif
