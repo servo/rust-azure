@@ -250,6 +250,10 @@ pub type AzNativeFont = struct__AzNativeFont;
 
 pub type AzGradientStopsRef = *c_void;
 
+pub type AzSkiaSharedGLContextRef = *c_void;
+
+pub type AzSkiaGrContextRef = *c_void;
+
 pub type AzDrawTargetRef = *c_void;
 
 pub type AzPatternRef = *c_void;
@@ -266,6 +270,8 @@ pub type AzDataSourceSurfaceRef = *c_void;
 
 pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
+pub type AzGLContext = *c_void;
+
 #[link_name="azure"]
 pub extern mod bindgen {
 
@@ -275,9 +281,27 @@ pub fn AzCreateColorPattern(aColor: *AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(aColorPattern: AzColorPatternRef);
 
+pub fn AzCreateSkiaSharedGLContext(aGLContext: AzGLContext) -> AzSkiaSharedGLContextRef;
+
+pub fn AzRetainSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
+
+pub fn AzReleaseSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
+
+pub fn AzSkiaSharedGLContextGetFBOID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
+
+pub fn AzSkiaSharedGLContextGetTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
+
+pub fn AzSkiaSharedGLContextGetGrContext(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrContextRef;
+
+pub fn AzSkiaSharedGLContextMakeCurrent(aGLContext: AzSkiaSharedGLContextRef);
+
+pub fn AzSkiaSharedGLContextFlush(aGLContext: AzSkiaSharedGLContextRef);
+
 pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *c_uchar, aSize: *AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+
+pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: AzSkiaSharedGLContextRef, aSize: *AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzRetainDrawTarget(aTarget: AzDrawTargetRef);
 
@@ -324,5 +348,7 @@ pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *AzMat
 pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontOptions;
 
 pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
+
+pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
 
 }
