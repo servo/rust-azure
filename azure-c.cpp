@@ -158,7 +158,6 @@ AzCreateSkiaSharedGLContext(AzGLContext aGLContext) {
     if (sharedGLContext == NULL) {
         return NULL;
     }
-    static const int kBogusSize = 1;
     if (!sharedGLContext->init(800, 600)) {
         return NULL;
     }
