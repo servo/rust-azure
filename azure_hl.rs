@@ -4,18 +4,20 @@
 
 //! High-level bindings to Azure.
 
-use azure::{AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
+use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{struct__AzColor};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
-use azure::{struct__AzRect, struct__AzStrokeOptions, AzGLContext, AzSkiaSharedGLContextRef};
+use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
+use azure::{AzGLContext, AzSkiaSharedGLContextRef};
 use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
 use azure::bindgen::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
 use azure::bindgen::{AzDrawTargetClearRect};
 use azure::bindgen::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use azure::bindgen::{AzDrawTargetGetSnapshot, AzDrawTargetSetTransform, AzDrawTargetStrokeRect};
+use azure::bindgen::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
+use azure::bindgen::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect};
 use azure::bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use azure::bindgen::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
@@ -27,6 +29,7 @@ use core::libc::c_uint;
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
 use geom::matrix2d::Matrix2D;
+use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
 use std::arc::ARC;
@@ -56,6 +59,19 @@ impl AsAzureIntSize for Size2D<i32> {
         struct__AzIntSize {
             width: self.width,
             height: self.height
+        }
+    }
+}
+
+pub trait AsAzurePoint {
+    fn as_azure_point(&self) -> AzPoint;
+}
+
+impl AsAzurePoint for Point2D<AzFloat> {
+    fn as_azure_point(&self) -> AzPoint {
+        struct__AzPoint {
+            x: self.x,
+            y: self.y
         }
     }
 }
@@ -344,6 +360,12 @@ pub impl DrawTarget {
         }
     }
 
+    fn get_size(&self) -> AzIntSize {
+        unsafe {
+            AzDrawTargetGetSize(self.azure_draw_target)
+        }
+    }
+
     fn flush(&self) {
         unsafe {
             AzDrawTargetFlush(self.azure_draw_target);
@@ -365,6 +387,22 @@ pub impl DrawTarget {
             AzDrawTargetFillRect(self.azure_draw_target,
                                  to_unsafe_ptr(&rect.as_azure_rect()),
                                  pattern.azure_color_pattern);
+        }
+    }
+
+    fn stroke_line(&self,
+                   start: Point2D<AzFloat>,
+                   end: Point2D<AzFloat>,
+                   pattern: &ColorPattern,
+                   stroke_options: &StrokeOptions,
+                   draw_options: &DrawOptions) {
+        unsafe {
+            AzDrawTargetStrokeLine(self.azure_draw_target,
+                                   &start.as_azure_point(),
+                                   &end.as_azure_point(),
+                                   pattern.azure_color_pattern,
+                                   &stroke_options.as_azure_stroke_options(),
+                                   &draw_options.as_azure_draw_options());
         }
     }
 
