@@ -153,13 +153,12 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
 
 #ifdef SK_BUILD_FOR_MAC
 extern "C" AzSkiaSharedGLContextRef
-AzCreateSkiaSharedGLContext(AzGLContext aGLContext) {
+AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
     if (sharedGLContext == NULL) {
         return NULL;
     }
-    static const int kBogusSize = 1;
-    if (!sharedGLContext->init(800, 600)) {
+    if (!sharedGLContext->init(aSize->width, aSize->height)) {
         return NULL;
     }
     sharedGLContext->AddRef();
