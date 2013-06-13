@@ -294,6 +294,16 @@ AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 }
 
 extern "C" void
+AzDrawTargetFillRect2(AzDrawTargetRef aDrawTarget, AzRect *aRect,
+             AzPatternRef aPattern, AzDrawOptions *aDrawOptions ) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->FillRect(*gfxRect, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
 AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
 		       AzDrawOptions *aDrawOptions) {
@@ -460,3 +470,135 @@ AzSkiaGetCurrentGLContext() {
     return SkNativeSharedGLContext::GetCurrent();
 }
 #endif
+
+
+/* Path */
+
+extern "C" AzPathBuilderRef
+AzCreatePathBuilder(AzDrawTargetRef aTarget, AzFillRule fillrule)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
+    RefPtr<gfx::PathBuilder> pathBuilder = gfxDrawTarget->CreatePathBuilder( gfx::FillRule(fillrule) );
+    pathBuilder->AddRef();
+    return pathBuilder;
+}
+
+extern "C" void
+AzReleasePathBuilder(AzPathBuilderRef aPathBuilder) 
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfxPathBuilder->Release();
+}
+
+extern "C" void 
+AzPathBuilderClose(AzPathBuilderRef aPathBuilder)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfxPathBuilder->Close();
+}
+
+extern "C" AzPathRef
+AzPathBuilderFinish(AzPathBuilderRef aPathBuilder)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    RefPtr<gfx::Path> path = gfxPathBuilder->Finish();
+    path->AddRef();
+    return path;
+}
+
+extern "C" void 
+AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->MoveTo(*gfxPt);
+}
+
+extern "C" void 
+AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->LineTo(*gfxPt);
+}
+
+extern "C" void
+AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPattern, 
+                        AzDrawOptions *aDrawOptions)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Fill( gfxPath, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" AzPathBuilderRef
+AzPathCopyToBuilder(AzPathRef aPath,AzFillRule fillrule)
+{
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    RefPtr<gfx::PathBuilder> pathBuilder = gfxPath->CopyToBuilder(gfx::FillRule(fillrule));
+    pathBuilder->AddRef();
+    return pathBuilder;
+}
+
+extern "C" void
+AzReleasePath(AzPathRef aPath) 
+{
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfxPath->Release();
+}
+
+extern "C" inline void
+AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a)
+{
+    color->r = r;
+    color->g = g;
+    color->b = b;
+    color->a = a;
+}
+
+extern "C" inline void
+AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat h)
+{
+    prect->x = x;
+    prect->y = y;
+    prect->width = w;
+    prect->height = h;
+}
+
+extern "C" inline AzPoint
+AzRectGetTopLeft(AzRect* prect)
+{
+    AzPoint pt;
+    pt.x = prect->x;
+    pt.y = prect->y;
+    return pt;
+}
+
+extern "C" inline AzPoint
+AzRectGetTopRight(AzRect* prect)
+{
+    AzPoint pt;
+    pt.x = prect->x + prect->width;
+    pt.y = prect->y;
+    return pt;
+}
+
+extern "C" inline AzPoint
+AzRectGetBottomRight(AzRect* prect)
+{
+    AzPoint pt;
+    pt.x = prect->x + prect->width;
+    pt.y = prect->y + prect->height;
+    return pt;
+}
+
+extern "C" inline AzPoint
+AzRectGetBottomLeft(AzRect* prect)
+{
+    AzPoint pt;
+    pt.x = prect->x;
+    pt.y = prect->y + prect->height;
+    return pt;
+}

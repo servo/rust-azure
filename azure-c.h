@@ -138,7 +138,8 @@ enum AzFillRule {
 enum AzAntialiasMode {
   AZ_AA_NONE,
   AZ_AA_GRAY,
-  AZ_AA_SUBPIXEL
+  AZ_AA_SUBPIXEL,
+  AZ_AA_DEFAULT
 };
 
 enum AzSnapping {
@@ -240,7 +241,7 @@ typedef struct _AzDrawOptions {
   uint16_t fields;
   /*
   enum AzCompositionOp mCompositionOp : 8;
-  enum AzAntialiasMode mAntialiasMode : 2;
+  enum AzAntialiasMode mAntialiasMode : 3;
   enum AzSnapping mSnapping : 1;
   */
 } AzDrawOptions;
@@ -294,8 +295,12 @@ typedef void* AzGlyphRenderingOptionsRef;
 typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
+typedef void* AzPathBuilderRef;
+typedef void* AzPathRef;
 
+#ifdef SK_BUILD_FOR_MAC
 typedef GrGLSharedContext AzGLContext;
+#endif
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
@@ -335,6 +340,10 @@ void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
 			  AzRect *aRect,
 			  AzPatternRef aPattern);
+void AzDrawTargetFillRect2(AzDrawTargetRef aDrawTarget, 
+        AzRect *aRect,
+        AzPatternRef aPattern, 
+        AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
 			    AzRect *aRect,
 			    AzPatternRef aPattern,
@@ -384,6 +393,29 @@ void AzDestroyFontOptions(AzFontOptions* aOptions);
 #ifdef SK_BUILD_FOR_MAC
 AzGLContext AzSkiaGetCurrentGLContext();
 #endif
+
+/* Path */
+AzPathBuilderRef AzCreatePathBuilder(AzDrawTargetRef aTarget, AzFillRule fillrule);
+void AzReleasePathBuilder(AzPathBuilderRef aPathBuilder);
+void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
+void AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
+void AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
+
+AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
+AzPathBuilderRef AzPathCopyToBuilder(AzPathRef aPath,AzFillRule fillrule);
+void AzReleasePath(AzPathRef aPath);
+
+void AzDrawTargetFill(AzDrawTargetRef aDrawTarget, 
+        AzPathRef aPath,
+        AzPatternRef aPattern, 
+        AzDrawOptions *aDrawOptions);
+
+inline void AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a);
+inline void AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat hz);
+inline AzPoint AzRectGetTopLeft(AzRect* prect);
+inline AzPoint AzRectGetTopRight(AzRect* prect);
+inline AzPoint AzRectGetBottomRight(AzRect* prect);
+inline AzPoint AzRectGetBottomLeft(AzRect* prect);
 
 #ifdef __cplusplus
 }
