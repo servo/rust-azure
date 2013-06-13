@@ -351,7 +351,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn get_texture(&self) -> Option<c_uint> {
+    fn get_texture_id(&self) -> Option<gl::GLuint> {
         match self.skia_context {
             None => None,
             Some(ctx) => {
@@ -467,6 +467,12 @@ pub impl DrawTarget {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
         }
+    }
+}
+
+impl TextureManager for DrawTarget {
+    pub fn get_texture(&self) -> gl::GLuint {
+        self.get_texture_id().get()
     }
 }
 
