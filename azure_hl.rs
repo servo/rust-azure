@@ -32,6 +32,8 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
+use layers::layers::TextureManager;
+use gl = opengles::gl2;
 use std::arc::ARC;
 use std::arc;
 
