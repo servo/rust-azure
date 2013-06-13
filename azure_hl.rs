@@ -574,8 +574,6 @@ impl SourceSurfaceMethods for DataSourceSurface {
 
 pub fn current_gl_context() -> AzGLContext {
     unsafe {
-        let r = AzSkiaGetCurrentGLContext();
-        println(fmt!("current gl context = %?", r));
-        r
+        AzSkiaGetCurrentGLContext()
     }
 }
