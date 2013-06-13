@@ -301,7 +301,7 @@ AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
 #ifdef SK_BUILD_FOR_MAC
-AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext);
+AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
 void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
 unsigned int AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext);

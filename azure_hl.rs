@@ -309,7 +309,8 @@ pub impl DrawTarget {
         assert!(backend == SkiaBackend);
         
         unsafe {
-            let skia_context = AzCreateSkiaSharedGLContext(share_context);
+            let skia_context = AzCreateSkiaSharedGLContext(share_context,
+                                                           to_unsafe_ptr(&size.as_azure_int_size()));
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
                                                                  to_unsafe_ptr(&size.as_azure_int_size()),
                                                                  format.as_azure_surface_format());
