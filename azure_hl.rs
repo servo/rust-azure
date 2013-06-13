@@ -267,7 +267,7 @@ pub impl DrawTarget {
                    -> DrawTarget {
         unsafe {
             let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
-                                                       to_unsafe_ptr(&size.as_azure_int_size()),
+                                                       &size.as_azure_int_size(),
                                                        format.as_azure_surface_format());
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
             DrawTarget {
@@ -288,8 +288,8 @@ pub impl DrawTarget {
             assert!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
                 AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                          to_unsafe_ptr(&data[offset]),
-                                          to_unsafe_ptr(&size.as_azure_int_size()),
+                                          &data[offset],
+                                          &size.as_azure_int_size(),
                                           stride,
                                           format.as_azure_surface_format());
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
@@ -309,9 +309,9 @@ pub impl DrawTarget {
         
         unsafe {
             let skia_context = AzCreateSkiaSharedGLContext(share_context,
-                                                           to_unsafe_ptr(&size.as_azure_int_size()));
+                                                           &size.as_azure_int_size());
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
-                                                                 to_unsafe_ptr(&size.as_azure_int_size()),
+                                                                 &size.as_azure_int_size(),
                                                                  format.as_azure_surface_format());
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
             DrawTarget {
