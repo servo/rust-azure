@@ -25,7 +25,6 @@ use azure::bindgen::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSki
 use azure::bindgen::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
 use core::libc::types::common::c99::uint16_t;
-use core::libc::c_uint;
 use core::cast::transmute;
 use core::ptr::{null, to_unsafe_ptr};
 use geom::matrix2d::Matrix2D;
