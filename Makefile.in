@@ -54,7 +54,6 @@ CXXFLAGS += \
 	-I$(VPATH)/include/mozilla/xpcom/glue \
 	-I$(VPATH)/include/mozilla/xpcom/string/public \
 	-DMOZ_GFX \
-	-DGFX_LOG_DEBUG \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(NULL)
 
