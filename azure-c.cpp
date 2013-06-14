@@ -522,6 +522,51 @@ AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt)
     gfxPathBuilder->LineTo(*gfxPt);
 }
 
+extern "C" void 
+AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder, AzPoint* ptc, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPtc = reinterpret_cast<gfx::Point*>(ptc);
+    gfx::Point *gfxPt  = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->QuadraticBezierTo(*gfxPtc, *gfxPt);
+}
+
+extern "C" void 
+AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder, AzPoint* ptc1, AzPoint* ptc2, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPtc1 = reinterpret_cast<gfx::Point*>(ptc1);
+    gfx::Point *gfxPtc2 = reinterpret_cast<gfx::Point*>(ptc2);
+    gfx::Point *gfxPt  = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->BezierTo(*gfxPtc1, *gfxPtc2, *gfxPt);
+}
+
+extern "C" void
+AzPathBuilderArc(AzPathBuilderRef aPathBuilder, AzPoint* pt, AzFloat radius, AzFloat angle1, AzFloat angle2, bool anticlockwise)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->Arc(*gfxPt, radius, angle1, angle2, anticlockwise );
+}
+
+extern "C" void
+AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point gfxpt = gfxPathBuilder->CurrentPoint();
+    pt->x = gfxpt.x;
+    pt->y = gfxpt.y;
+}
+
+extern "C" bool
+AzPathContainsPoint(AzPathRef aPath, AzPoint* pt, AzMatrix* aTransform)
+{
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    return gfxPath->ContainsPoint(*gfxPt, *gfxMatrix);
+}
+
 extern "C" void
 AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPattern, 
                         AzDrawOptions *aDrawOptions)
@@ -531,6 +576,18 @@ AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPat
     gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
     gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
     gfxDrawTarget->Fill( gfxPath, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
+AzDrawTargetStroke(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPattern, 
+                    AzStrokeOptions *aStrokeOptions, AzDrawOptions *aDrawOptions)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<gfx::StrokeOptions*>(aStrokeOptions);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Stroke( gfxPath, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
 }
 
 extern "C" AzPathBuilderRef
@@ -549,7 +606,16 @@ AzReleasePath(AzPathRef aPath)
     gfxPath->Release();
 }
 
-extern "C" inline void
+/* utils */
+extern void
+AzMatrixInit(AzMatrix* matrix)
+{
+    matrix->_11 = 1.0f, matrix->_12 = 0.0f;
+    matrix->_21 = 0.0f, matrix->_22 = 1.0f;
+    matrix->_31 = 0.0f; matrix->_32 = 0.0f;
+}
+
+extern "C" void
 AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a)
 {
     color->r = r;
@@ -558,7 +624,7 @@ AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a)
     color->a = a;
 }
 
-extern "C" inline void
+extern "C" void
 AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat h)
 {
     prect->x = x;
@@ -567,7 +633,7 @@ AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat h)
     prect->height = h;
 }
 
-extern "C" inline AzPoint
+extern "C" AzPoint
 AzRectGetTopLeft(AzRect* prect)
 {
     AzPoint pt;
@@ -576,7 +642,7 @@ AzRectGetTopLeft(AzRect* prect)
     return pt;
 }
 
-extern "C" inline AzPoint
+extern "C" AzPoint
 AzRectGetTopRight(AzRect* prect)
 {
     AzPoint pt;
@@ -585,7 +651,7 @@ AzRectGetTopRight(AzRect* prect)
     return pt;
 }
 
-extern "C" inline AzPoint
+extern "C" AzPoint
 AzRectGetBottomRight(AzRect* prect)
 {
     AzPoint pt;
@@ -594,7 +660,7 @@ AzRectGetBottomRight(AzRect* prect)
     return pt;
 }
 
-extern "C" inline AzPoint
+extern "C" AzPoint
 AzRectGetBottomLeft(AzRect* prect)
 {
     AzPoint pt;

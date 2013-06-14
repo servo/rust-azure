@@ -400,22 +400,40 @@ void AzReleasePathBuilder(AzPathBuilderRef aPathBuilder);
 void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
 void AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
 void AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
+void AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder, 
+        AzPoint* ptc, 
+        AzPoint* pt);
+void AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder, 
+        AzPoint* ptc1, 
+        AzPoint* ptc2, 
+        AzPoint* pt);
+void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
+        AzPoint* pt, 
+        AzFloat radius, AzFloat angle1, AzFloat angle2,
+        bool anticlockwise);
+void AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder, AzPoint* pt);
 
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 AzPathBuilderRef AzPathCopyToBuilder(AzPathRef aPath,AzFillRule fillrule);
 void AzReleasePath(AzPathRef aPath);
-
+bool AzPathContainsPoint(AzPathRef aPath, AzPoint* pt, AzMatrix* matrix);
 void AzDrawTargetFill(AzDrawTargetRef aDrawTarget, 
         AzPathRef aPath,
         AzPatternRef aPattern, 
         AzDrawOptions *aDrawOptions);
+void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget, 
+        AzPathRef aPath,
+        AzPatternRef aPattern, 
+        AzStrokeOptions *aStrokeOptions,
+        AzDrawOptions *aDrawOptions);
 
-inline void AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a);
-inline void AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat hz);
-inline AzPoint AzRectGetTopLeft(AzRect* prect);
-inline AzPoint AzRectGetTopRight(AzRect* prect);
-inline AzPoint AzRectGetBottomRight(AzRect* prect);
-inline AzPoint AzRectGetBottomLeft(AzRect* prect);
+void AzMatrixInit(AzMatrix* matrix);
+void AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a);
+void AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat hz);
+AzPoint AzRectGetTopLeft(AzRect* prect);
+AzPoint AzRectGetTopRight(AzRect* prect);
+AzPoint AzRectGetBottomRight(AzRect* prect);
+AzPoint AzRectGetBottomLeft(AzRect* prect);
 
 #ifdef __cplusplus
 }
