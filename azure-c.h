@@ -306,7 +306,7 @@ AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
 #ifdef SK_BUILD_FOR_MAC
-AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext);
+AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
 void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
 unsigned int AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext);
@@ -426,14 +426,6 @@ void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget,
         AzPatternRef aPattern, 
         AzStrokeOptions *aStrokeOptions,
         AzDrawOptions *aDrawOptions);
-
-void AzMatrixInit(AzMatrix* matrix);
-void AzColorSetVal(AzColor* color, AzFloat r, AzFloat g, AzFloat b, AzFloat a);
-void AzRectSetVal(AzRect* prect, AzFloat x, AzFloat y, AzFloat w, AzFloat hz);
-AzPoint AzRectGetTopLeft(AzRect* prect);
-AzPoint AzRectGetTopRight(AzRect* prect);
-AzPoint AzRectGetBottomRight(AzRect* prect);
-AzPoint AzRectGetBottomLeft(AzRect* prect);
 
 #ifdef __cplusplus
 }
