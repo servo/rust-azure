@@ -14,7 +14,8 @@ use azure::{AzGLContext, AzSkiaSharedGLContextRef};
 use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
 use azure::bindgen::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
 use azure::bindgen::{AzDrawTargetClearRect};
-use azure::bindgen::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
+use azure::bindgen::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext};
+use azure::bindgen::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::bindgen::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
 use azure::bindgen::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect};
@@ -257,6 +258,10 @@ pub struct DrawTarget {
 impl Drop for DrawTarget {
     fn finalize(&self) {
         unsafe {
+            match self.skia_context {
+                None => {}
+                Some(ctx_ref) => { AzReleaseSkiaSharedGLContext(ctx_ref); }
+            }
             AzReleaseDrawTarget(self.azure_draw_target);
         }
     }
@@ -306,7 +311,6 @@ pub impl DrawTarget {
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == SkiaBackend);
-        
         unsafe {
             let skia_context = AzCreateSkiaSharedGLContext(share_context,
                                                            &size.as_azure_int_size());
