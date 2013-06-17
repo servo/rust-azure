@@ -7,9 +7,7 @@
 
 #include "GrContext.h"
 
-#ifdef SK_BUILD_FOR_MAC
 #include "SkNativeSharedGLContext.h"
-#endif
 
 #include <stddef.h>
 #include <stdint.h>
@@ -298,14 +296,11 @@ typedef void* AzDataSourceSurfaceRef;
 typedef void* AzPathBuilderRef;
 typedef void* AzPathRef;
 
-#ifdef SK_BUILD_FOR_MAC
 typedef GrGLSharedContext AzGLContext;
-#endif
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
-#ifdef SK_BUILD_FOR_MAC
 AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
 void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
@@ -314,7 +309,6 @@ unsigned int AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLConte
 AzSkiaGrContextRef AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext);
 void AzSkiaSharedGLContextMakeCurrent(AzSkiaSharedGLContextRef aGLContext);
 void AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext);
-#endif
 
 AzDrawTargetRef AzCreateDrawTarget(AzBackendType aBackend,
                                    AzIntSize *aSize,
@@ -324,11 +318,9 @@ AzDrawTargetRef AzCreateDrawTargetForData(AzBackendType aBackend,
                                           AzIntSize *aSize,
                                           int32_t aStride,
                                           AzSurfaceFormat aFormat);
-#ifdef SK_BUILD_FOR_MAC
 AzDrawTargetRef AzCreateSkiaDrawTragetForFBO(AzSkiaSharedGLContextRef aGLContext,
                                              AzIntSize *aSize,
                                              AzSurfaceFormat aFormat);
-#endif
 
 void AzRetainDrawTarget(AzDrawTargetRef aTarget);
 
@@ -390,9 +382,7 @@ typedef void AzFontOptions;
 AzFontOptions* AzCreateFontOptions(char *aName, AzFontStyle aStyle);
 void AzDestroyFontOptions(AzFontOptions* aOptions);
 
-#ifdef SK_BUILD_FOR_MAC
 AzGLContext AzSkiaGetCurrentGLContext();
-#endif
 
 /* Path */
 AzPathBuilderRef AzCreatePathBuilder(AzDrawTargetRef aTarget, AzFillRule fillrule);
