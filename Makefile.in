@@ -2,7 +2,7 @@ VPATH=%VPATH%
 
 CC ?= gcc
 CXX ?= g++
-CXXFLAGS ?= -g
+CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
@@ -41,6 +41,22 @@ AZURE_CPP_SRC = \
 		image_operations.cpp)
 
 AZURE_CPP_SRC += azure-c.cpp
+
+ifeq ($(CFG_ENABLE_DEBUG),1)
+CXXFLAGS += \
+	-g \
+	-DSK_DEBUG \
+	-DGR_DEBUG=1 \
+	-DGR_GL_LOG_CALLS=1 \
+	-DGR_GL_LOG_CALLS_START=1 \
+	$(NULL)
+else
+CXXFLAGS += \
+	-O3 \
+	-DSK_RELEASE \
+	-DGR_RELEASE=1 \
+	$(NULL)
+endif
 
 #SSE2 instruction support required.
 CXXFLAGS += \
