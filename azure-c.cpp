@@ -160,7 +160,6 @@ AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     if (!sharedGLContext->init(aSize->width, aSize->height)) {
         return NULL;
     }
-    sharedGLContext->AddRef();
     return sharedGLContext;
 }
 
