@@ -295,11 +295,34 @@ typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
 typedef void* AzPathBuilderRef;
 typedef void* AzPathRef;
+typedef void* AzLinearGradientPatternRef;
+typedef void* AzRadialGradientPatternRef;
+typedef void* AzSurfacePatternRef;
 
 typedef GrGLSharedContext AzGLContext;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
+
+AzGradientStopsRef AzCreateGradientStops(AzDrawTargetRef aTarget, 
+                                          AzGradientStop* aGradientStop, 
+                                          uint32_t aNumStops, 
+                                          AzExtendMode aExtendMode);
+void AzReleaseGradientStops(AzGradientStopsRef aStops);
+AzLinearGradientPatternRef AzCreateLinearGradientPattern(AzPoint *aPt1, AzPoint *aPt2,
+                                          AzGradientStopsRef aStops, 
+                                          AzMatrix* aTransform);
+void AzReleaseLinearGradientPattern(AzLinearGradientPatternRef aPattern);
+AzRadialGradientPatternRef AzCreateRadialGradientPattern(AzPoint *aPt1, AzPoint *aPt2, 
+                                          AzFloat r0, AzFloat r1,
+                                          AzGradientStopsRef aStops, 
+                                          AzMatrix* aTransform);
+void AzReleaseRadialGradientPattern(AzRadialGradientPatternRef aPattern);
+AzSurfacePatternRef AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, 
+                                          AzExtendMode aExtendMode, 
+                                          AzMatrix* aTransform);
+void AzReleaseSurfacePattern(AzSurfacePatternRef aPattern);
+AzPatternType AzPatternGetType(AzPatternRef aPattern);
 
 AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);

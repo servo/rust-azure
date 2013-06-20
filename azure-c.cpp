@@ -151,6 +151,93 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     delete gfxColorPattern;
 }
 
+extern "C" AzGradientStopsRef
+AzCreateGradientStops(AzDrawTargetRef aTarget, AzGradientStop* aGradientStop, 
+                        uint32_t aNumStops, AzExtendMode aExtendMode) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
+    gfx::GradientStop *gfxGradientStop = reinterpret_cast<gfx::GradientStop*>(aGradientStop);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
+    
+    RefPtr<gfx::GradientStops> gradientstops = 
+        gfxDrawTarget->CreateGradientStops(gfxGradientStop, aNumStops, gfxExtendMode);
+
+    gradientstops->AddRef();
+    return gradientstops;
+}
+
+extern "C" void
+AzReleaseGradientStops(AzGradientStopsRef aStops) {
+    gfx::GradientStops *gfxGradientStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfxGradientStops->Release();
+}
+
+extern "C" AzLinearGradientPatternRef
+AzCreateLinearGradientPattern(AzPoint *aPt1, AzPoint *aPt2, 
+                                AzGradientStopsRef aStops, 
+                                AzMatrix* aTransform) {
+    gfx::Point *gfxPt1 = reinterpret_cast<gfx::Point*>(aPt1);
+    gfx::Point *gfxPt2 = reinterpret_cast<gfx::Point*>(aPt2);
+    gfx::GradientStops* gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    
+    gfx::LinearGradientPattern *gfxPattern = 
+                    new gfx::LinearGradientPattern(*gfxPt1, *gfxPt2, gfxStops, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void
+AzReleaseLinearGradientPattern(AzLinearGradientPatternRef aPattern) {
+    gfx::LinearGradientPattern *gfxPattern = static_cast<gfx::LinearGradientPattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzRadialGradientPatternRef
+AzCreateRadialGradientPattern(AzPoint *aPt1, AzPoint *aPt2, 
+                                AzFloat r0, AzFloat r1,
+                                AzGradientStopsRef aStops, 
+                                AzMatrix* aTransform) {
+    gfx::Point *gfxPt1 = reinterpret_cast<gfx::Point*>(aPt1);
+    gfx::Point *gfxPt2 = reinterpret_cast<gfx::Point*>(aPt2);
+    gfx::GradientStops* gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+
+    gfx::RadialGradientPattern *gfxPattern = 
+                    new gfx::RadialGradientPattern(*gfxPt1, *gfxPt2, r0, r1, gfxStops, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void
+AzReleaseRadialGradientPattern(AzRadialGradientPatternRef aPattern) {
+    gfx::RadialGradientPattern *gfxPattern = static_cast<gfx::RadialGradientPattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzSurfacePatternRef
+AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, AzExtendMode aExtendMode, AzMatrix* aTransform)
+{
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+
+    gfx::SurfacePattern *gfxPattern = 
+                    new gfx::SurfacePattern(gfxSourceSurface, gfxExtendMode, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void 
+AzReleaseSurfacePattern(AzSurfacePatternRef aPattern)
+{
+    gfx::SurfacePattern *gfxPattern = static_cast<gfx::SurfacePattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzPatternType 
+AzPatternGetType(AzPatternRef aPattern)
+{
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    return static_cast<AzPatternType>(gfxPattern->GetType());
+}
+
 extern "C" AzSkiaSharedGLContextRef
 AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
@@ -160,6 +247,7 @@ AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     if (!sharedGLContext->init(aSize->width, aSize->height)) {
         return NULL;
     }
+    sharedGLContext->AddRef();
     return sharedGLContext;
 }
 
