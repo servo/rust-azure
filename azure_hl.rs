@@ -24,6 +24,7 @@ use azure::bindgen::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::bindgen::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::bindgen::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
+use azure::bindgen::{AzSkiaSharedGLContextStealTextureID};
 
 use core::libc::types::common::c99::uint16_t;
 use core::cast::transmute;
@@ -362,6 +363,18 @@ pub impl DrawTarget {
             Some(ctx) => {
                 unsafe {
                     Some(AzSkiaSharedGLContextGetTextureID(ctx))
+                }
+            }
+        }
+    }
+
+    /// Consumes this draw target and returns the underlying texture ID, if there is one.
+    fn steal_texture_id(self) -> Option<gl::GLuint> {
+        match self.skia_context {
+            None => None,
+            Some(ctx) => {
+                unsafe {
+                    Some(AzSkiaSharedGLContextStealTextureID(ctx))
                 }
             }
         }

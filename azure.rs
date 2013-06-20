@@ -291,6 +291,8 @@ pub fn AzSkiaSharedGLContextGetFBOID(aGLContext: AzSkiaSharedGLContextRef) -> c_
 
 pub fn AzSkiaSharedGLContextGetTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
 
+pub fn AzSkiaSharedGLContextStealTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
+
 pub fn AzSkiaSharedGLContextGetGrContext(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrContextRef;
 
 pub fn AzSkiaSharedGLContextMakeCurrent(aGLContext: AzSkiaSharedGLContextRef);
