@@ -33,6 +33,7 @@ use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
 use layers::layers::TextureManager;
+use layers::texturegl::Texture;
 use gl = opengles::gl2;
 use std::arc::ARC;
 use std::arc;
@@ -475,8 +476,8 @@ pub impl DrawTarget {
 }
 
 impl TextureManager for DrawTarget {
-    pub fn get_texture(&self) -> gl::GLuint {
-        self.get_texture_id().get()
+    pub fn get_texture(&self) -> Texture {
+        Texture::wrap_native_texture(self.get_texture_id().get())
     }
 }
 
