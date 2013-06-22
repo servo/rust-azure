@@ -33,8 +33,6 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use layers::layers::TextureManager;
-use layers::texturegl::Texture;
 use gl = opengles::gl2;
 use std::arc::ARC;
 use std::arc;
@@ -487,13 +485,6 @@ pub impl DrawTarget {
         }
     }
 }
-
-impl TextureManager for DrawTarget {
-    pub fn get_texture(&self) -> Texture {
-        Texture::wrap_native_texture(self.get_texture_id().get())
-    }
-}
-
 
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
