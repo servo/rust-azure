@@ -137,7 +137,6 @@ void AzSanityCheck() {
     assert((int)AZ_eSideLeft == (int)css::eSideLeft);
 }
 
-
 extern "C" AzColorPatternRef
 AzCreateColorPattern(AzColor *aColor) {
     gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
@@ -151,6 +150,93 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
     delete gfxColorPattern;
 }
 
+extern "C" AzGradientStopsRef
+AzCreateGradientStops(AzDrawTargetRef aTarget, AzGradientStop* aGradientStop, 
+                        uint32_t aNumStops, AzExtendMode aExtendMode) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
+    gfx::GradientStop *gfxGradientStop = reinterpret_cast<gfx::GradientStop*>(aGradientStop);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
+    
+    RefPtr<gfx::GradientStops> gradientstops = 
+        gfxDrawTarget->CreateGradientStops(gfxGradientStop, aNumStops, gfxExtendMode);
+
+    gradientstops->AddRef();
+    return gradientstops;
+}
+
+extern "C" void
+AzReleaseGradientStops(AzGradientStopsRef aStops) {
+    gfx::GradientStops *gfxGradientStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfxGradientStops->Release();
+}
+
+extern "C" AzLinearGradientPatternRef
+AzCreateLinearGradientPattern(AzPoint *aPt1, AzPoint *aPt2, 
+                                AzGradientStopsRef aStops, 
+                                AzMatrix* aTransform) {
+    gfx::Point *gfxPt1 = reinterpret_cast<gfx::Point*>(aPt1);
+    gfx::Point *gfxPt2 = reinterpret_cast<gfx::Point*>(aPt2);
+    gfx::GradientStops* gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    
+    gfx::LinearGradientPattern *gfxPattern = 
+                    new gfx::LinearGradientPattern(*gfxPt1, *gfxPt2, gfxStops, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void
+AzReleaseLinearGradientPattern(AzLinearGradientPatternRef aPattern) {
+    gfx::LinearGradientPattern *gfxPattern = static_cast<gfx::LinearGradientPattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzRadialGradientPatternRef
+AzCreateRadialGradientPattern(AzPoint *aPt1, AzPoint *aPt2, 
+                                AzFloat r0, AzFloat r1,
+                                AzGradientStopsRef aStops, 
+                                AzMatrix* aTransform) {
+    gfx::Point *gfxPt1 = reinterpret_cast<gfx::Point*>(aPt1);
+    gfx::Point *gfxPt2 = reinterpret_cast<gfx::Point*>(aPt2);
+    gfx::GradientStops* gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+
+    gfx::RadialGradientPattern *gfxPattern = 
+                    new gfx::RadialGradientPattern(*gfxPt1, *gfxPt2, r0, r1, gfxStops, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void
+AzReleaseRadialGradientPattern(AzRadialGradientPatternRef aPattern) {
+    gfx::RadialGradientPattern *gfxPattern = static_cast<gfx::RadialGradientPattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzSurfacePatternRef
+AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, AzExtendMode aExtendMode, AzMatrix* aTransform)
+{
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+
+    gfx::SurfacePattern *gfxPattern = 
+                    new gfx::SurfacePattern(gfxSourceSurface, gfxExtendMode, *gfxMatrix);
+    return gfxPattern;
+}
+
+extern "C" void 
+AzReleaseSurfacePattern(AzSurfacePatternRef aPattern)
+{
+    gfx::SurfacePattern *gfxPattern = static_cast<gfx::SurfacePattern*>(aPattern);
+    delete gfxPattern;
+}
+
+extern "C" AzPatternType 
+AzPatternGetType(AzPatternRef aPattern)
+{
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    return static_cast<AzPatternType>(gfxPattern->GetType());
+}
+
 extern "C" AzSkiaSharedGLContextRef
 AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
@@ -160,6 +246,7 @@ AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
     if (!sharedGLContext->init(aSize->width, aSize->height)) {
         return NULL;
     }
+    sharedGLContext->AddRef();
     return sharedGLContext;
 }
 
@@ -294,6 +381,16 @@ AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 }
 
 extern "C" void
+AzDrawTargetFillRect2(AzDrawTargetRef aDrawTarget, AzRect *aRect,
+             AzPatternRef aPattern, AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->FillRect(*gfxRect, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
 AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
 		       AzDrawOptions *aDrawOptions) {
@@ -358,6 +455,26 @@ AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget) {
     RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->Snapshot();
     gfxSourceSurface->AddRef();
     return gfxSourceSurface;
+}
+
+extern "C" void
+AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfxDrawTarget->PopClip();    
+}
+
+extern "C" void
+AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfxDrawTarget->PushClip(gfxPath);
+}
+
+extern "C" void
+AzDrawTargetPushClipRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfxDrawTarget->PushClipRect(*gfxRect);
 }
 
 extern "C" AzSourceSurfaceRef
@@ -457,4 +574,137 @@ AzDestroyFontOptions(AzFontOptions* aOptions) {
 extern "C" AzGLContext
 AzSkiaGetCurrentGLContext() {
     return SkNativeSharedGLContext::GetCurrent();
+}
+
+/* Path */
+extern "C" AzPathBuilderRef
+AzCreatePathBuilder(AzDrawTargetRef aTarget, AzFillRule fillrule)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aTarget);
+    RefPtr<gfx::PathBuilder> pathBuilder = gfxDrawTarget->CreatePathBuilder(gfx::FillRule(fillrule));
+    pathBuilder->AddRef();
+    return pathBuilder;
+}
+
+extern "C" void
+AzReleasePathBuilder(AzPathBuilderRef aPathBuilder) 
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfxPathBuilder->Release();
+}
+
+extern "C" void 
+AzPathBuilderClose(AzPathBuilderRef aPathBuilder)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfxPathBuilder->Close();
+}
+
+extern "C" AzPathRef
+AzPathBuilderFinish(AzPathBuilderRef aPathBuilder)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    RefPtr<gfx::Path> path = gfxPathBuilder->Finish();
+    path->AddRef();
+    return path;
+}
+
+extern "C" void 
+AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->MoveTo(*gfxPt);
+}
+
+extern "C" void 
+AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->LineTo(*gfxPt);
+}
+
+extern "C" void 
+AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder, AzPoint* ptc, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPtc = reinterpret_cast<gfx::Point*>(ptc);
+    gfx::Point *gfxPt  = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->QuadraticBezierTo(*gfxPtc, *gfxPt);
+}
+
+extern "C" void 
+AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder, AzPoint* ptc1, AzPoint* ptc2, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPtc1 = reinterpret_cast<gfx::Point*>(ptc1);
+    gfx::Point *gfxPtc2 = reinterpret_cast<gfx::Point*>(ptc2);
+    gfx::Point *gfxPt  = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->BezierTo(*gfxPtc1, *gfxPtc2, *gfxPt);
+}
+
+extern "C" void
+AzPathBuilderArc(AzPathBuilderRef aPathBuilder, AzPoint* pt, AzFloat radius, AzFloat angle1, AzFloat angle2, bool anticlockwise)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfxPathBuilder->Arc(*gfxPt, radius, angle1, angle2, anticlockwise);
+}
+
+extern "C" void
+AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder, AzPoint* pt)
+{
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfx::Point gfxpt = gfxPathBuilder->CurrentPoint();
+    pt->x = gfxpt.x;
+    pt->y = gfxpt.y;
+}
+
+extern "C" bool
+AzPathContainsPoint(AzPathRef aPath, AzPoint* pt, AzMatrix* aTransform)
+{
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Point *gfxPt = reinterpret_cast<gfx::Point*>(pt);
+    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    return gfxPath->ContainsPoint(*gfxPt, *gfxMatrix);
+}
+
+extern "C" void
+AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPattern, 
+                        AzDrawOptions *aDrawOptions)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Fill(gfxPath, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
+AzDrawTargetStroke(AzDrawTargetRef aDrawTarget, AzPathRef aPath, AzPatternRef aPattern,
+                    AzStrokeOptions *aStrokeOptions, AzDrawOptions *aDrawOptions)
+{
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<gfx::StrokeOptions*>(aStrokeOptions);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Stroke(gfxPath, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
+}
+
+extern "C" AzPathBuilderRef
+AzPathCopyToBuilder(AzPathRef aPath,AzFillRule fillrule)
+{
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    RefPtr<gfx::PathBuilder> pathBuilder = gfxPath->CopyToBuilder(gfx::FillRule(fillrule));
+    pathBuilder->AddRef();
+    return pathBuilder;
+}
+
+extern "C" void
+AzReleasePath(AzPathRef aPath) 
+{
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfxPath->Release();
 }
