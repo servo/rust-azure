@@ -137,7 +137,6 @@ void AzSanityCheck() {
     assert((int)AZ_eSideLeft == (int)css::eSideLeft);
 }
 
-
 extern "C" AzColorPatternRef
 AzCreateColorPattern(AzColor *aColor) {
     gfx::Color *gfxColor = reinterpret_cast<gfx::Color*>(aColor);
@@ -450,6 +449,26 @@ AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget) {
     RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->Snapshot();
     gfxSourceSurface->AddRef();
     return gfxSourceSurface;
+}
+
+extern "C" void
+AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfxDrawTarget->PopClip();    
+}
+
+extern "C" void
+AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    gfxDrawTarget->PushClip(gfxPath);
+}
+
+extern "C" void
+AzDrawTargetPushClipRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
+    gfxDrawTarget->PushClipRect(*gfxRect);
 }
 
 extern "C" AzSourceSurfaceRef

@@ -383,6 +383,10 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzDrawSurfaceOptionsRef aSurfOptions,
                              AzDrawOptions *aOptions);
 AzSourceSurfaceRef AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget);
+void AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget, AzMatrix* aTransform);
+void AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget);
+void AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath);
+void AzDrawTargetPushClipRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
                                                            unsigned char *aData,
                                                            AzIntSize *aSize,
