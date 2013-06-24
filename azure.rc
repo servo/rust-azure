@@ -8,7 +8,6 @@
 
 extern mod std;
 extern mod geom;
-extern mod layers;
 extern mod opengles;
 
 pub use azure::*;

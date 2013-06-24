@@ -24,6 +24,7 @@ use azure::bindgen::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::bindgen::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::bindgen::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
+use azure::bindgen::{AzSkiaSharedGLContextStealTextureID};
 
 use core::libc::types::common::c99::uint16_t;
 use core::cast::transmute;
@@ -32,7 +33,6 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use layers::layers::TextureManager;
 use gl = opengles::gl2;
 use std::arc::ARC;
 use std::arc;
@@ -366,6 +366,18 @@ pub impl DrawTarget {
         }
     }
 
+    /// Consumes this draw target and returns the underlying texture ID, if there is one.
+    fn steal_texture_id(self) -> Option<gl::GLuint> {
+        match self.skia_context {
+            None => None,
+            Some(ctx) => {
+                unsafe {
+                    Some(AzSkiaSharedGLContextStealTextureID(ctx))
+                }
+            }
+        }
+    }
+
     fn get_size(&self) -> AzIntSize {
         unsafe {
             AzDrawTargetGetSize(self.azure_draw_target)
@@ -473,13 +485,6 @@ pub impl DrawTarget {
         }
     }
 }
-
-impl TextureManager for DrawTarget {
-    pub fn get_texture(&self) -> gl::GLuint {
-        self.get_texture_id().get()
-    }
-}
-
 
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
