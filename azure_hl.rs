@@ -11,31 +11,32 @@ use azure::{struct__AzColor};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
 use azure::{AzGLContext, AzSkiaSharedGLContextRef};
-use azure::bindgen::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
-use azure::bindgen::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use azure::bindgen::{AzDrawTargetClearRect};
-use azure::bindgen::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext};
-use azure::bindgen::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
-use azure::bindgen::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use azure::bindgen::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
-use azure::bindgen::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect};
-use azure::bindgen::{AzReleaseColorPattern, AzReleaseDrawTarget};
-use azure::bindgen::{AzReleaseSourceSurface, AzRetainDrawTarget};
-use azure::bindgen::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
-use azure::bindgen::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
-use azure::bindgen::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
+use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
+use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use azure::{AzDrawTargetClearRect};
+use azure::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext};
+use azure::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
+use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
+use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect};
+use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
+use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
+use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
+use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
+use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
-use core::libc::types::common::c99::uint16_t;
-use core::cast::transmute;
-use core::ptr::{null, to_unsafe_ptr};
+use std::libc::types::common::c99::uint16_t;
+use std::cast::transmute;
+use std::ptr;
+use std::ptr::{null, to_unsafe_ptr};
+use std::vec;
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
 use layers::layers::TextureManager;
 use gl = opengles::gl2;
-use std::arc::ARC;
-use std::arc;
+use extra::arc::ARC;
 
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
@@ -267,7 +268,7 @@ impl Drop for DrawTarget {
     }
 }
 
-pub impl DrawTarget {
+impl DrawTarget {
     pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
                    -> DrawTarget {
         unsafe {
@@ -326,7 +327,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn clone(&self) -> DrawTarget {
+    pub fn clone(&self) -> DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
             if self.skia_context.is_some() {
@@ -337,14 +338,14 @@ pub impl DrawTarget {
             azure_draw_target: self.azure_draw_target,
             data: match self.data {
                 None => None,
-                Some(ref arc) => Some(arc::clone(arc))
+                Some(ref arc) => Some(arc.clone())
             },
             skia_context: self.skia_context
                 
         }
     }
 
-    fn make_current(&self) {
+    pub fn make_current(&self) {
         match self.skia_context {
             None => {}
             Some(ctx) => { 
@@ -355,7 +356,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn get_texture_id(&self) -> Option<gl::GLuint> {
+    pub fn get_texture_id(&self) -> Option<gl::GLuint> {
         match self.skia_context {
             None => None,
             Some(ctx) => {
@@ -366,13 +367,13 @@ pub impl DrawTarget {
         }
     }
 
-    fn get_size(&self) -> AzIntSize {
+    pub fn get_size(&self) -> AzIntSize {
         unsafe {
             AzDrawTargetGetSize(self.azure_draw_target)
         }
     }
 
-    fn flush(&self) {
+    pub fn flush(&self) {
         unsafe {
             AzDrawTargetFlush(self.azure_draw_target);
             match self.skia_context {
@@ -382,13 +383,13 @@ pub impl DrawTarget {
         }
     }
 
-    fn clear_rect(&self, rect: &Rect<AzFloat>) {
+    pub fn clear_rect(&self, rect: &Rect<AzFloat>) {
         unsafe {
             AzDrawTargetClearRect(self.azure_draw_target, &rect.as_azure_rect());
         }
     }
 
-    fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
+    pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
                                  to_unsafe_ptr(&rect.as_azure_rect()),
@@ -396,7 +397,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn stroke_line(&self,
+    pub fn stroke_line(&self,
                    start: Point2D<AzFloat>,
                    end: Point2D<AzFloat>,
                    pattern: &ColorPattern,
@@ -412,7 +413,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn stroke_rect(&self,
+    pub fn stroke_rect(&self,
                    rect: &Rect<AzFloat>,
                    pattern: &ColorPattern,
                    stroke_options: &StrokeOptions,
@@ -426,7 +427,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn draw_surface(&self,
+    pub fn draw_surface(&self,
                     surface: SourceSurface,
                     dest: Rect<AzFloat>,
                     source: Rect<AzFloat>,
@@ -442,14 +443,14 @@ pub impl DrawTarget {
         }
     }
 
-    fn snapshot(&self) -> SourceSurface {
+    pub fn snapshot(&self) -> SourceSurface {
         unsafe {
             let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
             SourceSurface(azure_surface)
         }
     }
 
-    fn create_source_surface_from_data(&self,
+    pub fn create_source_surface_from_data(&self,
                                        data: &[u8],
                                        size: Size2D<i32>,
                                        stride: i32,
@@ -467,7 +468,7 @@ pub impl DrawTarget {
         }
     }
 
-    fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
+    pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
         }

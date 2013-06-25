@@ -6,9 +6,11 @@ use azure::{AzScaledFontRef, AzFloat};
 use azure::{struct__AzNativeFont};
 
 use azure_hl::{BackendType,SkiaBackend};
-use azure::bindgen::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
+use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 
-use core::libc::c_void;
+use std::cast;
+use std::libc::c_void;
+use std::ptr;
 
 #[cfg(target_os="macos")]
 priv use scaled_font::macos::*;
@@ -55,7 +57,7 @@ impl ScaledFont {
     pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
-        use azure::bindgen::{AzCreateFontOptions, AzDestroyFontOptions};
+        use azure::{AzCreateFontOptions, AzDestroyFontOptions};
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
