@@ -4,7 +4,7 @@
 
 #[test]
 fn sanity_check() {
-    use azure::bindgen::AzSanityCheck;
+    use azure::AzSanityCheck;
 
     unsafe { AzSanityCheck() };
 }
