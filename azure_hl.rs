@@ -25,7 +25,10 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
+use glfw;
+
 use std::libc::types::common::c99::uint16_t;
+use std::libc::c_void;
 use std::cast::transmute;
 use std::ptr;
 use std::ptr::{null, to_unsafe_ptr};
@@ -314,6 +317,7 @@ impl DrawTarget {
         assert!(backend == SkiaBackend);
         unsafe {
             let skia_context = AzCreateSkiaSharedGLContext(share_context,
+                                                           current_display(),
                                                            &size.as_azure_int_size());
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
                                                                  &size.as_azure_int_size(),
@@ -581,4 +585,14 @@ pub fn current_gl_context() -> AzGLContext {
     unsafe {
         AzSkiaGetCurrentGLContext()
     }
+}
+
+#[cfg(target_os="linux")]
+fn current_display() -> *c_void {
+    unsafe { glfw::ll::glfwGetX11Display() }
+}
+
+#[cfg(target_os="macos")]
+fn current_display() -> *c_void {
+    null()
 }
