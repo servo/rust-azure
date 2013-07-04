@@ -10,6 +10,7 @@ extern mod extra;
 extern mod geom;
 extern mod layers;
 extern mod opengles;
+extern mod glfw;
 
 pub use azure::*;
 

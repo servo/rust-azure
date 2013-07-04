@@ -298,7 +298,7 @@ typedef GrGLSharedContext AzGLContext;
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
-AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, AzIntSize *aSize);
+AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, void *extra, AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
 void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
 unsigned int AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext);
