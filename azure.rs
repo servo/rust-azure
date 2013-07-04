@@ -281,7 +281,7 @@ pub fn AzCreateColorPattern(aColor: *AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(aColorPattern: AzColorPatternRef);
 
-pub fn AzCreateSkiaSharedGLContext(aGLContext: AzGLContext, aSize: *AzIntSize) -> AzSkiaSharedGLContextRef;
+pub fn AzCreateSkiaSharedGLContext(aGLContext: AzGLContext, extra: *c_void, aSize: *AzIntSize) -> AzSkiaSharedGLContextRef;
 
 pub fn AzRetainSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
 
