@@ -152,8 +152,8 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
 }
 
 extern "C" AzSkiaSharedGLContextRef
-AzCreateSkiaSharedGLContext(AzGLContext aGLContext, AzIntSize *aSize) {
-    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext);
+AzCreateSkiaSharedGLContext(AzGLContext aGLContext, void *extra, AzIntSize *aSize) {
+    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext, extra);
     if (sharedGLContext == NULL) {
         return NULL;
     }
