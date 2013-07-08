@@ -26,8 +26,6 @@ use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurre
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaSharedGLContextStealTextureID};
 
-use glfw;
-
 use std::libc::types::common::c99::uint16_t;
 use std::libc::c_void;
 use std::cast::transmute;
@@ -106,7 +104,7 @@ pub struct ColorPattern {
 }
 
 impl Drop for ColorPattern {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             AzReleaseColorPattern(self.azure_color_pattern);
         }
@@ -260,7 +258,7 @@ pub struct DrawTarget {
 }
 
 impl Drop for DrawTarget {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             match self.skia_context {
                 None => {}
@@ -501,7 +499,7 @@ pub struct SourceSurface {
 }
 
 impl Drop for SourceSurface {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_source_surface);
         }
@@ -552,7 +550,7 @@ pub struct DataSourceSurface {
 }
 
 impl Drop for DataSourceSurface {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_data_source_surface);
         }
@@ -594,6 +592,7 @@ pub fn current_gl_context() -> AzGLContext {
 
 #[cfg(target_os="linux")]
 fn current_display() -> *c_void {
+    use glfw;
     unsafe { glfw::ll::glfwGetX11Display() }
 }
 

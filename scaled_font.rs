@@ -41,7 +41,7 @@ pub struct ScaledFont {
 }
 
 impl Drop for ScaledFont {
-    fn finalize(&self) {
+    fn drop(&self) {
         unsafe {
             AzReleaseScaledFont(self.azure_scaled_font);
         }
