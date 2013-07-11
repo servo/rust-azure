@@ -226,7 +226,7 @@ pub fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceO
 }
 
 
-#[deriving(Eq)]
+#[deriving(Clone, Eq)]
 pub enum BackendType {
     NoBackend,
     Direct2DBackend,
