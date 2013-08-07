@@ -595,3 +595,8 @@ fn current_display() -> *c_void {
 fn current_display() -> *c_void {
     null()
 }
+
+#[cfg(target_os="android")]
+fn current_display() -> *c_void {
+        null()
+}
