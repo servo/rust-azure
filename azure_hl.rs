@@ -592,6 +592,7 @@ fn current_display() -> *c_void {
 }
 
 #[cfg(target_os="macos")]
+#[cfg(target_os="android")]
 fn current_display() -> *c_void {
     null()
 }
