@@ -37,7 +37,7 @@ use geom::rect::Rect;
 use geom::size::Size2D;
 use layers::layers::TextureManager;
 use gl = opengles::gl2;
-use extra::arc::ARC;
+use extra::arc::Arc;
 
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
@@ -253,7 +253,7 @@ impl BackendType {
 
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
-    data: Option<ARC<~[u8]>>,
+    data: Option<Arc<~[u8]>>,
     skia_context: Option<AzSkiaSharedGLContextRef>
 }
 
@@ -302,7 +302,7 @@ impl DrawTarget {
             if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
-                data: Some(ARC(data)),
+                data: Some(Arc::new(data)),
                 skia_context: None
             }
         }
@@ -333,7 +333,7 @@ impl DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
             if self.skia_context.is_some() {
-                AzRetainSkiaSharedGLContext(self.skia_context.get());
+                AzRetainSkiaSharedGLContext(self.skia_context.unwrap());
             }
         }
         DrawTarget {
@@ -479,7 +479,7 @@ impl DrawTarget {
 
 impl TextureManager for DrawTarget {
     pub fn get_texture(&self) -> gl::GLuint {
-        self.get_texture_id().get()
+        self.get_texture_id().unwrap()
     }
 }
 
@@ -588,7 +588,7 @@ pub fn current_gl_context() -> AzGLContext {
 #[cfg(target_os="linux")]
 fn current_display() -> *c_void {
     use glfw;
-    unsafe { glfw::ll::glfwGetX11Display() }
+    unsafe { glfw::ffi::glfwGetX11Display() }
 }
 
 #[cfg(target_os="macos")]
