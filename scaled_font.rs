@@ -13,13 +13,13 @@ use std::libc::c_void;
 use std::ptr;
 
 #[cfg(target_os="macos")]
-priv use scaled_font::macos::*;
+use scaled_font::macos::*;
 
 #[cfg(target_os="linux")]
-priv use scaled_font::linux::*;
+use scaled_font::linux::*;
 
 #[cfg(target_os="android")]
-priv use scaled_font::android::*;
+use scaled_font::android::*;
 
 #[cfg(target_os="macos")]
 pub mod macos {
