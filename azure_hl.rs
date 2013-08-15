@@ -478,7 +478,7 @@ impl DrawTarget {
 }
 
 impl TextureManager for DrawTarget {
-    pub fn get_texture(&self) -> gl::GLuint {
+    fn get_texture(&self) -> gl::GLuint {
         self.get_texture_id().unwrap()
     }
 }
