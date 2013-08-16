@@ -165,11 +165,11 @@ all: libazure.dummy
 	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 azure-test: azure.rc $(RUST_SRC) libazure.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --test
 
 libazure.a: $(ALL_OBJS)
 	$(AR) rcs libazure.a $(ALL_OBJS)
