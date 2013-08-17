@@ -23,8 +23,7 @@ use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
-use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID};
-use azure::{AzSkiaSharedGLContextFlush, AzSkiaSharedGLContextStealTextureID};
+use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
 use std::libc::types::common::c99::uint16_t;
 use std::libc::c_void;
@@ -36,6 +35,7 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
+use layers::layers::TextureManager;
 use gl = opengles::gl2;
 use extra::arc::Arc;
 
@@ -369,18 +369,6 @@ impl DrawTarget {
         }
     }
 
-    /// Consumes this draw target and returns the underlying texture ID, if there is one.
-    pub fn steal_texture_id(self) -> Option<gl::GLuint> {
-        match self.skia_context {
-            None => None,
-            Some(ctx) => {
-                unsafe {
-                    Some(AzSkiaSharedGLContextStealTextureID(ctx))
-                }
-            }
-        }
-    }
-
     pub fn get_size(&self) -> AzIntSize {
         unsafe {
             AzDrawTargetGetSize(self.azure_draw_target)
@@ -488,6 +476,13 @@ impl DrawTarget {
         }
     }
 }
+
+impl TextureManager for DrawTarget {
+    fn get_texture(&self) -> gl::GLuint {
+        self.get_texture_id().unwrap()
+    }
+}
+
 
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
@@ -597,6 +592,7 @@ fn current_display() -> *c_void {
 }
 
 #[cfg(target_os="macos")]
+#[cfg(target_os="android")]
 fn current_display() -> *c_void {
     null()
 }

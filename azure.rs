@@ -10,7 +10,6 @@ use std::libc::*;
 
 pub type AzFontOptions = *c_void;
 pub type AzFloat = c_float;
-pub type AzBool = u8;
 
 pub type enum_AzSurfaceType = c_uint;
 pub static AZ_SURFACE_DATA: u32 = 0_u32;
@@ -275,10 +274,6 @@ pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
 pub type AzGLContext = *c_void;
 
-pub type AzPathBuilderRef = *c_void;
-
-pub type AzPathRef = *c_void;
-
 #[link_args="-lazure"]
 extern {
 
@@ -297,8 +292,6 @@ pub fn AzReleaseSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
 pub fn AzSkiaSharedGLContextGetFBOID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
 
 pub fn AzSkiaSharedGLContextGetTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
-
-pub fn AzSkiaSharedGLContextStealTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
 
 pub fn AzSkiaSharedGLContextGetGrContext(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrContextRef;
 
@@ -359,38 +352,5 @@ pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontO
 pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
 
 pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
-
-pub fn AzCreatePathBuilder(aDrawTarget: AzDrawTargetRef, aFillRule: enum_AzFillRule) -> AzPathBuilderRef;
-
-pub fn AzReleasePathBuilder(aPathBuilder: AzPathBuilderRef);
-
-pub fn AzPathBuilderClose(aPathBuilder: AzPathBuilderRef);
-
-pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
-
-pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
-
-pub fn AzPathBuilderQuadraticBezierTo(aPathBuilder: AzPathBuilderRef, aControl: *AzPoint, aPoint: *AzPoint);
-
-pub fn AzPathBuilderBezierTo(aPathBuilder: AzPathBuilderRef, aControl1: *AzPoint, aControl2: *AzPoint,
-                             aPoint: *AzPoint);
-pub fn AzPathBuilderArc(aPathBuilder: AzPathBuilderRef, aOrigin: *AzPoint, aRadius: AzFloat,
-                        aStartAngle: AzFloat, aEndAngle: AzFloat, aAntiClockwise: AzBool);
-
-pub fn AzPathBuilderCurrentPoint(aPathBuilder: AzPathBuilderRef, aCurrentPoint: *AzPoint);
-
-pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
-
-pub fn AzPathCopyToBuilder(aPath: AzPathRef, aFillRull: enum_AzFillRule) -> AzPathBuilderRef;
-
-pub fn AzReleasePath(aPath: AzPathRef);
-
-pub fn AzPathContainsPoint(aPath: AzPathRef, aPoint: *AzPoint, matrix: *AzMatrix) -> AzBool;
-
-pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef,
-                        aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
-
-pub fn AzDrawTargetStroke(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef,
-                          aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
 }

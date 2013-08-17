@@ -15,6 +15,9 @@ endif
 ifeq ($(UNAME),Linux)
     OSTYPE=linux
 endif
+ifeq ($(CFG_OSTYPE),linux-androideabi)
+    OSTYPE=android
+endif
 
 MOZALLOC_CPP_SRC = \
 	src/memory/mozalloc/mozalloc_abort.cpp \
@@ -29,7 +32,6 @@ AZURE_CPP_SRC = \
 		DrawTargetRecording.cpp \
 		Factory.cpp \
 		ImageScaling.cpp \
-		ImageScalingSSE2.cpp \
 		Matrix.cpp \
 		PathRecording.cpp \
 		RecordedEvent.cpp \
@@ -40,6 +42,9 @@ AZURE_CPP_SRC = \
 		convolver.cpp \
 		image_operations.cpp)
 
+ifneq ($(CFG_CPUTYPE), arm)
+    AZURE_CPP_SRC += $(addprefix src/gfx/2d/, ImageScalingSSE2.cpp)
+endif
 AZURE_CPP_SRC += azure-c.cpp
 
 ifeq ($(CFG_ENABLE_DEBUG),1)
@@ -61,7 +66,6 @@ endif
 #SSE2 instruction support required.
 CXXFLAGS += \
 	-fPIC \
-	-msse2 \
 	-I$(VPATH)/include \
 	-I$(VPATH)/include/mozilla/gfx \
 	-I$(VPATH)/include/mozilla/ipc/chromium/src \
@@ -72,6 +76,11 @@ CXXFLAGS += \
 	-DMOZ_GFX \
 	-DNS_ATTR_MALLOC="" -DNS_WARN_UNUSED_RESULT="" \
 	$(NULL)
+
+#SSE2 instruction support required.
+ifneq ($(CFG_CPUTYPE), arm)
+    CXXFLAGS += -msse2
+endif
 
 AZURE_CPP_SRC += \
 	$(addprefix src/gfx/2d/,\
@@ -127,6 +136,19 @@ AZURE_CPP_SRC += \
 		ScaledFontFreetype.cpp)
 endif
 
+ifeq ($(OSTYPE),android)
+    CXXFLAGS += \
+    -DXP_UNIX \
+    -DSK_BUILD_FOR_ANDROID \
+    $(NULL)
+    AZURE_OBJCPP_SRC =
+
+    CXXFLAGS += -DMOZ_ENABLE_FREETYPE
+    AZURE_CPP_SRC += \
+        $(addprefix src/gfx/2d/,\
+            ScaledFontFreetype.cpp)
+endif
+
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
 ALL_OBJCPP_SRC = $(AZURE_OBJCPP_SRC)
 ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o) $(ALL_OBJCPP_SRC:%.mm=%.o)
@@ -143,7 +165,7 @@ all: libazure.dummy
 	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
 libazure.dummy: azure.rc $(RUST_SRC) libazure.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 azure-test: azure.rc $(RUST_SRC) libazure.a

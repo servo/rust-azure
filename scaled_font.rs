@@ -13,10 +13,13 @@ use std::libc::c_void;
 use std::ptr;
 
 #[cfg(target_os="macos")]
-priv use scaled_font::macos::*;
+use scaled_font::macos::*;
 
 #[cfg(target_os="linux")]
-priv use scaled_font::linux::*;
+use scaled_font::linux::*;
+
+#[cfg(target_os="android")]
+use scaled_font::android::*;
 
 #[cfg(target_os="macos")]
 pub mod macos {
@@ -32,6 +35,13 @@ pub mod linux {
     extern mod freetype;
 
     pub use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+}
+
+#[cfg(target_os="android")]
+pub mod android {
+    extern mod freetype;
+
+    pub use scaled_font::android::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 type SkTypeface = *c_void;
@@ -54,6 +64,7 @@ impl ScaledFont {
     }
 
     #[cfg(target_os="linux")]
+    #[cfg(target_os="android")]
     pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;

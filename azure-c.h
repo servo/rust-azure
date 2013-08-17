@@ -136,8 +136,7 @@ enum AzFillRule {
 enum AzAntialiasMode {
   AZ_AA_NONE,
   AZ_AA_GRAY,
-  AZ_AA_SUBPIXEL,
-  AZ_AA_DEFAULT
+  AZ_AA_SUBPIXEL
 };
 
 enum AzSnapping {
@@ -239,7 +238,7 @@ typedef struct _AzDrawOptions {
   uint16_t fields;
   /*
   enum AzCompositionOp mCompositionOp : 8;
-  enum AzAntialiasMode mAntialiasMode : 3;
+  enum AzAntialiasMode mAntialiasMode : 2;
   enum AzSnapping mSnapping : 1;
   */
 } AzDrawOptions;
@@ -293,8 +292,6 @@ typedef void* AzGlyphRenderingOptionsRef;
 typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
-typedef void* AzPathBuilderRef;
-typedef void* AzPathRef;
 
 typedef GrGLSharedContext AzGLContext;
 
@@ -332,10 +329,6 @@ void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
 			  AzRect *aRect,
 			  AzPatternRef aPattern);
-void AzDrawTargetFillRect2(AzDrawTargetRef aDrawTarget, 
-        AzRect *aRect,
-        AzPatternRef aPattern, 
-        AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
 			    AzRect *aRect,
 			    AzPatternRef aPattern,
@@ -383,39 +376,6 @@ AzFontOptions* AzCreateFontOptions(char *aName, AzFontStyle aStyle);
 void AzDestroyFontOptions(AzFontOptions* aOptions);
 
 AzGLContext AzSkiaGetCurrentGLContext();
-
-/* Path */
-AzPathBuilderRef AzCreatePathBuilder(AzDrawTargetRef aTarget, AzFillRule fillrule);
-void AzReleasePathBuilder(AzPathBuilderRef aPathBuilder);
-void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
-void AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
-void AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, AzPoint* pt);
-void AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder, 
-        AzPoint* ptc, 
-        AzPoint* pt);
-void AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder, 
-        AzPoint* ptc1, 
-        AzPoint* ptc2, 
-        AzPoint* pt);
-void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
-        AzPoint* pt, 
-        AzFloat radius, AzFloat angle1, AzFloat angle2,
-        bool anticlockwise);
-void AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder, AzPoint* pt);
-
-AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
-AzPathBuilderRef AzPathCopyToBuilder(AzPathRef aPath,AzFillRule fillrule);
-void AzReleasePath(AzPathRef aPath);
-bool AzPathContainsPoint(AzPathRef aPath, AzPoint* pt, AzMatrix* matrix);
-void AzDrawTargetFill(AzDrawTargetRef aDrawTarget, 
-        AzPathRef aPath,
-        AzPatternRef aPattern, 
-        AzDrawOptions *aDrawOptions);
-void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget, 
-        AzPathRef aPath,
-        AzPatternRef aPattern, 
-        AzStrokeOptions *aStrokeOptions,
-        AzDrawOptions *aDrawOptions);
 
 #ifdef __cplusplus
 }
