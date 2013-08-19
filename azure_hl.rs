@@ -80,6 +80,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
     }
 }
 
+#[deriving(Clone)]
 pub struct Color {
     r: AzFloat,
     g: AzFloat,
