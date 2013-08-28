@@ -105,6 +105,7 @@ pub struct ColorPattern {
 }
 
 impl Drop for ColorPattern {
+    #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             AzReleaseColorPattern(self.azure_color_pattern);
@@ -112,6 +113,7 @@ impl Drop for ColorPattern {
     }
 }
 
+#[fixed_stack_segment]
 pub fn ColorPattern(color: Color) -> ColorPattern {
     unsafe {
         ColorPattern {
@@ -259,6 +261,7 @@ pub struct DrawTarget {
 }
 
 impl Drop for DrawTarget {
+    #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             match self.skia_context {
@@ -271,6 +274,7 @@ impl Drop for DrawTarget {
 }
 
 impl DrawTarget {
+    #[fixed_stack_segment]
     pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
                    -> DrawTarget {
         unsafe {
@@ -286,6 +290,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn new_with_data(backend: BackendType,
                          data: ~[u8],
                          offset: uint,
@@ -309,6 +314,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn new_with_fbo(backend: BackendType,
                         share_context: AzGLContext,
                         size: Size2D<i32>,
@@ -330,6 +336,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn clone(&self) -> DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
@@ -348,6 +355,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn make_current(&self) {
         match self.skia_context {
             None => {}
@@ -359,6 +367,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn get_texture_id(&self) -> Option<gl::GLuint> {
         match self.skia_context {
             None => None,
@@ -370,12 +379,14 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn get_size(&self) -> AzIntSize {
         unsafe {
             AzDrawTargetGetSize(self.azure_draw_target)
         }
     }
 
+    #[fixed_stack_segment]
     pub fn flush(&self) {
         unsafe {
             AzDrawTargetFlush(self.azure_draw_target);
@@ -386,12 +397,14 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn clear_rect(&self, rect: &Rect<AzFloat>) {
         unsafe {
             AzDrawTargetClearRect(self.azure_draw_target, &rect.as_azure_rect());
         }
     }
 
+    #[fixed_stack_segment]
     pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
@@ -400,6 +413,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn stroke_line(&self,
                    start: Point2D<AzFloat>,
                    end: Point2D<AzFloat>,
@@ -416,6 +430,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn stroke_rect(&self,
                    rect: &Rect<AzFloat>,
                    pattern: &ColorPattern,
@@ -430,6 +445,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn draw_surface(&self,
                     surface: SourceSurface,
                     dest: Rect<AzFloat>,
@@ -446,6 +462,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn snapshot(&self) -> SourceSurface {
         unsafe {
             let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
@@ -453,6 +470,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn create_source_surface_from_data(&self,
                                        data: &[u8],
                                        size: Size2D<i32>,
@@ -471,6 +489,7 @@ impl DrawTarget {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
@@ -495,6 +514,7 @@ pub struct SourceSurface {
 }
 
 impl Drop for SourceSurface {
+    #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_source_surface);
@@ -508,24 +528,39 @@ pub fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface 
     }
 }
 
+// FIXME Rust #8753 no fixed stack segment for default methods
+#[fixed_stack_segment]
+unsafe fn AzSourceSurfaceGetSize_(aSurface: AzSourceSurfaceRef) -> AzIntSize {
+    AzSourceSurfaceGetSize(aSurface)
+}
+
+// FIXME Rust #8753 no fixed stack segment for default methods
+#[fixed_stack_segment]
+unsafe fn AzSourceSurfaceGetFormat_(aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat {
+    AzSourceSurfaceGetFormat(aSurface)
+}
+
 pub trait SourceSurfaceMethods {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef;
 
+    #[fixed_stack_segment]
     fn size(&self) -> Size2D<i32> {
         unsafe {
-            let size = AzSourceSurfaceGetSize(self.get_azure_source_surface());
+            let size = AzSourceSurfaceGetSize_(self.get_azure_source_surface());
             Size2D { width: size.width, height: size.height }
         }
     }
 
+    #[fixed_stack_segment]
     fn format(&self) -> SurfaceFormat {
         unsafe {
-            SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
+            SurfaceFormat::new(AzSourceSurfaceGetFormat_(self.get_azure_source_surface()))
         }
     }
 }
 
 impl SourceSurface {
+    #[fixed_stack_segment]
     pub fn get_data_surface(&self) -> DataSourceSurface {
         unsafe {
             let data_source_surface = AzSourceSurfaceGetDataSurface(
@@ -546,6 +581,7 @@ pub struct DataSourceSurface {
 }
 
 impl Drop for DataSourceSurface {
+    #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_data_source_surface);
@@ -554,6 +590,7 @@ impl Drop for DataSourceSurface {
 }
 
 impl DataSourceSurface {
+    #[fixed_stack_segment]
     pub fn with_data(&self, f: &fn(&[u8])) {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface);
@@ -562,6 +599,7 @@ impl DataSourceSurface {
         }
     }
 
+    #[fixed_stack_segment]
     pub fn stride(&self) -> i32 {
         unsafe {
             AzDataSourceSurfaceGetStride(self.azure_data_source_surface)
@@ -580,6 +618,7 @@ impl SourceSurfaceMethods for DataSourceSurface {
     }
 }
 
+#[fixed_stack_segment]
 pub fn current_gl_context() -> AzGLContext {
     unsafe {
         AzSkiaGetCurrentGLContext()
@@ -587,6 +626,7 @@ pub fn current_gl_context() -> AzGLContext {
 }
 
 #[cfg(target_os="linux")]
+#[fixed_stack_segment]
 fn current_display() -> *c_void {
     use glfw;
     unsafe { glfw::ffi::glfwGetX11Display() }
