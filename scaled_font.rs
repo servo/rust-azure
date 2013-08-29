@@ -51,6 +51,7 @@ pub struct ScaledFont {
 }
 
 impl Drop for ScaledFont {
+    #[fixed_stack_segment]
     fn drop(&self) {
         unsafe {
             AzReleaseScaledFont(self.azure_scaled_font);
@@ -65,6 +66,7 @@ impl ScaledFont {
 
     #[cfg(target_os="linux")]
     #[cfg(target_os="android")]
+    #[fixed_stack_segment]
     pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
@@ -95,6 +97,7 @@ impl ScaledFont {
 
     /// Mac-specific function to create a font for the given backend.
     #[cfg(target_os="macos")]
+    #[fixed_stack_segment]
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
         use azure_hl::{CoreGraphicsBackend,CoreGraphicsAcceleratedBackend};
