@@ -250,7 +250,7 @@ typedef struct _AzStrokeOptions {
   const AzFloat* mDashPattern;
   size_t mDashLength;
   AzFloat mDashOffset;
-  uint16_t fields;
+  uint8_t fields;
   /*
     enum AzJoinStyle mLineJoin : 4;
     enum AzCapStyle mLineCap : 3;

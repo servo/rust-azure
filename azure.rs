@@ -218,7 +218,7 @@ pub struct struct__AzStrokeOptions {
     mDashPattern: *AzFloat,
     mDashLength: size_t,
     mDashOffset: AzFloat,
-    fields: uint16_t,
+    fields: uint8_t,
 }
 
 pub type AzStrokeOptions = struct__AzStrokeOptions;

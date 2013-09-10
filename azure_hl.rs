@@ -4,6 +4,7 @@
 
 //! High-level bindings to Azure.
 
+use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL};
 use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
@@ -25,8 +26,8 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
-use std::libc::types::common::c99::uint16_t;
-use std::libc::c_void;
+use std::libc::types::common::c99::{uint8_t, uint16_t};
+use std::libc::{c_void, size_t};
 use std::cast::transmute;
 use std::ptr;
 use std::ptr::{null, to_unsafe_ptr};
@@ -125,7 +126,9 @@ pub fn ColorPattern(color: Color) -> ColorPattern {
 pub struct StrokeOptions {
     line_width: AzFloat,
     miter_limit: AzFloat,
-    fields: uint16_t,
+    mDashPattern: *AzFloat,
+    mDashLength: size_t,
+    fields: uint8_t
 }
 
 impl StrokeOptions {
@@ -133,21 +136,32 @@ impl StrokeOptions {
         struct__AzStrokeOptions {
             mLineWidth: self.line_width,
             mMiterLimit: self.miter_limit,
-            mDashPattern: null(),
-            mDashLength: 0,
+            mDashPattern: self.mDashPattern,
+            mDashLength: self.mDashLength,
             mDashOffset: 0.0f as AzFloat,
             fields: self.fields
         }
     }
+
+    pub fn set_join_style(&mut self, style: u8) {
+        self.fields = self.fields & 0b1111_0000_u8;
+        self.fields = self.fields | style ;
+    }
+
+    pub fn set_cap_style(&mut self, style: u8) {
+        self.fields = self.fields & 0b0000_1111_u8;
+        self.fields = self.fields | (style << 4);
+    }
 }
 
 pub fn StrokeOptions(line_width: AzFloat,
-                  miter_limit: AzFloat,
-                  fields: uint16_t) -> StrokeOptions {
+                  miter_limit: AzFloat) -> StrokeOptions {
     StrokeOptions {
         line_width: line_width,
         miter_limit: miter_limit,
-        fields: fields
+        mDashPattern: null(),
+        mDashLength: 0,
+        fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
     }
 }
 
