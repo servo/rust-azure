@@ -187,6 +187,12 @@ AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLContext) {
    return sharedGLContext->getTextureID();
 }
 
+extern "C" unsigned int
+AzSkiaSharedGLContextStealTextureID(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    return sharedGLContext->stealTextureID();
+}
+
 extern "C" AzSkiaGrContextRef
 AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
