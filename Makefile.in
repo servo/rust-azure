@@ -47,7 +47,7 @@ ifneq ($(CFG_CPUTYPE), arm)
 endif
 AZURE_CPP_SRC += azure-c.cpp
 
-ifeq ($(CFG_ENABLE_DEBUG),1)
+ifeq ($(CFG_ENABLE_DEBUG_SKIA),1)
 CXXFLAGS += \
 	-g \
 	-DSK_DEBUG \
