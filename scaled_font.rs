@@ -52,7 +52,7 @@ pub struct ScaledFont {
 
 impl Drop for ScaledFont {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             AzReleaseScaledFont(self.azure_scaled_font);
         }
