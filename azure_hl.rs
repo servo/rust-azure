@@ -108,7 +108,7 @@ pub struct ColorPattern {
 
 impl Drop for ColorPattern {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             AzReleaseColorPattern(self.azure_color_pattern);
         }
@@ -311,7 +311,7 @@ pub struct DrawTarget {
 
 impl Drop for DrawTarget {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             match self.skia_context {
                 None => {}
@@ -570,7 +570,7 @@ pub struct SourceSurface {
 
 impl Drop for SourceSurface {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_source_surface);
         }
@@ -637,7 +637,7 @@ pub struct DataSourceSurface {
 
 impl Drop for DataSourceSurface {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             AzReleaseSourceSurface(self.azure_data_source_surface);
         }
