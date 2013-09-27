@@ -275,7 +275,7 @@ pub struct GLContext {
 
 impl Drop for GLContext {
     #[fixed_stack_segment]
-    fn drop(&self) {
+    fn drop(&mut self) {
         unsafe {
             AzReleaseSkiaSharedGLContext(self.azure_gl_context)
         }
