@@ -242,7 +242,6 @@ extern "C" AzDrawTargetRef
 AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSize, AzSurfaceFormat aFormat) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
     GrContext *grContext = sharedGLContext->getGrContext();
-    grContext->AddRef();
     gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
     gfx::SurfaceFormat surfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
     RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateSkiaDrawTargetForFBO(sharedGLContext->getFBOID(),
