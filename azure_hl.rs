@@ -8,7 +8,8 @@ use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL};
 use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{struct__AzColor};
+use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef};
+use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
 use azure::{AzGLContext, AzSkiaSharedGLContextRef};
@@ -19,7 +20,7 @@ use azure::{AzDrawTargetCreateSourceSurfaceFromData, AzCreateSkiaSharedGLContext
 use azure::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
-use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect};
+use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
 use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
@@ -555,6 +556,21 @@ impl DrawTarget {
     pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn fill_glyphs(&self, azfontref: AzScaledFontRef, glyphbuf: struct__AzGlyphBuffer,
+                              azure_pattern: AzColorPatternRef,
+                              options: struct__AzDrawOptions,
+                              renderingOptions: AzGlyphRenderingOptionsRef) {
+        unsafe {
+            AzDrawTargetFillGlyphs(self.azure_draw_target,
+                    azfontref,
+                    to_unsafe_ptr(&glyphbuf),
+                    azure_pattern,
+                    to_unsafe_ptr(&options),
+                    renderingOptions);
         }
     }
 }
