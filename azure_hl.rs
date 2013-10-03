@@ -140,7 +140,7 @@ impl StrokeOptions {
             mMiterLimit: self.miter_limit,
             mDashPattern: self.mDashPattern,
             mDashLength: self.mDashLength,
-            mDashOffset: 0.0f as AzFloat,
+            mDashOffset: 0.0 as AzFloat,
             fields: self.fields
         }
     }
