@@ -152,8 +152,9 @@ AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
 }
 
 extern "C" AzSkiaSharedGLContextRef
-AzCreateSkiaSharedGLContext(AzGLContext aGLContext, void *extra, AzIntSize *aSize) {
-    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(aGLContext, extra);
+AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext, AzIntSize *aSize) {
+    GrGLNativeContext* nativeContext = reinterpret_cast<GrGLNativeContext*>(aNativeContext);
+    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(*nativeContext);
     if (sharedGLContext == NULL) {
         return NULL;
     }
@@ -181,10 +182,10 @@ AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext) {
    return sharedGLContext->getFBOID();
 }
 
-extern "C" unsigned int
-AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLContext) {
-   SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-   return sharedGLContext->getTextureID();
+extern "C" AzSkiaGrGLSharedSurfaceRef
+AzSkiaSharedGLContextStealSurface(AzSkiaSharedGLContextRef aGLContext) {
+    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
+    return reinterpret_cast<void*>(sharedGLContext->stealSurface());
 }
 
 extern "C" AzSkiaGrContextRef
@@ -228,7 +229,9 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
                                                                            *size,
                                                                            aStride,
                                                                            surfaceFormat);
-    target->AddRef();
+    if (target != NULL) {
+        target->AddRef();
+    }
     return target;
 }
 
@@ -242,7 +245,9 @@ AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSi
                                                                               grContext,
                                                                               *size,
                                                                               surfaceFormat);
-    target->AddRef();
+    if (target != NULL) {
+        target->AddRef();
+    }
     return target;
 }
 
