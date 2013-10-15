@@ -25,8 +25,7 @@ use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
-use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID};
-use azure::{AzSkiaSharedGLContextStealTextureID, AzSkiaSharedGLContextFlush};
+use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
 
 use std::libc::types::common::c99::{uint8_t, uint16_t};
 use std::libc::{c_void, size_t};
@@ -270,40 +269,6 @@ impl BackendType {
     }
 }
 
-pub struct GLContext {
-    azure_gl_context: AzGLContext,
-}
-
-impl Drop for GLContext {
-    #[fixed_stack_segment]
-    fn drop(&mut self) {
-        unsafe {
-            AzReleaseSkiaSharedGLContext(self.azure_gl_context)
-        }
-    }
-}
-
-impl GLContext {
-    #[fixed_stack_segment]
-    pub fn new_with_shared_context(share_context: AzGLContext) -> GLContext {
-        let size = Size2D(16i32, 16);
-        unsafe {
-            GLContext {
-                azure_gl_context: AzCreateSkiaSharedGLContext(share_context,
-                                                              current_display(),
-                                                              &size.as_azure_int_size())
-            }
-        }
-    }
-
-    #[fixed_stack_segment]
-    pub fn make_current(&self) {
-        unsafe {
-            AzSkiaSharedGLContextMakeCurrent(self.azure_gl_context)
-        }
-    }
-}
-
 pub struct DrawTarget {
     azure_draw_target: AzDrawTargetRef,
     data: Option<Arc<~[u8]>>,
@@ -424,19 +389,6 @@ impl DrawTarget {
             Some(ctx) => {
                 unsafe {
                     Some(AzSkiaSharedGLContextGetTextureID(ctx))
-                }
-            }
-        }
-    }
-
-    /// Consumes this draw target and returns the underlying texture ID, if there is one.
-    #[fixed_stack_segment]
-    pub fn steal_texture_id(self) -> Option<gl::GLuint> {
-        match self.skia_context {
-            None => None,
-            Some(ctx) => {
-                unsafe {
-                    Some(AzSkiaSharedGLContextStealTextureID(ctx))
                 }
             }
         }
@@ -575,6 +527,13 @@ impl DrawTarget {
     }
 }
 
+impl TextureManager for DrawTarget {
+    fn get_texture(&self) -> gl::GLuint {
+        self.get_texture_id().unwrap()
+    }
+}
+
+
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
     return draw_target.clone();
@@ -693,13 +652,6 @@ impl SourceSurfaceMethods for DataSourceSurface {
 pub fn current_gl_context() -> AzGLContext {
     unsafe {
         AzSkiaGetCurrentGLContext()
-    }
-}
-
-#[fixed_stack_segment]
-pub fn make_gl_context_current(context: AzGLContext) {
-    unsafe {
-        AzSkiaSharedGLContextMakeCurrent(context)
     }
 }
 
