@@ -6,6 +6,8 @@
        vers = "0.1")];
 #[crate_type = "lib"];
 
+#[feature(globs)];
+
 extern mod std;
 extern mod extra;
 extern mod geom;
