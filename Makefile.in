@@ -65,6 +65,7 @@ endif
 
 #SSE2 instruction support required.
 CXXFLAGS += \
+	-std=gnu++0x \
 	-fPIC \
 	-I$(VPATH)/include \
 	-I$(VPATH)/include/mozilla/gfx \
@@ -120,15 +121,12 @@ AZURE_CPP_SRC += \
 	src/gfx/2d/PathCG.cpp \
 	src/gfx/2d/SourceSurfaceCG.cpp \
 	$(NULL)
-
-AZURE_OBJCPP_SRC = src/gfx/2d/QuartzSupport.mm
 endif
 
 ifeq ($(OSTYPE),linux)
 CXXFLAGS += \
 	-DXP_UNIX \
 	$(NULL)
-AZURE_OBJCPP_SRC =
 
 CXXFLAGS += -DMOZ_ENABLE_FREETYPE
 AZURE_CPP_SRC += \
@@ -141,7 +139,6 @@ ifeq ($(OSTYPE),android)
     -DXP_UNIX \
     -DSK_BUILD_FOR_ANDROID \
     $(NULL)
-    AZURE_OBJCPP_SRC =
 
     CXXFLAGS += -DMOZ_ENABLE_FREETYPE
     AZURE_CPP_SRC += \
@@ -150,8 +147,7 @@ ifeq ($(OSTYPE),android)
 endif
 
 ALL_CPP_SRC = $(MOZALLOC_CPP_SRC) $(AZURE_CPP_SRC)
-ALL_OBJCPP_SRC = $(AZURE_OBJCPP_SRC)
-ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o) $(ALL_OBJCPP_SRC:%.mm=%.o)
+ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o)
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
