@@ -65,7 +65,6 @@ endif
 
 #SSE2 instruction support required.
 CXXFLAGS += \
-	-std=gnu++0x \
 	-fPIC \
 	-I$(VPATH)/include \
 	-I$(VPATH)/include/mozilla/gfx \

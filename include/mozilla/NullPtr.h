@@ -12,6 +12,7 @@
 #define mozilla_NullPtr_h_
 
 #include "mozilla/Compiler.h"
+#include <cstddef>
 
 #if defined(__clang__)
 #  ifndef __has_extension
