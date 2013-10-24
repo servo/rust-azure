@@ -25,21 +25,25 @@ use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
-use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextGetTextureID, AzSkiaSharedGLContextFlush};
+use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
+use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 
-use std::libc::types::common::c99::{uint8_t, uint16_t};
-use std::libc::{c_void, size_t};
-use std::cast::transmute;
-use std::ptr;
-use std::ptr::{null, to_unsafe_ptr};
-use std::vec;
+use extra::arc::Arc;
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use layers::layers::TextureManager;
 use gl = opengles::gl2;
-use extra::arc::Arc;
+use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsContext};
+use std::libc::types::common::c99::{uint8_t, uint16_t};
+use std::libc::size_t;
+use std::cast;
+use std::ptr;
+use std::ptr::{null, to_unsafe_ptr};
+use std::vec;
+
+#[cfg(target_os="linux")]
+use std::libc::c_void;
 
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
@@ -288,6 +292,12 @@ impl Drop for DrawTarget {
     }
 }
 
+/// Contains the GL resources that Skia was holding onto that may be safely extracted. At the
+/// moment this consists simply of the native surface.
+pub struct StolenGLResources {
+    surface: AzSkiaGrGLSharedSurfaceRef,
+}
+
 impl DrawTarget {
     #[fixed_stack_segment]
     pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
@@ -331,18 +341,20 @@ impl DrawTarget {
 
     #[fixed_stack_segment]
     pub fn new_with_fbo(backend: BackendType,
-                        share_context: AzGLContext,
+                        native_graphics_context: &NativePaintingGraphicsContext,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == SkiaBackend);
         unsafe {
-            let skia_context = AzCreateSkiaSharedGLContext(share_context,
-                                                           current_display(),
+            let native_graphics_context = cast::transmute(native_graphics_context);
+            let skia_context = AzCreateSkiaSharedGLContext(native_graphics_context,
                                                            &size.as_azure_int_size());
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
                                                                  &size.as_azure_int_size(),
                                                                  format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
+            if azure_draw_target == ptr::null() {
+                fail!(~"null azure draw target");
+            }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
                 data: None,
@@ -382,13 +394,16 @@ impl DrawTarget {
         }
     }
 
+    /// Consumes this draw target and returns the underlying native surface and GL context, if they exist.
     #[fixed_stack_segment]
-    pub fn get_texture_id(&self) -> Option<gl::GLuint> {
+    pub fn steal_gl_resources(self) -> Option<StolenGLResources> {
         match self.skia_context {
             None => None,
             Some(ctx) => {
                 unsafe {
-                    Some(AzSkiaSharedGLContextGetTextureID(ctx))
+                    Some(StolenGLResources {
+                        surface: AzSkiaSharedGLContextStealSurface(ctx),
+                    })
                 }
             }
         }
@@ -507,7 +522,7 @@ impl DrawTarget {
     #[fixed_stack_segment]
     pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
-            AzDrawTargetSetTransform(self.azure_draw_target, transmute(matrix));
+            AzDrawTargetSetTransform(self.azure_draw_target, cast::transmute(matrix));
         }
     }
 
@@ -526,13 +541,6 @@ impl DrawTarget {
         }
     }
 }
-
-impl TextureManager for DrawTarget {
-    fn get_texture(&self) -> gl::GLuint {
-        self.get_texture_id().unwrap()
-    }
-}
-
 
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
@@ -657,13 +665,31 @@ pub fn current_gl_context() -> AzGLContext {
 
 #[cfg(target_os="linux")]
 #[fixed_stack_segment]
-fn current_display() -> *c_void {
+pub fn current_display() -> *c_void {
     use glfw;
-    unsafe { glfw::ffi::glfwGetX11Display() }
+    unsafe {
+        glfw::ffi::glfwGetX11Display()
+    }
+}
+
+#[cfg(target_os="linux")]
+#[fixed_stack_segment]
+pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
+    use xlib::xlib::XDisplayString;
+    unsafe {
+        XDisplayString(current_display())
+    }
 }
 
 #[cfg(target_os="macos")]
 #[cfg(target_os="android")]
-fn current_display() -> *c_void {
-    null()
+#[fixed_stack_segment]
+pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
+    use opengles::cgl::{CGLGetCurrentContext, CGLGetPixelFormat};
+    unsafe {
+        NativeGraphicsMetadata {
+            pixel_format: CGLGetPixelFormat(CGLGetCurrentContext()),
+        }
+    }
 }
+

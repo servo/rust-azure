@@ -13,6 +13,8 @@ extern mod extra;
 extern mod geom;
 extern mod layers;
 extern mod opengles;
+#[cfg(target_os = "linux")]
+extern mod xlib;
 #[cfg(not(target_os = "android"))]
 extern mod glfw;
 

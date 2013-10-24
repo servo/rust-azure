@@ -283,7 +283,10 @@ typedef struct _AzNativeFont {
 
 typedef void* AzGradientStopsRef;
 typedef void* AzSkiaSharedGLContextRef;
+typedef void* AzSkiaSharedGrGLContextRef;
 typedef void* AzSkiaGrContextRef;
+typedef void* AzSkiaGrGLSharedSurfaceRef;
+typedef void* AzSkiaGrGLSharedContextRef;
 typedef void* AzDrawTargetRef;
 typedef void* AzPatternRef;
 typedef void* AzColorPatternRef;
@@ -292,17 +295,19 @@ typedef void* AzGlyphRenderingOptionsRef;
 typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
+typedef void* AzGLContextMetadataRef;
 
 typedef GrGLSharedContext AzGLContext;
+typedef GrGLNativeContext* AzGLNativeContextRef;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
 void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
-AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(GrGLSharedContext aSharedContext, void *extra, AzIntSize *aSize);
+AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext,
+                                                     AzIntSize *aSize);
 void AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
-void AzReleaseSkiaShareGLContext(AzSkiaSharedGLContextRef aGLContext);
+void AzReleaseSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext);
 unsigned int AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext);
-unsigned int AzSkiaSharedGLContextGetTextureID(AzSkiaSharedGLContextRef aGLContext);
 AzSkiaGrContextRef AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext);
 void AzSkiaSharedGLContextMakeCurrent(AzSkiaSharedGLContextRef aGLContext);
 void AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext);

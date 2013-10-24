@@ -254,7 +254,11 @@ pub type AzGradientStopsRef = *c_void;
 
 pub type AzSkiaSharedGLContextRef = *c_void;
 
+pub type AzSkiaSharedGrGLContextRef = *c_void;
+
 pub type AzSkiaGrContextRef = *c_void;
+
+pub type AzSkiaGrGLSharedSurfaceRef = *c_void;
 
 pub type AzDrawTargetRef = *c_void;
 
@@ -274,6 +278,12 @@ pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
 
 pub type AzGLContext = *c_void;
 
+pub type AzSkiaGrGLSharedContextRef = *c_void;
+
+pub type AzGLContextMetadataRef = *c_void;
+
+pub type AzGLNativeContextRef = *c_void;
+
 #[link_args="-lazure"]
 extern {
 
@@ -283,7 +293,8 @@ pub fn AzCreateColorPattern(aColor: *AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(aColorPattern: AzColorPatternRef);
 
-pub fn AzCreateSkiaSharedGLContext(aGLContext: AzGLContext, extra: *c_void, aSize: *AzIntSize) -> AzSkiaSharedGLContextRef;
+pub fn AzCreateSkiaSharedGLContext(aNativeContext: AzGLNativeContextRef, aSize: *AzIntSize)
+                                   -> AzSkiaSharedGLContextRef;
 
 pub fn AzRetainSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
 
@@ -291,7 +302,7 @@ pub fn AzReleaseSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
 
 pub fn AzSkiaSharedGLContextGetFBOID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
 
-pub fn AzSkiaSharedGLContextGetTextureID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
+pub fn AzSkiaSharedGLContextStealSurface(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrGLSharedSurfaceRef;
 
 pub fn AzSkiaSharedGLContextGetGrContext(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrContextRef;
 
