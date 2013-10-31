@@ -8,7 +8,8 @@
 #define nsCoreAnimationSupport_h__
 #ifdef XP_MACOSX
 
-#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl.h>
+#import <OpenGL/glext.h>
 #import "ApplicationServices/ApplicationServices.h"
 #include "mozilla/RefPtr.h"
 #include "mozilla/gfx/MacIOSurface.h"
