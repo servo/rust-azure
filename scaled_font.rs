@@ -23,6 +23,7 @@ use scaled_font::android::*;
 
 #[cfg(target_os="macos")]
 pub mod macos {
+    extern mod core_foundation;
     extern mod core_graphics;
     extern mod core_text;
 
@@ -101,6 +102,7 @@ impl ScaledFont {
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
         use azure_hl::{CoreGraphicsBackend,CoreGraphicsAcceleratedBackend};
+        use scaled_font::macos::core_foundation::base::TCFType;
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
@@ -111,7 +113,7 @@ impl ScaledFont {
             CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
                 unsafe {
-                    azure_native_font.mFont = cast::transmute(*native_font.contents.borrow_ref());
+                    azure_native_font.mFont = cast::transmute(native_font.as_concrete_TypeRef());
                 }
             }
             _ => {
