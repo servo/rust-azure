@@ -10,11 +10,11 @@
 
 extern mod std;
 extern mod extra;
-extern mod geom;
-extern mod layers;
-extern mod opengles;
+extern mod geom = "rust-geom";
+extern mod layers = "rust-layers";
+extern mod opengles = "rust-opengles";
 #[cfg(target_os = "linux")]
-extern mod xlib;
+extern mod xlib = "rust-xlib";
 #[cfg(not(target_os = "android"))]
 extern mod glfw;
 
