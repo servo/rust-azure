@@ -37,6 +37,7 @@ use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsCo
 use std::libc::types::common::c99::{uint8_t, uint16_t};
 use std::libc::size_t;
 use std::cast;
+use std::c_str::CString;
 use std::ptr;
 use std::ptr::{null, to_unsafe_ptr};
 use std::vec;
@@ -676,7 +677,10 @@ pub fn current_display() -> *c_void {
 pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
     use xlib::xlib::XDisplayString;
     unsafe {
-        XDisplayString(current_display())
+        let c_str = CString::new(XDisplayString(current_display()), false);
+        NativeGraphicsMetadata {
+            display: c_str.as_str().unwrap().to_str(),
+        }
     }
 }
 
