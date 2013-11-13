@@ -283,6 +283,16 @@ AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
 }
 
 extern "C" void
+AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, 
+                 AzPatternRef aPattern, AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Fill(gfxPath, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
 AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		     AzPatternRef aPattern) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
@@ -484,4 +494,10 @@ AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
   gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
   const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
   gfxPathBuilder->LineTo(*gfxPoint);
+}
+
+extern "C" void
+AzReleasePath(AzPathRef aPath) {
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfxPath->Release();
 }
