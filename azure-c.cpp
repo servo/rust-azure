@@ -456,3 +456,32 @@ extern "C" AzGLContext
 AzSkiaGetCurrentGLContext() {
     return SkNativeSharedGLContext::GetCurrent();
 }
+
+// FIXME: Needs to take a FillRule
+extern "C" AzPathBuilderRef
+AzCreatePathBuilder(AzDrawTargetRef aDrawTarget) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  RefPtr<gfx::PathBuilder> gfxPathBuilder = gfxDrawTarget->CreatePathBuilder();
+  gfxPathBuilder->AddRef();
+  return gfxPathBuilder;
+}
+
+extern "C" void
+AzReleasePathBuilder(AzPathBuilderRef aPathBuilder) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  gfxPathBuilder->Release();
+}
+
+extern "C" void
+AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+  gfxPathBuilder->MoveTo(*gfxPoint);
+}
+
+extern "C" void
+AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+  gfxPathBuilder->LineTo(*gfxPoint);
+}
