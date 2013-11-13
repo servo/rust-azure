@@ -284,6 +284,8 @@ pub type AzGLContextMetadataRef = *c_void;
 
 pub type AzGLNativeContextRef = *c_void;
 
+pub type AzPathBuilderRef = *c_void;
+
 #[link_args="-lazure"]
 extern {
 
@@ -363,5 +365,13 @@ pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontO
 pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
 
 pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
+
+pub fn AzCreatePathBuilder(aDrawTarget: AzDrawTargetRef) -> AzPathBuilderRef;
+
+pub fn AzReleasePathBuilder(aPathBuilder: AzPathBuilderRef);
+
+pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
+
+pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 
 }

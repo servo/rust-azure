@@ -27,6 +27,7 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
+use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzReleasePathBuilder};
 
 use extra::arc::Arc;
 use geom::matrix2d::Matrix2D;
@@ -539,6 +540,15 @@ impl DrawTarget {
                     renderingOptions);
         }
     }
+
+    #[fixed_stack_segment]
+    pub fn create_path_builder(&self) -> PathBuilder {
+        unsafe {
+            PathBuilder {
+                azure_path_builder: AzCreatePathBuilder(self.azure_draw_target)
+            }
+        }
+    }
 }
 
 // Ugly workaround for the lack of explicit self.
@@ -652,6 +662,37 @@ impl DataSourceSurface {
 impl SourceSurfaceMethods for DataSourceSurface {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
+    }
+}
+
+struct PathBuilder {
+    priv azure_path_builder: AzPathBuilderRef
+}
+
+impl PathBuilder {
+    #[fixed_stack_segment]
+    pub fn move_to(&self, point: Point2D<AzFloat>) {
+        unsafe {
+            let az_point = point.as_azure_point();
+            AzPathBuilderMoveTo(self.azure_path_builder, &az_point);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn line_to(&self, point: Point2D<AzFloat>) {
+        unsafe {
+            let az_point = point.as_azure_point();
+            AzPathBuilderLineTo(self.azure_path_builder, &az_point);
+        }
+    }
+}
+
+impl Drop for PathBuilder {
+    #[fixed_stack_segment]
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePathBuilder(self.azure_path_builder);
+        }
     }
 }
 
