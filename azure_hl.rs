@@ -28,6 +28,7 @@ use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurre
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzReleasePathBuilder};
+use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath};
 
 use extra::arc::Arc;
 use geom::matrix2d::Matrix2D;
@@ -435,6 +436,16 @@ impl DrawTarget {
     }
 
     #[fixed_stack_segment]
+    pub fn fill(&self, path: &Path, pattern: &ColorPattern, draw_options: &DrawOptions) {
+        unsafe {
+            AzDrawTargetFill(self.azure_draw_target,
+                             path.azure_path,
+                             pattern.azure_color_pattern,
+                             &draw_options.as_azure_draw_options());
+        }
+    }
+
+    #[fixed_stack_segment]
     pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
@@ -662,6 +673,19 @@ impl DataSourceSurface {
 impl SourceSurfaceMethods for DataSourceSurface {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
+    }
+}
+
+struct Path {
+    priv azure_path: AzPathRef
+}
+
+impl Drop for Path {
+    #[fixed_stack_segment]
+    fn drop(&mut self){
+        unsafe {
+            AzReleasePath(self.azure_path);
+        }
     }
 }
 

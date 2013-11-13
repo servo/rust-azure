@@ -284,6 +284,8 @@ pub type AzGLContextMetadataRef = *c_void;
 
 pub type AzGLNativeContextRef = *c_void;
 
+pub type AzPathRef = *c_void;
+
 pub type AzPathBuilderRef = *c_void;
 
 #[link_args="-lazure"]
@@ -334,6 +336,8 @@ pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPat
 
 pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *AzPoint, aEnd: *AzPoint, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
+pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *AzDrawOptions);
+
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *AzRect, aSource: *AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *AzDrawOptions);
@@ -374,4 +378,5 @@ pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 
 pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 
+pub fn AzReleasePath(aPath: AzPathRef);
 }
