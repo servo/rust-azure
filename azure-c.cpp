@@ -293,6 +293,19 @@ AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath,
 }
 
 extern "C" void
+AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, const AzPathRef *aPath) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  const gfx::Path *gfxPath = reinterpret_cast<const gfx::Path*>(aPath);
+  gfxDrawTarget->PushClip(gfxPath);
+}
+
+extern "C" void
+AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  gfxDrawTarget->PopClip();
+}
+
+extern "C" void
 AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		     AzPatternRef aPattern) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
