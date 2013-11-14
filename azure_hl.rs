@@ -28,7 +28,7 @@ use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurre
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
-use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath};
+use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 
 use extra::arc::Arc;
 use geom::matrix2d::Matrix2D;
@@ -560,6 +560,24 @@ impl DrawTarget {
             }
         }
     }
+
+    #[fixed_stack_segment]
+    pub fn push_clip(&self, path: &Path) {
+
+        unsafe {
+            AzDrawTargetPushClip(self.azure_draw_target,path.azure_path);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn pop_clip(&self) {
+
+        unsafe {
+            AzDrawTargetPopClip(self.azure_draw_target);
+        }
+
+    }
+
 }
 
 // Ugly workaround for the lack of explicit self.

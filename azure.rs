@@ -338,6 +338,10 @@ pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *AzPoint, aE
 
 pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *AzDrawOptions);
 
+pub fn AzDrawTargetPushClip(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef);
+
+pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
+
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *AzRect, aSource: *AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *AzDrawOptions);
@@ -381,4 +385,5 @@ pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 
 pub fn AzReleasePath(aPath: AzPathRef);
+
 }
