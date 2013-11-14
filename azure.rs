@@ -378,5 +378,7 @@ pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 
 pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
 
+pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
+
 pub fn AzReleasePath(aPath: AzPathRef);
 }

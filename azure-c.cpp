@@ -496,6 +496,14 @@ AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
   gfxPathBuilder->LineTo(*gfxPoint);
 }
 
+extern "C" AzPathRef
+AzPathBuilderFinish(AzPathBuilderRef aPathBuilder) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    RefPtr<gfx::Path> gfxPath = gfxPathBuilder->Finish();
+    gfxPath->AddRef();
+    return gfxPath;
+}
+
 extern "C" void
 AzReleasePath(AzPathRef aPath) {
     gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);

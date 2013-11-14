@@ -27,7 +27,7 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
-use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzReleasePathBuilder};
+use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath};
 
 use extra::arc::Arc;
@@ -707,6 +707,16 @@ impl PathBuilder {
         unsafe {
             let az_point = point.as_azure_point();
             AzPathBuilderLineTo(self.azure_path_builder, &az_point);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn finish(&self) -> Path{
+        unsafe {
+            let az_path = AzPathBuilderFinish(self.azure_path_builder);
+            Path {
+                azure_path : az_path
+            }
         }
     }
 }
