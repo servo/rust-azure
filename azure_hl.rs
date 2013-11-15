@@ -563,7 +563,6 @@ impl DrawTarget {
 
     #[fixed_stack_segment]
     pub fn push_clip(&self, path: &Path) {
-
         unsafe {
             AzDrawTargetPushClip(self.azure_draw_target,path.azure_path);
         }
@@ -571,13 +570,11 @@ impl DrawTarget {
 
     #[fixed_stack_segment]
     pub fn pop_clip(&self) {
-
         unsafe {
             AzDrawTargetPopClip(self.azure_draw_target);
         }
 
     }
-
 }
 
 // Ugly workaround for the lack of explicit self.
