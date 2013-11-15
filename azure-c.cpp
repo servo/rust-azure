@@ -283,6 +283,29 @@ AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
 }
 
 extern "C" void
+AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, 
+                 AzPatternRef aPattern, AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Fill(gfxPath, *gfxPattern, *gfxDrawOptions);
+}
+
+extern "C" void
+AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, const AzPathRef *aPath) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  const gfx::Path *gfxPath = reinterpret_cast<const gfx::Path*>(aPath);
+  gfxDrawTarget->PushClip(gfxPath);
+}
+
+extern "C" void
+AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  gfxDrawTarget->PopClip();
+}
+
+extern "C" void
 AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		     AzPatternRef aPattern) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
@@ -455,4 +478,47 @@ AzDestroyFontOptions(AzFontOptions* aOptions) {
 extern "C" AzGLContext
 AzSkiaGetCurrentGLContext() {
     return SkNativeSharedGLContext::GetCurrent();
+}
+
+// FIXME: Needs to take a FillRule
+extern "C" AzPathBuilderRef
+AzCreatePathBuilder(AzDrawTargetRef aDrawTarget) {
+  gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+  RefPtr<gfx::PathBuilder> gfxPathBuilder = gfxDrawTarget->CreatePathBuilder();
+  gfxPathBuilder->AddRef();
+  return gfxPathBuilder;
+}
+
+extern "C" void
+AzReleasePathBuilder(AzPathBuilderRef aPathBuilder) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  gfxPathBuilder->Release();
+}
+
+extern "C" void
+AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+  gfxPathBuilder->MoveTo(*gfxPoint);
+}
+
+extern "C" void
+AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
+  gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+  const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+  gfxPathBuilder->LineTo(*gfxPoint);
+}
+
+extern "C" AzPathRef
+AzPathBuilderFinish(AzPathBuilderRef aPathBuilder) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    RefPtr<gfx::Path> gfxPath = gfxPathBuilder->Finish();
+    gfxPath->AddRef();
+    return gfxPath;
+}
+
+extern "C" void
+AzReleasePath(AzPathRef aPath) {
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfxPath->Release();
 }

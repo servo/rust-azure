@@ -296,6 +296,8 @@ typedef void* AzSourceSurfaceRef;
 typedef void* AzDrawSurfaceOptionsRef;
 typedef void* AzDataSourceSurfaceRef;
 typedef void* AzGLContextMetadataRef;
+typedef void* AzPathBuilderRef;
+typedef void* AzPathRef;
 
 typedef GrGLSharedContext AzGLContext;
 typedef GrGLNativeContext* AzGLNativeContextRef;

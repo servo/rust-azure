@@ -284,6 +284,10 @@ pub type AzGLContextMetadataRef = *c_void;
 
 pub type AzGLNativeContextRef = *c_void;
 
+pub type AzPathRef = *c_void;
+
+pub type AzPathBuilderRef = *c_void;
+
 #[link_args="-lazure"]
 extern {
 
@@ -332,6 +336,12 @@ pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPat
 
 pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *AzPoint, aEnd: *AzPoint, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
+pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *AzDrawOptions);
+
+pub fn AzDrawTargetPushClip(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef);
+
+pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
+
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *AzRect, aSource: *AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *AzDrawOptions);
@@ -363,5 +373,17 @@ pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontO
 pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
 
 pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
+
+pub fn AzCreatePathBuilder(aDrawTarget: AzDrawTargetRef) -> AzPathBuilderRef;
+
+pub fn AzReleasePathBuilder(aPathBuilder: AzPathBuilderRef);
+
+pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
+
+pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
+
+pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
+
+pub fn AzReleasePath(aPath: AzPathRef);
 
 }

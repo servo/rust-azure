@@ -27,6 +27,8 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
+use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
+use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 
 use extra::arc::Arc;
 use geom::matrix2d::Matrix2D;
@@ -435,6 +437,16 @@ impl DrawTarget {
     }
 
     #[fixed_stack_segment]
+    pub fn fill(&self, path: &Path, pattern: &ColorPattern, draw_options: &DrawOptions) {
+        unsafe {
+            AzDrawTargetFill(self.azure_draw_target,
+                             path.azure_path,
+                             pattern.azure_color_pattern,
+                             &draw_options.as_azure_draw_options());
+        }
+    }
+
+    #[fixed_stack_segment]
     pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
@@ -539,6 +551,30 @@ impl DrawTarget {
                     to_unsafe_ptr(&options),
                     renderingOptions);
         }
+    }
+
+    #[fixed_stack_segment]
+    pub fn create_path_builder(&self) -> PathBuilder {
+        unsafe {
+            PathBuilder {
+                azure_path_builder: AzCreatePathBuilder(self.azure_draw_target)
+            }
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn push_clip(&self, path: &Path) {
+        unsafe {
+            AzDrawTargetPushClip(self.azure_draw_target,path.azure_path);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn pop_clip(&self) {
+        unsafe {
+            AzDrawTargetPopClip(self.azure_draw_target);
+        }
+
     }
 }
 
@@ -653,6 +689,60 @@ impl DataSourceSurface {
 impl SourceSurfaceMethods for DataSourceSurface {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
+    }
+}
+
+struct Path {
+    priv azure_path: AzPathRef
+}
+
+impl Drop for Path {
+    #[fixed_stack_segment]
+    fn drop(&mut self){
+        unsafe {
+            AzReleasePath(self.azure_path);
+        }
+    }
+}
+
+struct PathBuilder {
+    priv azure_path_builder: AzPathBuilderRef
+}
+
+impl PathBuilder {
+    #[fixed_stack_segment]
+    pub fn move_to(&self, point: Point2D<AzFloat>) {
+        unsafe {
+            let az_point = point.as_azure_point();
+            AzPathBuilderMoveTo(self.azure_path_builder, &az_point);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn line_to(&self, point: Point2D<AzFloat>) {
+        unsafe {
+            let az_point = point.as_azure_point();
+            AzPathBuilderLineTo(self.azure_path_builder, &az_point);
+        }
+    }
+
+    #[fixed_stack_segment]
+    pub fn finish(&self) -> Path{
+        unsafe {
+            let az_path = AzPathBuilderFinish(self.azure_path_builder);
+            Path {
+                azure_path : az_path
+            }
+        }
+    }
+}
+
+impl Drop for PathBuilder {
+    #[fixed_stack_segment]
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePathBuilder(self.azure_path_builder);
+        }
     }
 }
 
