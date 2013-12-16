@@ -740,13 +740,8 @@ pub fn current_display() -> *c_void {
 
 #[cfg(target_os="linux")]
 pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
-    use xlib::xlib::XDisplayString;
-    use std::c_str::CString;
-    unsafe {
-        let c_str = CString::new(XDisplayString(current_display()), false);
-        NativeGraphicsMetadata {
-            display: c_str.as_str().unwrap().to_str(),
-        }
+    NativeGraphicsMetadata {
+        display: current_display(),
     }
 }
 
