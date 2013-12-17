@@ -184,6 +184,23 @@ impl DrawOptions {
             fields: self.fields
         }
     }
+
+    pub fn set_composition_op(&mut self, style: u8) {
+        self.fields = self.fields & 0b1111_1111_0000_0000_u16;
+        self.fields = self.fields | style as u16;
+    }
+
+    pub fn set_antialias_mode(&mut self, style: u8) {
+        self.fields = self.fields & 0b1111_1000_1111_1111_u16; 
+        let style = ((style & 7) as u16) << 8;
+        self.fields = self.fields | style;
+    }
+
+    pub fn set_snapping(&mut self, style: u8) {
+        self.fields = self.fields & 0b1111_0111_1111_1111_u16;
+        let style = ((style & 1) as u16) << 11;
+        self.fields = self.fields | style;
+    }
 }
 
 
