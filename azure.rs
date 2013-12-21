@@ -303,7 +303,7 @@ pub type AzPathRef = *c_void;
 
 pub type AzPathBuilderRef = *c_void;
 
-#[link_args="-lazure"]
+#[link(name = "azure")]
 extern {
 
 pub fn AzSanityCheck(/* FIXME: variadic function */);

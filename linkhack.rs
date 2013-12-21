@@ -5,18 +5,30 @@
 // Some crumminess to make sure we link correctly
 
 #[cfg(target_os = "linux")]
-#[link_args = "-L. -lazure -lstdc++ -lskia -lfontconfig -lX11"]
-#[nolink]
+#[link(name = "azure")]
+#[link(name = "stdc++")]
+#[link(name = "skia")]
+#[link(name = "fontconfig")]
+#[link(name = "X11")]
 extern { }
 
 #[cfg(target_os = "android")]
-#[link_args = "-L. -lazure -lstdc++ -lskia -lexpat -lfontconfig -lEGL"]
-#[nolink]
+#[link(name = "azure")]
+#[link(name = "stdc++")]
+#[link(name = "skia")]
+#[link(name = "expat")]
+#[link(name = "fontconfig")]
+#[link(name = "EGL")]
 extern { }
 
 #[cfg(target_os = "macos")]
-#[link_args = "-L. -lazure -lstdc++ -framework ApplicationServices \
-			   -lskia -framework IOSurface -lobjc -framework OpenGL \
-			   -framework Foundation -framework QuartzCore"]
-#[nolink]
+#[link(name = "azure")]
+#[link(name = "stdc++")]
+#[link(name = "skia")]
+#[link(name = "objc")]
+#[link(name = "IOSurface", kind = "framework")]
+#[link(name = "OpenGL", kind = "framework")]
+#[link(name = "Foundation", kind = "framework")]
+#[link(name = "QuartzCore", kind = "framework")]
+#[link(name = "ApplicationServices", kind = "framework")]
 extern { }
