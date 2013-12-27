@@ -39,7 +39,6 @@ use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsCo
 use std::libc::types::common::c99::{uint8_t, uint16_t};
 use std::libc::size_t;
 use std::cast;
-use std::c_str::CString;
 use std::ptr;
 use std::ptr::{null, to_unsafe_ptr};
 use std::vec;

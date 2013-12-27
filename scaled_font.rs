@@ -23,9 +23,9 @@ use scaled_font::android::*;
 
 #[cfg(target_os="macos")]
 pub mod macos {
-    extern mod core_foundation = "rust-core-foundation";
-    extern mod core_graphics = "rust-core-graphics";
-    extern mod core_text = "rust-core-text";
+    extern mod core_foundation;
+    extern mod core_graphics;
+    extern mod core_text;
 
     pub use scaled_font::macos::core_text::font::CTFontRef;
     pub use scaled_font::macos::core_graphics::font::{CGFont, CGFontRef};
