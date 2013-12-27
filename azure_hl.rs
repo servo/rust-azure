@@ -782,6 +782,7 @@ pub fn current_display() -> *c_void {
 #[fixed_stack_segment]
 pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
     use xlib::xlib::XDisplayString;
+    use std::c_str::CString;
     unsafe {
         let c_str = CString::new(XDisplayString(current_display()), false);
         NativeGraphicsMetadata {
