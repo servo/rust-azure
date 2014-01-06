@@ -164,7 +164,7 @@ all: libazure.dummy
 %.o: %.mm
 	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
-libazure.dummy: azure.rc $(RUST_SRC) libazure.a
+libazure.dummy: azure.rc $(RUST_SRC) libazure.a ../../skia/skia/libskia.a
 	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
@@ -181,3 +181,6 @@ check: azure-test
 .PHONY: clean
 clean:
 	rm -f azure-test *.o *.a */*/*.o */*/*/*.o *.so *.dylib *.dll *.dummy
+
+../../skia/skia/libskia.a:
+	cd ../../skia/skia && make
