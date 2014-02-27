@@ -8,6 +8,7 @@
 #[link(name = "azure")]
 #[link(name = "stdc++")]
 #[link(name = "skia")]
+#[link(name = "expat")]
 #[link(name = "fontconfig")]
 #[link(name = "X11")]
 extern { }
