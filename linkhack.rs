@@ -8,8 +8,9 @@
 #[link(name = "azure")]
 #[link(name = "stdc++")]
 #[link(name = "skia")]
-#[link(name = "expat")]
+// fontconfig must come before expat for linking to succeed
 #[link(name = "fontconfig")]
+#[link(name = "expat")]
 #[link(name = "X11")]
 extern { }
 
