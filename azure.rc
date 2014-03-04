@@ -7,17 +7,17 @@
 
 #[feature(globs)];
 
-extern mod std;
-extern mod extra;
-extern mod geom;
-extern mod layers;
-extern mod opengles;
+extern crate std;
+extern crate sync;
+extern crate geom;
+extern crate layers;
+extern crate opengles;
 #[cfg(target_os = "linux")]
-extern mod xlib;
+extern crate xlib;
 #[cfg(target_os = "android")]
-extern mod egl;
+extern crate egl;
 #[cfg(not(target_os = "android"))]
-extern mod glfw;
+extern crate glfw = "glfw-rs";
 
 pub use azure::*;
 
