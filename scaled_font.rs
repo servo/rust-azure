@@ -23,9 +23,9 @@ use scaled_font::android::*;
 
 #[cfg(target_os="macos")]
 pub mod macos {
-    extern mod core_foundation;
-    extern mod core_graphics;
-    extern mod core_text;
+    extern crate core_foundation;
+    extern crate core_graphics;
+    extern crate core_text;
 
     pub use scaled_font::macos::core_text::font::CTFontRef;
     pub use scaled_font::macos::core_graphics::font::{CGFont, CGFontRef};
@@ -33,14 +33,14 @@ pub mod macos {
 
 #[cfg(target_os="linux")]
 pub mod linux {
-    extern mod freetype;
+    extern crate freetype;
 
     pub use scaled_font::linux::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 #[cfg(target_os="android")]
 pub mod android {
-    extern mod freetype;
+    extern crate freetype;
 
     pub use scaled_font::android::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }

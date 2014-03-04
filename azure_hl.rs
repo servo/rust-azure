@@ -30,7 +30,7 @@ use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 
-use extra::arc::Arc;
+use sync::Arc;
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
@@ -40,7 +40,7 @@ use std::libc::types::common::c99::{uint8_t, uint16_t};
 use std::libc::size_t;
 use std::cast;
 use std::ptr;
-use std::ptr::{null, to_unsafe_ptr};
+use std::ptr::null;
 use std::vec;
 
 #[cfg(target_os="linux")]
@@ -452,7 +452,7 @@ impl DrawTarget {
     pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
-                                 to_unsafe_ptr(&rect.as_azure_rect()),
+                                 &rect.as_azure_rect(),
                                  pattern.azure_color_pattern);
         }
     }
@@ -496,10 +496,10 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawSurface(self.azure_draw_target,
                                     surface.azure_source_surface,
-                                    to_unsafe_ptr(&dest.as_azure_rect()),
-                                    to_unsafe_ptr(&source.as_azure_rect()),
-                                    to_unsafe_ptr(&surf_options.as_azure_draw_surface_options()),
-                                    to_unsafe_ptr(&options.as_azure_draw_options()));
+                                    &dest.as_azure_rect(),
+                                    &source.as_azure_rect(),
+                                    &surf_options.as_azure_draw_surface_options(),
+                                    &options.as_azure_draw_options());
         }
     }
 
@@ -541,9 +541,9 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetFillGlyphs(self.azure_draw_target,
                     azfontref,
-                    to_unsafe_ptr(&glyphbuf),
+                    &glyphbuf,
                     azure_pattern,
-                    to_unsafe_ptr(&options),
+                    &options,
                     renderingOptions);
         }
     }
