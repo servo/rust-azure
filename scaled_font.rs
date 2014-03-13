@@ -84,7 +84,7 @@ impl ScaledFont {
                     let options = AzCreateFontOptions((*native_font).family_name, style);
                     azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
                     azure_native_font.mFont = cast::transmute(options);
-                    let azure_native_font_ptr = ptr::to_unsafe_ptr(&azure_native_font);
+                    let azure_native_font_ptr = &azure_native_font;
                     let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
                     AzDestroyFontOptions(options);
                     ScaledFont { azure_scaled_font: azure_scaled_font }
