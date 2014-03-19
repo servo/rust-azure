@@ -180,7 +180,7 @@ check: azure-test
 
 .PHONY: clean
 clean:
-	rm -f azure-test *.o *.a */*/*.o */*/*/*.o *.so *.dylib *.dll *.dummy
+	rm -f azure-test *.o *.a */*/*.o */*/*/*.o *.so *.dylib *.rlib *.dll *.dummy
 
 ../../skia/skia/libskia.a:
 	cd ../../skia/skia && make
