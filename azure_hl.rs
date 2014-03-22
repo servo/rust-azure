@@ -41,7 +41,7 @@ use std::libc::size_t;
 use std::cast;
 use std::ptr;
 use std::ptr::null;
-use std::vec;
+use std::slice;
 
 #[cfg(target_os="linux")]
 use std::libc::c_void;
@@ -653,7 +653,7 @@ impl DataSourceSurface {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface);
             let len = self.stride() * self.size().height;
-            vec::raw::buf_as_slice(buf, len as uint, f);
+            slice::raw::buf_as_slice(buf, len as uint, f);
         }
     }
 
