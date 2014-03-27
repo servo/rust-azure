@@ -306,12 +306,17 @@ AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
 }
 
 extern "C" void
-AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
-		     AzPatternRef aPattern) {
+AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
+                     AzRect* aRect,
+		             AzPatternRef aPattern,
+                     AzDrawOptions* aDrawOptions) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
     gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
-    gfxDrawTarget->FillRect(*gfxRect, *gfxPattern);
+    gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->FillRect(*gfxRect,
+                            *gfxPattern,
+                            gfxDrawOptions != NULL ? *gfxDrawOptions : gfx::DrawOptions());
 }
 
 extern "C" void

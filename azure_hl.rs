@@ -127,6 +127,35 @@ pub fn ColorPattern(color: Color) -> ColorPattern {
     }
 }
 
+pub enum CompositionOp {
+    OverOp,
+    AddOp,
+    AtopOp,
+    OutOp,
+    InOp,
+    SourceOp,
+    DestInOp,
+    DestOutOp,
+    DestOverOp,
+    DestAtopOp,
+    XorOp,
+    MultiplyOp,
+    ScreenOp,
+    OverlayOp,
+    DarkenOp,
+    LightenOp,
+    ColorDodgeOp,
+    ColorBurnOp,
+    HardLightOp,
+    SoftLightOp,
+    DifferenceOp,
+    ExclusionOp,
+    HueOp,
+    SaturationOp,
+    ColorOp,
+    LuminosityOp,
+}
+
 pub struct StrokeOptions {
     line_width: AzFloat,
     miter_limit: AzFloat,
@@ -182,9 +211,9 @@ impl DrawOptions {
         }
     }
 
-    pub fn set_composition_op(&mut self, style: u8) {
+    pub fn set_composition_op(&mut self, style: CompositionOp) {
         self.fields = self.fields & 0b1111_1111_0000_0000_u16;
-        self.fields = self.fields | style as u16;
+        self.fields = self.fields | (style as u16);
     }
 
     pub fn set_antialias_mode(&mut self, style: u8) {
@@ -449,11 +478,25 @@ impl DrawTarget {
         }
     }
 
-    pub fn fill_rect(&self, rect: &Rect<AzFloat>, pattern: &ColorPattern) {
+    pub fn fill_rect(&self,
+                     rect: &Rect<AzFloat>,
+                     pattern: &ColorPattern,
+                     draw_options: Option<&DrawOptions>) {
         unsafe {
+            let draw_options = draw_options.map(|draw_options| {
+                draw_options.as_azure_draw_options()
+            });
+            let draw_options = match draw_options {
+                None => ptr::null(),
+                Some(draw_options) => {
+                    let draw_options: *AzDrawOptions = &draw_options;
+                    draw_options
+                }
+            };
             AzDrawTargetFillRect(self.azure_draw_target,
                                  &rect.as_azure_rect(),
-                                 pattern.azure_color_pattern);
+                                 pattern.azure_color_pattern,
+                                 draw_options);
         }
     }
 
