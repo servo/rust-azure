@@ -345,7 +345,10 @@ pub fn AzDrawTargetFlush(aDrawTarget: AzDrawTargetRef);
 
 pub fn AzDrawTargetClearRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect);
 
-pub fn AzDrawTargetFillRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPattern: AzPatternRef);
+pub fn AzDrawTargetFillRect(aDrawTarget: AzDrawTargetRef,
+                            aRect: *AzRect,
+                            aPattern: AzPatternRef,
+                            aDrawOptions: *AzDrawOptions);
 
 pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
 
