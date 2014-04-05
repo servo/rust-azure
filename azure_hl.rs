@@ -619,7 +619,7 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 }
 
 pub struct SourceSurface {
-    priv azure_source_surface: AzSourceSurfaceRef,
+    azure_source_surface: AzSourceSurfaceRef,
 }
 
 impl Drop for SourceSurface {
@@ -680,7 +680,7 @@ impl SourceSurfaceMethods for SourceSurface {
 }
 
 pub struct DataSourceSurface {
-    priv azure_data_source_surface: AzDataSourceSurfaceRef,
+    azure_data_source_surface: AzDataSourceSurfaceRef,
 }
 
 impl Drop for DataSourceSurface {
@@ -719,7 +719,7 @@ impl SourceSurfaceMethods for DataSourceSurface {
 }
 
 pub struct Path {
-    priv azure_path: AzPathRef
+    azure_path: AzPathRef
 }
 
 impl Drop for Path {
@@ -731,7 +731,7 @@ impl Drop for Path {
 }
 
 pub struct PathBuilder {
-    priv azure_path_builder: AzPathBuilderRef
+    azure_path_builder: AzPathBuilderRef
 }
 
 impl PathBuilder {

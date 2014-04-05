@@ -148,10 +148,10 @@ pub static AZ_eSideBottom: u32 = 2_u32;
 pub static AZ_eSideLeft: u32 = 3_u32;
 
 pub struct struct__AzColor {
-    r: AzFloat,
-    g: AzFloat,
-    b: AzFloat,
-    a: AzFloat,
+    pub r: AzFloat,
+    pub g: AzFloat,
+    pub b: AzFloat,
+    pub a: AzFloat,
 }
 
 pub type AzColor = struct__AzColor;
@@ -164,19 +164,19 @@ pub struct struct__AzGradientStop {
 pub type AzGradientStop = struct__AzGradientStop;
 
 pub struct struct__AzIntRect {
-    x: int32_t,
-    y: int32_t,
-    width: int32_t,
-    height: int32_t,
+    pub x: int32_t,
+    pub y: int32_t,
+    pub width: int32_t,
+    pub height: int32_t,
 }
 
 pub type AzIntRect = struct__AzIntRect;
 
 pub struct struct__AzRect {
-    x: AzFloat,
-    y: AzFloat,
-    width: AzFloat,
-    height: AzFloat,
+    pub x: AzFloat,
+    pub y: AzFloat,
+    pub width: AzFloat,
+    pub height: AzFloat,
 }
 
 pub type AzRect = struct__AzRect;
@@ -189,22 +189,22 @@ pub struct struct__AzIntPoint {
 pub type AzIntPoint = struct__AzIntPoint;
 
 pub struct struct__AzPoint {
-    x: AzFloat,
-    y: AzFloat,
+    pub x: AzFloat,
+    pub y: AzFloat,
 }
 
 pub type AzPoint = struct__AzPoint;
 
 pub struct struct__AzIntSize {
-    width: int32_t,
-    height: int32_t,
+    pub width: int32_t,
+    pub height: int32_t,
 }
 
 pub type AzIntSize = struct__AzIntSize;
 
 pub struct struct__AzSize {
-    width: AzFloat,
-    height: AzFloat,
+    pub width: AzFloat,
+    pub height: AzFloat,
 }
 
 pub type AzSize = struct__AzSize;
@@ -221,25 +221,25 @@ pub struct struct__AzMatrix {
 pub type AzMatrix = struct__AzMatrix;
 
 pub struct struct__AzDrawOptions {
-    mAlpha: AzFloat,
-    fields: uint16_t,
+    pub mAlpha: AzFloat,
+    pub fields: uint16_t,
 }
 
 pub type AzDrawOptions = struct__AzDrawOptions;
 
 pub struct struct__AzStrokeOptions {
-    mLineWidth: AzFloat,
-    mMiterLimit: AzFloat,
-    mDashPattern: *AzFloat,
-    mDashLength: size_t,
-    mDashOffset: AzFloat,
-    fields: uint8_t,
+    pub mLineWidth: AzFloat,
+    pub mMiterLimit: AzFloat,
+    pub mDashPattern: *AzFloat,
+    pub mDashLength: size_t,
+    pub mDashOffset: AzFloat,
+    pub fields: uint8_t,
 }
 
 pub type AzStrokeOptions = struct__AzStrokeOptions;
 
 pub struct struct__AzDrawSurfaceOptions {
-    fields: uint32_t,
+    pub fields: uint32_t,
 }
 
 pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
@@ -259,8 +259,8 @@ pub struct struct__AzGlyphBuffer {
 pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
 pub struct struct__AzNativeFont {
-    mType: enum_AzNativeFontType,
-    mFont: *c_void,
+    pub mType: enum_AzNativeFontType,
+    pub mFont: *c_void,
 }
 
 pub type AzNativeFont = struct__AzNativeFont;
