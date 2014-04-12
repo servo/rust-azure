@@ -8,8 +8,8 @@ use azure::{struct__AzNativeFont};
 use azure_hl::{BackendType,SkiaBackend};
 use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 
+use libc::c_void;
 use std::cast;
-use std::libc::c_void;
 use std::ptr;
 
 #[cfg(target_os="macos")]
