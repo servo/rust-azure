@@ -36,15 +36,15 @@ use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
 use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsContext};
-use std::libc::types::common::c99::{uint8_t, uint16_t};
-use std::libc::size_t;
+use libc::types::common::c99::{uint8_t, uint16_t};
+use libc::size_t;
 use std::cast;
 use std::ptr;
 use std::ptr::null;
 use std::slice;
 
 #[cfg(target_os="linux")]
-use std::libc::c_void;
+use libc::c_void;
 
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
