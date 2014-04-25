@@ -89,10 +89,10 @@ impl AsAzurePoint for Point2D<AzFloat> {
 
 #[deriving(Clone)]
 pub struct Color {
-    r: AzFloat,
-    g: AzFloat,
-    b: AzFloat,
-    a: AzFloat,
+    pub r: AzFloat,
+    pub g: AzFloat,
+    pub b: AzFloat,
+    pub a: AzFloat,
 }
 
 impl Color {
@@ -108,7 +108,7 @@ pub fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
-    azure_color_pattern: AzColorPatternRef,
+    pub azure_color_pattern: AzColorPatternRef,
 }
 
 impl Drop for ColorPattern {
@@ -157,11 +157,11 @@ pub enum CompositionOp {
 }
 
 pub struct StrokeOptions {
-    line_width: AzFloat,
-    miter_limit: AzFloat,
-    mDashPattern: *AzFloat,
-    mDashLength: size_t,
-    fields: uint8_t
+    pub line_width: AzFloat,
+    pub miter_limit: AzFloat,
+    pub mDashPattern: *AzFloat,
+    pub mDashLength: size_t,
+    pub fields: uint8_t
 }
 
 impl StrokeOptions {
@@ -199,8 +199,8 @@ pub fn StrokeOptions(line_width: AzFloat,
 }
 
 pub struct DrawOptions {
-    alpha: AzFloat,
-    fields: uint16_t,
+    pub alpha: AzFloat,
+    pub fields: uint16_t,
 }
 
 impl DrawOptions {
@@ -272,8 +272,8 @@ impl Filter {
 }
 
 pub struct DrawSurfaceOptions {
-    filter: Filter,
-    sampling_bounds: bool,
+    pub filter: Filter,
+    pub sampling_bounds: bool,
 }
 
 impl DrawSurfaceOptions {
@@ -319,9 +319,9 @@ impl BackendType {
 }
 
 pub struct DrawTarget {
-    azure_draw_target: AzDrawTargetRef,
-    data: Option<Arc<~[u8]>>,
-    skia_context: Option<AzSkiaSharedGLContextRef>
+    pub azure_draw_target: AzDrawTargetRef,
+    pub data: Option<Arc<~[u8]>>,
+    pub skia_context: Option<AzSkiaSharedGLContextRef>
 }
 
 impl Drop for DrawTarget {
@@ -339,7 +339,7 @@ impl Drop for DrawTarget {
 /// Contains the GL resources that Skia was holding onto that may be safely extracted. At the
 /// moment this consists simply of the native surface.
 pub struct StolenGLResources {
-    surface: AzSkiaGrGLSharedSurfaceRef,
+    pub surface: AzSkiaGrGLSharedSurfaceRef,
 }
 
 impl DrawTarget {
@@ -619,7 +619,7 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 }
 
 pub struct SourceSurface {
-    azure_source_surface: AzSourceSurfaceRef,
+    pub azure_source_surface: AzSourceSurfaceRef,
 }
 
 impl Drop for SourceSurface {
@@ -680,7 +680,7 @@ impl SourceSurfaceMethods for SourceSurface {
 }
 
 pub struct DataSourceSurface {
-    azure_data_source_surface: AzDataSourceSurfaceRef,
+    pub azure_data_source_surface: AzDataSourceSurfaceRef,
 }
 
 impl Drop for DataSourceSurface {
@@ -719,7 +719,7 @@ impl SourceSurfaceMethods for DataSourceSurface {
 }
 
 pub struct Path {
-    azure_path: AzPathRef
+    pub azure_path: AzPathRef
 }
 
 impl Drop for Path {
@@ -731,7 +731,7 @@ impl Drop for Path {
 }
 
 pub struct PathBuilder {
-    azure_path_builder: AzPathBuilderRef
+    pub azure_path_builder: AzPathBuilderRef
 }
 
 impl PathBuilder {

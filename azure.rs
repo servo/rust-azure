@@ -157,8 +157,8 @@ pub struct struct__AzColor {
 pub type AzColor = struct__AzColor;
 
 pub struct struct__AzGradientStop {
-    offset: AzFloat,
-    color: AzColor,
+    pub offset: AzFloat,
+    pub color: AzColor,
 }
 
 pub type AzGradientStop = struct__AzGradientStop;
@@ -182,8 +182,8 @@ pub struct struct__AzRect {
 pub type AzRect = struct__AzRect;
 
 pub struct struct__AzIntPoint {
-    x: int32_t,
-    y: int32_t,
+    pub x: int32_t,
+    pub y: int32_t,
 }
 
 pub type AzIntPoint = struct__AzIntPoint;
@@ -245,15 +245,15 @@ pub struct struct__AzDrawSurfaceOptions {
 pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
 pub struct struct__AzGlyph {
-    mIndex: uint32_t,
-    mPosition: AzPoint,
+    pub mIndex: uint32_t,
+    pub mPosition: AzPoint,
 }
 
 pub type AzGlyph = struct__AzGlyph;
 
 pub struct struct__AzGlyphBuffer {
-    mGlyphs: *AzGlyph,
-    mNumGlyphs: uint32_t,
+    pub mGlyphs: *AzGlyph,
+    pub mNumGlyphs: uint32_t,
 }
 
 pub type AzGlyphBuffer = struct__AzGlyphBuffer;
