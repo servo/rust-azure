@@ -255,7 +255,7 @@ impl SurfaceFormat {
             1 => B8G8R8X8,
             2 => R5G6B5,
             3 => A8,
-            _ => fail!(~"SurfaceFormat::new(): unknown Azure surface format")
+            _ => fail!("SurfaceFormat::new(): unknown Azure surface format")
         }
     }
 }
@@ -349,7 +349,7 @@ impl DrawTarget {
             let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
                                                        &size.as_azure_int_size(),
                                                        format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
+            if azure_draw_target == ptr::null() { fail!("null azure draw target"); }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
                 data: None,
@@ -372,7 +372,7 @@ impl DrawTarget {
                                           &size.as_azure_int_size(),
                                           stride,
                                           format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() { fail!(~"null azure draw target"); }
+            if azure_draw_target == ptr::null() { fail!("null azure draw target"); }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
                 data: Some(Arc::new(data)),
@@ -394,7 +394,7 @@ impl DrawTarget {
                                                                  &size.as_azure_int_size(),
                                                                  format.as_azure_surface_format());
             if azure_draw_target == ptr::null() {
-                fail!(~"null azure draw target");
+                fail!("null azure draw target");
             }
             DrawTarget {
                 azure_draw_target: azure_draw_target,

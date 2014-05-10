@@ -90,7 +90,7 @@ impl ScaledFont {
                     ScaledFont { azure_scaled_font: azure_scaled_font }
                 }
             }
-            _ => { fail!(~"don't know how to make a scaled font for this backend"); }
+            _ => { fail!("don't know how to make a scaled font for this backend"); }
         }
     }
 
