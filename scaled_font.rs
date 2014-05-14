@@ -114,7 +114,7 @@ impl ScaledFont {
                 }
             }
             _ => {
-                fail!(~"don't know how to make a scaled font for this backend");
+                fail!("don't know how to make a scaled font for this backend");
             }
         }
 
