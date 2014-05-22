@@ -6,6 +6,7 @@ CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
+EXT_DEPS ?=
 
 UNAME=$(shell uname)
 
@@ -164,7 +165,7 @@ all: libazure.dummy
 %.o: %.mm
 	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
-libazure.dummy: azure.rc $(RUST_SRC) libazure.a ../../skia/skia/libskia.a
+libazure.dummy: azure.rc $(RUST_SRC) libazure.a $(EXT_DEPS)
 	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
