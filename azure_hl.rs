@@ -38,7 +38,7 @@ use geom::size::Size2D;
 use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsContext};
 use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
-use std::cast;
+use std::mem;
 use std::ptr;
 use std::ptr::null;
 use std::slice;
@@ -387,7 +387,7 @@ impl DrawTarget {
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == SkiaBackend);
         unsafe {
-            let native_graphics_context = cast::transmute(native_graphics_context);
+            let native_graphics_context = mem::transmute(native_graphics_context);
             let skia_context = AzCreateSkiaSharedGLContext(native_graphics_context,
                                                            &size.as_azure_int_size());
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
@@ -573,7 +573,7 @@ impl DrawTarget {
 
     pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
-            AzDrawTargetSetTransform(self.azure_draw_target, cast::transmute(matrix));
+            AzDrawTargetSetTransform(self.azure_draw_target, mem::transmute(matrix));
         }
     }
 
