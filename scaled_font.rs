@@ -9,7 +9,7 @@ use azure_hl::{BackendType,SkiaBackend};
 use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 
 use libc::c_void;
-use std::cast;
+use std::mem;
 use std::ptr;
 
 #[cfg(target_os="macos")]
@@ -45,7 +45,7 @@ pub mod android {
     pub use scaled_font::android::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
-type SkTypeface = *c_void;
+pub type SkTypeface = *c_void;
 
 pub struct ScaledFont {
     azure_scaled_font: AzScaledFontRef,
@@ -83,7 +83,7 @@ impl ScaledFont {
                     let style = ((*native_font).style_flags & 3) as u32;
                     let options = AzCreateFontOptions((*native_font).family_name, style);
                     azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
-                    azure_native_font.mFont = cast::transmute(options);
+                    azure_native_font.mFont = mem::transmute(options);
                     let azure_native_font_ptr = &azure_native_font;
                     let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
                     AzDestroyFontOptions(options);
@@ -110,7 +110,7 @@ impl ScaledFont {
             CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
                 unsafe {
-                    azure_native_font.mFont = cast::transmute(native_font.as_concrete_TypeRef());
+                    azure_native_font.mFont = mem::transmute(native_font.as_concrete_TypeRef());
                 }
             }
             _ => {
