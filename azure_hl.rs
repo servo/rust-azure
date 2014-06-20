@@ -293,7 +293,7 @@ pub fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceO
 }
 
 
-#[deriving(Clone, Eq)]
+#[deriving(Clone, PartialEq)]
 pub enum BackendType {
     NoBackend,
     Direct2DBackend,
@@ -320,7 +320,7 @@ impl BackendType {
 
 pub struct DrawTarget {
     pub azure_draw_target: AzDrawTargetRef,
-    pub data: Option<Arc<~[u8]>>,
+    pub data: Option<Arc<Vec<u8>>>,
     pub skia_context: Option<AzSkiaSharedGLContextRef>
 }
 
@@ -359,7 +359,7 @@ impl DrawTarget {
     }
 
     pub fn new_with_data(backend: BackendType,
-                         data: ~[u8],
+                         data: Vec<u8>,
                          offset: uint,
                          size: Size2D<i32>,
                          stride: i32,
@@ -368,7 +368,7 @@ impl DrawTarget {
             assert!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
                 AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                          &data[offset],
+                                          data.get(offset),
                                           &size.as_azure_int_size(),
                                           stride,
                                           format.as_azure_surface_format());
