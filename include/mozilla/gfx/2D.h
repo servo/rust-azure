@@ -517,6 +517,8 @@ struct FontOptions
 {
   std::string mName;
   FontStyle mStyle;
+  uint8_t *mData;
+  uint32_t mDataSize;
 };
 #endif
 

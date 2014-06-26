@@ -380,7 +380,8 @@ void AzReleaseScaledFont(AzScaledFontRef aFont);
 
 /* Helpers */
 typedef void AzFontOptions;
-AzFontOptions* AzCreateFontOptions(char *aName, AzFontStyle aStyle);
+AzFontOptions* AzCreateFontOptionsForName(char *aName, AzFontStyle aStyle);
+AzFontOptions* AzCreateFontOptionsForData(uint8_t *aFontData, uint32_t aFontDataSize);
 void AzDestroyFontOptions(AzFontOptions* aOptions);
 
 AzGLContext AzSkiaGetCurrentGLContext();
