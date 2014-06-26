@@ -386,7 +386,9 @@ pub fn AzReleaseScaledFont(aFont: AzScaledFontRef);
 
 pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *AzMatrix);
 
-pub fn AzCreateFontOptions(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontOptions;
+pub fn AzCreateFontOptionsForData(aFontData: *u8, aFontDataSize: u32) -> *AzFontOptions;
+
+pub fn AzCreateFontOptionsForName(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontOptions;
 
 pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
 

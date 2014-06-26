@@ -8,6 +8,7 @@
 
 #ifdef USE_SKIA
 #include "SkTypeface.h"
+#include "SkStream.h"
 #endif
 
 #include <string>
@@ -37,13 +38,19 @@ fontStyleToSkia(FontStyle aStyle)
 }
 #endif
 
-// Ideally we want to use FT_Face here but as there is currently no way to get
-// an SkTypeface from an FT_Face we do this.
 ScaledFontFreetype::ScaledFontFreetype(FontOptions* aFont, Float aSize)
   : ScaledFontBase(aSize)
 {
 #ifdef USE_SKIA
-  mTypeface = SkTypeface::CreateFromName(aFont->mName.c_str(), fontStyleToSkia(aFont->mStyle));
+  if (aFont->mData)
+  {
+    SkStream *stream = new SkMemoryStream(aFont->mData, aFont->mDataSize, true);
+    mTypeface = SkTypeface::CreateFromStream(stream);
+  }
+  else
+  {
+    mTypeface = SkTypeface::CreateFromName(aFont->mName.c_str(), fontStyleToSkia(aFont->mStyle));
+  }
 #endif
 }
 

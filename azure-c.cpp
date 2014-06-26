@@ -459,11 +459,26 @@ AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
 }
 
 extern "C" AzFontOptions*
-AzCreateFontOptions(char *aName, AzFontStyle aStyle) {
+AzCreateFontOptionsForName(char *aName, AzFontStyle aStyle) {
     #ifdef MOZ_ENABLE_FREETYPE
     gfx::FontOptions *options = new gfx::FontOptions;
     options->mName = std::string(aName);
     options->mStyle = static_cast<gfx::FontStyle>(aStyle);
+    options->mData = NULL;
+    options->mDataSize = 0;
+    return options;
+    #else
+    abort();
+    #endif
+}
+
+extern "C" AzFontOptions*
+AzCreateFontOptionsForData(uint8_t *aFontData, uint32_t aFontDataSize) {
+    #ifdef MOZ_ENABLE_FREETYPE
+    gfx::FontOptions *options = new gfx::FontOptions;
+    options->mStyle = gfx::FONT_STYLE_NORMAL;
+    options->mData = aFontData;
+    options->mDataSize = aFontDataSize;
     return options;
     #else
     abort();

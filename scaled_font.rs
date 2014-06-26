@@ -47,6 +47,13 @@ pub mod android {
 
 pub type SkTypeface = *c_void;
 
+#[cfg(target_os="linux")]
+#[cfg(target_os="android")]
+pub enum FontInfo<'a> {
+    NativeFont(FT_Face),
+    FontData(&'a Vec<u8>),
+}
+
 pub struct ScaledFont {
     azure_scaled_font: AzScaledFontRef,
 }
@@ -66,10 +73,10 @@ impl ScaledFont {
 
     #[cfg(target_os="linux")]
     #[cfg(target_os="android")]
-    pub fn new(backend: BackendType, native_font: FT_Face, size: AzFloat)
+    pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
-        use azure::{AzCreateFontOptions, AzDestroyFontOptions};
+        use azure::{AzCreateFontOptionsForData, AzCreateFontOptionsForName, AzDestroyFontOptions};
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
@@ -79,9 +86,16 @@ impl ScaledFont {
         match backend {
             SkiaBackend => {
                 unsafe {
-                    // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
-                    let style = ((*native_font).style_flags & 3) as u32;
-                    let options = AzCreateFontOptions((*native_font).family_name, style);
+                    let options = match font_info {
+                        NativeFont(native_font) => {
+                            // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
+                            let style = ((*native_font).style_flags & 3) as u32;
+                            AzCreateFontOptionsForName((*native_font).family_name, style)
+                        },
+                        FontData(bytes) => {
+                            AzCreateFontOptionsForData(bytes.as_ptr(), bytes.len() as u32)
+                        },
+                    };
                     azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
                     azure_native_font.mFont = mem::transmute(options);
                     let azure_native_font_ptr = &azure_native_font;
