@@ -96,13 +96,13 @@ pub struct Color {
 }
 
 impl Color {
+    pub fn new(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
+        Color { r: r, g: g, b: b, a: a }
+    }
+
     fn as_azure_color(&self) -> AzColor {
         struct__AzColor { r: self.r, g: self.g, b: self.b, a: self.a }
     }
-}
-
-pub fn Color(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
-    Color { r: r, g: g, b: b, a: a }
 }
 
 
@@ -119,10 +119,12 @@ impl Drop for ColorPattern {
     }
 }
 
-pub fn ColorPattern(color: Color) -> ColorPattern {
-    unsafe {
-        ColorPattern {
-            azure_color_pattern: AzCreateColorPattern(&color.as_azure_color())
+impl ColorPattern {
+    pub fn new(color: Color) -> ColorPattern {
+        unsafe {
+            ColorPattern {
+                azure_color_pattern: AzCreateColorPattern(&color.as_azure_color())
+            }
         }
     }
 }
@@ -165,6 +167,16 @@ pub struct StrokeOptions {
 }
 
 impl StrokeOptions {
+    pub fn new(line_width: AzFloat, miter_limit: AzFloat) -> StrokeOptions {
+        StrokeOptions {
+            line_width: line_width,
+            miter_limit: miter_limit,
+            mDashPattern: null(),
+            mDashLength: 0,
+            fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
+        }
+    }
+
     fn as_azure_stroke_options(&self) -> AzStrokeOptions {
         struct__AzStrokeOptions {
             mLineWidth: self.line_width,
@@ -187,23 +199,19 @@ impl StrokeOptions {
     }
 }
 
-pub fn StrokeOptions(line_width: AzFloat,
-                  miter_limit: AzFloat) -> StrokeOptions {
-    StrokeOptions {
-        line_width: line_width,
-        miter_limit: miter_limit,
-        mDashPattern: null(),
-        mDashLength: 0,
-        fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
-    }
-}
-
 pub struct DrawOptions {
     pub alpha: AzFloat,
     pub fields: uint16_t,
 }
 
 impl DrawOptions {
+    pub fn new(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
+        DrawOptions {
+            alpha : alpha,
+            fields : fields,
+        }
+    }
+
     fn as_azure_draw_options(&self) -> AzDrawOptions {
         struct__AzDrawOptions {
             mAlpha: self.alpha,
@@ -229,13 +237,6 @@ impl DrawOptions {
     }
 }
 
-
-pub fn DrawOptions(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
-    DrawOptions {
-        alpha : alpha,
-        fields : fields,
-    }
-}
 
 pub enum SurfaceFormat {
     B8G8R8A8,
@@ -277,18 +278,17 @@ pub struct DrawSurfaceOptions {
 }
 
 impl DrawSurfaceOptions {
+    pub fn new(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
+        DrawSurfaceOptions {
+            filter: filter,
+            sampling_bounds: sampling_bounds,
+        }
+    }
+
     fn as_azure_draw_surface_options(&self) -> AzDrawSurfaceOptions {
         struct__AzDrawSurfaceOptions {
             fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32
         }
-    }
-}
-
-
-pub fn DrawSurfaceOptions(filter: Filter, sampling_bounds: bool) -> DrawSurfaceOptions {
-    DrawSurfaceOptions {
-        filter: filter,
-        sampling_bounds: sampling_bounds,
     }
 }
 
@@ -549,7 +549,7 @@ impl DrawTarget {
     pub fn snapshot(&self) -> SourceSurface {
         unsafe {
             let azure_surface = AzDrawTargetGetSnapshot(self.azure_draw_target);
-            SourceSurface(azure_surface)
+            SourceSurface::new(azure_surface)
         }
     }
 
@@ -567,7 +567,7 @@ impl DrawTarget {
                 &size.as_azure_int_size(),
                 stride,
                 format.as_azure_surface_format());
-            SourceSurface(azure_surface)
+            SourceSurface::new(azure_surface)
         }
     }
 
@@ -630,9 +630,11 @@ impl Drop for SourceSurface {
     }
 }
 
-pub fn SourceSurface(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
-    SourceSurface {
-        azure_source_surface: azure_source_surface
+impl SourceSurface {
+    pub fn new(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
+        SourceSurface {
+            azure_source_surface: azure_source_surface
+        }
     }
 }
 
