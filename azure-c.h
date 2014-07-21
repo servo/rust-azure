@@ -362,7 +362,7 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzDrawOptions *aOptions);
 AzSourceSurfaceRef AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget);
 AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
-                                                           unsigned char *aData,
+                                                           const unsigned char *aData,
                                                            AzIntSize *aSize,
                                                            int32_t aStride,
                                                            AzSurfaceFormat aFormat);

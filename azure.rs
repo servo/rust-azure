@@ -8,7 +8,7 @@
 
 use libc::*;
 
-pub type AzFontOptions = *c_void;
+pub type AzFontOptions = *mut c_void;
 pub type AzFloat = c_float;
 
 pub type enum_AzSurfaceType = c_uint;
@@ -230,7 +230,7 @@ pub type AzDrawOptions = struct__AzDrawOptions;
 pub struct struct__AzStrokeOptions {
     pub mLineWidth: AzFloat,
     pub mMiterLimit: AzFloat,
-    pub mDashPattern: *AzFloat,
+    pub mDashPattern: *mut AzFloat,
     pub mDashLength: size_t,
     pub mDashOffset: AzFloat,
     pub fields: uint8_t,
@@ -252,7 +252,7 @@ pub struct struct__AzGlyph {
 pub type AzGlyph = struct__AzGlyph;
 
 pub struct struct__AzGlyphBuffer {
-    pub mGlyphs: *AzGlyph,
+    pub mGlyphs: *mut AzGlyph,
     pub mNumGlyphs: uint32_t,
 }
 
@@ -260,59 +260,59 @@ pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
 pub struct struct__AzNativeFont {
     pub mType: enum_AzNativeFontType,
-    pub mFont: *c_void,
+    pub mFont: *mut c_void,
 }
 
 pub type AzNativeFont = struct__AzNativeFont;
 
-pub type AzGradientStopsRef = *c_void;
+pub type AzGradientStopsRef = *mut c_void;
 
-pub type AzSkiaSharedGLContextRef = *c_void;
+pub type AzSkiaSharedGLContextRef = *mut c_void;
 
-pub type AzSkiaSharedGrGLContextRef = *c_void;
+pub type AzSkiaSharedGrGLContextRef = *mut c_void;
 
-pub type AzSkiaGrContextRef = *c_void;
+pub type AzSkiaGrContextRef = *mut c_void;
 
-pub type AzSkiaGrGLSharedSurfaceRef = *c_void;
+pub type AzSkiaGrGLSharedSurfaceRef = *mut c_void;
 
-pub type AzDrawTargetRef = *c_void;
+pub type AzDrawTargetRef = *mut c_void;
 
-pub type AzPatternRef = *c_void;
+pub type AzPatternRef = *mut c_void;
 
-pub type AzColorPatternRef = *c_void;
+pub type AzColorPatternRef = *mut c_void;
 
-pub type AzScaledFontRef = *c_void;
+pub type AzScaledFontRef = *mut c_void;
 
-pub type AzGlyphRenderingOptionsRef = *c_void;
+pub type AzGlyphRenderingOptionsRef = *mut c_void;
 
-pub type AzSourceSurfaceRef = *c_void;
+pub type AzSourceSurfaceRef = *mut c_void;
 
-pub type AzDataSourceSurfaceRef = *c_void;
+pub type AzDataSourceSurfaceRef = *mut c_void;
 
-pub type AzDrawSurfaceOptionsRef = *AzDrawSurfaceOptions;
+pub type AzDrawSurfaceOptionsRef = *mut AzDrawSurfaceOptions;
 
-pub type AzGLContext = *c_void;
+pub type AzGLContext = *mut c_void;
 
-pub type AzSkiaGrGLSharedContextRef = *c_void;
+pub type AzSkiaGrGLSharedContextRef = *mut c_void;
 
-pub type AzGLContextMetadataRef = *c_void;
+pub type AzGLContextMetadataRef = *mut c_void;
 
-pub type AzGLNativeContextRef = *c_void;
+pub type AzGLNativeContextRef = *mut c_void;
 
-pub type AzPathRef = *c_void;
+pub type AzPathRef = *mut c_void;
 
-pub type AzPathBuilderRef = *c_void;
+pub type AzPathBuilderRef = *mut c_void;
 
 #[link(name = "azure")]
 extern {
 
 pub fn AzSanityCheck(/* FIXME: variadic function */);
 
-pub fn AzCreateColorPattern(aColor: *AzColor) -> AzColorPatternRef;
+pub fn AzCreateColorPattern(aColor: *mut AzColor) -> AzColorPatternRef;
 
 pub fn AzReleaseColorPattern(aColorPattern: AzColorPatternRef);
 
-pub fn AzCreateSkiaSharedGLContext(aNativeContext: AzGLNativeContextRef, aSize: *AzIntSize)
+pub fn AzCreateSkiaSharedGLContext(aNativeContext: AzGLNativeContextRef, aSize: *mut AzIntSize)
                                    -> AzSkiaSharedGLContextRef;
 
 pub fn AzRetainSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
@@ -329,11 +329,11 @@ pub fn AzSkiaSharedGLContextMakeCurrent(aGLContext: AzSkiaSharedGLContextRef);
 
 pub fn AzSkiaSharedGLContextFlush(aGLContext: AzSkiaSharedGLContextRef);
 
-pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *c_uchar, aSize: *AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *mut c_uchar, aSize: *mut AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: AzSkiaSharedGLContextRef, aSize: *AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: AzSkiaSharedGLContextRef, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzRetainDrawTarget(aTarget: AzDrawTargetRef);
 
@@ -343,30 +343,30 @@ pub fn AzDrawTargetGetSize(aDrawTarget: AzDrawTargetRef) -> AzIntSize;
 
 pub fn AzDrawTargetFlush(aDrawTarget: AzDrawTargetRef);
 
-pub fn AzDrawTargetClearRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect);
+pub fn AzDrawTargetClearRect(aDrawTarget: AzDrawTargetRef, aRect: *mut AzRect);
 
 pub fn AzDrawTargetFillRect(aDrawTarget: AzDrawTargetRef,
-                            aRect: *AzRect,
+                            aRect: *mut AzRect,
                             aPattern: AzPatternRef,
-                            aDrawOptions: *AzDrawOptions);
+                            aDrawOptions: *mut AzDrawOptions);
 
-pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *AzRect, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *mut AzRect, aPattern: AzPatternRef, aStrokeOptions: *mut AzStrokeOptions, aDrawOptions: *mut AzDrawOptions);
 
-pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *AzPoint, aEnd: *AzPoint, aPattern: AzPatternRef, aStrokeOptions: *AzStrokeOptions, aDrawOptions: *AzDrawOptions);
+pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *mut AzPoint, aEnd: *mut AzPoint, aPattern: AzPatternRef, aStrokeOptions: *mut AzStrokeOptions, aDrawOptions: *mut AzDrawOptions);
 
-pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *AzDrawOptions);
+pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions);
 
 pub fn AzDrawTargetPushClip(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef);
 
 pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
 
-pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
+pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *mut AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
-pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *AzRect, aSource: *AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *AzDrawOptions);
+pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *mut AzRect, aSource: *mut AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *mut AzDrawOptions);
 
 pub fn AzDrawTargetGetSnapshot(aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
 
-pub fn AzDrawTargetCreateSourceSurfaceFromData(aDrawTarget: AzDrawTargetRef, aData: *u8, aSize: *AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
+pub fn AzDrawTargetCreateSourceSurfaceFromData(aDrawTarget: AzDrawTargetRef, aData: *const u8, aSize: *mut AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
 
 pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 
@@ -376,21 +376,21 @@ pub fn AzSourceSurfaceGetFormat(aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat
 
 pub fn AzSourceSurfaceGetDataSurface(aSurface: AzSourceSurfaceRef) -> AzDataSourceSurfaceRef;
 
-pub fn AzDataSourceSurfaceGetData(aSurface: AzDataSourceSurfaceRef) -> *u8;
+pub fn AzDataSourceSurfaceGetData(aSurface: AzDataSourceSurfaceRef) -> *mut u8;
 
 pub fn AzDataSourceSurfaceGetStride(aSurface: AzDataSourceSurfaceRef) -> i32;
 
-pub fn AzCreateScaledFontForNativeFont(aNativeFont: *AzNativeFont, aSize: AzFloat) -> AzScaledFontRef;
+pub fn AzCreateScaledFontForNativeFont(aNativeFont: *mut AzNativeFont, aSize: AzFloat) -> AzScaledFontRef;
 
 pub fn AzReleaseScaledFont(aFont: AzScaledFontRef);
 
-pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *AzMatrix);
+pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *mut AzMatrix);
 
-pub fn AzCreateFontOptionsForData(aFontData: *u8, aFontDataSize: u32) -> *AzFontOptions;
+pub fn AzCreateFontOptionsForData(aFontData: *const u8, aFontDataSize: u32) -> *mut AzFontOptions;
 
-pub fn AzCreateFontOptionsForName(aName: *c_char, aStyle: enum_AzFontStyle) -> *AzFontOptions;
+pub fn AzCreateFontOptionsForName(aName: *const c_char, aStyle: enum_AzFontStyle) -> *mut AzFontOptions;
 
-pub fn AzDestroyFontOptions(aOptions: *AzFontOptions);
+pub fn AzDestroyFontOptions(aOptions: *mut AzFontOptions);
 
 pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
 
@@ -398,9 +398,9 @@ pub fn AzCreatePathBuilder(aDrawTarget: AzDrawTargetRef) -> AzPathBuilderRef;
 
 pub fn AzReleasePathBuilder(aPathBuilder: AzPathBuilderRef);
 
-pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
+pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 
-pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *AzPoint);
+pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 

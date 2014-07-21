@@ -2,12 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#![crate_id = "github.com/mozilla-servo/rust-azure#azure:0.1"]
-#![crate_type = "lib"]
-#![crate_type = "dylib"]
+#![crate_name = "azure"]
 #![crate_type = "rlib"]
 
 #![feature(globs)]
+
+#![allow(non_snake_case_functions)]
 
 extern crate libc;
 extern crate std;

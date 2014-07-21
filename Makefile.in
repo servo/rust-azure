@@ -157,7 +157,7 @@ ALL_OBJS = $(ALL_CPP_SRC:%.cpp=%.o) $(ALL_OBJCPP_SRC:%.mm=%.o)
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
 .PHONY: all
-all: libazure.dummy
+all: libazure-servo.dummy
 
 %.o: %.cpp
 	$(CXX) $< -o $@ -c $(CXXFLAGS)
@@ -165,8 +165,8 @@ all: libazure.dummy
 %.o: %.mm
 	$(CXX) -ObjC++ $< -o $@ -c $(CXXFLAGS)
 
-libazure.dummy: azure.rc $(RUST_SRC) libazure.a $(EXT_DEPS)
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
+libazure-servo.dummy: azure.rc $(RUST_SRC) libazure.a $(EXT_DEPS)
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir . -C extra-filename=-servo
 	touch $@
 
 azure-test: azure.rc $(RUST_SRC) libazure.a
