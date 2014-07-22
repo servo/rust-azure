@@ -327,11 +327,11 @@ pub struct DrawTarget {
 impl Drop for DrawTarget {
     fn drop(&mut self) {
         unsafe {
+            AzReleaseDrawTarget(self.azure_draw_target);
             match self.skia_context {
                 None => {}
                 Some(ctx_ref) => { AzReleaseSkiaSharedGLContext(ctx_ref); }
             }
-            AzReleaseDrawTarget(self.azure_draw_target);
         }
     }
 }
