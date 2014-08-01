@@ -45,7 +45,7 @@ pub mod android {
     pub use scaled_font::android::freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
-pub type SkTypeface = *c_void;
+pub type SkTypeface = *mut c_void;
 
 #[cfg(target_os="linux")]
 #[cfg(target_os="android")]
@@ -80,7 +80,7 @@ impl ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::null()
+            mFont: ptr::mut_null()
         };
         
         match backend {
@@ -90,7 +90,7 @@ impl ScaledFont {
                         NativeFont(native_font) => {
                             // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
                             let style = ((*native_font).style_flags & 3) as u32;
-                            AzCreateFontOptionsForName((*native_font).family_name, style)
+                            AzCreateFontOptionsForName(&*(*native_font).family_name, style)
                         },
                         FontData(bytes) => {
                             AzCreateFontOptionsForData(bytes.as_ptr(), bytes.len() as u32)
@@ -98,7 +98,7 @@ impl ScaledFont {
                     };
                     azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
                     azure_native_font.mFont = mem::transmute(options);
-                    let azure_native_font_ptr = &azure_native_font;
+                    let azure_native_font_ptr = &mut azure_native_font;
                     let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
                     AzDestroyFontOptions(options);
                     ScaledFont { azure_scaled_font: azure_scaled_font }
@@ -117,7 +117,7 @@ impl ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::null()
+            mFont: ptr::mut_null()
         };
 
         match backend {
@@ -133,7 +133,7 @@ impl ScaledFont {
         }
 
         unsafe {
-            let azure_scaled_font = AzCreateScaledFontForNativeFont(&azure_native_font, size);
+            let azure_scaled_font = AzCreateScaledFontForNativeFont(&mut azure_native_font, size);
             ScaledFont {
                 azure_scaled_font: azure_scaled_font
             }
@@ -146,6 +146,6 @@ impl ScaledFont {
 #[cfg(target_os="macos")]
 #[link(name = "skia")]
 extern {
-    pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *SkTypeface;
+    pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *mut SkTypeface;
 }
 

@@ -40,7 +40,6 @@ use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
 use std::mem;
 use std::ptr;
-use std::ptr::null;
 use std::slice;
 
 #[cfg(target_os="linux")]
@@ -123,7 +122,7 @@ impl ColorPattern {
     pub fn new(color: Color) -> ColorPattern {
         unsafe {
             ColorPattern {
-                azure_color_pattern: AzCreateColorPattern(&color.as_azure_color())
+                azure_color_pattern: AzCreateColorPattern(&mut color.as_azure_color())
             }
         }
     }
@@ -161,7 +160,7 @@ pub enum CompositionOp {
 pub struct StrokeOptions {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
-    pub mDashPattern: *AzFloat,
+    pub mDashPattern: *mut AzFloat,
     pub mDashLength: size_t,
     pub fields: uint8_t
 }
@@ -171,7 +170,7 @@ impl StrokeOptions {
         StrokeOptions {
             line_width: line_width,
             miter_limit: miter_limit,
-            mDashPattern: null(),
+            mDashPattern: ptr::mut_null(),
             mDashLength: 0,
             fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
         }
@@ -347,9 +346,9 @@ impl DrawTarget {
                    -> DrawTarget {
         unsafe {
             let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
-                                                       &size.as_azure_int_size(),
+                                                       &mut size.as_azure_int_size(),
                                                        format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() { fail!("null azure draw target"); }
+            if azure_draw_target == ptr::mut_null() { fail!("null azure draw target"); }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
                 data: None,
@@ -359,7 +358,7 @@ impl DrawTarget {
     }
 
     pub fn new_with_data(backend: BackendType,
-                         data: Vec<u8>,
+                         mut data: Vec<u8>,
                          offset: uint,
                          size: Size2D<i32>,
                          stride: i32,
@@ -368,11 +367,11 @@ impl DrawTarget {
             assert!((data.len() - offset) as i32 >= stride * size.height);
             let azure_draw_target =
                 AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                          data.get(offset),
-                                          &size.as_azure_int_size(),
+                                          data.get_mut(offset),
+                                          &mut size.as_azure_int_size(),
                                           stride,
                                           format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() { fail!("null azure draw target"); }
+            if azure_draw_target == ptr::mut_null() { fail!("null azure draw target"); }
             DrawTarget {
                 azure_draw_target: azure_draw_target,
                 data: Some(Arc::new(data)),
@@ -389,11 +388,11 @@ impl DrawTarget {
         unsafe {
             let native_graphics_context = mem::transmute(native_graphics_context);
             let skia_context = AzCreateSkiaSharedGLContext(native_graphics_context,
-                                                           &size.as_azure_int_size());
+                                                           &mut size.as_azure_int_size());
             let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
-                                                                 &size.as_azure_int_size(),
+                                                                 &mut size.as_azure_int_size(),
                                                                  format.as_azure_surface_format());
-            if azure_draw_target == ptr::null() {
+            if azure_draw_target == ptr::mut_null() {
                 fail!("null azure draw target");
             }
             DrawTarget {
@@ -465,7 +464,7 @@ impl DrawTarget {
 
     pub fn clear_rect(&self, rect: &Rect<AzFloat>) {
         unsafe {
-            AzDrawTargetClearRect(self.azure_draw_target, &rect.as_azure_rect());
+            AzDrawTargetClearRect(self.azure_draw_target, &mut rect.as_azure_rect());
         }
     }
 
@@ -474,7 +473,7 @@ impl DrawTarget {
             AzDrawTargetFill(self.azure_draw_target,
                              path.azure_path,
                              pattern.azure_color_pattern,
-                             &draw_options.as_azure_draw_options());
+                             &mut draw_options.as_azure_draw_options());
         }
     }
 
@@ -487,14 +486,14 @@ impl DrawTarget {
                 draw_options.as_azure_draw_options()
             });
             let draw_options = match draw_options {
-                None => ptr::null(),
-                Some(draw_options) => {
-                    let draw_options: *AzDrawOptions = &draw_options;
+                None => ptr::mut_null(),
+                Some(mut draw_options) => {
+                    let draw_options: *mut AzDrawOptions = &mut draw_options;
                     draw_options
                 }
             };
             AzDrawTargetFillRect(self.azure_draw_target,
-                                 &rect.as_azure_rect(),
+                                 &mut rect.as_azure_rect(),
                                  pattern.azure_color_pattern,
                                  draw_options);
         }
@@ -508,11 +507,11 @@ impl DrawTarget {
                    draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeLine(self.azure_draw_target,
-                                   &start.as_azure_point(),
-                                   &end.as_azure_point(),
+                                   &mut start.as_azure_point(),
+                                   &mut end.as_azure_point(),
                                    pattern.azure_color_pattern,
-                                   &stroke_options.as_azure_stroke_options(),
-                                   &draw_options.as_azure_draw_options());
+                                   &mut stroke_options.as_azure_stroke_options(),
+                                   &mut draw_options.as_azure_draw_options());
         }
     }
 
@@ -523,10 +522,10 @@ impl DrawTarget {
                    draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeRect(self.azure_draw_target,
-                                   &rect.as_azure_rect(),
+                                   &mut rect.as_azure_rect(),
                                    pattern.azure_color_pattern,
-                                   &stroke_options.as_azure_stroke_options(),
-                                   &draw_options.as_azure_draw_options());
+                                   &mut stroke_options.as_azure_stroke_options(),
+                                   &mut draw_options.as_azure_draw_options());
         }
     }
 
@@ -539,10 +538,10 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawSurface(self.azure_draw_target,
                                     surface.azure_source_surface,
-                                    &dest.as_azure_rect(),
-                                    &source.as_azure_rect(),
-                                    &surf_options.as_azure_draw_surface_options(),
-                                    &options.as_azure_draw_options());
+                                    &mut dest.as_azure_rect(),
+                                    &mut source.as_azure_rect(),
+                                    &mut surf_options.as_azure_draw_surface_options(),
+                                    &mut options.as_azure_draw_options());
         }
     }
 
@@ -564,7 +563,7 @@ impl DrawTarget {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
                 &data[0],
-                &size.as_azure_int_size(),
+                &mut size.as_azure_int_size(),
                 stride,
                 format.as_azure_surface_format());
             SourceSurface::new(azure_surface)
@@ -577,16 +576,18 @@ impl DrawTarget {
         }
     }
 
-    pub fn fill_glyphs(&self, azfontref: AzScaledFontRef, glyphbuf: struct__AzGlyphBuffer,
-                              azure_pattern: AzColorPatternRef,
-                              options: struct__AzDrawOptions,
-                              renderingOptions: AzGlyphRenderingOptionsRef) {
+    pub fn fill_glyphs(&self,
+                       azfontref: AzScaledFontRef,
+                       mut glyphbuf: struct__AzGlyphBuffer,
+                       azure_pattern: AzColorPatternRef,
+                       mut options: struct__AzDrawOptions,
+                       renderingOptions: AzGlyphRenderingOptionsRef) {
         unsafe {
             AzDrawTargetFillGlyphs(self.azure_draw_target,
                     azfontref,
-                    &glyphbuf,
+                    &mut glyphbuf,
                     azure_pattern,
-                    &options,
+                    &mut options,
                     renderingOptions);
         }
     }
@@ -696,7 +697,7 @@ impl Drop for DataSourceSurface {
 impl DataSourceSurface {
     pub fn with_data(&self, f: |&[u8]|) {
         unsafe {
-            let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface);
+            let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
             let len = self.stride() * self.size().height;
             slice::raw::buf_as_slice(buf, len as uint, f);
         }
@@ -739,15 +740,15 @@ pub struct PathBuilder {
 impl PathBuilder {
     pub fn move_to(&self, point: Point2D<AzFloat>) {
         unsafe {
-            let az_point = point.as_azure_point();
-            AzPathBuilderMoveTo(self.azure_path_builder, &az_point);
+            let mut az_point = point.as_azure_point();
+            AzPathBuilderMoveTo(self.azure_path_builder, &mut az_point);
         }
     }
 
     pub fn line_to(&self, point: Point2D<AzFloat>) {
         unsafe {
-            let az_point = point.as_azure_point();
-            AzPathBuilderLineTo(self.azure_path_builder, &az_point);
+            let mut az_point = point.as_azure_point();
+            AzPathBuilderLineTo(self.azure_path_builder, &mut az_point);
         }
     }
 
@@ -776,7 +777,7 @@ pub fn current_gl_context() -> AzGLContext {
 }
 
 #[cfg(target_os="linux")]
-pub fn current_display() -> *c_void {
+pub fn current_display() -> *mut c_void {
     use glfw;
     unsafe {
         glfw::ffi::glfwGetX11Display()

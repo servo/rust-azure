@@ -388,14 +388,14 @@ AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget) {
 
 extern "C" AzSourceSurfaceRef
 AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
-                                        unsigned char *aData,
+                                        const unsigned char *aData,
                                         AzIntSize *aSize,
                                         int32_t aStride,
                                         AzSurfaceFormat aFormat) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::IntSize *gfxSize = reinterpret_cast<gfx::IntSize*>(aSize);
     gfx::SurfaceFormat gfxSurfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
-    RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->CreateSourceSurfaceFromData(aData, *gfxSize, aStride, gfxSurfaceFormat);
+    RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->CreateSourceSurfaceFromData(const_cast<unsigned char *>(aData), *gfxSize, aStride, gfxSurfaceFormat);
     gfxSourceSurface->AddRef();
     return gfxSourceSurface;
 }
