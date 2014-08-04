@@ -7,6 +7,9 @@ AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
 EXT_DEPS ?=
+RUSTDOC ?= rustdoc
+RUSTDOC_FLAGS ?=
+RUSTDOC_TARGET ?= doc
 
 UNAME=$(shell uname)
 
@@ -178,6 +181,12 @@ libazure.a: $(ALL_OBJS)
 .PHONY: check
 check: azure-test
 	./azure-test
+
+.PHONY: doc
+doc: $(RUSTDOC_TARGET)/azure/index.html
+
+$(RUSTDOC_TARGET)/azure/index.html: azure.rc $(RUST_SRC) $(EXT_DEPS)
+	$(RUSTDOC) $(RUSTDOC_FLAGS) $< -o $(RUSTDOC_TARGET)
 
 .PHONY: clean
 clean:
