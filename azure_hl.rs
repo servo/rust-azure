@@ -482,15 +482,12 @@ impl DrawTarget {
                      pattern: &ColorPattern,
                      draw_options: Option<&DrawOptions>) {
         unsafe {
-            let draw_options = draw_options.map(|draw_options| {
+            let mut draw_options = draw_options.map(|draw_options| {
                 draw_options.as_azure_draw_options()
             });
             let draw_options = match draw_options {
                 None => ptr::mut_null(),
-                Some(mut draw_options) => {
-                    let draw_options: *mut AzDrawOptions = &mut draw_options;
-                    draw_options
-                }
+                Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
             };
             AzDrawTargetFillRect(self.azure_draw_target,
                                  &mut rect.as_azure_rect(),
