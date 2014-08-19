@@ -29,6 +29,7 @@ use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface}
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
+use azure::AzGLNativeContextRef;
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -344,16 +345,18 @@ pub struct StolenGLResources {
 impl DrawTarget {
     pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
                    -> DrawTarget {
-        unsafe {
-            let azure_draw_target = AzCreateDrawTarget(backend.as_azure_backend_type(),
+        let azure_draw_target = unsafe {
+            AzCreateDrawTarget(backend.as_azure_backend_type(),
                                                        &mut size.as_azure_int_size(),
-                                                       format.as_azure_surface_format());
-            if azure_draw_target == ptr::mut_null() { fail!("null azure draw target"); }
-            DrawTarget {
-                azure_draw_target: azure_draw_target,
-                data: None,
-                skia_context: None
-            }
+                                                       format.as_azure_surface_format())
+        };
+        if azure_draw_target.is_null() {
+            fail!("null azure draw target");
+        }
+        DrawTarget {
+            azure_draw_target: azure_draw_target,
+            data: None,
+            skia_context: None
         }
     }
 
@@ -363,20 +366,21 @@ impl DrawTarget {
                          size: Size2D<i32>,
                          stride: i32,
                          format: SurfaceFormat) -> DrawTarget {
-        unsafe {
-            assert!((data.len() - offset) as i32 >= stride * size.height);
-            let azure_draw_target =
-                AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                          data.get_mut(offset),
-                                          &mut size.as_azure_int_size(),
-                                          stride,
-                                          format.as_azure_surface_format());
-            if azure_draw_target == ptr::mut_null() { fail!("null azure draw target"); }
-            DrawTarget {
-                azure_draw_target: azure_draw_target,
-                data: Some(Arc::new(data)),
-                skia_context: None
-            }
+        assert!((data.len() - offset) as i32 >= stride * size.height);
+        let azure_draw_target = unsafe {
+            AzCreateDrawTargetForData(backend.as_azure_backend_type(),
+                                      data.get_mut(offset),
+                                      &mut size.as_azure_int_size(),
+                                      stride,
+                                      format.as_azure_surface_format())
+        };
+        if azure_draw_target.is_null() {
+            fail!("null azure draw target");
+        }
+        DrawTarget {
+            azure_draw_target: azure_draw_target,
+            data: Some(Arc::new(data)),
+            skia_context: None
         }
     }
 
@@ -385,29 +389,32 @@ impl DrawTarget {
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == SkiaBackend);
-        unsafe {
-            let native_graphics_context = mem::transmute(native_graphics_context);
-            let skia_context = AzCreateSkiaSharedGLContext(native_graphics_context,
-                                                           &mut size.as_azure_int_size());
-            let azure_draw_target = AzCreateSkiaDrawTargetForFBO(skia_context,
-                                                                 &mut size.as_azure_int_size(),
-                                                                 format.as_azure_surface_format());
-            if azure_draw_target == ptr::mut_null() {
-                fail!("null azure draw target");
-            }
-            DrawTarget {
-                azure_draw_target: azure_draw_target,
-                data: None,
-                skia_context: Some(skia_context)
-            }
+        let native_graphics_context = native_graphics_context as *const _ as AzGLNativeContextRef;
+        let skia_context = unsafe {
+            AzCreateSkiaSharedGLContext(native_graphics_context,
+                                        &mut size.as_azure_int_size())
+        };
+        let azure_draw_target = unsafe {
+            AzCreateSkiaDrawTargetForFBO(skia_context,
+                                         &mut size.as_azure_int_size(),
+                                         format.as_azure_surface_format())
+        };
+        if azure_draw_target.is_null() {
+            fail!("null azure draw target");
+        }
+        DrawTarget {
+            azure_draw_target: azure_draw_target,
+            data: None,
+            skia_context: Some(skia_context)
         }
     }
 
     pub fn clone(&self) -> DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
-            if self.skia_context.is_some() {
-                AzRetainSkiaSharedGLContext(self.skia_context.unwrap());
+            match self.skia_context {
+                Some(ctx) => AzRetainSkiaSharedGLContext(ctx),
+                None => (),
             }
         }
         DrawTarget {
@@ -417,7 +424,6 @@ impl DrawTarget {
                 Some(ref arc) => Some(arc.clone())
             },
             skia_context: self.skia_context
-                
         }
     }
 
@@ -434,16 +440,11 @@ impl DrawTarget {
 
     /// Consumes this draw target and returns the underlying native surface and GL context, if they exist.
     pub fn steal_gl_resources(self) -> Option<StolenGLResources> {
-        match self.skia_context {
-            None => None,
-            Some(ctx) => {
-                unsafe {
-                    Some(StolenGLResources {
-                        surface: AzSkiaSharedGLContextStealSurface(ctx),
-                    })
-                }
+        self.skia_context.map(|ctx| {
+            StolenGLResources {
+                surface: unsafe { AzSkiaSharedGLContextStealSurface(ctx) },
             }
-        }
+        })
     }
 
     pub fn get_size(&self) -> AzIntSize {
@@ -481,14 +482,14 @@ impl DrawTarget {
                      rect: &Rect<AzFloat>,
                      pattern: &ColorPattern,
                      draw_options: Option<&DrawOptions>) {
+        let mut draw_options = draw_options.map(|draw_options| {
+            draw_options.as_azure_draw_options()
+        });
+        let draw_options = match draw_options {
+            None => ptr::mut_null(),
+            Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
+        };
         unsafe {
-            let mut draw_options = draw_options.map(|draw_options| {
-                draw_options.as_azure_draw_options()
-            });
-            let draw_options = match draw_options {
-                None => ptr::mut_null(),
-                Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
-            };
             AzDrawTargetFillRect(self.azure_draw_target,
                                  &mut rect.as_azure_rect(),
                                  pattern.azure_color_pattern,
@@ -650,10 +651,10 @@ pub trait SourceSurfaceMethods {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef;
 
     fn size(&self) -> Size2D<i32> {
-        unsafe {
-            let size = AzSourceSurfaceGetSize_(self.get_azure_source_surface());
-            Size2D { width: size.width, height: size.height }
-        }
+        let size = unsafe {
+            AzSourceSurfaceGetSize_(self.get_azure_source_surface())
+        };
+        Size2D { width: size.width, height: size.height }
     }
 
     fn format(&self) -> SurfaceFormat {
@@ -665,12 +666,11 @@ pub trait SourceSurfaceMethods {
 
 impl SourceSurface {
     pub fn get_data_surface(&self) -> DataSourceSurface {
-        unsafe {
-            let data_source_surface = AzSourceSurfaceGetDataSurface(
-                self.azure_source_surface);
-            DataSourceSurface {
-                azure_data_source_surface: data_source_surface
-            }
+        let data_source_surface = unsafe {
+            AzSourceSurfaceGetDataSurface(self.azure_source_surface)
+        };
+        DataSourceSurface {
+            azure_data_source_surface: data_source_surface
         }
     }
 }
@@ -723,7 +723,7 @@ pub struct Path {
 }
 
 impl Drop for Path {
-    fn drop(&mut self){
+    fn drop(&mut self) {
         unsafe {
             AzReleasePath(self.azure_path);
         }
@@ -736,25 +736,23 @@ pub struct PathBuilder {
 
 impl PathBuilder {
     pub fn move_to(&self, point: Point2D<AzFloat>) {
+        let mut az_point = point.as_azure_point();
         unsafe {
-            let mut az_point = point.as_azure_point();
             AzPathBuilderMoveTo(self.azure_path_builder, &mut az_point);
         }
     }
 
     pub fn line_to(&self, point: Point2D<AzFloat>) {
+        let mut az_point = point.as_azure_point();
         unsafe {
-            let mut az_point = point.as_azure_point();
             AzPathBuilderLineTo(self.azure_path_builder, &mut az_point);
         }
     }
 
     pub fn finish(&self) -> Path{
-        unsafe {
-            let az_path = AzPathBuilderFinish(self.azure_path_builder);
-            Path {
-                azure_path : az_path
-            }
+        let az_path = unsafe { AzPathBuilderFinish(self.azure_path_builder) };
+        Path {
+            azure_path : az_path
         }
     }
 }
