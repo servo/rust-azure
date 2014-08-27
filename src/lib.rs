@@ -21,6 +21,14 @@ extern crate xlib;
 extern crate egl;
 #[cfg(not(target_os = "android"))]
 extern crate glfw;
+#[cfg(not(target_os = "macos"))]
+extern crate freetype;
+#[cfg(target_os = "macos")]
+extern crate core_foundation;
+#[cfg(target_os = "macos")]
+extern crate core_graphics;
+#[cfg(target_os = "macos")]
+extern crate core_text;
 
 pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA, 
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO, AZ_SURFACE_CAIRO_IMAGE, 

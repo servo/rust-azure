@@ -10,3 +10,5 @@
 azure-test
 build
 /doc
+/target
+/Cargo.lock

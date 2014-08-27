@@ -1,0 +1,52 @@
+[package]
+
+name = "azure"
+version = "0.1.0"
+authors = ["The Servo Project Developers"]
+
+build = "make -f makefile.cargo"
+
+[dependencies.geom]
+
+git = "https://github.com/servo/rust-geom"
+
+[dependencies.layers]
+
+git = "https://github.com/servo/rust-layers"
+
+[dependencies.opengles]
+
+git = "https://github.com/servo/rust-opengles"
+
+[dependencies.skia-sys]
+
+git = "https://github.com/servo/skia"
+
+[dependencies.xlib]
+
+git = "https://github.com/servo/rust-xlib"
+
+[dependencies.egl]
+
+git = "https://github.com/servo/rust-egl"
+
+[dependencies.glfw]
+
+git = "https://github.com/servo/glfw-rs"
+branch = "servo"
+
+[dependencies.freetype]
+
+git = "https://github.com/servo/rust-freetype"
+
+[dependencies.core_foundation]
+
+git = "https://github.com/servo/rust-core-foundation"
+
+[dependencies.core_graphics]
+
+git = "https://github.com/servo/rust-core-graphics"
+
+[dependencies.core_text]
+
+git = "https://github.com/servo/rust-core-text"
