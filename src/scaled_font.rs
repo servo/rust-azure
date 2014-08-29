@@ -105,7 +105,7 @@ impl ScaledFont {
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
         use azure_hl::{CoreGraphicsBackend,CoreGraphicsAcceleratedBackend};
-        use scaled_font::macos::core_foundation::base::TCFType;
+        use core_foundation::base::TCFType;
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
