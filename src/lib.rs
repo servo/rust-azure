@@ -10,7 +10,6 @@
 #![allow(non_snake_case_functions)]
 
 extern crate libc;
-extern crate std;
 extern crate sync;
 extern crate geom;
 extern crate layers;
