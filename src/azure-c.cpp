@@ -529,6 +529,17 @@ AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint) {
   gfxPathBuilder->LineTo(*gfxPoint);
 }
 
+extern "C" void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
+                                 const AzPoint *aOrigin,
+                                 AzFloat aRadius,
+                                 AzFloat aStartAngle,
+                                 AzFloat aEndAngle,
+                                 bool aAntiClockwise) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    const gfx::Point *gfxOrigin = reinterpret_cast<const gfx::Point*>(aOrigin);
+    gfxPathBuilder->Arc(*gfxOrigin, aRadius, aStartAngle, aEndAngle, aAntiClockwise);
+}
+
 extern "C" AzPathRef
 AzPathBuilderFinish(AzPathBuilderRef aPathBuilder) {
     gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);

@@ -373,6 +373,17 @@ AzDataSourceSurfaceRef AzSourceSurfaceGetDataSurface(AzSourceSurfaceRef aSurface
 uint8_t *AzDataSourceSurfaceGetData(AzDataSourceSurfaceRef aSurface);
 int32_t AzDataSourceSurfaceGetStride(AzDataSourceSurfaceRef aSurface);
 
+AzPathBuilderRef AzCreatePathBuilder(AzDrawTargetRef aDrawTarget);
+void AzReleasePathBuilder(AzPathBuilderRef aPathBuilder);
+void AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint);
+void AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint);
+void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
+                      const AzPoint *aOrigin,
+                      AzFloat aRadius,
+                      AzFloat aStartAngle,
+                      AzFloat aEndAngle,
+                      bool aAntiClockwise);
+AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 
 /* Factory.h */
 
