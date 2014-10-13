@@ -402,6 +402,13 @@ pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint)
 
 pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 
+pub fn AzPathBuilderArc(aPathBuilder: AzPathBuilderRef,
+                        aOrigin: *const AzPoint,
+                        aRadius: AzFloat,
+                        aStartAngle: AzFloat,
+                        aEndAngle: AzFloat,
+                        aAntiClockwise: bool);
+
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 
 pub fn AzReleasePath(aPath: AzPathRef);

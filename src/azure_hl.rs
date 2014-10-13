@@ -27,7 +27,8 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
 use azure::{AzSkiaSharedGLContextMakeCurrent, AzSkiaSharedGLContextStealSurface};
 use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
-use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePathBuilder};
+use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
+use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::AzGLNativeContextRef;
 
@@ -749,7 +750,25 @@ impl PathBuilder {
         }
     }
 
-    pub fn finish(&self) -> Path{
+    /// Adds an arc to the current figure.
+    pub fn arc(&self,
+               origin: Point2D<AzFloat>,
+               radius: AzFloat,
+               start_angle: AzFloat,
+               end_angle: AzFloat,
+               anticlockwise: bool) {
+        let origin = origin.as_azure_point();
+        unsafe {
+            AzPathBuilderArc(self.azure_path_builder,
+                             &origin,
+                             radius,
+                             start_angle,
+                             end_angle,
+                             anticlockwise)
+        }
+    }
+
+    pub fn finish(&self) -> Path {
         let az_path = unsafe { AzPathBuilderFinish(self.azure_path_builder) };
         Path {
             azure_path : az_path
