@@ -145,12 +145,6 @@ AzCreateColorPattern(AzColor *aColor) {
     return gfxColorPattern;
 }
 
-extern "C" void
-AzReleaseColorPattern(AzColorPatternRef aColorPattern) {
-    gfx::ColorPattern *gfxColorPattern = static_cast<gfx::ColorPattern*>(aColorPattern);
-    delete gfxColorPattern;
-}
-
 extern "C" AzSkiaSharedGLContextRef
 AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext, AzIntSize *aSize) {
     GrGLNativeContext* nativeContext = reinterpret_cast<GrGLNativeContext*>(aNativeContext);
@@ -400,6 +394,20 @@ AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
     return gfxSourceSurface;
 }
 
+extern "C" AzGradientStopsRef
+AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
+                                AzGradientStop *aStops,
+                                uint32_t aNumStops,
+                                AzExtendMode aExtendMode) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::GradientStop *gfxStops = reinterpret_cast<gfx::GradientStop*>(aStops);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
+    RefPtr<gfx::GradientStops> gfxGradientStops =
+        gfxDrawTarget->CreateGradientStops(gfxStops, aNumStops, gfxExtendMode);
+    gfxGradientStops->AddRef();
+    return gfxGradientStops;
+}
+
 extern "C" void
 AzReleaseSourceSurface(AzSourceSurfaceRef aSurface) {
     gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
@@ -553,3 +561,28 @@ AzReleasePath(AzPathRef aPath) {
     gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
     gfxPath->Release();
 }
+
+extern "C" AzLinearGradientPatternRef
+AzCreateLinearGradientPattern(const AzPoint *aBegin,
+                              const AzPoint *aEnd,
+                              AzGradientStopsRef aStops,
+                              const AzMatrix *aMatrix) {
+    const gfx::Point *gfxBegin = reinterpret_cast<const gfx::Point*>(aBegin);
+    const gfx::Point *gfxEnd = reinterpret_cast<const gfx::Point*>(aEnd);
+    gfx::GradientStops *gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aMatrix);
+    gfx::LinearGradientPattern* gfxLinearGradientPattern = new
+        gfx::LinearGradientPattern(*gfxBegin, *gfxEnd, gfxStops, *gfxMatrix);
+    return gfxLinearGradientPattern;
+}
+
+void AzReleasePattern(AzPatternRef aPattern) {
+    gfx::Pattern *gfxPattern = reinterpret_cast<gfx::Pattern*>(aPattern);
+    delete gfxPattern;
+}
+
+void AzReleaseGradientStops(AzGradientStopsRef aStops) {
+    gfx::GradientStops *gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    gfxStops->Release();
+}
+

@@ -5,10 +5,10 @@
 //! High-level bindings to Azure.
 
 use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL};
-use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef};
+use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef};
+use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
 use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
@@ -21,7 +21,8 @@ use azure::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
 use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzReleaseColorPattern, AzReleaseDrawTarget};
+use azure::{AzDrawTargetCreateGradientStops};
+use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO, AzSkiaGetCurrentGLContext};
@@ -30,7 +31,8 @@ use azure::{AzSkiaSharedGLContextFlush, AzSkiaGrGLSharedSurfaceRef};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
 use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::AzGLNativeContextRef;
+use azure::{AzGLNativeContextRef, AzLinearGradientPatternRef, AzMatrix, AzPatternRef};
+use azure::{AzCreateLinearGradientPattern};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -115,7 +117,7 @@ pub struct ColorPattern {
 impl Drop for ColorPattern {
     fn drop(&mut self) {
         unsafe {
-            AzReleaseColorPattern(self.azure_color_pattern);
+            AzReleasePattern(self.azure_color_pattern);
         }
     }
 }
@@ -481,7 +483,7 @@ impl DrawTarget {
 
     pub fn fill_rect(&self,
                      rect: &Rect<AzFloat>,
-                     pattern: &ColorPattern,
+                     pattern: PatternRef,
                      draw_options: Option<&DrawOptions>) {
         let mut draw_options = draw_options.map(|draw_options| {
             draw_options.as_azure_draw_options()
@@ -493,7 +495,7 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
                                  &mut rect.as_azure_rect(),
-                                 pattern.azure_color_pattern,
+                                 pattern.as_azure_pattern(),
                                  draw_options);
         }
     }
@@ -552,11 +554,11 @@ impl DrawTarget {
     }
 
     pub fn create_source_surface_from_data(&self,
-                                       data: &[u8],
-                                       size: Size2D<i32>,
-                                       stride: i32,
-                                       format: SurfaceFormat)
-                                    -> SourceSurface {
+                                           data: &[u8],
+                                           size: Size2D<i32>,
+                                           stride: i32,
+                                           format: SurfaceFormat)
+                                           -> SourceSurface {
         assert!(data.len() as i32 == stride * size.height);
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
@@ -566,6 +568,19 @@ impl DrawTarget {
                 stride,
                 format.as_azure_surface_format());
             SourceSurface::new(azure_surface)
+        }
+    }
+
+    pub fn create_gradient_stops(&self,
+                                 gradient_stops: &[GradientStop],
+                                 extend_mode: ExtendMode)
+                                 -> GradientStops {
+        unsafe {
+            GradientStops::new(AzDrawTargetCreateGradientStops(
+                    self.azure_draw_target,
+                    mem::transmute::<_,*const AzGradientStop>(&gradient_stops[0]),
+                    gradient_stops.len() as u32,
+                    extend_mode.as_azure_extend_mode()))
         }
     }
 
@@ -635,6 +650,47 @@ impl SourceSurface {
         SourceSurface {
             azure_source_surface: azure_source_surface
         }
+    }
+}
+
+pub struct GradientStops {
+    pub azure_gradient_stops: AzGradientStopsRef,
+}
+
+impl Drop for GradientStops {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseGradientStops(self.azure_gradient_stops);
+        }
+    }
+}
+
+impl GradientStops {
+    pub fn new(azure_gradient_stops: AzGradientStopsRef) -> GradientStops {
+        GradientStops {
+            azure_gradient_stops: azure_gradient_stops,
+        }
+    }
+}
+
+#[repr(C)]
+#[deriving(Clone)]
+pub struct GradientStop {
+    pub offset: AzFloat,
+    pub color: Color,
+}
+
+#[repr(i32)]
+#[deriving(Clone, PartialEq)]
+pub enum ExtendMode {
+    ExtendClamp = 0,
+    ExtendRepeat = 1,
+    ExtendReflect = 2,
+}
+
+impl ExtendMode {
+    fn as_azure_extend_mode(self) -> AzExtendMode {
+        self as AzExtendMode
     }
 }
 
@@ -780,6 +836,52 @@ impl Drop for PathBuilder {
     fn drop(&mut self) {
         unsafe {
             AzReleasePathBuilder(self.azure_path_builder);
+        }
+    }
+}
+
+pub struct LinearGradientPattern {
+    pub azure_linear_gradient_pattern: AzLinearGradientPatternRef,
+}
+
+impl Drop for LinearGradientPattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_linear_gradient_pattern);
+        }
+    }
+}
+
+impl LinearGradientPattern {
+    pub fn new(begin: &Point2D<AzFloat>,
+               end: &Point2D<AzFloat>,
+               stops: GradientStops,
+               matrix: &Matrix2D<AzFloat>)
+               -> LinearGradientPattern {
+        unsafe {
+            LinearGradientPattern {
+                azure_linear_gradient_pattern:
+                    AzCreateLinearGradientPattern(mem::transmute::<_,*const AzPoint>(begin),
+                                                  mem::transmute::<_,*const AzPoint>(end),
+                                                  stops.azure_gradient_stops,
+                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+            }
+        }
+    }
+}
+
+pub enum PatternRef<'a> {
+    ColorPatternRef(&'a ColorPattern),
+    LinearGradientPatternRef(&'a LinearGradientPattern),
+}
+
+impl<'a> PatternRef<'a> {
+    fn as_azure_pattern(&self) -> AzPatternRef {
+        match *self {
+            ColorPatternRef(color_pattern) => color_pattern.azure_color_pattern,
+            LinearGradientPatternRef(linear_gradient_pattern) => {
+                linear_gradient_pattern.azure_linear_gradient_pattern
+            }
         }
     }
 }
