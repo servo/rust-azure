@@ -22,6 +22,24 @@ void AzSanityCheck();
 
 // FIXME: This stuff is copy pasted from the azure headers
 
+typedef void* AzGradientStopsRef;
+typedef void* AzSkiaSharedGLContextRef;
+typedef void* AzSkiaSharedGrGLContextRef;
+typedef void* AzSkiaGrContextRef;
+typedef void* AzSkiaGrGLSharedSurfaceRef;
+typedef void* AzSkiaGrGLSharedContextRef;
+typedef void* AzDrawTargetRef;
+typedef void* AzPatternRef;
+typedef void* AzColorPatternRef;
+typedef void* AzScaledFontRef;
+typedef void* AzGlyphRenderingOptionsRef;
+typedef void* AzSourceSurfaceRef;
+typedef void* AzDrawSurfaceOptionsRef;
+typedef void* AzDataSourceSurfaceRef;
+typedef void* AzGLContextMetadataRef;
+typedef void* AzPathBuilderRef;
+typedef void* AzPathRef;
+typedef void* AzLinearGradientPatternRef;
 
 /* Types.h */
 
@@ -281,29 +299,10 @@ typedef struct _AzNativeFont {
   void *mFont;
 } AzNativeFont;
 
-typedef void* AzGradientStopsRef;
-typedef void* AzSkiaSharedGLContextRef;
-typedef void* AzSkiaSharedGrGLContextRef;
-typedef void* AzSkiaGrContextRef;
-typedef void* AzSkiaGrGLSharedSurfaceRef;
-typedef void* AzSkiaGrGLSharedContextRef;
-typedef void* AzDrawTargetRef;
-typedef void* AzPatternRef;
-typedef void* AzColorPatternRef;
-typedef void* AzScaledFontRef;
-typedef void* AzGlyphRenderingOptionsRef;
-typedef void* AzSourceSurfaceRef;
-typedef void* AzDrawSurfaceOptionsRef;
-typedef void* AzDataSourceSurfaceRef;
-typedef void* AzGLContextMetadataRef;
-typedef void* AzPathBuilderRef;
-typedef void* AzPathRef;
-
 typedef GrGLSharedContext AzGLContext;
 typedef GrGLNativeContext* AzGLNativeContextRef;
 
 AzColorPatternRef AzCreateColorPattern(AzColor *aColor);
-void AzReleaseColorPattern(AzColorPatternRef aColorPattern);
 
 AzSkiaSharedGLContextRef AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext,
                                                      AzIntSize *aSize);
@@ -343,11 +342,11 @@ void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
 			    AzStrokeOptions *aStrokeOptions,
 			    AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
-			    AzPoint *aStart,
-			    AzPoint *aEnd,
-			    AzPatternRef aPattern,
-			    AzStrokeOptions *aStrokeOptions,
-			    AzDrawOptions *aDrawOptions);
+			                AzPoint *aStart,
+			                AzPoint *aEnd,
+			                AzPatternRef aPattern,
+			                AzStrokeOptions *aStrokeOptions,
+			                AzDrawOptions *aDrawOptions);
 void AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
                             AzScaledFontRef aFont,
                             AzGlyphBuffer *aGlyphBuffer,
@@ -366,6 +365,11 @@ AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDraw
                                                            AzIntSize *aSize,
                                                            int32_t aStride,
                                                            AzSurfaceFormat aFormat);
+AzGradientStopsRef AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
+                                                   AzGradientStop *aStops,
+                                                   uint32_t aNumStops,
+                                                   AzExtendMode aExtendMode);
+
 void AzReleaseSourceSurface(AzSourceSurfaceRef aSurface);
 AzIntSize AzSourceSurfaceGetSize(AzSourceSurfaceRef aSurface);
 AzSurfaceFormat AzSourceSurfaceGetFormat(AzSourceSurfaceRef aSurface);
@@ -384,6 +388,14 @@ void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
                       AzFloat aEndAngle,
                       bool aAntiClockwise);
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
+
+AzLinearGradientPatternRef AzCreateLinearGradientPattern(const AzPoint *aBegin,
+                                                         const AzPoint *aEnd,
+                                                         AzGradientStopsRef aStops,
+                                                         const AzMatrix *aMatrix);
+void AzReleasePattern(AzPatternRef aPattern);
+
+void AzReleaseGradientStops(AzGradientStopsRef aStops);
 
 /* Factory.h */
 

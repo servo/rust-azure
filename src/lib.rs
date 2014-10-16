@@ -7,8 +7,6 @@
 
 #![feature(globs)]
 
-#![allow(non_snake_case_functions)]
-
 extern crate libc;
 extern crate sync;
 extern crate geom;
@@ -71,7 +69,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzGlyphRenderingOptionsRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef, AzDrawSurfaceOptionsRef, 
                 AzGLContext, AzSkiaGrGLSharedContextRef, AzGLContextMetadataRef, AzGLNativeContextRef, 
                 AzPathRef, AzPathBuilderRef, AzSanityCheck, AzCreateColorPattern, 
-                AzReleaseColorPattern, AzCreateSkiaSharedGLContext, AzRetainSkiaSharedGLContext, AzReleaseSkiaSharedGLContext, 
+                AzCreateSkiaSharedGLContext, AzRetainSkiaSharedGLContext, AzReleaseSkiaSharedGLContext, 
                 AzSkiaSharedGLContextGetFBOID, AzSkiaSharedGLContextStealSurface, AzSkiaSharedGLContextGetGrContext, AzSkiaSharedGLContextMakeCurrent, 
                 AzSkiaSharedGLContextFlush, AzCreateDrawTarget, AzCreateDrawTargetForData, AzCreateSkiaDrawTargetForFBO, 
                 AzRetainDrawTarget, AzReleaseDrawTarget, AzDrawTargetGetSize, AzDrawTargetFlush, 
