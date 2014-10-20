@@ -461,6 +461,7 @@ DrawTargetSkia::FillGlyphs(ScaledFont *aFont,
   paint.mPaint.setTypeface(skiaFont->GetSkTypeface());
   paint.mPaint.setTextSize(SkFloatToScalar(skiaFont->mSize));
   paint.mPaint.setTextEncoding(SkPaint::kGlyphID_TextEncoding);
+  paint.mPaint.setSubpixelText(true);
   
   std::vector<uint16_t> indices;
   std::vector<SkPoint> offsets;
