@@ -369,6 +369,9 @@ AzGradientStopsRef AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
                                                    AzGradientStop *aStops,
                                                    uint32_t aNumStops,
                                                    AzExtendMode aExtendMode);
+void AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath);
+void AzDrawTargetPushClipRect(AzDrawTargetRef aDrawTarget, const AzRect *aRect);
+void AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget);
 
 void AzReleaseSourceSurface(AzSourceSurfaceRef aSurface);
 AzIntSize AzSourceSurfaceGetSize(AzSourceSurfaceRef aSurface);
