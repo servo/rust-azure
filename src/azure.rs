@@ -381,6 +381,8 @@ pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern
 
 pub fn AzDrawTargetPushClip(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef);
 
+pub fn AzDrawTargetPushClipRect(aDrawTarget: AzDrawTargetRef, aRect: *const AzRect);
+
 pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
 
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *mut AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);

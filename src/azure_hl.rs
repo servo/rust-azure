@@ -32,7 +32,7 @@ use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBu
 use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzGLNativeContextRef, AzLinearGradientPatternRef, AzMatrix, AzPatternRef};
-use azure::{AzCreateLinearGradientPattern};
+use azure::{AzCreateLinearGradientPattern, AzDrawTargetPushClipRect};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -617,6 +617,12 @@ impl DrawTarget {
     pub fn push_clip(&self, path: &Path) {
         unsafe {
             AzDrawTargetPushClip(self.azure_draw_target,path.azure_path);
+        }
+    }
+
+    pub fn push_clip_rect(&self, rect: &Rect<AzFloat>) {
+        unsafe {
+            AzDrawTargetPushClipRect(self.azure_draw_target, &rect.as_azure_rect());
         }
     }
 
