@@ -30,11 +30,6 @@ git = "https://github.com/servo/rust-xlib"
 
 git = "https://github.com/servo/rust-egl"
 
-[dependencies.glfw]
-
-git = "https://github.com/servo/glfw-rs"
-branch = "servo"
-
 [dependencies.freetype]
 
 git = "https://github.com/servo/rust-freetype"

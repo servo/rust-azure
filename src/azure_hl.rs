@@ -897,36 +897,3 @@ pub fn current_gl_context() -> AzGLContext {
         AzSkiaGetCurrentGLContext()
     }
 }
-
-#[cfg(target_os="linux")]
-pub fn current_display() -> *mut c_void {
-    use glfw;
-    unsafe {
-        glfw::ffi::glfwGetX11Display()
-    }
-}
-
-#[cfg(target_os="linux")]
-pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
-    NativeGraphicsMetadata {
-        display: current_display(),
-    }
-}
-
-#[cfg(target_os="macos")]
-pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
-    use opengles::cgl::{CGLGetCurrentContext, CGLGetPixelFormat};
-    unsafe {
-        NativeGraphicsMetadata {
-            pixel_format: CGLGetPixelFormat(CGLGetCurrentContext()),
-        }
-    }
-}
-
-#[cfg(target_os="android")]
-pub fn current_graphics_metadata() -> NativeGraphicsMetadata {
-    use egl::egl::GetCurrentDisplay;
-    NativeGraphicsMetadata {
-        display: GetCurrentDisplay(),
-    }
-}

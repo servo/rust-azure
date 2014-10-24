@@ -16,8 +16,6 @@ extern crate opengles;
 extern crate xlib;
 #[cfg(target_os = "android")]
 extern crate egl;
-#[cfg(not(target_os = "android"))]
-extern crate glfw;
 #[cfg(not(target_os = "macos"))]
 extern crate freetype;
 #[cfg(target_os = "macos")]
