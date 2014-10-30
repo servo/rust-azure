@@ -11,7 +11,6 @@ extern crate libc;
 extern crate sync;
 extern crate geom;
 extern crate layers;
-extern crate opengles;
 #[cfg(target_os = "linux")]
 extern crate xlib;
 #[cfg(target_os = "android")]
