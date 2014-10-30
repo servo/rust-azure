@@ -14,10 +14,6 @@ git = "https://github.com/servo/rust-geom"
 
 git = "https://github.com/servo/rust-layers"
 
-[dependencies.opengles]
-
-git = "https://github.com/servo/rust-opengles"
-
 [dependencies.skia-sys]
 
 git = "https://github.com/servo/skia"
