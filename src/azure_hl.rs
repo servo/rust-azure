@@ -174,7 +174,7 @@ impl StrokeOptions {
         StrokeOptions {
             line_width: line_width,
             miter_limit: miter_limit,
-            mDashPattern: ptr::mut_null(),
+            mDashPattern: ptr::null_mut(),
             mDashLength: 0,
             fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
         }
@@ -259,7 +259,7 @@ impl SurfaceFormat {
             1 => B8G8R8X8,
             2 => R5G6B5,
             3 => A8,
-            _ => fail!("SurfaceFormat::new(): unknown Azure surface format")
+            _ => panic!("SurfaceFormat::new(): unknown Azure surface format")
         }
     }
 }
@@ -354,7 +354,7 @@ impl DrawTarget {
                                                        format.as_azure_surface_format())
         };
         if azure_draw_target.is_null() {
-            fail!("null azure draw target");
+            panic!("null azure draw target");
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
@@ -378,7 +378,7 @@ impl DrawTarget {
                                       format.as_azure_surface_format())
         };
         if azure_draw_target.is_null() {
-            fail!("null azure draw target");
+            panic!("null azure draw target");
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
@@ -403,7 +403,7 @@ impl DrawTarget {
                                          format.as_azure_surface_format())
         };
         if azure_draw_target.is_null() {
-            fail!("null azure draw target");
+            panic!("null azure draw target");
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
@@ -489,7 +489,7 @@ impl DrawTarget {
             draw_options.as_azure_draw_options()
         });
         let draw_options = match draw_options {
-            None => ptr::mut_null(),
+            None => ptr::null_mut(),
             Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
         };
         unsafe {

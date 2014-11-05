@@ -72,7 +72,7 @@ impl ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::mut_null()
+            mFont: ptr::null_mut()
         };
         
         match backend {
@@ -96,7 +96,7 @@ impl ScaledFont {
                     ScaledFont { azure_scaled_font: azure_scaled_font }
                 }
             }
-            _ => { fail!("don't know how to make a scaled font for this backend"); }
+            _ => { panic!("don't know how to make a scaled font for this backend"); }
         }
     }
 
@@ -109,7 +109,7 @@ impl ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::mut_null()
+            mFont: ptr::null_mut()
         };
 
         match backend {
@@ -120,7 +120,7 @@ impl ScaledFont {
                 }
             }
             _ => {
-                fail!("don't know how to make a scaled font for this backend");
+                panic!("don't know how to make a scaled font for this backend");
             }
         }
 
