@@ -39,8 +39,7 @@ pub mod android {
 
 pub type SkTypeface = *mut c_void;
 
-#[cfg(target_os="linux")]
-#[cfg(target_os="android")]
+#[cfg(any(target_os="linux", target_os = "android"))]
 pub enum FontInfo<'a> {
     NativeFont(FT_Face),
     FontData(&'a Vec<u8>),
@@ -63,8 +62,7 @@ impl ScaledFont {
         self.azure_scaled_font
     }
 
-    #[cfg(target_os="linux")]
-    #[cfg(target_os="android")]
+    #[cfg(any(target_os="linux", target_os = "android"))]
     pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
