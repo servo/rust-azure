@@ -39,7 +39,7 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use layers::platform::surface::{NativeGraphicsMetadata, NativePaintingGraphicsContext};
+use layers::platform::surface::NativePaintingGraphicsContext;
 use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
 use std::mem;
@@ -161,6 +161,7 @@ pub enum CompositionOp {
     LuminosityOp,
 }
 
+#[allow(non_snake_case)]
 pub struct StrokeOptions {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
@@ -372,7 +373,7 @@ impl DrawTarget {
         assert!((data.len() - offset) as i32 >= stride * size.height);
         let azure_draw_target = unsafe {
             AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                      data.get_mut(offset),
+                                      &mut data[offset],
                                       &mut size.as_azure_int_size(),
                                       stride,
                                       format.as_azure_surface_format())
@@ -595,14 +596,14 @@ impl DrawTarget {
                        mut glyphbuf: struct__AzGlyphBuffer,
                        azure_pattern: AzColorPatternRef,
                        mut options: struct__AzDrawOptions,
-                       renderingOptions: AzGlyphRenderingOptionsRef) {
+                       rendering_options: AzGlyphRenderingOptionsRef) {
         unsafe {
             AzDrawTargetFillGlyphs(self.azure_draw_target,
                     azfontref,
                     &mut glyphbuf,
                     azure_pattern,
                     &mut options,
-                    renderingOptions);
+                    rendering_options);
         }
     }
 
@@ -701,11 +702,13 @@ impl ExtendMode {
 }
 
 // FIXME Rust #8753 no fixed stack segment for default methods
+#[allow(non_snake_case)]
 unsafe fn AzSourceSurfaceGetSize_(aSurface: AzSourceSurfaceRef) -> AzIntSize {
     AzSourceSurfaceGetSize(aSurface)
 }
 
 // FIXME Rust #8753 no fixed stack segment for default methods
+#[allow(non_snake_case)]
 unsafe fn AzSourceSurfaceGetFormat_(aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat {
     AzSourceSurfaceGetFormat(aSurface)
 }
