@@ -359,6 +359,13 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzRect *aSource,
                              AzDrawSurfaceOptionsRef aSurfOptions,
                              AzDrawOptions *aOptions);
+void AzDrawTargetDrawSurfaceWithShadow(AzDrawTargetRef aDrawTarget,
+                                       AzSourceSurfaceRef aSurface,
+                                       const AzPoint* aPoint,
+                                       const AzColor* aColor,
+                                       const AzPoint* aOffset,
+                                       AzFloat aSigma,
+                                       AzCompositionOp aOperator);
 AzSourceSurfaceRef AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget);
 AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
                                                            const unsigned char *aData,
