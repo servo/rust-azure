@@ -97,6 +97,7 @@ pub static AZ_OP_SATURATION: u32 = 23_u32;
 pub static AZ_OP_COLOR: u32 = 24_u32;
 pub static AZ_OP_LUMINOSITY: u32 = 25_u32;
 pub static AZ_OP_COUNT: u32 = 26_u32;
+pub type AzCompositionOp = enum_AzCompositionOp;
 
 pub type enum_AzExtendMode = c_uint;
 pub static AZ_EXTEND_CLAMP: u32 = 0_u32;
@@ -390,6 +391,14 @@ pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *mut AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *mut AzRect, aSource: *mut AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *mut AzDrawOptions);
+
+pub fn AzDrawTargetDrawSurfaceWithShadow(aDrawTarget: AzDrawTargetRef,
+                                         aSurface: AzSourceSurfaceRef,
+                                         aDest: *const AzPoint,
+                                         aColor: *const AzColor,
+                                         aOffset: *const AzPoint,
+                                         aSigma: AzFloat,
+                                         aOperator: AzCompositionOp);
 
 pub fn AzDrawTargetGetSnapshot(aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
 

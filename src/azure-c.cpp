@@ -379,6 +379,28 @@ AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
     gfxDrawTarget->DrawSurface(gfxSourceSurface, *gfxDest, *gfxSource, *gfxDrawSurfaceOptions, *gfxDrawOptions);
 }
 
+extern "C" void
+AzDrawTargetDrawSurfaceWithShadow(AzDrawTargetRef aDrawTarget,
+                                  AzSourceSurfaceRef aSurface,
+                                  const AzPoint* aPoint,
+                                  const AzColor* aColor,
+                                  const AzPoint* aOffset,
+                                  AzFloat aSigma,
+                                  AzCompositionOp aOperator) {
+    gfx::DrawTarget* gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::SourceSurface* gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    const gfx::Point* gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+    const gfx::Color* gfxColor = reinterpret_cast<const gfx::Color*>(aColor);
+    const gfx::Point* gfxOffset = reinterpret_cast<const gfx::Point*>(aOffset);
+    gfx::CompositionOp gfxOperator = static_cast<gfx::CompositionOp>(aOperator);
+    gfxDrawTarget->DrawSurfaceWithShadow(gfxSourceSurface,
+                                         *gfxPoint,
+                                         *gfxColor,
+                                         *gfxOffset,
+                                         aSigma,
+                                         gfxOperator);
+}
+
 extern "C" AzSourceSurfaceRef
 AzDrawTargetGetSnapshot(AzDrawTargetRef aDrawTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);

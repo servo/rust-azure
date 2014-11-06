@@ -9,6 +9,7 @@ use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzG
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
+use azure::{AzCompositionOp};
 use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
@@ -33,6 +34,7 @@ use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzGLNativeContextRef, AzLinearGradientPatternRef, AzMatrix, AzPatternRef};
 use azure::{AzCreateLinearGradientPattern, AzDrawTargetPushClipRect};
+use azure::{AzDrawTargetDrawSurfaceWithShadow};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -532,11 +534,11 @@ impl DrawTarget {
     }
 
     pub fn draw_surface(&self,
-                    surface: SourceSurface,
-                    dest: Rect<AzFloat>,
-                    source: Rect<AzFloat>,
-                    surf_options: DrawSurfaceOptions,
-                    options: DrawOptions) {
+                        surface: SourceSurface,
+                        dest: Rect<AzFloat>,
+                        source: Rect<AzFloat>,
+                        surf_options: DrawSurfaceOptions,
+                        options: DrawOptions) {
         unsafe {
             AzDrawTargetDrawSurface(self.azure_draw_target,
                                     surface.azure_source_surface,
@@ -544,6 +546,24 @@ impl DrawTarget {
                                     &mut source.as_azure_rect(),
                                     &mut surf_options.as_azure_draw_surface_options(),
                                     &mut options.as_azure_draw_options());
+        }
+    }
+
+    pub fn draw_surface_with_shadow(&self,
+                                    surface: SourceSurface,
+                                    dest: &Point2D<AzFloat>,
+                                    color: &Color,
+                                    offset: &Point2D<AzFloat>,
+                                    sigma: AzFloat,
+                                    operator: CompositionOp) {
+        unsafe {
+            AzDrawTargetDrawSurfaceWithShadow(self.azure_draw_target,
+                                              surface.azure_source_surface,
+                                              mem::transmute::<_,*const AzPoint>(dest),
+                                              mem::transmute::<_,*const AzColor>(color),
+                                              mem::transmute::<_,*const AzPoint>(offset),
+                                              sigma,
+                                              operator as AzCompositionOp)
         }
     }
 
@@ -631,7 +651,6 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetPopClip(self.azure_draw_target);
         }
-
     }
 }
 
