@@ -263,6 +263,18 @@ AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget) {
     return IntSizeToC(gfxDrawTarget->GetSize());
 }
 
+extern "C" AzSurfaceFormat
+AzDrawTargetGetFormat(AzDrawTargetRef aDrawTarget) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    return static_cast<AzSurfaceFormat>(gfxDrawTarget->GetFormat());
+}
+
+extern "C" void
+AzDrawTargetGetTransform(AzDrawTargetRef aDrawTarget, AzMatrix* aOutMatrix) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    *reinterpret_cast<gfx::Matrix*>(aOutMatrix) = gfxDrawTarget->GetTransform();
+}
+
 extern "C" void
 AzDrawTargetFlush(AzDrawTargetRef aDrawTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
@@ -418,9 +430,40 @@ AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDrawTarget,
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::IntSize *gfxSize = reinterpret_cast<gfx::IntSize*>(aSize);
     gfx::SurfaceFormat gfxSurfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
-    RefPtr<gfx::SourceSurface> gfxSourceSurface = gfxDrawTarget->CreateSourceSurfaceFromData(const_cast<unsigned char *>(aData), *gfxSize, aStride, gfxSurfaceFormat);
+    RefPtr<gfx::SourceSurface> gfxSourceSurface =
+        gfxDrawTarget->CreateSourceSurfaceFromData(const_cast<unsigned char *>(aData),
+                                                   *gfxSize,
+                                                   aStride,
+                                                   gfxSurfaceFormat);
     gfxSourceSurface->AddRef();
     return gfxSourceSurface;
+}
+
+extern "C" AzDrawTargetRef
+AzDrawTargetCreateSimilarDrawTarget(AzDrawTargetRef aDrawTarget,
+                                    const AzIntSize *aSize,
+                                    AzSurfaceFormat aFormat) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    const gfx::IntSize *gfxSize = reinterpret_cast<const gfx::IntSize*>(aSize);
+    gfx::SurfaceFormat gfxSurfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
+    RefPtr<gfx::DrawTarget> newDrawTarget =
+        gfxDrawTarget->CreateSimilarDrawTarget(*gfxSize, gfxSurfaceFormat);
+    newDrawTarget->AddRef();
+    return newDrawTarget;
+}
+
+extern "C" AzDrawTargetRef
+AzDrawTargetCreateShadowDrawTarget(AzDrawTargetRef aDrawTarget,
+                                   const AzIntSize *aSize,
+                                   AzSurfaceFormat aFormat,
+                                   AzFloat aSigma) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    const gfx::IntSize *gfxSize = reinterpret_cast<const gfx::IntSize*>(aSize);
+    gfx::SurfaceFormat gfxSurfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
+    RefPtr<gfx::DrawTarget> newDrawTarget =
+        gfxDrawTarget->CreateShadowDrawTarget(*gfxSize, gfxSurfaceFormat, aSigma);
+    newDrawTarget->AddRef();
+    return newDrawTarget;
 }
 
 extern "C" AzGradientStopsRef

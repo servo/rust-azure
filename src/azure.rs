@@ -367,6 +367,10 @@ pub fn AzReleaseDrawTarget(aTarget: AzDrawTargetRef);
 
 pub fn AzDrawTargetGetSize(aDrawTarget: AzDrawTargetRef) -> AzIntSize;
 
+pub fn AzDrawTargetGetFormat(aDrawTarget: AzDrawTargetRef) -> AzSurfaceFormat;
+
+pub fn AzDrawTargetGetTransform(aDrawTarget: AzDrawTargetRef, aOutMatrix: *mut AzMatrix);
+
 pub fn AzDrawTargetFlush(aDrawTarget: AzDrawTargetRef);
 
 pub fn AzDrawTargetClearRect(aDrawTarget: AzDrawTargetRef, aRect: *mut AzRect);
@@ -403,6 +407,17 @@ pub fn AzDrawTargetDrawSurfaceWithShadow(aDrawTarget: AzDrawTargetRef,
 pub fn AzDrawTargetGetSnapshot(aDrawTarget: AzDrawTargetRef) -> AzSourceSurfaceRef;
 
 pub fn AzDrawTargetCreateSourceSurfaceFromData(aDrawTarget: AzDrawTargetRef, aData: *const u8, aSize: *mut AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzSourceSurfaceRef;
+
+pub fn AzDrawTargetCreateSimilarDrawTarget(aDrawTarget: AzDrawTargetRef,
+                                           aSize: *const AzIntSize,
+                                           aFormat: AzSurfaceFormat)
+                                           -> AzSourceSurfaceRef;
+
+pub fn AzDrawTargetCreateShadowDrawTarget(aDrawTarget: AzDrawTargetRef,
+                                          aSize: *const AzIntSize,
+                                          aFormat: AzSurfaceFormat,
+                                          aSigma: AzFloat)
+                                          -> AzSourceSurfaceRef;
 
 pub fn AzDrawTargetCreateGradientStops(aDrawTarget: AzDrawTargetRef,
                                        aStops: *const AzGradientStop,
