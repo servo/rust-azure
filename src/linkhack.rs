@@ -10,6 +10,7 @@
 #[link(name = "skia", kind = "static")]
 // skia must come before freetype for linking to succeed
 #[link(name = "freetype")]
+#[link(name = "bz2")]
 // fontconfig must come before expat for linking to succeed
 #[link(name = "fontconfig")]
 #[link(name = "expat")]
