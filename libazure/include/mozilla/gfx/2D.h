@@ -709,6 +709,24 @@ public:
                     const DrawOptions &aOptions = DrawOptions()) = 0;
 
   /*
+   * Draws a shadow around the given path. The transform *is* taken into
+   * account, unlike |DrawSurfaceWithShadow()|.
+   *
+   * aPath Path that is to be shadowed
+   * aColor The color of the shadow
+   * aOffset The offset of the shadow from the path
+   * aSigma The sigma for the blur
+   * aOperator The composition operator for the operation
+   */
+  virtual void DrawShadow(const Path &aPath,
+                          const Color &aColor,
+                          const Point &aOffset,
+                          Float aSigma,
+                          CompositionOp aOperator) {
+    // Default: no-op.
+  }
+
+  /*
    * Push a clip to the DrawTarget.
    *
    * aPath The path to clip to

@@ -22,7 +22,7 @@ use azure::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
 use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzDrawTargetCreateGradientStops};
+use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetDrawShadow};
 use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
@@ -92,7 +92,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
     }
 }
 
-#[deriving(Clone)]
+#[deriving(Clone, Show)]
 pub struct Color {
     pub r: AzFloat,
     pub g: AzFloat,
@@ -111,7 +111,6 @@ impl Color {
 }
 
 
-// FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
     pub azure_color_pattern: AzColorPatternRef,
 }
@@ -500,6 +499,22 @@ impl DrawTarget {
                                  &mut rect.as_azure_rect(),
                                  pattern.as_azure_pattern(),
                                  draw_options);
+        }
+    }
+
+    pub fn draw_shadow(&self,
+                       path: &Path,
+                       color: &Color,
+                       point: &Point2D<AzFloat>,
+                       sigma: AzFloat,
+                       operator: CompositionOp) {
+        unsafe {
+            AzDrawTargetDrawShadow(self.azure_draw_target,
+                                   path.azure_path,
+                                   &color.as_azure_color(),
+                                   &point.as_azure_point(),
+                                   sigma,
+                                   operator as AzCompositionOp)
         }
     }
 

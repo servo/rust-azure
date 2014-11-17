@@ -424,6 +424,52 @@ DrawTargetSkia::StrokeLine(const Point &aStart,
 }
 
 void
+DrawTargetSkia::DrawShadow(const Path &aPath,
+                           const Color &aColor,
+                           const Point &aOffset,
+                           Float aSigma,
+                           CompositionOp aOperator)
+{
+  MarkChanged();
+
+  if (aPath.GetBackendType() != BACKEND_SKIA) {
+    return;
+  }
+  const PathSkia *skiaPath = static_cast<const PathSkia*>(&aPath);
+
+  uint32_t blurFlags = SkBlurMaskFilter::kHighQuality_BlurFlag;
+  SkLayerDrawLooper* dl = new SkLayerDrawLooper;
+  SkLayerDrawLooper::LayerInfo info;
+
+  info.fPaintBits = 0;
+  info.fPaintBits |= SkLayerDrawLooper::kMaskFilter_Bit;
+  info.fPaintBits |= SkLayerDrawLooper::kColorFilter_Bit;
+  info.fColorMode = SkXfermode::kSrc_Mode;
+  info.fOffset.set(SkFloatToScalar(aOffset.x), SkFloatToScalar(aOffset.y));
+  info.fPostTranslate = false;
+
+  SkMaskFilter* mf = SkBlurMaskFilter::Create(aSigma,
+                                              SkBlurMaskFilter::kNormal_BlurStyle,
+                                              blurFlags);
+  SkColor color = ColorToSkColor(aColor, 1);
+  SkColorFilter* cf = SkColorFilter::CreateModeFilter(color, SkXfermode::kSrcIn_Mode);
+
+  SkPaint *layerPaint = dl->addLayer(info);
+  SkSafeUnref(layerPaint->setMaskFilter(mf));
+  SkSafeUnref(layerPaint->setColorFilter(cf));
+  layerPaint->setColor(color);
+
+  SkPaint paint;
+  paint.setColor(SkColorSetARGB(255, 0, 0, 0));
+  paint.setAntiAlias(true);
+  paint.setXfermodeMode(GfxOpToSkiaOp(aOperator));
+  SkSafeUnref(paint.setLooper(dl));
+
+  mCanvas->drawPath(skiaPath->GetPath(), paint);
+  mCanvas->restore();
+}
+
+void
 DrawTargetSkia::Fill(const Path *aPath,
                     const Pattern &aPattern,
                     const DrawOptions &aOptions)

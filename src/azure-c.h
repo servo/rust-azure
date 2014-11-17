@@ -333,9 +333,15 @@ AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget);
 void AzDrawTargetFlush(AzDrawTargetRef aDrawTarget);
 void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
-			              AzRect* aRect,
-			              AzPatternRef aPattern,
+			                    AzRect* aRect,
+			                    AzPatternRef aPattern,
                           AzDrawOptions* aDrawOptions);
+void AzDrawTargetDrawShadow(AzDrawTargetRef aDrawTarget,
+                            AzPathRef aPath,
+                            const AzColor *aColor,
+                            const AzPoint *aOffset,
+                            AzFloat aSigma,
+                            AzCompositionOp aOperator);
 void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
 			    AzRect *aRect,
 			    AzPatternRef aPattern,

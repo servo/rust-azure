@@ -376,6 +376,13 @@ pub fn AzDrawTargetFillRect(aDrawTarget: AzDrawTargetRef,
                             aPattern: AzPatternRef,
                             aDrawOptions: *mut AzDrawOptions);
 
+pub fn AzDrawTargetDrawShadow(aDrawTarget: AzDrawTargetRef,
+                              aPath: AzPathRef,
+                              aColor: *const AzColor,
+                              aPoint: *const AzPoint,
+                              aSigma: AzFloat,
+                              aOperator: AzCompositionOp);
+
 pub fn AzDrawTargetStrokeRect(aDrawTarget: AzDrawTargetRef, aRect: *mut AzRect, aPattern: AzPatternRef, aStrokeOptions: *mut AzStrokeOptions, aDrawOptions: *mut AzDrawOptions);
 
 pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *mut AzPoint, aEnd: *mut AzPoint, aPattern: AzPatternRef, aStrokeOptions: *mut AzStrokeOptions, aDrawOptions: *mut AzDrawOptions);
