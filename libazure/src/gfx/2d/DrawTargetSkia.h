@@ -75,6 +75,11 @@ public:
   virtual void Mask(const Pattern &aSource,
                     const Pattern &aMask,
                     const DrawOptions &aOptions = DrawOptions());
+  virtual void DrawShadow(const Path &aPath,
+                          const Color &aColor,
+                          const Point &aOffset,
+                          Float aSigma,
+                          CompositionOp aOperator);
   virtual void PushClip(const Path *aPath);
   virtual void PushClipRect(const Rect& aRect);
   virtual void PopClip();

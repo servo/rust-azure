@@ -321,6 +321,25 @@ AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
 }
 
 extern "C" void
+AzDrawTargetDrawShadow(AzDrawTargetRef aDrawTarget,
+                       AzPathRef aPath,
+                       const AzColor *aColor,
+                       const AzPoint *aOffset,
+                       AzFloat aSigma,
+                       AzCompositionOp aOperator) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::Path *gfxPath = reinterpret_cast<gfx::Path*>(aPath);
+    const gfx::Color *gfxColor = reinterpret_cast<const gfx::Color*>(aColor);
+    const gfx::Point *gfxOffset = reinterpret_cast<const gfx::Point*>(aOffset);
+    gfx::CompositionOp gfxOperator = static_cast<gfx::CompositionOp>(aOperator);
+    gfxDrawTarget->DrawShadow(*gfxPath,
+                              *gfxColor,
+                              *gfxOffset,
+                              aSigma,
+                              gfxOperator);
+}
+
+extern "C" void
 AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 		       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
 		       AzDrawOptions *aDrawOptions) {
