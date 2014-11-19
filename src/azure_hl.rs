@@ -343,6 +343,13 @@ impl Drop for DrawTarget {
     }
 }
 
+impl PartialEq for DrawTarget {
+    #[inline]
+    fn eq(&self, other: &DrawTarget) -> bool {
+        self.azure_draw_target == other.azure_draw_target
+    }
+}
+
 /// Contains the GL resources that Skia was holding onto that may be safely extracted. At the
 /// moment this consists simply of the native surface.
 pub struct StolenGLResources {
