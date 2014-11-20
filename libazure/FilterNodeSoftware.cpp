@@ -16,6 +16,7 @@
 #include "Logging.h"
 #include "mozilla/PodOperations.h"
 #include "mozilla/DebugOnly.h"
+#include <limits>
 
 // #define DEBUG_DUMP_SURFACES
 
@@ -2446,12 +2447,12 @@ FilterNodeConvolveMatrixSoftware::DoRender(const IntRect& aRect,
                                 MaxVectorSum(ScaledVector(kernel, -1)) - mBias);
   maxResultAbs = std::max(maxResultAbs, 1.0f);
 
-  double idealFactor = INT32_MAX / 2.0 / maxResultAbs / 255.0 * 0.999;
-  MOZ_ASSERT(255.0 * maxResultAbs * idealFactor <= INT32_MAX / 2.0, "badly chosen float-to-int scale");
+  double idealFactor = std::numeric_limits<int32_t>::max() / 2.0 / maxResultAbs / 255.0 * 0.999;
+  MOZ_ASSERT(255.0 * maxResultAbs * idealFactor <= std::numeric_limits<int32_t>::max() / 2.0, "badly chosen float-to-int scale");
   int32_t shiftL, shiftR;
   TranslateDoubleToShifts(idealFactor, shiftL, shiftR);
   double factorFromShifts = Float(1 << shiftL) / Float(1 << shiftR);
-  MOZ_ASSERT(255.0 * maxResultAbs * factorFromShifts <= INT32_MAX / 2.0, "badly chosen float-to-int scale");
+  MOZ_ASSERT(255.0 * maxResultAbs * factorFromShifts <= std::numeric_limits<int32_t>::max() / 2.0, "badly chosen float-to-int scale");
 
   int32_t* intKernel = new int32_t[kernel.size()];
   for (size_t i = 0; i < kernel.size(); i++) {

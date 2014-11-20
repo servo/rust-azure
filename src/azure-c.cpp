@@ -3,7 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "azure-c.h"
-#include "mozilla/gfx/2D.h"
+#include "2D.h"
+#include "ScaledFontSkia.h"
 
 #include <assert.h>
 #include <string.h>
@@ -20,7 +21,10 @@ static AzIntSize IntSizeToC(gfx::IntSize src) {
 
 
 #define CHECK_SIZE(name) assert(sizeof(Az##name) == sizeof(gfx::name))
-#define CHECK_ENUM(name) assert((int)AZ_##name == (int)gfx::name)
+#define CHECK_ENUM(azureEnumName, rustAzurePrefix, name) assert((int)rustAzurePrefix##_##name == (int)gfx::azureEnumName::name)
+
+#define STATIC_ASSERT_EQUALS(a, b)\
+    typedef char assert_failed_ ## name [ (a - b) ? 1 : -1 ]
 
 extern "C"
 void AzSanityCheck() {
@@ -41,102 +45,121 @@ void AzSanityCheck() {
     CHECK_SIZE(GlyphBuffer);
     CHECK_SIZE(NativeFont);
 
-    CHECK_ENUM(SURFACE_DATA);
-    CHECK_ENUM(SURFACE_D2D1_BITMAP);
-    CHECK_ENUM(SURFACE_D2D1_DRAWTARGET);
-    CHECK_ENUM(SURFACE_CAIRO);
-    CHECK_ENUM(SURFACE_CAIRO_IMAGE);
-    CHECK_ENUM(SURFACE_COREGRAPHICS_IMAGE);
-    CHECK_ENUM(SURFACE_COREGRAPHICS_CGCONTEXT);
-    CHECK_ENUM(SURFACE_SKIA);
-    CHECK_ENUM(SURFACE_DUAL_DT);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, DATA);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, D2D1_BITMAP);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, D2D1_DRAWTARGET);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, CAIRO);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, CAIRO_IMAGE);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, COREGRAPHICS_IMAGE);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, COREGRAPHICS_CGCONTEXT);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, SKIA);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, DUAL_DT);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, D2D1_1_IMAGE);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, RECORDING);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, NVPR_TEXTURE);
+    CHECK_ENUM(SurfaceType, AZ_SURFACE, TILED);
 
-    CHECK_ENUM(FORMAT_B8G8R8A8);
-    CHECK_ENUM(FORMAT_B8G8R8X8);
-    CHECK_ENUM(FORMAT_R5G6B5);
-    CHECK_ENUM(FORMAT_A8);
+    CHECK_ENUM(SurfaceFormat, AZ_FORMAT, B8G8R8A8);
+    CHECK_ENUM(SurfaceFormat, AZ_FORMAT, B8G8R8X8);
+    CHECK_ENUM(SurfaceFormat, AZ_FORMAT, R5G6B5);
+    CHECK_ENUM(SurfaceFormat, AZ_FORMAT, A8);
 
-    CHECK_ENUM(BACKEND_NONE);
-    CHECK_ENUM(BACKEND_DIRECT2D);
-    CHECK_ENUM(BACKEND_COREGRAPHICS);
-    CHECK_ENUM(BACKEND_CAIRO);
-    CHECK_ENUM(BACKEND_SKIA);
+    CHECK_ENUM(BackendType, AZ_BACKEND, NONE);
+    CHECK_ENUM(BackendType, AZ_BACKEND, DIRECT2D);
+    CHECK_ENUM(BackendType, AZ_BACKEND, COREGRAPHICS);
+    CHECK_ENUM(BackendType, AZ_BACKEND, CAIRO);
+    CHECK_ENUM(BackendType, AZ_BACKEND, SKIA);
+    CHECK_ENUM(BackendType, AZ_BACKEND, RECORDING);
+    CHECK_ENUM(BackendType, AZ_BACKEND, DIRECT2D1_1);
+    CHECK_ENUM(BackendType, AZ_BACKEND, NVPR);
 
-    CHECK_ENUM(FONT_DWRITE);
-    CHECK_ENUM(FONT_GDI);
-    CHECK_ENUM(FONT_MAC);
-    CHECK_ENUM(FONT_SKIA);
-    CHECK_ENUM(FONT_CAIRO);
-    CHECK_ENUM(FONT_COREGRAPHICS);
+    CHECK_ENUM(FontType, AZ_FONT, DWRITE);
+    CHECK_ENUM(FontType, AZ_FONT, GDI);
+    CHECK_ENUM(FontType, AZ_FONT, MAC);
+    CHECK_ENUM(FontType, AZ_FONT, SKIA);
+    CHECK_ENUM(FontType, AZ_FONT, CAIRO);
+    CHECK_ENUM(FontType, AZ_FONT, COREGRAPHICS);
+    CHECK_ENUM(FontType, AZ_FONT, NVPR);
 
-    CHECK_ENUM(NATIVE_SURFACE_D3D10_TEXTURE);
-    CHECK_ENUM(NATIVE_SURFACE_CAIRO_SURFACE);
-    CHECK_ENUM(NATIVE_SURFACE_CGCONTEXT);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, D3D10_TEXTURE);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, CAIRO_SURFACE);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, CAIRO_CONTEXT);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, CGCONTEXT);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, CGCONTEXT_ACCELERATED);
+    CHECK_ENUM(NativeSurfaceType, AZ_NATIVE_SURFACE, OPENGL_TEXTURE);
 
-    CHECK_ENUM(NATIVE_FONT_DWRITE_FONT_FACE);
-    CHECK_ENUM(NATIVE_FONT_GDI_FONT_FACE);
-    CHECK_ENUM(NATIVE_FONT_MAC_FONT_FACE);
-    CHECK_ENUM(NATIVE_FONT_SKIA_FONT_FACE);
-    CHECK_ENUM(NATIVE_FONT_CAIRO_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, DWRITE_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, GDI_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, MAC_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, SKIA_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, CAIRO_FONT_FACE);
+    CHECK_ENUM(NativeFontType, AZ_NATIVE_FONT, NVPR_FONT_FACE);
 
-    CHECK_ENUM(OP_OVER);
-    CHECK_ENUM(OP_ADD);
-    CHECK_ENUM(OP_ATOP);
-    CHECK_ENUM(OP_OUT);
-    CHECK_ENUM(OP_IN);
-    CHECK_ENUM(OP_SOURCE);
-    CHECK_ENUM(OP_DEST_IN);
-    CHECK_ENUM(OP_DEST_OUT);
-    CHECK_ENUM(OP_DEST_OVER);
-    CHECK_ENUM(OP_DEST_ATOP);
-    CHECK_ENUM(OP_XOR);
-    CHECK_ENUM(OP_MULTIPLY);
-    CHECK_ENUM(OP_SCREEN);
-    CHECK_ENUM(OP_OVERLAY);
-    /* ... */
-    CHECK_ENUM(OP_LUMINOSITY);
-    CHECK_ENUM(OP_COUNT);
+    CHECK_ENUM(CompositionOp, AZ, OP_OVER);
+    CHECK_ENUM(CompositionOp, AZ, OP_ADD);
+    CHECK_ENUM(CompositionOp, AZ, OP_ATOP);
+    CHECK_ENUM(CompositionOp, AZ, OP_OUT);
+    CHECK_ENUM(CompositionOp, AZ, OP_IN);
+    CHECK_ENUM(CompositionOp, AZ, OP_SOURCE);
+    CHECK_ENUM(CompositionOp, AZ, OP_DEST_IN);
+    CHECK_ENUM(CompositionOp, AZ, OP_DEST_OUT);
+    CHECK_ENUM(CompositionOp, AZ, OP_DEST_OVER);
+    CHECK_ENUM(CompositionOp, AZ, OP_DEST_ATOP);
+    CHECK_ENUM(CompositionOp, AZ, OP_XOR);
+    CHECK_ENUM(CompositionOp, AZ, OP_MULTIPLY);
+    CHECK_ENUM(CompositionOp, AZ, OP_SCREEN);
+    CHECK_ENUM(CompositionOp, AZ, OP_OVERLAY);
+    CHECK_ENUM(CompositionOp, AZ, OP_DARKEN);
+    CHECK_ENUM(CompositionOp, AZ, OP_LIGHTEN);
+    CHECK_ENUM(CompositionOp, AZ, OP_COLOR_DODGE);
+    CHECK_ENUM(CompositionOp, AZ, OP_COLOR_BURN);
+    CHECK_ENUM(CompositionOp, AZ, OP_HARD_LIGHT);
+    CHECK_ENUM(CompositionOp, AZ, OP_SOFT_LIGHT);
+    CHECK_ENUM(CompositionOp, AZ, OP_DIFFERENCE);
+    CHECK_ENUM(CompositionOp, AZ, OP_EXCLUSION);
+    CHECK_ENUM(CompositionOp, AZ, OP_HUE);
+    CHECK_ENUM(CompositionOp, AZ, OP_SATURATION);
+    CHECK_ENUM(CompositionOp, AZ, OP_COLOR);
+    CHECK_ENUM(CompositionOp, AZ, OP_LUMINOSITY);
+    CHECK_ENUM(CompositionOp, AZ, OP_COUNT);
 
-    CHECK_ENUM(EXTEND_CLAMP);
-    CHECK_ENUM(EXTEND_REPEAT);
-    CHECK_ENUM(EXTEND_REFLECT);
+    CHECK_ENUM(ExtendMode, AZ_EXTEND, CLAMP);
+    CHECK_ENUM(ExtendMode, AZ_EXTEND, REPEAT);
+    CHECK_ENUM(ExtendMode, AZ_EXTEND, REFLECT);
 
-    CHECK_ENUM(FILL_WINDING);
-    CHECK_ENUM(FILL_EVEN_ODD);
+    CHECK_ENUM(FillRule, AZ, FILL_WINDING);
+    CHECK_ENUM(FillRule, AZ, FILL_EVEN_ODD);
 
-    CHECK_ENUM(AA_NONE);
-    CHECK_ENUM(AA_GRAY);
-    CHECK_ENUM(AA_SUBPIXEL);
+    CHECK_ENUM(AntialiasMode, AZ_AA, NONE);
+    CHECK_ENUM(AntialiasMode, AZ_AA, GRAY);
+    CHECK_ENUM(AntialiasMode, AZ_AA, SUBPIXEL);
 
-    CHECK_ENUM(SNAP_NONE);
-    CHECK_ENUM(SNAP_ALIGNED);
+    CHECK_ENUM(Filter, AZ_FILTER, GOOD);
+    CHECK_ENUM(Filter, AZ_FILTER, LINEAR);
+    CHECK_ENUM(Filter, AZ_FILTER, POINT);
 
-    CHECK_ENUM(FILTER_LINEAR);
-    CHECK_ENUM(FILTER_POINT);
+    CHECK_ENUM(PatternType, AZ_PATTERN, COLOR);
+    CHECK_ENUM(PatternType, AZ_PATTERN, SURFACE);
+    CHECK_ENUM(PatternType, AZ_PATTERN, LINEAR_GRADIENT);
+    CHECK_ENUM(PatternType, AZ_PATTERN, RADIAL_GRADIENT);
 
-    CHECK_ENUM(PATTERN_COLOR);
-    CHECK_ENUM(PATTERN_SURFACE);
-    CHECK_ENUM(PATTERN_LINEAR_GRADIENT);
-    CHECK_ENUM(PATTERN_RADIAL_GRADIENT);
+    CHECK_ENUM(JoinStyle, AZ_JOIN, BEVEL);
+    CHECK_ENUM(JoinStyle, AZ_JOIN, ROUND);
+    CHECK_ENUM(JoinStyle, AZ_JOIN, MITER);
+    CHECK_ENUM(JoinStyle, AZ_JOIN, MITER_OR_BEVEL);
 
-    CHECK_ENUM(JOIN_BEVEL);
-    CHECK_ENUM(JOIN_ROUND);
-    CHECK_ENUM(JOIN_MITER);
-    CHECK_ENUM(JOIN_MITER_OR_BEVEL);
+    CHECK_ENUM(CapStyle, AZ_CAP, BUTT);
+    CHECK_ENUM(CapStyle, AZ_CAP, ROUND);
+    CHECK_ENUM(CapStyle, AZ_CAP, SQUARE);
 
-    CHECK_ENUM(CAP_BUTT);
-    CHECK_ENUM(CAP_ROUND);
-    CHECK_ENUM(CAP_SQUARE);
+    CHECK_ENUM(SamplingBounds, AZ_SAMPLING, UNBOUNDED);
+    CHECK_ENUM(SamplingBounds, AZ_SAMPLING, BOUNDED);
 
-    CHECK_ENUM(SAMPLING_UNBOUNDED);
-    CHECK_ENUM(SAMPLING_BOUNDED);
-
-    assert((int)AZ_eSideTop == (int)css::eSideTop);
-    assert((int)AZ_eSideRight == (int)css::eSideRight);
-    assert((int)AZ_eSideBottom == (int)css::eSideBottom);
-    assert((int)AZ_eSideLeft == (int)css::eSideLeft);
+    assert((int)AZ_eSideTop == (int)mozilla::eSideTop);
+    assert((int)AZ_eSideRight == (int)mozilla::eSideRight);
+    assert((int)AZ_eSideBottom == (int)mozilla::eSideBottom);
+    assert((int)AZ_eSideLeft == (int)mozilla::eSideLeft);
 }
-
 
 extern "C" AzColorPatternRef
 AzCreateColorPattern(AzColor *aColor) {
@@ -161,13 +184,13 @@ AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext, AzIntSize *aSiz
 extern "C" void
 AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->AddRef();
+    sharedGLContext->ref();
 }
 
 extern "C" void
 AzReleaseSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->Release();
+    sharedGLContext->unref();
 }
 
 extern "C" unsigned int
@@ -235,10 +258,10 @@ AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSi
     GrContext *grContext = sharedGLContext->getGrContext();
     gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
     gfx::SurfaceFormat surfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
-    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateSkiaDrawTargetForFBO(sharedGLContext->getFBOID(),
-                                                                              grContext,
-                                                                              *size,
-                                                                              surfaceFormat);
+    RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetSkiaWithGrContextAndFBO(grContext,
+                                                                                           sharedGLContext->getFBOID(),
+                                                                                           *size,
+                                                                                           surfaceFormat);
     if (target != NULL) {
         target->AddRef();
     }
@@ -495,7 +518,24 @@ AzSourceSurfaceGetSize(AzSourceSurfaceRef aSurface) {
 extern "C" AzSurfaceFormat
 AzSourceSurfaceGetFormat(AzSourceSurfaceRef aSurface) {
     gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
-    return static_cast<AzSurfaceFormat>(gfxSourceSurface->GetFormat());
+    switch (gfxSourceSurface->GetFormat()) {
+        case gfx::SurfaceFormat::B8G8R8A8:
+            return AZ_FORMAT_B8G8R8A8;
+        case gfx::SurfaceFormat::B8G8R8X8:
+            return AZ_FORMAT_B8G8R8X8;
+        case gfx::SurfaceFormat::R8G8B8A8:
+            return AZ_FORMAT_R8G8B8A8;
+        case gfx::SurfaceFormat::R8G8B8X8:
+            return AZ_FORMAT_R8G8B8X8;
+        case gfx::SurfaceFormat::R5G6B5:
+            return AZ_FORMAT_R5G6B5;
+        case gfx::SurfaceFormat::A8:
+            return AZ_FORMAT_A8;
+        case gfx::SurfaceFormat::YUV:
+            return AZ_FORMAT_YUV;
+        case gfx::SurfaceFormat::UNKNOWN:
+            return AZ_FORMAT_UNKNOWN;
+    }
 }
 
 extern "C" AzDataSourceSurfaceRef
@@ -524,6 +564,13 @@ AzCreateScaledFontForNativeFont(AzNativeFont *aNativeFont, AzFloat aSize) {
     return font;
 }
 
+extern "C" AzScaledFontRef
+AzCreateScaledFontForTrueTypeData(uint8_t *aData, uint32_t aSize, uint32_t aFaceIndex, AzFloat aGlyphSize, AzFontType) {
+    RefPtr<gfx::ScaledFont> font = new gfx::ScaledFontSkia(aData, aSize, aFaceIndex, aGlyphSize);
+    font->AddRef();
+    return font;
+}
+
 extern "C" void
 AzReleaseScaledFont(AzScaledFontRef aFont) {
     gfx::ScaledFont *gfxFont = static_cast<gfx::ScaledFont*>(aFont);
@@ -544,21 +591,6 @@ AzCreateFontOptionsForName(char *aName, AzFontStyle aStyle) {
     gfx::FontOptions *options = new gfx::FontOptions;
     options->mName = std::string(aName);
     options->mStyle = static_cast<gfx::FontStyle>(aStyle);
-    options->mData = NULL;
-    options->mDataSize = 0;
-    return options;
-    #else
-    abort();
-    #endif
-}
-
-extern "C" AzFontOptions*
-AzCreateFontOptionsForData(uint8_t *aFontData, uint32_t aFontDataSize) {
-    #ifdef MOZ_ENABLE_FREETYPE
-    gfx::FontOptions *options = new gfx::FontOptions;
-    options->mStyle = gfx::FONT_STYLE_NORMAL;
-    options->mData = aFontData;
-    options->mDataSize = aFontDataSize;
     return options;
     #else
     abort();

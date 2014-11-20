@@ -811,6 +811,32 @@ DrawTargetSkia::InitWithGrContext(GrContext* aGrContext,
   mCanvas.adopt(new SkCanvas(device.get()));
 
   return true;
+
+}
+
+bool
+DrawTargetSkia::InitWithGrContextAndFBO(GrContext* aGrContext,
+                                        unsigned int aFBOID,
+                                        const IntSize &aSize,
+                                        SurfaceFormat aFormat)
+{
+  GrBackendRenderTargetDesc targetDescriptor;
+
+  targetDescriptor.fWidth = aSize.width;
+  targetDescriptor.fHeight = aSize.height;
+  targetDescriptor.fConfig = GfxFormatToGrConfig(aFormat);
+  targetDescriptor.fSampleCnt = 0;
+  targetDescriptor.fRenderTargetHandle = aFBOID;
+
+  mGrContext = aGrContext;
+  mSize = aSize;
+  mFormat = aFormat;
+
+  SkAutoTUnref<GrRenderTarget> target(mGrContext->wrapBackendRenderTarget(targetDescriptor));
+  SkAutoTUnref<SkBaseDevice> device(new SkGpuDevice(aGrContext, target.get()));
+  mCanvas.adopt(new SkCanvas(device.get()));
+
+  return true;
 }
 
 #endif

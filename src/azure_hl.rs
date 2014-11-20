@@ -49,9 +49,6 @@ use std::mem;
 use std::ptr;
 use std::slice;
 
-#[cfg(target_os="linux")]
-use libc::c_void;
-
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
 }
@@ -162,6 +159,7 @@ pub enum CompositionOp {
     SaturationOp,
     ColorOp,
     LuminosityOp,
+    CountOp,
 }
 
 #[allow(non_snake_case)]
@@ -236,20 +234,18 @@ impl DrawOptions {
         let style = ((style & 7) as u16) << 8;
         self.fields = self.fields | style;
     }
-
-    pub fn set_snapping(&mut self, style: u8) {
-        self.fields = self.fields & 0b1111_0111_1111_1111_u16;
-        let style = ((style & 1) as u16) << 11;
-        self.fields = self.fields | style;
-    }
 }
 
 
 pub enum SurfaceFormat {
     B8G8R8A8,
     B8G8R8X8,
+    R8G8B8A8,
+    R8G8B8X8,
     R5G6B5,
-    A8
+    A8,
+    YUV,
+    UNKNOWN
 }
 
 impl SurfaceFormat {
@@ -261,14 +257,19 @@ impl SurfaceFormat {
         match azure_surface_format {
             0 => SurfaceFormat::B8G8R8A8,
             1 => SurfaceFormat::B8G8R8X8,
-            2 => SurfaceFormat::R5G6B5,
-            3 => SurfaceFormat::A8,
+            2 => SurfaceFormat::R8G8B8A8,
+            3 => SurfaceFormat::R8G8B8X8,
+            4 => SurfaceFormat::R5G6B5,
+            5 => SurfaceFormat::A8,
+            6 => SurfaceFormat::YUV,
+            7 => SurfaceFormat::UNKNOWN,
             _ => panic!("SurfaceFormat::new(): unknown Azure surface format")
         }
     }
 }
 
 pub enum Filter {
+    Good,
     Linear,
     Point
 }
@@ -308,7 +309,9 @@ pub enum BackendType {
     CoreGraphicsAcceleratedBackend,
     CairoBackend,
     SkiaBackend,
-    RecordingBackend
+    RecordingBackend,
+    Direct2D11Backend,
+    NVPathRenderingBackend,
 }
 
 impl BackendType {
@@ -321,6 +324,8 @@ impl BackendType {
             BackendType::CairoBackend                   => 4,
             BackendType::SkiaBackend                    => 5,
             BackendType::RecordingBackend               => 6,
+            BackendType::Direct2D11Backend              => 7,
+            BackendType::NVPathRenderingBackend         => 8,
         }
     }
 }

@@ -1048,6 +1048,15 @@ public:
   {
     MOZ_CRASH();
   }
+
+  virtual bool InitWithGrContextAndFBO(GrContext* aGrContext,
+                               unsigned int aFBOID,
+                               const IntSize &aSize,
+                               SurfaceFormat aFormat)
+  {
+    MOZ_CRASH();
+  }
+
 #endif
 
 protected:
@@ -1176,6 +1185,12 @@ public:
     CreateDrawTargetSkiaWithGrContext(GrContext* aGrContext,
                                       const IntSize &aSize,
                                       SurfaceFormat aFormat);
+
+  static TemporaryRef<DrawTarget>
+    CreateDrawTargetSkiaWithGrContextAndFBO(GrContext* aGrContext,
+                                            unsigned int aFBOID,
+                                            const IntSize &aSize,
+                                            SurfaceFormat aFormat);
 #endif
 
   static void PurgeTextureCaches();

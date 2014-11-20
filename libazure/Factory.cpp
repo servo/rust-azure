@@ -661,6 +661,20 @@ Factory::CreateDrawTargetSkiaWithGrContext(GrContext* aGrContext,
   return newTarget.forget();
 }
 
+TemporaryRef<DrawTarget>
+Factory::CreateDrawTargetSkiaWithGrContextAndFBO(GrContext* aGrContext,
+                                                 unsigned int aFBOID,
+                                                 const IntSize &aSize,
+                                                 SurfaceFormat aFormat)
+{
+  RefPtr<DrawTarget> newTarget = new DrawTargetSkia();
+  if (!newTarget->InitWithGrContextAndFBO(aGrContext, aFBOID, aSize, aFormat)) {
+    return nullptr;
+  }
+
+  return newTarget.forget();
+}
+
 #endif // USE_SKIA_GPU
 
 void

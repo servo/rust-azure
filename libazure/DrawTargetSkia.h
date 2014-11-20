@@ -112,6 +112,10 @@ public:
   bool InitWithGrContext(GrContext* aGrContext,
                          const IntSize &aSize,
                          SurfaceFormat aFormat) MOZ_OVERRIDE;
+  bool InitWithGrContextAndFBO(GrContext* aGrContext,
+                               unsigned int aFBOID,
+                               const IntSize &aSize,
+                               SurfaceFormat aFormat) MOZ_OVERRIDE;
 #endif
 
   operator std::string() const {

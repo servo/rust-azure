@@ -67,32 +67,39 @@ impl ScaledFont {
     pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
-        use azure::{AzCreateFontOptionsForData, AzCreateFontOptionsForName, AzDestroyFontOptions};
+        use azure::{AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreateScaledFontForTrueTypeData};
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
             mFont: ptr::null_mut()
         };
-        
+
         match backend {
             SkiaBackend => {
                 unsafe {
-                    let options = match font_info {
+                    match font_info {
                         FontInfo::NativeFont(native_font) => {
                             // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
                             let style = ((*native_font).style_flags & 3) as u32;
-                            AzCreateFontOptionsForName(&*(*native_font).family_name, style)
+                            let options = AzCreateFontOptionsForName(&*(*native_font).family_name, style);
+                            azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
+                            azure_native_font.mFont = mem::transmute(options);
+                            let azure_native_font_ptr = &mut azure_native_font;
+                            let azure_scaled_font =
+                                AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
+                            AzDestroyFontOptions(options);
+                            ScaledFont { azure_scaled_font: azure_scaled_font }
                         },
                         FontInfo::FontData(bytes) => {
-                            AzCreateFontOptionsForData(bytes.as_ptr(), bytes.len() as u32)
+                            let azure_scaled_font =
+                                AzCreateScaledFontForTrueTypeData(bytes.as_ptr(),
+                                                                  bytes.len() as u32,
+                                                                  0,
+                                                                  size,
+                                                                  AZ_NATIVE_FONT_SKIA_FONT_FACE);
+                            ScaledFont { azure_scaled_font: azure_scaled_font }
                         },
-                    };
-                    azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
-                    azure_native_font.mFont = mem::transmute(options);
-                    let azure_native_font_ptr = &mut azure_native_font;
-                    let azure_scaled_font = AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
-                    AzDestroyFontOptions(options);
-                    ScaledFont { azure_scaled_font: azure_scaled_font }
+                    }
                 }
             }
             _ => { panic!("don't know how to make a scaled font for this backend"); }
