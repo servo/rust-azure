@@ -1,0 +1,25 @@
+DEFINES  += USE_SKIA SK_RELEASE GR_RELEASE
+
+LIBS += -L$(MOZ2D_SKIA)/out/Release/ -Wl,--start-group -lskia_skgpu -lskia_core -lskia_ports -lskia_effects -lskia_sfnt -lskia_utils -lskia_core -lskia_opts -lskia_opts_ssse3 -lskia_ports -lskia_images -Wl,--end-group -lpthread -lGL
+
+ifeq ($(UNAME),Linux)
+LIBS += -lfreetype -lfontconfig
+endif
+
+MOZ2D_CPPSRCS += \
+  DrawTargetSkia.cpp \
+  PathSkia.cpp \
+  ScaledFontSkia.cpp \
+  SourceSurfaceSkia.cpp \
+  $(NULL)
+
+INCLUDES += $(MOZ2D_SKIA)/include \
+            $(MOZ2D_SKIA)/include/core \
+            $(MOZ2D_SKIA)/include/config \
+            $(MOZ2D_SKIA)/include/utils \
+            $(MOZ2D_SKIA)/include/gpu \
+            $(NULL)
+
+PERFTEST_CPPSRCS += \
+  perftest/TestDrawTargetSkiaSoftware.cpp \
+  $(NULL)

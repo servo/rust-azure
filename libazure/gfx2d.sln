@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gfx2d", "gfx2d.vcxproj", "{FDF1302F-77E8-975E-39C0-B4AD3F190A84}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unittest", "unittest\unittest.vcxproj", "{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84} = {FDF1302F-77E8-975E-39C0-B4AD3F190A84}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perftest", "perftest\perftest.vcxproj", "{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84} = {FDF1302F-77E8-975E-39C0-B4AD3F190A84}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recordbench", "recordbench\recordbench.vcxproj", "{10760766-5991-426D-A2D3-C0A0789A3BB6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84} = {FDF1302F-77E8-975E-39C0-B4AD3F190A84}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (With Skia)|Win32 = Debug (With Skia)|Win32
+		Debug|Win32 = Debug|Win32
+		Release (With Skia)|Win32 = Release (With Skia)|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Debug (With Skia)|Win32.ActiveCfg = Debug (With Skia)|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Debug (With Skia)|Win32.Build.0 = Debug (With Skia)|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Debug|Win32.Build.0 = Debug|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Release (With Skia)|Win32.ActiveCfg = Release (With Skia)|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Release (With Skia)|Win32.Build.0 = Release (With Skia)|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Release|Win32.ActiveCfg = Release|Win32
+		{FDF1302F-77E8-975E-39C0-B4AD3F190A84}.Release|Win32.Build.0 = Release|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Debug (With Skia)|Win32.ActiveCfg = Debug (With Skia)|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Debug (With Skia)|Win32.Build.0 = Debug (With Skia)|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Debug|Win32.Build.0 = Debug|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Release (With Skia)|Win32.ActiveCfg = Release (With Skia)|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Release (With Skia)|Win32.Build.0 = Release (With Skia)|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Release|Win32.ActiveCfg = Release|Win32
+		{CCF4BC8B-0CED-47CA-B621-ABF1832527D9}.Release|Win32.Build.0 = Release|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Debug (With Skia)|Win32.ActiveCfg = Debug (With Skia)|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Debug (With Skia)|Win32.Build.0 = Debug (With Skia)|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Debug|Win32.Build.0 = Debug|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Release (With Skia)|Win32.ActiveCfg = Release (With Skia)|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Release (With Skia)|Win32.Build.0 = Release (With Skia)|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Release|Win32.ActiveCfg = Release|Win32
+		{AE3B14C7-6EE2-482A-B7C0-B9F851B8E172}.Release|Win32.Build.0 = Release|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Debug (With Skia)|Win32.ActiveCfg = Debug (With Skia)|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Debug (With Skia)|Win32.Build.0 = Debug (With Skia)|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Debug|Win32.Build.0 = Debug|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Release (With Skia)|Win32.ActiveCfg = Release (With Skia)|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Release (With Skia)|Win32.Build.0 = Release (With Skia)|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Release|Win32.ActiveCfg = Release|Win32
+		{10760766-5991-426D-A2D3-C0A0789A3BB6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

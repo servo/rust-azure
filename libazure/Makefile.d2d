@@ -1,0 +1,16 @@
+
+# TODO FontWin belong here?
+
+MOZ2D_CPPSRCS += \
+  DrawTargetD2D.cpp \
+  PathD2D.cpp \
+  SourceSurfaceD2D.cpp \
+  SourceSurfaceD2DTarget.cpp \
+  ScaledFontDWrite.cpp \
+  ScaledFontWin.cpp \
+  $(NULL)
+
+UNITTEST_CPPSRS += \
+  unittest/TestDrawTargetD2D.cpp \
+  $(NULL)
+
