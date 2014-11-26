@@ -22,7 +22,7 @@ use azure::{AzReleaseSkiaSharedGLContext, AzRetainSkiaSharedGLContext};
 use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
 use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzDrawTargetCreateGradientStops};
+use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
 use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
@@ -34,7 +34,8 @@ use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzGLNativeContextRef, AzLinearGradientPatternRef, AzMatrix, AzPatternRef};
 use azure::{AzCreateLinearGradientPattern, AzDrawTargetPushClipRect};
-use azure::{AzDrawTargetDrawSurfaceWithShadow};
+use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
+use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -342,6 +343,13 @@ impl Drop for DrawTarget {
     }
 }
 
+impl PartialEq for DrawTarget {
+    #[inline]
+    fn eq(&self, other: &DrawTarget) -> bool {
+        self.azure_draw_target == other.azure_draw_target
+    }
+}
+
 /// Contains the GL resources that Skia was holding onto that may be safely extracted. At the
 /// moment this consists simply of the native surface.
 pub struct StolenGLResources {
@@ -456,6 +464,20 @@ impl DrawTarget {
     pub fn get_size(&self) -> AzIntSize {
         unsafe {
             AzDrawTargetGetSize(self.azure_draw_target)
+        }
+    }
+
+    pub fn get_format(&self) -> SurfaceFormat {
+        unsafe {
+            SurfaceFormat::new(AzDrawTargetGetFormat(self.azure_draw_target))
+        }
+    }
+
+    pub fn get_transform(&self) -> Matrix2D<AzFloat> {
+        unsafe {
+            let mut result: AzMatrix = mem::uninitialized();
+            AzDrawTargetGetTransform(self.azure_draw_target, &mut result);
+            mem::transmute::<AzMatrix,Matrix2D<AzFloat>>(result)
         }
     }
 
@@ -589,6 +611,40 @@ impl DrawTarget {
                 stride,
                 format.as_azure_surface_format());
             SourceSurface::new(azure_surface)
+        }
+    }
+
+    pub fn create_similar_draw_target(&self, size: &Size2D<i32>, format: SurfaceFormat)
+                                      -> DrawTarget {
+        unsafe {
+            let new_draw_target = AzDrawTargetCreateSimilarDrawTarget(
+                self.azure_draw_target,
+                &size.as_azure_int_size(),
+                format.as_azure_surface_format());
+            DrawTarget {
+                azure_draw_target: new_draw_target,
+                data: None,
+                skia_context: None,
+            }
+        }
+    }
+
+    pub fn create_shadow_draw_target(&self,
+                                     size: &Size2D<i32>,
+                                     format: SurfaceFormat,
+                                     sigma: AzFloat)
+                                     -> DrawTarget {
+        unsafe {
+            let new_draw_target = AzDrawTargetCreateShadowDrawTarget(
+                self.azure_draw_target,
+                &size.as_azure_int_size(),
+                format.as_azure_surface_format(),
+                sigma);
+            DrawTarget {
+                azure_draw_target: new_draw_target,
+                data: None,
+                skia_context: None,
+            }
         }
     }
 

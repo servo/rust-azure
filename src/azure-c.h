@@ -330,6 +330,8 @@ void AzRetainDrawTarget(AzDrawTargetRef aTarget);
 void AzReleaseDrawTarget(AzDrawTargetRef aTarget);
 
 AzIntSize AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget);
+AzSurfaceFormat AzDrawTargetGetFormat(AzDrawTargetRef aDrawTarget);
+void AzDrawTargetGetTransform(AzDrawTargetRef aDrawTarget, AzMatrix* aOutMatrix);
 void AzDrawTargetFlush(AzDrawTargetRef aDrawTarget);
 void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
@@ -372,6 +374,10 @@ AzSourceSurfaceRef AzDrawTargetCreateSourceSurfaceFromData(AzDrawTargetRef aDraw
                                                            AzIntSize *aSize,
                                                            int32_t aStride,
                                                            AzSurfaceFormat aFormat);
+AzDrawTargetRef AzDrawTargetCreateShadowDrawTarget(AzDrawTargetRef aDrawTarget,
+                                                   const AzIntSize *aSize,
+                                                   AzSurfaceFormat aFormat,
+                                                   AzFloat aSigma);
 AzGradientStopsRef AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
                                                    AzGradientStop *aStops,
                                                    uint32_t aNumStops,
