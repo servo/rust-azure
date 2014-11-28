@@ -259,10 +259,10 @@ impl SurfaceFormat {
 
     pub fn new(azure_surface_format: AzSurfaceFormat) -> SurfaceFormat {
         match azure_surface_format {
-            0 => B8G8R8A8,
-            1 => B8G8R8X8,
-            2 => R5G6B5,
-            3 => A8,
+            0 => SurfaceFormat::B8G8R8A8,
+            1 => SurfaceFormat::B8G8R8X8,
+            2 => SurfaceFormat::R5G6B5,
+            3 => SurfaceFormat::A8,
             _ => panic!("SurfaceFormat::new(): unknown Azure surface format")
         }
     }
@@ -314,13 +314,13 @@ pub enum BackendType {
 impl BackendType {
     pub fn as_azure_backend_type(self) -> AzBackendType {
         match self {
-            NoBackend                      => 0,
-            Direct2DBackend                => 1,
-            CoreGraphicsBackend            => 2,
-            CoreGraphicsAcceleratedBackend => 3,
-            CairoBackend                   => 4,
-            SkiaBackend                    => 5,
-            RecordingBackend               => 6,
+            BackendType::NoBackend                      => 0,
+            BackendType::Direct2DBackend                => 1,
+            BackendType::CoreGraphicsBackend            => 2,
+            BackendType::CoreGraphicsAcceleratedBackend => 3,
+            BackendType::CairoBackend                   => 4,
+            BackendType::SkiaBackend                    => 5,
+            BackendType::RecordingBackend               => 6,
         }
     }
 }
@@ -402,7 +402,7 @@ impl DrawTarget {
                         native_graphics_context: &NativePaintingGraphicsContext,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
-        assert!(backend == SkiaBackend);
+        assert!(backend == BackendType::SkiaBackend);
         let native_graphics_context = native_graphics_context as *const _ as AzGLNativeContextRef;
         let skia_context = unsafe {
             AzCreateSkiaSharedGLContext(native_graphics_context,
@@ -962,8 +962,10 @@ pub enum PatternRef<'a> {
 impl<'a> PatternRef<'a> {
     fn as_azure_pattern(&self) -> AzPatternRef {
         match *self {
-            ColorPatternRef(color_pattern) => color_pattern.azure_color_pattern,
-            LinearGradientPatternRef(linear_gradient_pattern) => {
+            PatternRef::ColorPatternRef(color_pattern) => {
+                color_pattern.azure_color_pattern
+            },
+            PatternRef::LinearGradientPatternRef(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
             }
         }

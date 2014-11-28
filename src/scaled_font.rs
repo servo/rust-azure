@@ -5,7 +5,8 @@
 use azure::{AzScaledFontRef, AzFloat};
 use azure::{struct__AzNativeFont};
 
-use azure_hl::{BackendType,SkiaBackend};
+use azure_hl::BackendType;
+use azure_hl::BackendType::SkiaBackend;
 use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 
 use libc::c_void;
@@ -77,12 +78,12 @@ impl ScaledFont {
             SkiaBackend => {
                 unsafe {
                     let options = match font_info {
-                        NativeFont(native_font) => {
+                        FontInfo::NativeFont(native_font) => {
                             // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
                             let style = ((*native_font).style_flags & 3) as u32;
                             AzCreateFontOptionsForName(&*(*native_font).family_name, style)
                         },
-                        FontData(bytes) => {
+                        FontInfo::FontData(bytes) => {
                             AzCreateFontOptionsForData(bytes.as_ptr(), bytes.len() as u32)
                         },
                     };
