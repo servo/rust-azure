@@ -46,8 +46,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_OP_COUNT, enum_AzExtendMode, AZ_EXTEND_CLAMP, AZ_EXTEND_REPEAT, 
                 AZ_EXTEND_REFLECT, enum_AzFillRule, AZ_FILL_WINDING, AZ_FILL_EVEN_ODD, 
                 enum_AzAntialiasMode, AZ_AA_NONE, AZ_AA_GRAY, AZ_AA_SUBPIXEL, 
-                enum_AzSnapping, AZ_SNAP_NONE, AZ_SNAP_ALIGNED, enum_AzFilter, 
-                AZ_FILTER_LINEAR, AZ_FILTER_POINT, AzFilter, enum_AzPatternType, 
+                enum_AzFilter, AZ_FILTER_LINEAR, AZ_FILTER_POINT, AzFilter, enum_AzPatternType,
                 AZ_PATTERN_COLOR, AZ_PATTERN_SURFACE, AZ_PATTERN_LINEAR_GRADIENT, AZ_PATTERN_RADIAL_GRADIENT, 
                 enum_AzJoinStyle, AZ_JOIN_BEVEL, AZ_JOIN_ROUND, AZ_JOIN_MITER, 
                 AZ_JOIN_MITER_OR_BEVEL, enum_AzCapStyle, AZ_CAP_BUTT, AZ_CAP_ROUND, 
@@ -75,7 +74,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzDrawTargetDrawSurface, AzDrawTargetGetSnapshot, AzDrawTargetCreateSourceSurfaceFromData, AzReleaseSourceSurface, 
                 AzSourceSurfaceGetSize, AzSourceSurfaceGetFormat, AzSourceSurfaceGetDataSurface, AzDataSourceSurfaceGetData, 
                 AzDataSourceSurfaceGetStride, AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzDrawTargetSetTransform, 
-                AzCreateFontOptionsForData, AzCreateFontOptionsForName, AzDestroyFontOptions, AzSkiaGetCurrentGLContext, AzCreatePathBuilder, 
+                AzCreateFontOptionsForName, AzDestroyFontOptions, AzSkiaGetCurrentGLContext, AzCreatePathBuilder, 
                 AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
 
 pub mod azure_hl;

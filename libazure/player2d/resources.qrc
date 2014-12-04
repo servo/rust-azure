@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/zoom_best_fit.ico</file>
+        <file>icons/zoom_in.ico</file>
+        <file>icons/zoom_out.ico</file>
+        <file>icons/zoom_original.ico</file>
+        <file>icons/vis_clip.ico</file>
+        <file>icons/back.ico</file>
+        <file>icons/forward.ico</file>
+    </qresource>
+</RCC>

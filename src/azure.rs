@@ -23,12 +23,20 @@ pub static AZ_SURFACE_COREGRAPHICS_IMAGE: u32 = 5_u32;
 pub static AZ_SURFACE_COREGRAPHICS_CGCONTEXT: u32 = 6_u32;
 pub static AZ_SURFACE_SKIA: u32 = 7_u32;
 pub static AZ_SURFACE_DUAL_DT: u32 = 8_u32;
+pub static AZ_SURFACE_D2D1_1_IMAGE: u32 = 9_u32;
+pub static AZ_SURFACE_RECORDING: u32 = 10_u32;
+pub static AZ_SURFACE_NVPR_TEXTURE: u32 = 11_u32;
+pub static AZ_SURFACE_TILED: u32 = 12_u32;
 
 pub type enum_AzSurfaceFormat = c_uint;
 pub static AZ_FORMAT_B8G8R8A8: u32 = 0_u32;
 pub static AZ_FORMAT_B8G8R8X8: u32 = 1_u32;
-pub static AZ_FORMAT_R5G6B5: u32 = 2_u32;
-pub static AZ_FORMAT_A8: u32 = 3_u32;
+pub static AZ_FORMAT_R8G8B8A8: u32 = 2_u32;
+pub static AZ_FORMAT_R8G8B8X8: u32 = 3_u32;
+pub static AZ_FORMAT_R5G6B5: u32 = 4_u32;
+pub static AZ_FORMAT_A8: u32 = 5_u32;
+pub static AZ_FORMAT_YUV: u32 = 6_u32;
+pub static AZ_FORMAT_UNKNOWN: u32 = 7_u32;
 
 pub type AzSurfaceFormat = enum_AzSurfaceFormat;
 
@@ -40,8 +48,40 @@ pub static AZ_BACKEND_COREGRAPHICS_ACCELERATED: u32 = 3_u32;
 pub static AZ_BACKEND_CAIRO: u32 = 4_u32;
 pub static AZ_BACKEND_SKIA: u32 = 5_u32;
 pub static AZ_BACKEND_RECORDING: u32 = 6_u32;
+pub static AZ_BACKEND_DIRECT2D1_1: u32 = 7_u32;
+pub static AZ_BACKEND_NVP: u32 = 8_u32;
 
 pub type AzBackendType = enum_AzBackendType;
+
+pub type enum_AzFilterType = c_uint;
+pub static AZ_FILTER_TYPE_BLEND: u32 = 0_u32;
+pub static AZ_FILTER_TYPE_TRANSFORM: u32 = 1_u32;
+pub static AZ_FILTER_TYPE_MORPHOLOGY: u32 = 2_u32;
+pub static AZ_FILTER_TYPE_COLOR_MATRIX: u32 = 3_u32;
+pub static AZ_FILTER_TYPE_FLOOD: u32 = 4_u32;
+pub static AZ_FILTER_TYPE_TILE: u32 = 5_u32;
+pub static AZ_FILTER_TYPE_TABLE_TRANSFER: u32 = 6_u32;
+pub static AZ_FILTER_TYPE_DISCRETE_TRANSFER: u32 = 7_u32;
+pub static AZ_FILTER_TYPE_LINEAR_TRANSFER: u32 = 8_u32;
+pub static AZ_FILTER_TYPE_GAMMA_TRANSFER: u32 = 9_u32;
+pub static AZ_FILTER_TYPE_CONVOLVE_MATRIX: u32 = 10_u32;
+pub static AZ_FILTER_TYPE_DISPLACEMENT_MAP: u32 = 11_u32;
+pub static AZ_FILTER_TYPE_TURBULENCE: u32 = 12_u32;
+pub static AZ_FILTER_TYPE_ARITHMETIC_COMBINE: u32 = 13_u32;
+pub static AZ_FILTER_TYPE_COMPOSITE: u32 = 14_u32;
+pub static AZ_FILTER_TYPE_DIRECTIONAL_BLUR: u32 = 15_u32;
+pub static AZ_FILTER_TYPE_GAUSSIAN_BLUR: u32 = 16_u32;
+pub static AZ_FILTER_TYPE_POINT_DIFFUSE: u32 = 17_u32;
+pub static AZ_FILTER_TYPE_POINT_SPECULAR: u32 = 18_u32;
+pub static AZ_FILTER_TYPE_SPOT_DIFFUSE: u32 = 19_u32;
+pub static AZ_FILTER_TYPE_SPOT_SPECULAR: u32 = 20_u32;
+pub static AZ_FILTER_TYPE_DISTANT_DIFFUSE: u32 = 21_u32;
+pub static AZ_FILTER_TYPE_DISTANT_SPECULAR: u32 = 22_u32;
+pub static AZ_FILTER_TYPE_CROP: u32 = 23_u32;
+pub static AZ_FILTER_TYPE_PREMULTIPLY: u32 = 24_u32;
+pub static AZ_FILTER_TYPE_UNPREMULTIPL: u32 = 25_u32;
+
+pub type AzFilterType = enum_AzFilterType;
 
 pub type enum_AzFontType = c_uint;
 pub static AZ_FONT_DWRITE: u32 = 0_u32;
@@ -50,11 +90,15 @@ pub static AZ_FONT_MAC: u32 = 2_u32;
 pub static AZ_FONT_SKIA: u32 = 3_u32;
 pub static AZ_FONT_CAIRO: u32 = 4_u32;
 pub static AZ_FONT_COREGRAPHICS: u32 = 5_u32;
+pub static AZ_FONT_NVPR: u32 = 6_u32;
 
 pub type enum_AzNativeSurfaceType = c_uint;
 pub static AZ_NATIVE_SURFACE_D3D10_TEXTURE: u32 = 0_u32;
 pub static AZ_NATIVE_SURFACE_CAIRO_SURFACE: u32 = 1_u32;
-pub static AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 2_u32;
+pub static AZ_NATIVE_SURFACE_CAIRO_CONTEXT: u32 = 2_u32;
+pub static AZ_NATIVE_SURFACE_CGCONTEXT: u32 = 3_u32;
+pub static AZ_NATIVE_SURFACE_CGCONTEXT_ACCELERATED: u32 = 4_u32;
+pub static AZ_NATIVE_SURFACE_OPENGL_TEXTUR: u32 = 5_u32;
 
 pub type enum_AzNativeFontType = c_uint;
 pub static AZ_NATIVE_FONT_DWRITE_FONT_FACE: u32 = 0_u32;
@@ -62,6 +106,7 @@ pub static AZ_NATIVE_FONT_GDI_FONT_FACE: u32 = 1_u32;
 pub static AZ_NATIVE_FONT_MAC_FONT_FACE: u32 = 2_u32;
 pub static AZ_NATIVE_FONT_SKIA_FONT_FACE: u32 = 3_u32;
 pub static AZ_NATIVE_FONT_CAIRO_FONT_FACE: u32 = 4_u32;
+pub static AZ_NATIVE_FONT_NVPR_FONT_FAC: u32 = 5_u32;
 
 pub type enum_AzFontStyle = c_uint;
 pub static AZ_FONT_STYLE_NORMAL: u32 = 0_u32;
@@ -112,14 +157,12 @@ pub type enum_AzAntialiasMode = c_uint;
 pub static AZ_AA_NONE: u32 = 0_u32;
 pub static AZ_AA_GRAY: u32 = 1_u32;
 pub static AZ_AA_SUBPIXEL: u32 = 2_u32;
-
-pub type enum_AzSnapping = c_uint;
-pub static AZ_SNAP_NONE: u32 = 0_u32;
-pub static AZ_SNAP_ALIGNED: u32 = 1_u32;
+pub static AZ_AA_DEFAULT: u32 = 3_u32;
 
 pub type enum_AzFilter = c_uint;
-pub static AZ_FILTER_LINEAR: u32 = 0_u32;
-pub static AZ_FILTER_POINT: u32 = 1_u32;
+pub static AZ_FILTER_GOOD: u32 = 0_u32;
+pub static AZ_FILTER_LINEAR: u32 = 1_u32;
+pub static AZ_FILTER_POINT: u32 = 2_u32;
 
 pub type AzFilter = enum_AzFilter;
 
@@ -445,11 +488,11 @@ pub fn AzDataSourceSurfaceGetStride(aSurface: AzDataSourceSurfaceRef) -> i32;
 
 pub fn AzCreateScaledFontForNativeFont(aNativeFont: *mut AzNativeFont, aSize: AzFloat) -> AzScaledFontRef;
 
+pub fn AzCreateScaledFontForTrueTypeData(aFontData: *const u8, aFontDataSize: u32, aFaceIndex: u32, aGlyphSize: f32, aType: enum_AzFontType) -> AzScaledFontRef;
+
 pub fn AzReleaseScaledFont(aFont: AzScaledFontRef);
 
 pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *mut AzMatrix);
-
-pub fn AzCreateFontOptionsForData(aFontData: *const u8, aFontDataSize: u32) -> *mut AzFontOptions;
 
 pub fn AzCreateFontOptionsForName(aName: *const c_char, aStyle: enum_AzFontStyle) -> *mut AzFontOptions;
 

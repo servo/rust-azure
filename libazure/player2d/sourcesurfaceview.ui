@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SourceSurfaceView</class>
+ <widget class="SurfaceView" name="SourceSurfaceView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>512</width>
+    <height>399</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetDefaultConstraint</enum>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0" colspan="2">
+    <widget class="QToolBar" name="toolBar">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="windowTitle">
+      <string>toolBar</string>
+     </property>
+     <addaction name="actionZoom_In"/>
+     <addaction name="actionZoom_Out"/>
+     <addaction name="actionFit_To_Window"/>
+     <addaction name="actionOriginal_Size"/>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="DrawTargetWidget" name="dtWidget" native="true"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QScrollBar" name="horizontalScrollBar">
+     <property name="maximum">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QScrollBar" name="verticalScrollBar">
+     <property name="maximum">
+      <number>0</number>
+     </property>
+     <property name="pageStep">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <action name="actionFit_To_Window">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/icons/zoom_best_fit.ico</normaloff>:/icons/icons/zoom_best_fit.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Fit To Window</string>
+   </property>
+   <property name="toolTip">
+    <string>Resize this DrawTarget to fit in the window</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/icons/zoom_in.ico</normaloff>:/icons/icons/zoom_in.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/icons/zoom_out.ico</normaloff>:/icons/icons/zoom_out.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="actionOriginal_Size">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/icons/zoom_original.ico</normaloff>:/icons/icons/zoom_original.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Original Size</string>
+   </property>
+   <property name="toolTip">
+    <string>Original Size</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DrawTargetWidget</class>
+   <extends>QWidget</extends>
+   <header>drawtargetwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>verticalScrollBar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>DrawTargetView</receiver>
+   <slot>UpdateView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>503</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalScrollBar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>DrawTargetView</receiver>
+   <slot>UpdateView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>UpdateView()</slot>
+  <slot>on_actionFit_To_Window_triggered()</slot>
+ </slots>
+</ui>

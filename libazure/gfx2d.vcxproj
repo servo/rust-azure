@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug (With Skia)|Win32">
+      <Configuration>Debug (With Skia)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (With Skia)|Win32">
+      <Configuration>Release (With Skia)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{FDF1302F-77E8-975E-39C0-B4AD3F190A84}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>$(DXSDK_DIR)\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_NVPR;_USE_MATH_DEFINES;INITGUID;USE_D2D1_1;USE_SSE2;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);GFX_LOG_DEBUG;GFX_LOG_WARNING;MFBT_STAND_ALONE;XP_WIN</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_NVPR;_USE_MATH_DEFINES;INITGUID;USE_D2D1_1;USE_SSE2;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);GFX_LOG_DEBUG;GFX_LOG_WARNING;MFBT_STAND_ALONE;XP_WIN;USE_SKIA;USE_CAIRO;CAIRO_WIN32_STATIC_BUILD;USE_CAIRO_SCALED_FONT</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../cairo/src;$(ProjectDir)/..;$(ProjectDir)/../skia/include;$(ProjectDir)/../skia/include/core;$(ProjectDir)/../skia/include/utils;$(ProjectDir)/../skia/include/gpu;$(ProjectDir)/../skia/include/config</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_NVPR;_USE_MATH_DEFINES;INITGUID;USE_D2D1_1;USE_SSE2;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_NVPR;_USE_MATH_DEFINES;INITGUID;USE_D2D1_1;USE_SSE2;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);USE_SKIA;USE_CAIRO;CAIRO_WIN32_STATIC_BUILD;USE_CAIRO_SCALED_FONT</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../cairo/src;$(ProjectDir)/..;$(ProjectDir)/../skia/include;$(ProjectDir)/../skia/include/core;$(ProjectDir)/../skia/include/utils;$(ProjectDir)/../skia/include/gpu;$(ProjectDir)/../skia/include/config</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="2D.h" />
+    <ClInclude Include="BaseMargin.h" />
+    <ClInclude Include="BasePoint.h" />
+    <ClInclude Include="BaseRect.h" />
+    <ClInclude Include="BaseSize.h" />
+    <ClInclude Include="Blur.h" />
+    <ClInclude Include="BorrowedContext.h" />
+    <ClInclude Include="ClipNVpr.h" />
+    <ClInclude Include="DataSurfaceHelpers.h" />
+    <ClInclude Include="DrawCommand.h" />
+    <ClInclude Include="DrawEventRecorder.h" />
+    <ClInclude Include="DrawTargetCairo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="DrawTargetCapture.h" />
+    <ClInclude Include="DrawTargetD2D.h" />
+    <ClInclude Include="DrawTargetD2D1.h" />
+    <ClInclude Include="DrawTargetDual.h" />
+    <ClInclude Include="DrawTargetNVpr.h" />
+    <ClInclude Include="DrawTargetRecording.h" />
+    <ClInclude Include="DrawTargetSkia.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="DrawTargetTiled.h" />
+    <ClInclude Include="FilterNodeD2D1.h" />
+    <ClInclude Include="FilterNodeSoftware.h" />
+    <ClInclude Include="Filters.h" />
+    <ClInclude Include="DXTextureInteropNVpr.h" />
+    <ClInclude Include="GLContextNVpr.h" />
+    <ClInclude Include="GradientShadersNVpr.h" />
+    <ClInclude Include="GradientStopsD2D.h" />
+    <ClInclude Include="GradientStopsNVpr.h" />
+    <ClInclude Include="HelpersD2D.h" />
+    <ClInclude Include="ImageScaling.h" />
+    <ClInclude Include="Logging.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="nvpr\ConvexPolygon.h" />
+    <ClInclude Include="nvpr\Paint.h" />
+    <ClInclude Include="nvpr\ShaderProgram.h" />
+    <ClInclude Include="nvpr\ShadowShaders.h" />
+    <ClInclude Include="nvpr\WGL.h" />
+    <ClInclude Include="nvpr\WGLDefs.h" />
+    <ClInclude Include="PathAnalysis.h" />
+    <ClInclude Include="PathBuilderNVpr.h" />
+    <ClInclude Include="PathCairo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="PathD2D.h" />
+    <ClInclude Include="PathHelpers.h" />
+    <ClInclude Include="PathNVpr.h" />
+    <ClInclude Include="PathRecording.h" />
+    <ClInclude Include="PathSkia.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="RadialGradientEffectD2D1.h" />
+    <ClInclude Include="RecordedEvent.h" />
+    <ClInclude Include="RecordingTypes.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="ScaledFontBase.h" />
+    <ClInclude Include="ScaledFontCairo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="ScaledFontDWrite.h" />
+    <ClInclude Include="ScaledFontNVpr.h" />
+    <ClInclude Include="ScaledFontSkia.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="ScaledFontWin.h" />
+    <ClInclude Include="SourceSurfaceCairo.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="SourceSurfaceD2D.h" />
+    <ClInclude Include="SourceSurfaceD2D1.h" />
+    <ClInclude Include="SourceSurfaceD2DTarget.h" />
+    <ClInclude Include="SourceSurfaceNVpr.h" />
+    <ClInclude Include="SourceSurfaceRawData.h" />
+    <ClInclude Include="SourceSurfaceSkia.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="SVGTurbulenceRenderer.h" />
+    <ClInclude Include="Tools.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="UserData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Blur.cpp" />
+    <ClCompile Include="BlurSSE2.cpp" />
+    <ClCompile Include="DataSourceSurface.cpp" />
+    <ClCompile Include="DataSurfaceHelpers.cpp" />
+    <ClCompile Include="DrawEventRecorder.cpp" />
+    <ClCompile Include="DrawTarget.cpp" />
+    <ClCompile Include="DrawTargetCairo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DrawTargetCapture.cpp" />
+    <ClCompile Include="DrawTargetD2D.cpp" />
+    <ClCompile Include="DrawTargetD2D1.cpp" />
+    <ClCompile Include="DrawTargetDual.cpp" />
+    <ClCompile Include="DrawTargetNVpr.cpp" />
+    <ClCompile Include="DrawTargetRecording.cpp" />
+    <ClCompile Include="DrawTargetSkia.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DrawTargetTiled.cpp" />
+    <ClCompile Include="DXTextureInteropNVpr.cpp" />
+    <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="FilterNodeD2D1.cpp" />
+    <ClCompile Include="FilterNodeSoftware.cpp" />
+    <ClCompile Include="FilterProcessing.cpp" />
+    <ClCompile Include="FilterProcessingScalar.cpp" />
+    <ClCompile Include="FilterProcessingSSE2.cpp" />
+    <ClCompile Include="GradientStopsNVpr.cpp" />
+    <ClCompile Include="ImageScaling.cpp" />
+    <ClCompile Include="ImageScalingSSE2.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="nvpr\Clip.cpp" />
+    <ClCompile Include="nvpr\ConvexPolygon.cpp" />
+    <ClCompile Include="nvpr\GL.cpp" />
+    <ClCompile Include="nvpr\Paint.cpp" />
+    <ClCompile Include="nvpr\ShaderProgram.cpp" />
+    <ClCompile Include="nvpr\ShadowShaders.cpp" />
+    <ClCompile Include="nvpr\WGL.cpp" />
+    <ClCompile Include="Path.cpp" />
+    <ClCompile Include="PathBuilderNVpr.cpp" />
+    <ClCompile Include="PathCairo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="PathD2D.cpp" />
+    <ClCompile Include="PathHelpers.cpp" />
+    <ClCompile Include="PathNVpr.cpp" />
+    <ClCompile Include="PathRecording.cpp" />
+    <ClCompile Include="PathSkia.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="RadialGradientEffectD2D1.cpp" />
+    <ClCompile Include="RecordedEvent.cpp" />
+    <ClCompile Include="ScaledFontBase.cpp" />
+    <ClCompile Include="ScaledFontCairo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ScaledFontDWrite.cpp" />
+    <ClCompile Include="ScaledFontNVpr.cpp" />
+    <ClCompile Include="ScaledFontSkia.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ScaledFontWin.cpp" />
+    <ClCompile Include="SourceSurfaceCairo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="SourceSurfaceD2D.cpp" />
+    <ClCompile Include="SourceSurfaceD2D1.cpp" />
+    <ClCompile Include="SourceSurfaceD2DTarget.cpp" />
+    <ClCompile Include="SourceSurfaceNVpr.cpp" />
+    <ClCompile Include="SourceSurfaceRawData.cpp" />
+    <ClCompile Include="SourceSurfaceSkia.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile.in" />
+    <CustomBuild Include="ShadersD2D.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc /Tfx_4_0 /FhShadersD2D.h ShadersD2D.fx /Vn d2deffect</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">fxc /Tfx_4_0 /FhShadersD2D.h ShadersD2D.fx /Vn d2deffect</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ShadersD2D.h</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">ShadersD2D.h</Outputs>
+    </CustomBuild>
+    <None Include="perftest\perftest.vcxproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ShadersD2D1.hlsl">
+      <FileType>HLSL</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">fxc ShadersD2D1.hlsl -ESampleRadialGradientPS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientPS
+type tmpfile &gt; ShadersD2D1.h
+fxc ShadersD2D1.hlsl -ESampleRadialGradientA0PS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientA0PS
+type tmpfile &gt;&gt; ShadersD2D1.h
+del tmpfile
+</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">Compiling D2D 1.1 Shaders</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">ShadersD2D1.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release (With Skia)|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxc ShadersD2D1.hlsl -ESampleRadialGradientPS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientPS
+type tmpfile &gt; ShadersD2D1.h
+fxc ShadersD2D1.hlsl -ESampleRadialGradientA0PS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientA0PS
+type tmpfile &gt;&gt; ShadersD2D1.h
+del tmpfile
+</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling D2D 1.1 Shaders</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ShadersD2D1.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxc ShadersD2D1.hlsl -ESampleRadialGradientPS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientPS
+type tmpfile &gt; ShadersD2D1.h
+fxc ShadersD2D1.hlsl -ESampleRadialGradientA0PS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientA0PS
+type tmpfile &gt;&gt; ShadersD2D1.h
+del tmpfile
+</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling D2D 1.1 Shaders</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ShadersD2D1.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">fxc ShadersD2D1.hlsl -ESampleRadialGradientPS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientPS
+type tmpfile &gt; ShadersD2D1.h
+fxc ShadersD2D1.hlsl -ESampleRadialGradientA0PS -nologo -Tps_4_0_level_9_3 -Fhtmpfile -VnSampleRadialGradientA0PS
+type tmpfile &gt;&gt; ShadersD2D1.h
+del tmpfile
+</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">Compiling D2D 1.1 Shaders</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">ShadersD2D1.h</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug (With Skia)|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

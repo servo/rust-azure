@@ -1,0 +1,25 @@
+DEFINES += USE_NVPR
+
+LIBS += -ldl -lX11
+
+MOZ2D_CPPSRCS += \
+  DrawTargetNVpr.cpp \
+  PathNVpr.cpp \
+  PathBuilderNVpr.cpp \
+  SourceSurfaceNVpr.cpp \
+  GradientStopsNVpr.cpp \
+  ScaledFontNVpr.cpp \
+  nvpr/Clip.cpp \
+  nvpr/ConvexPolygon.cpp \
+  nvpr/GL.cpp \
+  nvpr/GLX.cpp \
+  nvpr/ShaderProgram.cpp \
+  nvpr/Paint.cpp \
+  nvpr/ShadowShaders.cpp \
+  $(NULL)
+
+UNITTEST_CPPSRCS += \
+  $(NULL)
+  
+PERFTEST_CPPSRCS += \
+  $(NULL)

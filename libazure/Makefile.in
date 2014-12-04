@@ -1,0 +1,177 @@
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+DEPTH		= @DEPTH@
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		=  $(srcdir) $(srcdir)/unittest
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= gfx2d
+LIBRARY_NAME	= gfx2d
+LIBXUL_LIBRARY	= 1
+EXPORT_LIBRARY	= 1
+
+EXPORTS_NAMESPACES = mozilla/gfx
+EXPORTS_mozilla/gfx	= \
+        2D.h \
+        BasePoint.h \
+        BasePoint3D.h \
+        BasePoint4D.h \
+        BaseMargin.h \
+        BaseRect.h \
+        BaseSize.h \
+        Blur.h \
+        PathHelpers.h \
+        Point.h \
+        Matrix.h \
+        Rect.h \
+        Scale.h \
+        Types.h \
+        Tools.h \
+        UserData.h \
+	$(NULL)
+
+CPPSRCS	= \
+        Factory.cpp \
+        Rect.cpp \
+        Matrix.cpp \
+        DrawTargetCairo.cpp \
+        SourceSurfaceCairo.cpp \
+        PathCairo.cpp \
+        DrawTargetRecording.cpp \
+        PathRecording.cpp \
+        RecordedEvent.cpp \
+        DrawEventRecorder.cpp \
+        Blur.cpp \
+        Scale.cpp \
+        ScaledFontBase.cpp \
+        DrawTargetDual.cpp \
+        ImageScaling.cpp \
+        SourceSurfaceRawData.cpp \
+        $(NULL)
+
+GTEST_CPPSRCS = \
+        GTestMain.cpp \
+        TestBase.cpp \
+        TestPoint.cpp \
+        TestScaling.cpp \
+        $(NULL)
+
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+CPPSRCS	+= \
+	   SourceSurfaceCG.cpp \
+	   DrawTargetCG.cpp \
+	   PathCG.cpp \
+	   $(NULL)
+
+CMMSRCS = \
+	   QuartzSupport.mm \
+	   $(NULL)
+
+EXPORTS_mozilla/gfx	+= \
+	   QuartzSupport.h \
+	   MacIOSurface.h \
+	   $(NULL)
+endif
+
+DEFINES += -DMOZ_GFX -DUSE_CAIRO -DGFX2D_INTERNAL
+
+ifdef MOZ_ENABLE_SKIA
+CPPSRCS	+= \
+        SourceSurfaceSkia.cpp \
+        DrawTargetSkia.cpp \
+        PathSkia.cpp \
+        convolver.cpp \
+        image_operations.cpp \
+        $(NULL)
+endif
+
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+ifdef MOZ_ENABLE_SKIA
+CPPSRCS += \
+        ScaledFontMac.cpp \
+        $(NULL)
+
+endif
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),$(findstring $(MOZ_WIDGET_TOOLKIT),android gtk2 gonk qt))
+CPPSRCS	+= \
+        ScaledFontFreetype.cpp \
+        $(NULL)
+DEFINES += -DMOZ_ENABLE_FREETYPE
+endif
+
+DEFINES += -DSK_A32_SHIFT=24 -DSK_R32_SHIFT=16 -DSK_G32_SHIFT=8 -DSK_B32_SHIFT=0
+
+ifdef MOZ_DEBUG
+DEFINES += -DGFX_LOG_DEBUG -DGFX_LOG_WARNING
+endif
+
+# Are we targeting x86 or x64?  If so, build SSE2 files.
+ifneq (,$(INTEL_ARCHITECTURE))
+# VC2005 doesn't support _mm_castsi128_ps, so SSE2 is turned off
+ifneq (1400,$(_MSC_VER))
+CPPSRCS += \
+        ImageScalingSSE2.cpp \
+        BlurSSE2.cpp \
+        $(NULL)
+DEFINES += -DUSE_SSE2
+endif
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+CPPSRCS	+= \
+        DrawTargetD2D.cpp \
+        SourceSurfaceD2D.cpp \
+        SourceSurfaceD2DTarget.cpp \
+        PathD2D.cpp \
+        ScaledFontDWrite.cpp \
+        $(NULL)
+DEFINES += -DWIN32 -DINITGUID
+
+ifdef MOZ_ENABLE_SKIA
+CPPSRCS += \
+        ScaledFontWin.cpp \
+        $(NULL)
+DEFINES += -DSKIA_IMPLEMENTATION=1 -DGR_IMPLEMENTATION=1
+endif
+endif
+
+include $(topsrcdir)/config/rules.mk
+include $(topsrcdir)/ipc/chromium/chromium-config.mk
+
+# Due to bug 796023, we can't have -DUNICODE and -D_UNICODE; defining those
+# macros changes the type of LOGFONT to LOGFONTW instead of LOGFONTA. This
+# changes the symbol names of exported C++ functions that use LOGFONT.
+DEFINES := $(filter-out -DUNICODE -D_UNICODE,$(DEFINES))
+
+#ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
+#CPPSRCS	+= \
+#        DrawTargetCG.cpp \
+#        SourceSurfaceCG.cpp \
+#	$(NULL)
+#
+## Always link with OpenGL/AGL
+#EXTRA_DSO_LDOPTS += -framework OpenGL -framework AGL -framework QuickTime -framework AppKit -framework QuartzCore
+#endif
+
+# The file uses SSE2 intrinsics, so it needs special compile flags on some
+# compilers.
+ifneq (,$(INTEL_ARCHITECTURE))
+ifdef GNU_CC
+ImageScalingSSE2.$(OBJ_SUFFIX): CXXFLAGS+=-msse2
+BlurSSE2.$(OBJ_SUFFIX): CXXFLAGS+=-msse2
+endif
+
+ifdef SOLARIS_SUNPRO_CXX
+ImageScalingSSE2.$(OBJ_SUFFIX): OS_CXXFLAGS += -xarch=sse2 -xO4
+BlurSSE2.$(OBJ_SUFFIX): OS_CXXFLAGS += -xarch=sse2 -xO4
+endif
+endif
+
+CXXFLAGS += $(MOZ_CAIRO_CFLAGS) $(MOZ_PIXMAN_CFLAGS)
