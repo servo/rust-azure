@@ -193,6 +193,18 @@ pub static AZ_eSideRight: u32 = 1_u32;
 pub static AZ_eSideBottom: u32 = 2_u32;
 pub static AZ_eSideLeft: u32 = 3_u32;
 
+pub type enum_AzFloodFilterAtts = u32;
+pub static AZ_ATT_FLOOD_COLOR: u32 = 0;
+
+pub type enum_AzFloodFilterInputs = u32;
+pub static AZ_IN_FLOOD_IN: u32 = 0;
+
+pub type enum_AzGaussianBlurAtts = u32;
+pub static AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION: u32 = 0;
+
+pub type enum_AzGaussianBlurInputs = u32;
+pub static AZ_IN_GAUSSIAN_BLUR_IN: u32 = 0;
+
 #[repr(C)]
 #[deriving(Clone)]
 pub struct struct__AzColor {
@@ -370,6 +382,8 @@ pub type AzPathRef = *mut c_void;
 
 pub type AzPathBuilderRef = *mut c_void;
 
+pub type AzFilterNodeRef = *mut c_void;
+
 pub type AzExtendMode = i32;
 
 #[link(name = "azure")]
@@ -439,6 +453,12 @@ pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontR
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *mut AzRect, aSource: *mut AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *mut AzDrawOptions);
 
+pub fn AzDrawTargetDrawFilter(aDrawTarget: AzDrawTargetRef,
+                              aFilter: AzFilterNodeRef,
+                              aSourceRect: *const AzRect,
+                              aDestPoint: *const AzPoint,
+                              aOptions: *const AzDrawOptions);
+
 pub fn AzDrawTargetDrawSurfaceWithShadow(aDrawTarget: AzDrawTargetRef,
                                          aSurface: AzSourceSurfaceRef,
                                          aDest: *const AzPoint,
@@ -467,6 +487,9 @@ pub fn AzDrawTargetCreateGradientStops(aDrawTarget: AzDrawTargetRef,
                                        aNumStops: u32,
                                        aExtendMode: AzExtendMode)
                                        -> AzGradientStopsRef;
+
+pub fn AzDrawTargetCreateFilter(aDrawTarget: AzDrawTargetRef, aFilterType: AzFilterType)
+                                -> AzFilterNodeRef;
 
 pub fn AzCreateLinearGradientPattern(aBegin: *const AzPoint,
                                      aEnd: *const AzPoint,
@@ -520,5 +543,17 @@ pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 pub fn AzReleasePath(aPath: AzPathRef);
 
 pub fn AzReleaseGradientStops(aFont: AzScaledFontRef);
+
+pub fn AzReleaseFilterNode(aFilter: AzFilterNodeRef);
+pub fn AzFilterNodeSetSourceSurfaceInput(aFilter: AzFilterNodeRef,
+                                         aIndex: u32,
+                                         aSurface: AzSourceSurfaceRef);
+pub fn AzFilterNodeSetFilterNodeInput(aFilter: AzFilterNodeRef,
+                                      aIndex: u32,
+                                      aInputFilter: AzFilterNodeRef);
+pub fn AzFilterNodeSetFloatAttribute(aFilter: AzFilterNodeRef, aIndex: u32, aValue: AzFloat);
+pub fn AzFilterNodeSetColorAttribute(aFilter: AzFilterNodeRef,
+                                     aIndex: u32,
+                                     aValue: *const AzColor);
 
 }

@@ -6,7 +6,6 @@
 #define MOZILLA_GFX_AZURE_C_H_
 
 #include "GrContext.h"
-
 #include "SkNativeSharedGLContext.h"
 
 #include <stddef.h>
@@ -40,6 +39,7 @@ typedef void* AzGLContextMetadataRef;
 typedef void* AzPathBuilderRef;
 typedef void* AzPathRef;
 typedef void* AzLinearGradientPatternRef;
+typedef void* AzFilterNodeRef;
 
 /* Types.h */
 
@@ -402,6 +402,11 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzRect *aSource,
                              AzDrawSurfaceOptionsRef aSurfOptions,
                              AzDrawOptions *aOptions);
+void AzDrawTargetDrawFilter(AzDrawTargetRef aDrawTarget,
+                            AzFilterNodeRef aFilter,
+                            const AzRect *aSourceRect,
+                            const AzPoint *aDestPoint,
+                            const AzDrawOptions *aOptions);
 void AzDrawTargetDrawSurfaceWithShadow(AzDrawTargetRef aDrawTarget,
                                        AzSourceSurfaceRef aSurface,
                                        const AzPoint* aPoint,
@@ -426,6 +431,7 @@ AzGradientStopsRef AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
 void AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath);
 void AzDrawTargetPushClipRect(AzDrawTargetRef aDrawTarget, const AzRect *aRect);
 void AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget);
+AzFilterNodeRef AzDrawTargetCreateFilter(AzDrawTargetRef aDrawTarget, AzFilterType aType);
 
 void AzReleaseSourceSurface(AzSourceSurfaceRef aSurface);
 AzIntSize AzSourceSurfaceGetSize(AzSourceSurfaceRef aSurface);
@@ -453,6 +459,20 @@ AzLinearGradientPatternRef AzCreateLinearGradientPattern(const AzPoint *aBegin,
 void AzReleasePattern(AzPatternRef aPattern);
 
 void AzReleaseGradientStops(AzGradientStopsRef aStops);
+
+/* Filters.h */
+
+void AzReleaseFilterNode(AzFilterNodeRef aFilter);
+void AzFilterNodeSetSourceSurfaceInput(AzFilterNodeRef aFilter,
+                                       uint32_t aIndex,
+                                       AzSourceSurfaceRef aSurface);
+void AzFilterNodeSetFilterNodeInput(AzFilterNodeRef aFilter,
+                                    uint32_t aIndex,
+                                    AzFilterNodeRef aInputFilter);
+void AzFilterNodeSetFloatAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, AzFloat aValue);
+void AzFilterNodeSetColorAttribute(AzFilterNodeRef aFilter,
+                                   uint32_t aIndex,
+                                   const AzColor *aValue);
 
 /* Factory.h */
 

@@ -17,6 +17,7 @@ git = "https://github.com/servo/rust-layers"
 [dependencies.skia-sys]
 
 git = "https://github.com/servo/skia"
+branch = "upstream-2014-06-16"
 
 [dependencies.xlib]
 

@@ -4,7 +4,9 @@
 
 //! High-level bindings to Azure.
 
-use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL};
+use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL, AZ_FILTER_TYPE_FLOOD};
+use azure::{AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN};
+use azure::{AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
 use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
@@ -36,6 +38,9 @@ use azure::{AzGLNativeContextRef, AzLinearGradientPatternRef, AzMatrix, AzPatter
 use azure::{AzCreateLinearGradientPattern, AzDrawTargetPushClipRect};
 use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
+use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
+use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
+use azure::{AzFilterNodeSetFilterNodeInput, AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -576,6 +581,20 @@ impl DrawTarget {
         }
     }
 
+    pub fn draw_filter(&self,
+                       filter: FilterNode,
+                       source_rect: &Rect<AzFloat>,
+                       dest_point: &Point2D<AzFloat>,
+                       options: DrawOptions) {
+        unsafe {
+            AzDrawTargetDrawFilter(self.azure_draw_target,
+                                   filter.azure_filter_node,
+                                   mem::transmute::<_,*const AzRect>(source_rect),
+                                   mem::transmute::<_,*const AzPoint>(dest_point),
+                                   &options.as_azure_draw_options())
+        }
+    }
+
     pub fn draw_surface_with_shadow(&self,
                                     surface: SourceSurface,
                                     dest: &Point2D<AzFloat>,
@@ -692,6 +711,15 @@ impl DrawTarget {
         unsafe {
             PathBuilder {
                 azure_path_builder: AzCreatePathBuilder(self.azure_draw_target)
+            }
+        }
+    }
+
+    pub fn create_filter(&self, filter_type: FilterType) -> FilterNode {
+        unsafe {
+            FilterNode {
+                azure_filter_node: AzDrawTargetCreateFilter(self.azure_draw_target,
+                                                            filter_type.as_azure_filter_type()),
             }
         }
     }
@@ -982,3 +1010,116 @@ pub fn current_gl_context() -> AzGLContext {
         AzSkiaGetCurrentGLContext()
     }
 }
+
+pub struct FilterNode {
+    pub azure_filter_node: AzFilterNodeRef,
+}
+
+impl Drop for FilterNode {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseFilterNode(self.azure_filter_node);
+        }
+    }
+}
+
+impl FilterNode {
+    pub fn set_input<FIndex,FInput>(&self, index: FIndex, input: &FInput)
+                                    where FIndex: FilterInputIndex, FInput: FilterInput {
+        input.set(self, index.azure_index())
+    }
+    pub fn set_attribute<A>(&self, attribute: A) where A: FilterAttribute {
+        attribute.set(self)
+    }
+}
+
+pub struct FloodFilterInput;
+
+pub struct GaussianBlurInput;
+
+pub trait FilterInputIndex {
+    fn azure_index(&self) -> u32;
+}
+
+impl FilterInputIndex for FloodFilterInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_FLOOD_IN
+    }
+}
+
+impl FilterInputIndex for GaussianBlurInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_GAUSSIAN_BLUR_IN
+    }
+}
+
+pub trait FilterAttribute {
+    fn set(&self, filter_node: &FilterNode);
+}
+
+pub enum FloodAttribute {
+    ColorFloodAttribute(Color),
+}
+
+pub enum GaussianBlurAttribute {
+    StdDeviationGaussianBlurAttribute(AzFloat),
+}
+
+impl FilterAttribute for FloodAttribute {
+    fn set(&self, filter_node: &FilterNode) {
+        let ColorFloodAttribute(value) = *self;
+        unsafe {
+            AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
+                                          AZ_ATT_FLOOD_COLOR,
+                                          &value.as_azure_color())
+        }
+    }
+}
+
+impl FilterAttribute for GaussianBlurAttribute {
+    fn set(&self, filter_node: &FilterNode) {
+        let StdDeviationGaussianBlurAttribute(value) = *self;
+        unsafe {
+            AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                          AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION,
+                                          value)
+        }
+    }
+}
+
+pub enum FilterType {
+    FloodFilterType,
+    GaussianBlurFilterType,
+}
+
+impl FilterType {
+    pub fn as_azure_filter_type(self) -> AzFilterType {
+        match self {
+            FloodFilterType => AZ_FILTER_TYPE_FLOOD,
+            GaussianBlurFilterType => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
+        }
+    }
+}
+
+pub trait FilterInput {
+    fn set(&self, filter: &FilterNode, index: u32);
+}
+
+impl FilterInput for SourceSurface {
+    fn set(&self, filter: &FilterNode, index: u32) {
+        unsafe {
+            AzFilterNodeSetSourceSurfaceInput(filter.azure_filter_node,
+                                              index,
+                                              self.azure_source_surface)
+        }
+    }
+}
+
+impl FilterInput for FilterNode {
+    fn set(&self, filter: &FilterNode, index: u32) {
+        unsafe {
+            AzFilterNodeSetFilterNodeInput(filter.azure_filter_node, index, self.azure_filter_node)
+        }
+    }
+}
+
