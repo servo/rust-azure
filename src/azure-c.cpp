@@ -4,7 +4,9 @@
 
 #include "azure-c.h"
 #include "2D.h"
+#include "Filters.h"
 #include "ScaledFontSkia.h"
+#include "Types.h"
 
 #include <assert.h>
 #include <string.h>
@@ -415,6 +417,20 @@ AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
 }
 
 extern "C" void
+AzDrawTargetDrawFilter(AzDrawTargetRef aDrawTarget,
+                       AzFilterNodeRef aFilter,
+                       const AzRect *aSourceRect,
+                       const AzPoint *aDestPoint,
+                       const AzDrawOptions *aOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::FilterNode *gfxFilterNode = static_cast<gfx::FilterNode*>(aFilter);
+    const gfx::Rect *gfxSourceRect = reinterpret_cast<const gfx::Rect*>(aSourceRect);
+    const gfx::Point *gfxDestPoint = reinterpret_cast<const gfx::Point*>(aDestPoint);
+    const gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<const gfx::DrawOptions*>(aOptions);
+    gfxDrawTarget->DrawFilter(gfxFilterNode, *gfxSourceRect, *gfxDestPoint, *gfxDrawOptions);
+}
+
+extern "C" void
 AzDrawTargetDrawSurfaceWithShadow(AzDrawTargetRef aDrawTarget,
                                   AzSourceSurfaceRef aSurface,
                                   const AzPoint* aPoint,
@@ -680,13 +696,59 @@ AzCreateLinearGradientPattern(const AzPoint *aBegin,
     return gfxLinearGradientPattern;
 }
 
-void AzReleasePattern(AzPatternRef aPattern) {
+extern "C" void
+AzReleasePattern(AzPatternRef aPattern) {
     gfx::Pattern *gfxPattern = reinterpret_cast<gfx::Pattern*>(aPattern);
     delete gfxPattern;
 }
 
-void AzReleaseGradientStops(AzGradientStopsRef aStops) {
+extern "C" void
+AzReleaseGradientStops(AzGradientStopsRef aStops) {
     gfx::GradientStops *gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
     gfxStops->Release();
+}
+
+extern "C" AzFilterNodeRef
+AzDrawTargetCreateFilter(AzDrawTargetRef aDrawTarget, AzFilterType aType) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::FilterType gfxFilterType = static_cast<gfx::FilterType>(aType);
+    return gfxDrawTarget->CreateFilter(gfxFilterType).drop();
+}
+
+extern "C" void
+AzReleaseFilterNode(AzFilterNodeRef aFilter) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfxFilterNode->Release();
+}
+
+extern "C" void
+AzFilterNodeSetSourceSurfaceInput(AzFilterNodeRef aFilter,
+                                  uint32_t aIndex,
+                                  AzSourceSurfaceRef aSurface) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
+    gfxFilterNode->SetInput(aIndex, gfxSourceSurface);
+}
+
+extern "C" void
+AzFilterNodeSetFilterNodeInput(AzFilterNodeRef aFilter,
+                               uint32_t aIndex,
+                               AzFilterNodeRef aInputFilter) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfx::FilterNode *gfxInputFilterNode = reinterpret_cast<gfx::FilterNode*>(aInputFilter);
+    gfxFilterNode->SetInput(aIndex, gfxInputFilterNode);
+}
+
+extern "C" void
+AzFilterNodeSetFloatAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, AzFloat aValue) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfxFilterNode->SetAttribute(aIndex, aValue);
+}
+
+extern "C" void
+AzFilterNodeSetColorAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, const AzColor *aValue) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    const gfx::Color *gfxColor = reinterpret_cast<const gfx::Color*>(aValue);
+    gfxFilterNode->SetAttribute(aIndex, aValue);
 }
 
