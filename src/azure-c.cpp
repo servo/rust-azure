@@ -291,7 +291,7 @@ AzDrawTargetGetSize(AzDrawTargetRef aDrawTarget) {
 extern "C" AzSurfaceFormat
 AzDrawTargetGetFormat(AzDrawTargetRef aDrawTarget) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
-    return static_cast<AzSurfaceFormat>(gfxDrawTarget->GetFormat());
+    return static_cast<AzSurfaceFormat>(static_cast<int>(gfxDrawTarget->GetFormat()));
 }
 
 extern "C" void
