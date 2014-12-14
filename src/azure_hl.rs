@@ -300,7 +300,8 @@ impl DrawSurfaceOptions {
 
     fn as_azure_draw_surface_options(&self) -> AzDrawSurfaceOptions {
         struct__AzDrawSurfaceOptions {
-            fields: ((self.filter as int) | (if self.sampling_bounds { 8 } else { 0 })) as u32
+            filter: self.filter as i8,
+            sampling_bounds: self.sampling_bounds as i8,
         }
     }
 }

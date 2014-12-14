@@ -316,13 +316,9 @@ typedef struct _AzStrokeOptions {
    */
 } AzStrokeOptions;
 
-// FIXME: Guess what? Bitfields
 typedef struct _AzDrawSurfaceOptions {
-  uint32_t fields;
-  /*
-  enum Filter mFilter : 3;
-  enum Filter mSamplingBounds : 1;
-  */
+  int8_t filter;
+  int8_t samplingBounds;
 } AzDrawSurfaceOptions;
 
 typedef struct _AzGlyph {
