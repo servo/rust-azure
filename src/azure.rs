@@ -309,7 +309,8 @@ pub type AzStrokeOptions = struct__AzStrokeOptions;
 
 #[repr(C)]
 pub struct struct__AzDrawSurfaceOptions {
-    pub fields: uint32_t,
+    pub filter: i8,
+    pub sampling_bounds: i8,
 }
 
 #[repr(C)]
