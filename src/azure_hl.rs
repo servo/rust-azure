@@ -1068,7 +1068,7 @@ pub enum GaussianBlurAttribute {
 
 impl FilterAttribute for FloodAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let ColorFloodAttribute(value) = *self;
+        let FloodAttribute::ColorFloodAttribute(value) = *self;
         unsafe {
             AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_FLOOD_COLOR,
@@ -1079,7 +1079,7 @@ impl FilterAttribute for FloodAttribute {
 
 impl FilterAttribute for GaussianBlurAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let StdDeviationGaussianBlurAttribute(value) = *self;
+        let GaussianBlurAttribute::StdDeviationGaussianBlurAttribute(value) = *self;
         unsafe {
             AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION,
@@ -1096,8 +1096,8 @@ pub enum FilterType {
 impl FilterType {
     pub fn as_azure_filter_type(self) -> AzFilterType {
         match self {
-            FloodFilterType => AZ_FILTER_TYPE_FLOOD,
-            GaussianBlurFilterType => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
+            FilterType::FloodFilterType => AZ_FILTER_TYPE_FLOOD,
+            FilterType::GaussianBlurFilterType => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
         }
     }
 }
