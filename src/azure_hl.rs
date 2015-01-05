@@ -989,17 +989,17 @@ impl LinearGradientPattern {
 }
 
 pub enum PatternRef<'a> {
-    ColorPatternRef(&'a ColorPattern),
-    LinearGradientPatternRef(&'a LinearGradientPattern),
+    Color(&'a ColorPattern),
+    LinearGradient(&'a LinearGradientPattern),
 }
 
 impl<'a> PatternRef<'a> {
     fn as_azure_pattern(&self) -> AzPatternRef {
         match *self {
-            PatternRef::ColorPatternRef(color_pattern) => {
+            PatternRef::Color(color_pattern) => {
                 color_pattern.azure_color_pattern
             },
-            PatternRef::LinearGradientPatternRef(linear_gradient_pattern) => {
+            PatternRef::LinearGradient(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
             }
         }
