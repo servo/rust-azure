@@ -138,33 +138,33 @@ impl ColorPattern {
 }
 
 pub enum CompositionOp {
-    OverOp,
-    AddOp,
-    AtopOp,
-    OutOp,
-    InOp,
-    SourceOp,
-    DestInOp,
-    DestOutOp,
-    DestOverOp,
-    DestAtopOp,
-    XorOp,
-    MultiplyOp,
-    ScreenOp,
-    OverlayOp,
-    DarkenOp,
-    LightenOp,
-    ColorDodgeOp,
-    ColorBurnOp,
-    HardLightOp,
-    SoftLightOp,
-    DifferenceOp,
-    ExclusionOp,
-    HueOp,
-    SaturationOp,
-    ColorOp,
-    LuminosityOp,
-    CountOp,
+    Over,
+    Add,
+    Atop,
+    Out,
+    In,
+    Source,
+    DestIn,
+    DestOut,
+    DestOver,
+    DestAtop,
+    Xor,
+    Multiply,
+    Screen,
+    Overlay,
+    Darken,
+    Lighten,
+    ColorDodge,
+    ColorBurn,
+    HardLight,
+    SoftLight,
+    Difference,
+    Exclusion,
+    Hue,
+    Saturation,
+    Color,
+    Luminosity,
+    Count,
 }
 
 #[allow(non_snake_case)]
@@ -309,29 +309,29 @@ impl DrawSurfaceOptions {
 
 #[deriving(Clone, PartialEq)]
 pub enum BackendType {
-    NoBackend,
-    Direct2DBackend,
-    CoreGraphicsBackend,
-    CoreGraphicsAcceleratedBackend,
-    CairoBackend,
-    SkiaBackend,
-    RecordingBackend,
-    Direct2D11Backend,
-    NVPathRenderingBackend,
+    None,
+    Direct2D,
+    CoreGraphics,
+    CoreGraphicsAccelerated,
+    Cairo,
+    Skia,
+    Recording,
+    Direct2D11,
+    NVPathRendering,
 }
 
 impl BackendType {
     pub fn as_azure_backend_type(self) -> AzBackendType {
         match self {
-            BackendType::NoBackend                      => 0,
-            BackendType::Direct2DBackend                => 1,
-            BackendType::CoreGraphicsBackend            => 2,
-            BackendType::CoreGraphicsAcceleratedBackend => 3,
-            BackendType::CairoBackend                   => 4,
-            BackendType::SkiaBackend                    => 5,
-            BackendType::RecordingBackend               => 6,
-            BackendType::Direct2D11Backend              => 7,
-            BackendType::NVPathRenderingBackend         => 8,
+            BackendType::None                    => 0,
+            BackendType::Direct2D                => 1,
+            BackendType::CoreGraphics            => 2,
+            BackendType::CoreGraphicsAccelerated => 3,
+            BackendType::Cairo                   => 4,
+            BackendType::Skia                    => 5,
+            BackendType::Recording               => 6,
+            BackendType::Direct2D11              => 7,
+            BackendType::NVPathRendering         => 8,
         }
     }
 }
@@ -413,7 +413,7 @@ impl DrawTarget {
                         native_graphics_context: &NativePaintingGraphicsContext,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
-        assert!(backend == BackendType::SkiaBackend);
+        assert!(backend == BackendType::Skia);
         let native_graphics_context = native_graphics_context as *const _ as AzGLNativeContextRef;
         let skia_context = unsafe {
             AzCreateSkiaSharedGLContext(native_graphics_context,
@@ -799,9 +799,9 @@ pub struct GradientStop {
 #[repr(i32)]
 #[deriving(Clone, PartialEq)]
 pub enum ExtendMode {
-    ExtendClamp = 0,
-    ExtendRepeat = 1,
-    ExtendReflect = 2,
+    Clamp = 0,
+    Repeat = 1,
+    Reflect = 2,
 }
 
 impl ExtendMode {
@@ -989,17 +989,17 @@ impl LinearGradientPattern {
 }
 
 pub enum PatternRef<'a> {
-    ColorPatternRef(&'a ColorPattern),
-    LinearGradientPatternRef(&'a LinearGradientPattern),
+    Color(&'a ColorPattern),
+    LinearGradient(&'a LinearGradientPattern),
 }
 
 impl<'a> PatternRef<'a> {
     fn as_azure_pattern(&self) -> AzPatternRef {
         match *self {
-            PatternRef::ColorPatternRef(color_pattern) => {
+            PatternRef::Color(color_pattern) => {
                 color_pattern.azure_color_pattern
             },
-            PatternRef::LinearGradientPatternRef(linear_gradient_pattern) => {
+            PatternRef::LinearGradient(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
             }
         }
@@ -1059,16 +1059,16 @@ pub trait FilterAttribute {
 }
 
 pub enum FloodAttribute {
-    ColorFloodAttribute(Color),
+    Color(Color),
 }
 
 pub enum GaussianBlurAttribute {
-    StdDeviationGaussianBlurAttribute(AzFloat),
+    StdDeviation(AzFloat),
 }
 
 impl FilterAttribute for FloodAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let FloodAttribute::ColorFloodAttribute(value) = *self;
+        let FloodAttribute::Color(value) = *self;
         unsafe {
             AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_FLOOD_COLOR,
@@ -1079,7 +1079,7 @@ impl FilterAttribute for FloodAttribute {
 
 impl FilterAttribute for GaussianBlurAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let GaussianBlurAttribute::StdDeviationGaussianBlurAttribute(value) = *self;
+        let GaussianBlurAttribute::StdDeviation(value) = *self;
         unsafe {
             AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION,
@@ -1089,15 +1089,15 @@ impl FilterAttribute for GaussianBlurAttribute {
 }
 
 pub enum FilterType {
-    FloodFilterType,
-    GaussianBlurFilterType,
+    Flood,
+    GaussianBlur,
 }
 
 impl FilterType {
     pub fn as_azure_filter_type(self) -> AzFilterType {
         match self {
-            FilterType::FloodFilterType => AZ_FILTER_TYPE_FLOOD,
-            FilterType::GaussianBlurFilterType => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
+            FilterType::Flood => AZ_FILTER_TYPE_FLOOD,
+            FilterType::GaussianBlur => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
         }
     }
 }
