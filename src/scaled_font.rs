@@ -6,7 +6,6 @@ use azure::{AzScaledFontRef, AzFloat};
 use azure::{struct__AzNativeFont};
 
 use azure_hl::BackendType;
-use azure_hl::BackendType::SkiaBackend;
 use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 
 use libc::c_void;
@@ -75,7 +74,7 @@ impl ScaledFont {
         };
 
         match backend {
-            SkiaBackend => {
+            BackendType::Skia => {
                 unsafe {
                     match font_info {
                         FontInfo::NativeFont(native_font) => {
@@ -110,7 +109,6 @@ impl ScaledFont {
     #[cfg(target_os="macos")]
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
-        use azure_hl::BackendType::{CoreGraphicsBackend,CoreGraphicsAcceleratedBackend};
         use core_foundation::base::TCFType;
 
         let mut azure_native_font = struct__AzNativeFont {
@@ -119,7 +117,7 @@ impl ScaledFont {
         };
 
         match backend {
-            CoreGraphicsBackend | CoreGraphicsAcceleratedBackend | SkiaBackend => {
+            BackendType::CoreGraphics | BackendType::CoreGraphicsAccelerated | BackendType::Skia => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
                 unsafe {
                     azure_native_font.mFont = mem::transmute(native_font.as_concrete_TypeRef());

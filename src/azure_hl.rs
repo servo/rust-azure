@@ -309,29 +309,29 @@ impl DrawSurfaceOptions {
 
 #[deriving(Clone, PartialEq)]
 pub enum BackendType {
-    NoBackend,
-    Direct2DBackend,
-    CoreGraphicsBackend,
-    CoreGraphicsAcceleratedBackend,
-    CairoBackend,
-    SkiaBackend,
-    RecordingBackend,
-    Direct2D11Backend,
-    NVPathRenderingBackend,
+    None,
+    Direct2D,
+    CoreGraphics,
+    CoreGraphicsAccelerated,
+    Cairo,
+    Skia,
+    Recording,
+    Direct2D11,
+    NVPathRendering,
 }
 
 impl BackendType {
     pub fn as_azure_backend_type(self) -> AzBackendType {
         match self {
-            BackendType::NoBackend                      => 0,
-            BackendType::Direct2DBackend                => 1,
-            BackendType::CoreGraphicsBackend            => 2,
-            BackendType::CoreGraphicsAcceleratedBackend => 3,
-            BackendType::CairoBackend                   => 4,
-            BackendType::SkiaBackend                    => 5,
-            BackendType::RecordingBackend               => 6,
-            BackendType::Direct2D11Backend              => 7,
-            BackendType::NVPathRenderingBackend         => 8,
+            BackendType::None                    => 0,
+            BackendType::Direct2D                => 1,
+            BackendType::CoreGraphics            => 2,
+            BackendType::CoreGraphicsAccelerated => 3,
+            BackendType::Cairo                   => 4,
+            BackendType::Skia                    => 5,
+            BackendType::Recording               => 6,
+            BackendType::Direct2D11              => 7,
+            BackendType::NVPathRendering         => 8,
         }
     }
 }
@@ -413,7 +413,7 @@ impl DrawTarget {
                         native_graphics_context: &NativePaintingGraphicsContext,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
-        assert!(backend == BackendType::SkiaBackend);
+        assert!(backend == BackendType::Skia);
         let native_graphics_context = native_graphics_context as *const _ as AzGLNativeContextRef;
         let skia_context = unsafe {
             AzCreateSkiaSharedGLContext(native_graphics_context,
