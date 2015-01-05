@@ -799,9 +799,9 @@ pub struct GradientStop {
 #[repr(i32)]
 #[deriving(Clone, PartialEq)]
 pub enum ExtendMode {
-    ExtendClamp = 0,
-    ExtendRepeat = 1,
-    ExtendReflect = 2,
+    Clamp = 0,
+    Repeat = 1,
+    Reflect = 2,
 }
 
 impl ExtendMode {
