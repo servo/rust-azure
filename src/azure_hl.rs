@@ -1063,7 +1063,7 @@ pub enum FloodAttribute {
 }
 
 pub enum GaussianBlurAttribute {
-    StdDeviationGaussianBlurAttribute(AzFloat),
+    StdDeviation(AzFloat),
 }
 
 impl FilterAttribute for FloodAttribute {
@@ -1079,7 +1079,7 @@ impl FilterAttribute for FloodAttribute {
 
 impl FilterAttribute for GaussianBlurAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let GaussianBlurAttribute::StdDeviationGaussianBlurAttribute(value) = *self;
+        let GaussianBlurAttribute::StdDeviation(value) = *self;
         unsafe {
             AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION,
