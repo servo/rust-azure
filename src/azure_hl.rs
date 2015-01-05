@@ -1059,7 +1059,7 @@ pub trait FilterAttribute {
 }
 
 pub enum FloodAttribute {
-    ColorFloodAttribute(Color),
+    Color(Color),
 }
 
 pub enum GaussianBlurAttribute {
@@ -1068,7 +1068,7 @@ pub enum GaussianBlurAttribute {
 
 impl FilterAttribute for FloodAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let FloodAttribute::ColorFloodAttribute(value) = *self;
+        let FloodAttribute::Color(value) = *self;
         unsafe {
             AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_FLOOD_COLOR,
