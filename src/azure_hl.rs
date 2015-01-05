@@ -1089,15 +1089,15 @@ impl FilterAttribute for GaussianBlurAttribute {
 }
 
 pub enum FilterType {
-    FloodFilterType,
-    GaussianBlurFilterType,
+    Flood,
+    GaussianBlur,
 }
 
 impl FilterType {
     pub fn as_azure_filter_type(self) -> AzFilterType {
         match self {
-            FilterType::FloodFilterType => AZ_FILTER_TYPE_FLOOD,
-            FilterType::GaussianBlurFilterType => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
+            FilterType::Flood => AZ_FILTER_TYPE_FLOOD,
+            FilterType::GaussianBlur => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
         }
     }
 }
