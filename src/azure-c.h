@@ -289,6 +289,13 @@ typedef struct _AzMatrix {
   AzFloat _31, _32;
 } AzMatrix;
 
+typedef struct _AzMatrix5x4 {
+  AzFloat _11, _12, _13, _14;
+  AzFloat _21, _22, _23, _24;
+  AzFloat _31, _32, _33, _34;
+  AzFloat _41, _42, _43, _44;
+  AzFloat _51, _52, _53, _54;
+} AzMatrix5x4;
 
 /* 2D.h */
 
@@ -469,6 +476,10 @@ void AzFilterNodeSetFloatAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, AzF
 void AzFilterNodeSetColorAttribute(AzFilterNodeRef aFilter,
                                    uint32_t aIndex,
                                    const AzColor *aValue);
+void AzFilterNodeSetMatrix5x4Attribute(AzFilterNodeRef aFilter,
+                                       uint32_t aIndex,
+                                       const AzMatrix5x4 *aValue);
+void AzFilterNodeSetBoolAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, bool aValue);
 
 /* Factory.h */
 

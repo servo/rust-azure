@@ -79,7 +79,7 @@ pub static AZ_FILTER_TYPE_DISTANT_DIFFUSE: u32 = 21_u32;
 pub static AZ_FILTER_TYPE_DISTANT_SPECULAR: u32 = 22_u32;
 pub static AZ_FILTER_TYPE_CROP: u32 = 23_u32;
 pub static AZ_FILTER_TYPE_PREMULTIPLY: u32 = 24_u32;
-pub static AZ_FILTER_TYPE_UNPREMULTIPL: u32 = 25_u32;
+pub static AZ_FILTER_TYPE_UNPREMULTIPLY: u32 = 25_u32;
 
 pub type AzFilterType = enum_AzFilterType;
 
@@ -193,6 +193,15 @@ pub static AZ_eSideRight: u32 = 1_u32;
 pub static AZ_eSideBottom: u32 = 2_u32;
 pub static AZ_eSideLeft: u32 = 3_u32;
 
+pub type enum_AzColorMatrixFilterAtts = u32;
+pub static AZ_ATT_COLOR_MATRIX_MATRIX: u32 = 0;
+
+pub type enum_AzColorMatrixFilterInputs = u32;
+pub static AZ_IN_COLOR_MATRIX_IN: u32 = 0;
+
+pub type enum_AzCompositeFilterInputs = u32;
+pub static AZ_IN_COMPOSITE_IN: u32 = 0;
+
 pub type enum_AzFloodFilterAtts = u32;
 pub static AZ_ATT_FLOOD_COLOR: u32 = 0;
 
@@ -204,6 +213,34 @@ pub static AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION: u32 = 0;
 
 pub type enum_AzGaussianBlurInputs = u32;
 pub static AZ_IN_GAUSSIAN_BLUR_IN: u32 = 0;
+
+pub type enum_LinearTransferAtts = u32;
+pub static AZ_ATT_LINEAR_TRANSFER_SLOPE_R: u32 = 4;
+pub static AZ_ATT_LINEAR_TRANSFER_SLOPE_G: u32 = 5;
+pub static AZ_ATT_LINEAR_TRANSFER_SLOPE_B: u32 = 6;
+pub static AZ_ATT_LINEAR_TRANSFER_SLOPE_A: u32 = 7;
+pub static AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R: u32 = 8;
+pub static AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G: u32 = 9;
+pub static AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B: u32 = 10;
+pub static AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A: u32 = 11;
+
+pub type enum_AzLinearTransferInputs = u32;
+pub static AZ_IN_LINEAR_TRANSFER_IN: u32 = 0;
+
+pub type enum_AzTableTransferAtts = u32;
+pub static AZ_ATT_TABLE_TRANSFER_TABLE_R: u32 = 4;
+pub static AZ_ATT_TABLE_TRANSFER_TABLE_G: u32 = 5;
+pub static AZ_ATT_TABLE_TRANSFER_TABLE_B: u32 = 6;
+pub static AZ_ATT_TABLE_TRANSFER_TABLE_A: u32 = 7;
+
+pub type enum_AzTableTransferInputs = u32;
+pub static AZ_IN_TABLE_TRANSFER_IN: u32 = 0;
+
+pub type enum_TransferAtts = u32;
+pub static AZ_ATT_TRANSFER_DISABLE_R: u32 = 0;
+pub static AZ_ATT_TRANSFER_DISABLE_G: u32 = 1;
+pub static AZ_ATT_TRANSFER_DISABLE_B: u32 = 2;
+pub static AZ_ATT_TRANSFER_DISABLE_A: u32 = 3;
 
 #[repr(C)]
 #[deriving(Clone)]
@@ -286,6 +323,18 @@ pub struct struct__AzMatrix {
 }
 
 pub type AzMatrix = struct__AzMatrix;
+
+#[repr(C)]
+#[deriving(PartialEq, Clone)]
+pub struct struct__AzMatrix5x4 {
+    pub _11: AzFloat, pub _12: AzFloat, pub _13: AzFloat, pub _14: AzFloat,
+    pub _21: AzFloat, pub _22: AzFloat, pub _23: AzFloat, pub _24: AzFloat,
+    pub _31: AzFloat, pub _32: AzFloat, pub _33: AzFloat, pub _34: AzFloat,
+    pub _41: AzFloat, pub _42: AzFloat, pub _43: AzFloat, pub _44: AzFloat,
+    pub _51: AzFloat, pub _52: AzFloat, pub _53: AzFloat, pub _54: AzFloat,
+}
+
+pub type AzMatrix5x4 = struct__AzMatrix5x4;
 
 #[repr(C)]
 pub struct struct__AzDrawOptions {
@@ -553,8 +602,17 @@ pub fn AzFilterNodeSetFilterNodeInput(aFilter: AzFilterNodeRef,
                                       aIndex: u32,
                                       aInputFilter: AzFilterNodeRef);
 pub fn AzFilterNodeSetFloatAttribute(aFilter: AzFilterNodeRef, aIndex: u32, aValue: AzFloat);
+pub fn AzFilterNodeSetFloatArrayAttribute(aFilter: AzFilterNodeRef,
+                                          aIndex: u32,
+                                          aFloats: *const AzFloat,
+                                          aSize: u32);
 pub fn AzFilterNodeSetColorAttribute(aFilter: AzFilterNodeRef,
                                      aIndex: u32,
                                      aValue: *const AzColor);
+pub fn AzFilterNodeSetMatrix5x4Attribute(aFilter: AzFilterNodeRef,
+                                         aIndex: u32,
+                                         aValue: *const AzMatrix5x4);
+
+pub fn AzFilterNodeSetBoolAttribute(aFilter: AzFilterNodeRef, aIndex: u32, aValue: bool);
 
 }

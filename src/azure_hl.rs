@@ -4,9 +4,20 @@
 
 //! High-level bindings to Azure.
 
-use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL, AZ_FILTER_TYPE_FLOOD};
-use azure::{AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN};
-use azure::{AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
+use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL, AZ_FILTER_TYPE_COLOR_MATRIX};
+use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
+use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
+use azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
+use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
+use azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
+use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
+use azure::{AZ_ATT_TRANSFER_DISABLE_A};
 use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
@@ -14,7 +25,7 @@ use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradien
 use azure::{AzCompositionOp};
 use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
-use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
+use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzMatrix5x4};
 use azure::{AzGLContext, AzSkiaSharedGLContextRef};
 use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
 use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
@@ -40,7 +51,9 @@ use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarge
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
 use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
 use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
-use azure::{AzFilterNodeSetFilterNodeInput, AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
+use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
+use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
+use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 
 use sync::Arc;
 use geom::matrix2d::Matrix2D;
@@ -583,7 +596,7 @@ impl DrawTarget {
     }
 
     pub fn draw_filter(&self,
-                       filter: FilterNode,
+                       filter: &FilterNode,
                        source_rect: &Rect<AzFloat>,
                        dest_point: &Point2D<AzFloat>,
                        options: DrawOptions) {
@@ -1034,12 +1047,32 @@ impl FilterNode {
     }
 }
 
+pub struct ColorMatrixInput;
+
+pub struct CompositeInput;
+
 pub struct FloodFilterInput;
 
 pub struct GaussianBlurInput;
 
+pub struct LinearTransferInput;
+
+pub struct TableTransferInput;
+
 pub trait FilterInputIndex {
     fn azure_index(&self) -> u32;
+}
+
+impl FilterInputIndex for ColorMatrixInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_COLOR_MATRIX_IN
+    }
+}
+
+impl FilterInputIndex for CompositeInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_COMPOSITE_IN
+    }
 }
 
 impl FilterInputIndex for FloodFilterInput {
@@ -1054,8 +1087,24 @@ impl FilterInputIndex for GaussianBlurInput {
     }
 }
 
+impl FilterInputIndex for LinearTransferInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_LINEAR_TRANSFER_IN
+    }
+}
+
+impl FilterInputIndex for TableTransferInput {
+    fn azure_index(&self) -> u32 {
+        AZ_IN_TABLE_TRANSFER_IN
+    }
+}
+
 pub trait FilterAttribute {
     fn set(&self, filter_node: &FilterNode);
+}
+
+pub enum ColorMatrixAttribute {
+    Matrix(Matrix5x4),
 }
 
 pub enum FloodAttribute {
@@ -1064,6 +1113,43 @@ pub enum FloodAttribute {
 
 pub enum GaussianBlurAttribute {
     StdDeviation(AzFloat),
+}
+
+pub enum LinearTransferAttribute {
+    DisableR(bool),
+    DisableG(bool),
+    DisableB(bool),
+    DisableA(bool),
+    SlopeR(AzFloat),
+    SlopeG(AzFloat),
+    SlopeB(AzFloat),
+    SlopeA(AzFloat),
+    InterceptR(AzFloat),
+    InterceptG(AzFloat),
+    InterceptB(AzFloat),
+    InterceptA(AzFloat),
+}
+
+pub enum TableTransferAttribute<'a> {
+    DisableR(bool),
+    DisableG(bool),
+    DisableB(bool),
+    DisableA(bool),
+    TableR(&'a [AzFloat]),
+    TableG(&'a [AzFloat]),
+    TableB(&'a [AzFloat]),
+    TableA(&'a [AzFloat]),
+}
+
+impl FilterAttribute for ColorMatrixAttribute {
+    fn set(&self, filter_node: &FilterNode) {
+        let ColorMatrixAttribute::Matrix(value) = *self;
+        unsafe {
+            AzFilterNodeSetMatrix5x4Attribute(filter_node.azure_filter_node,
+                                              AZ_ATT_COLOR_MATRIX_MATRIX,
+                                              &value.as_azure_matrix_5x4())
+        }
+    }
 }
 
 impl FilterAttribute for FloodAttribute {
@@ -1088,16 +1174,146 @@ impl FilterAttribute for GaussianBlurAttribute {
     }
 }
 
+impl FilterAttribute for LinearTransferAttribute {
+    fn set(&self, filter_node: &FilterNode) {
+        unsafe {
+            match *self {
+                LinearTransferAttribute::DisableR(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_R,
+                                                 value)
+                }
+                LinearTransferAttribute::DisableG(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_G,
+                                                 value)
+                }
+                LinearTransferAttribute::DisableB(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_B,
+                                                 value)
+                }
+                LinearTransferAttribute::DisableA(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_A,
+                                                 value)
+                }
+                LinearTransferAttribute::SlopeR(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_SLOPE_R,
+                                                  value)
+                }
+                LinearTransferAttribute::SlopeG(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_SLOPE_G,
+                                                  value)
+                }
+                LinearTransferAttribute::SlopeB(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_SLOPE_B,
+                                                  value)
+                }
+                LinearTransferAttribute::SlopeA(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_SLOPE_A,
+                                                  value)
+                }
+                LinearTransferAttribute::InterceptR(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R,
+                                                  value)
+                }
+                LinearTransferAttribute::InterceptG(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G,
+                                                  value)
+                }
+                LinearTransferAttribute::InterceptB(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B,
+                                                  value)
+                }
+                LinearTransferAttribute::InterceptA(value) => {
+                    AzFilterNodeSetFloatAttribute(filter_node.azure_filter_node,
+                                                  AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A,
+                                                  value)
+                }
+            }
+        }
+    }
+}
+
+impl<'a> FilterAttribute for TableTransferAttribute<'a> {
+    fn set(&self, filter_node: &FilterNode) {
+        unsafe {
+            match *self {
+                TableTransferAttribute::DisableR(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_R,
+                                                 value)
+                }
+                TableTransferAttribute::DisableG(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_G,
+                                                 value)
+                }
+                TableTransferAttribute::DisableB(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_B,
+                                                 value)
+                }
+                TableTransferAttribute::DisableA(value) => {
+                    AzFilterNodeSetBoolAttribute(filter_node.azure_filter_node,
+                                                 AZ_ATT_TRANSFER_DISABLE_A,
+                                                 value)
+                }
+                TableTransferAttribute::TableR(value) => {
+                    AzFilterNodeSetFloatArrayAttribute(filter_node.azure_filter_node,
+                                                       AZ_ATT_TABLE_TRANSFER_TABLE_R,
+                                                       value.as_ptr(),
+                                                       value.len() as u32)
+                }
+                TableTransferAttribute::TableG(value) => {
+                    AzFilterNodeSetFloatArrayAttribute(filter_node.azure_filter_node,
+                                                       AZ_ATT_TABLE_TRANSFER_TABLE_G,
+                                                       value.as_ptr(),
+                                                       value.len() as u32)
+                }
+                TableTransferAttribute::TableB(value) => {
+                    AzFilterNodeSetFloatArrayAttribute(filter_node.azure_filter_node,
+                                                       AZ_ATT_TABLE_TRANSFER_TABLE_B,
+                                                       value.as_ptr(),
+                                                       value.len() as u32)
+                }
+                TableTransferAttribute::TableA(value) => {
+                    AzFilterNodeSetFloatArrayAttribute(filter_node.azure_filter_node,
+                                                       AZ_ATT_TABLE_TRANSFER_TABLE_A,
+                                                       value.as_ptr(),
+                                                       value.len() as u32)
+                }
+            }
+        }
+    }
+}
+
 pub enum FilterType {
+    ColorMatrix,
+    Composite,
     Flood,
     GaussianBlur,
+    LinearTransfer,
+    TableTransfer,
 }
 
 impl FilterType {
     pub fn as_azure_filter_type(self) -> AzFilterType {
         match self {
+            FilterType::ColorMatrix => AZ_FILTER_TYPE_COLOR_MATRIX,
+            FilterType::Composite => AZ_FILTER_TYPE_COMPOSITE,
             FilterType::Flood => AZ_FILTER_TYPE_FLOOD,
             FilterType::GaussianBlur => AZ_FILTER_TYPE_GAUSSIAN_BLUR,
+            FilterType::LinearTransfer => AZ_FILTER_TYPE_LINEAR_TRANSFER,
+            FilterType::TableTransfer => AZ_FILTER_TYPE_TABLE_TRANSFER,
         }
     }
 }
@@ -1120,6 +1336,28 @@ impl FilterInput for FilterNode {
     fn set(&self, filter: &FilterNode, index: u32) {
         unsafe {
             AzFilterNodeSetFilterNodeInput(filter.azure_filter_node, index, self.azure_filter_node)
+        }
+    }
+}
+
+#[deriving(PartialEq, Clone, Show)]
+pub struct Matrix5x4 {
+    pub m11: AzFloat, pub m12: AzFloat, pub m13: AzFloat, pub m14: AzFloat,
+    pub m21: AzFloat, pub m22: AzFloat, pub m23: AzFloat, pub m24: AzFloat,
+    pub m31: AzFloat, pub m32: AzFloat, pub m33: AzFloat, pub m34: AzFloat,
+    pub m41: AzFloat, pub m42: AzFloat, pub m43: AzFloat, pub m44: AzFloat,
+    pub m51: AzFloat, pub m52: AzFloat, pub m53: AzFloat, pub m54: AzFloat,
+}
+
+impl Matrix5x4 {
+    #[inline]
+    pub fn as_azure_matrix_5x4(&self) -> struct__AzMatrix5x4 {
+        struct__AzMatrix5x4 {
+            _11: self.m11, _12: self.m12, _13: self.m13, _14: self.m14,
+            _21: self.m21, _22: self.m22, _23: self.m23, _24: self.m24,
+            _31: self.m31, _32: self.m32, _33: self.m33, _34: self.m34,
+            _41: self.m41, _42: self.m42, _43: self.m43, _44: self.m44,
+            _51: self.m51, _52: self.m52, _53: self.m53, _54: self.m54,
         }
     }
 }

@@ -746,9 +746,34 @@ AzFilterNodeSetFloatAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, AzFloat 
 }
 
 extern "C" void
+AzFilterNodeSetFloatArrayAttribute(AzFilterNodeRef aFilter,
+                                   uint32_t aIndex,
+                                   const AzFloat *aFloats,
+                                   uint32_t aSize) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfxFilterNode->SetAttribute(aIndex, aFloats, aSize);
+}
+
+extern "C" void
 AzFilterNodeSetColorAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, const AzColor *aValue) {
     gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
     const gfx::Color *gfxColor = reinterpret_cast<const gfx::Color*>(aValue);
     gfxFilterNode->SetAttribute(aIndex, aValue);
 }
+
+extern "C" void
+AzFilterNodeSetMatrix5x4Attribute(AzFilterNodeRef aFilter,
+                                  uint32_t aIndex,
+                                  const AzMatrix5x4 *aValue) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    const gfx::Matrix5x4 *gfxMatrix5x4 = reinterpret_cast<const gfx::Matrix5x4*>(aValue);
+    gfxFilterNode->SetAttribute(aIndex, *gfxMatrix5x4);
+}
+
+extern "C" void
+AzFilterNodeSetBoolAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, bool aValue) {
+    gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
+    gfxFilterNode->SetAttribute(aIndex, aValue);
+}
+
 
