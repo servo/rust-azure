@@ -55,7 +55,7 @@ use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
 use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
 use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 
-use sync::Arc;
+use std::sync::Arc;
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
@@ -108,7 +108,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
     }
 }
 
-#[deriving(Clone)]
+#[deriving(Copy, Clone)]
 pub struct Color {
     pub r: AzFloat,
     pub g: AzFloat,
@@ -286,6 +286,7 @@ impl SurfaceFormat {
     }
 }
 
+#[deriving(Copy)]
 pub enum Filter {
     Good,
     Linear,

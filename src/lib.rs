@@ -8,7 +8,6 @@
 #![feature(globs)]
 
 extern crate libc;
-extern crate sync;
 extern crate geom;
 extern crate layers;
 #[cfg(target_os = "linux")]
