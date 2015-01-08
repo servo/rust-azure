@@ -1144,7 +1144,7 @@ pub enum TableTransferAttribute<'a> {
 
 impl FilterAttribute for ColorMatrixAttribute {
     fn set(&self, filter_node: &FilterNode) {
-        let ColorMatrixAttribute::Matrix(value) = *self;
+        let ColorMatrixAttribute::Matrix(ref value) = *self;
         unsafe {
             AzFilterNodeSetMatrix5x4Attribute(filter_node.azure_filter_node,
                                               AZ_ATT_COLOR_MATRIX_MATRIX,
