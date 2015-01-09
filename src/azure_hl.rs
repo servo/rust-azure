@@ -408,7 +408,7 @@ impl DrawTarget {
         assert!((data.len() - offset) as i32 >= stride * size.height);
         let azure_draw_target = unsafe {
             AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                      &mut data[offset],
+                                      data.as_mut_slice().as_mut_ptr().offset(offset as int),
                                       &mut size.as_azure_int_size(),
                                       stride,
                                       format.as_azure_surface_format())
@@ -645,7 +645,7 @@ impl DrawTarget {
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
-                &data[0],
+                data.as_ptr(),
                 &mut size.as_azure_int_size(),
                 stride,
                 format.as_azure_surface_format());
