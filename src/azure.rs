@@ -10,6 +10,8 @@
 
 use libc::*;
 
+use skia::SkiaSkNativeSharedGLContextRef;
+
 pub type AzFontOptions = *mut c_void;
 pub type AzFloat = c_float;
 
@@ -393,14 +395,6 @@ pub type AzNativeFont = struct__AzNativeFont;
 
 pub type AzGradientStopsRef = *mut c_void;
 
-pub type AzSkiaSharedGLContextRef = *mut c_void;
-
-pub type AzSkiaSharedGrGLContextRef = *mut c_void;
-
-pub type AzSkiaGrContextRef = *mut c_void;
-
-pub type AzSkiaGrGLSharedSurfaceRef = *mut c_void;
-
 pub type AzDrawTargetRef = *mut c_void;
 
 pub type AzPatternRef = *mut c_void;
@@ -422,11 +416,7 @@ pub type AzDrawSurfaceOptionsRef = *mut AzDrawSurfaceOptions;
 
 pub type AzGLContext = *mut c_void;
 
-pub type AzSkiaGrGLSharedContextRef = *mut c_void;
-
 pub type AzGLContextMetadataRef = *mut c_void;
-
-pub type AzGLNativeContextRef = *mut c_void;
 
 pub type AzPathRef = *mut c_void;
 
@@ -445,28 +435,11 @@ pub fn AzCreateColorPattern(aColor: *mut AzColor) -> AzColorPatternRef;
 
 pub fn AzReleasePattern(aPattern: AzPatternRef);
 
-pub fn AzCreateSkiaSharedGLContext(aNativeContext: AzGLNativeContextRef, aSize: *mut AzIntSize)
-                                   -> AzSkiaSharedGLContextRef;
-
-pub fn AzRetainSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
-
-pub fn AzReleaseSkiaSharedGLContext(aGLContext: AzSkiaSharedGLContextRef);
-
-pub fn AzSkiaSharedGLContextGetFBOID(aGLContext: AzSkiaSharedGLContextRef) -> c_uint;
-
-pub fn AzSkiaSharedGLContextStealSurface(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrGLSharedSurfaceRef;
-
-pub fn AzSkiaSharedGLContextGetGrContext(aGLContext: AzSkiaSharedGLContextRef) -> AzSkiaGrContextRef;
-
-pub fn AzSkiaSharedGLContextMakeCurrent(aGLContext: AzSkiaSharedGLContextRef);
-
-pub fn AzSkiaSharedGLContextFlush(aGLContext: AzSkiaSharedGLContextRef);
-
 pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *mut c_uchar, aSize: *mut AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: AzSkiaSharedGLContextRef, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: SkiaSkNativeSharedGLContextRef, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzRetainDrawTarget(aTarget: AzDrawTargetRef);
 
@@ -570,8 +543,6 @@ pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *mut A
 pub fn AzCreateFontOptionsForName(aName: *const c_char, aStyle: enum_AzFontStyle) -> *mut AzFontOptions;
 
 pub fn AzDestroyFontOptions(aOptions: *mut AzFontOptions);
-
-pub fn AzSkiaGetCurrentGLContext() -> AzGLContext;
 
 pub fn AzCreatePathBuilder(aDrawTarget: AzDrawTargetRef) -> AzPathBuilderRef;
 

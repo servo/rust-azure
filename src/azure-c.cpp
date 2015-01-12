@@ -170,61 +170,6 @@ AzCreateColorPattern(AzColor *aColor) {
     return gfxColorPattern;
 }
 
-extern "C" AzSkiaSharedGLContextRef
-AzCreateSkiaSharedGLContext(AzGLNativeContextRef aNativeContext, AzIntSize *aSize) {
-    GrGLNativeContext* nativeContext = reinterpret_cast<GrGLNativeContext*>(aNativeContext);
-    SkNativeSharedGLContext *sharedGLContext = new SkNativeSharedGLContext(*nativeContext);
-    if (sharedGLContext == NULL) {
-        return NULL;
-    }
-    if (!sharedGLContext->init(aSize->width, aSize->height)) {
-        return NULL;
-    }
-    return sharedGLContext;
-}
-
-extern "C" void
-AzRetainSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->ref();
-}
-
-extern "C" void
-AzReleaseSkiaSharedGLContext(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->unref();
-}
-
-extern "C" unsigned int
-AzSkiaSharedGLContextGetFBOID(AzSkiaSharedGLContextRef aGLContext) {
-   SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-   return sharedGLContext->getFBOID();
-}
-
-extern "C" AzSkiaGrGLSharedSurfaceRef
-AzSkiaSharedGLContextStealSurface(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    return reinterpret_cast<void*>(sharedGLContext->stealSurface());
-}
-
-extern "C" AzSkiaGrContextRef
-AzSkiaSharedGLContextGetGrContext(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    return sharedGLContext->getGrContext();
-}
-
-extern "C" void
-AzSkiaSharedGLContextMakeCurrent(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->makeCurrent();
-}
-
-extern "C" void
-AzSkiaSharedGLContextFlush(AzSkiaSharedGLContextRef aGLContext) {
-    SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
-    sharedGLContext->flush();
-}
-
 extern "C" AzDrawTargetRef
 AzCreateDrawTarget(AzBackendType aBackend, AzIntSize *aSize, AzSurfaceFormat aFormat) {
     gfx::BackendType backendType = static_cast<gfx::BackendType>(aBackend);
@@ -255,7 +200,7 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
 }
 
 extern "C" AzDrawTargetRef
-AzCreateSkiaDrawTargetForFBO(AzSkiaSharedGLContextRef aGLContext, AzIntSize *aSize, AzSurfaceFormat aFormat) {
+AzCreateSkiaDrawTargetForFBO(SkiaSkNativeSharedGLContextRef aGLContext, AzIntSize *aSize, AzSurfaceFormat aFormat) {
     SkNativeSharedGLContext *sharedGLContext = static_cast<SkNativeSharedGLContext*>(aGLContext);
     GrContext *grContext = sharedGLContext->getGrContext();
     gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
@@ -621,11 +566,6 @@ AzDestroyFontOptions(AzFontOptions* aOptions) {
     #else
     abort();
     #endif
-}
-
-extern "C" AzGLContext
-AzSkiaGetCurrentGLContext() {
-    return SkNativeSharedGLContext::GetCurrent();
 }
 
 // FIXME: Needs to take a FillRule
