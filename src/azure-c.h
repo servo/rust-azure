@@ -436,6 +436,11 @@ void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
                       AzFloat aStartAngle,
                       AzFloat aEndAngle,
                       bool aAntiClockwise);
+void AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder,
+                           const AzPoint *aControlPoint1,
+                           const AzPoint *aControlPoint2,
+                           const AzPoint *aControlPoint3);
+void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 
 AzLinearGradientPatternRef AzCreateLinearGradientPattern(const AzPoint *aBegin,

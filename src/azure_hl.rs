@@ -50,7 +50,8 @@ use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTarget
 use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
 use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
 use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
-use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
+use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType, AzPathBuilderBezierTo};
+use azure::{AzPathBuilderClose};
 
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
@@ -983,6 +984,26 @@ impl PathBuilder {
         }
     }
 
+    /// Adds a cubic Bézier curve to the current figure.
+    pub fn bezier_curve_to(&self,
+                           control_point_1: &Point2D<AzFloat>,
+                           control_point_2: &Point2D<AzFloat>,
+                           control_point_3: &Point2D<AzFloat>) {
+        unsafe {
+            AzPathBuilderBezierTo(self.azure_path_builder,
+                                  &control_point_1.as_azure_point(),
+                                  &control_point_2.as_azure_point(),
+                                  &control_point_3.as_azure_point())
+        }
+    }
+
+    /// Closes the current path.
+    pub fn close(&self) {
+        unsafe {
+            AzPathBuilderClose(self.azure_path_builder)
+        }
+    }
+
     pub fn finish(&self) -> Path {
         let az_path = unsafe { AzPathBuilderFinish(self.azure_path_builder) };
         Path {
@@ -1042,6 +1063,22 @@ impl<'a> PatternRef<'a> {
             },
             PatternRef::LinearGradient(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
+            }
+        }
+    }
+}
+
+pub enum Pattern {
+    Color(ColorPattern),
+    LinearGradient(LinearGradientPattern),
+}
+
+impl Pattern {
+    pub fn to_pattern_ref(&self) -> PatternRef {
+        match *self {
+            Pattern::Color(ref color_pattern) => PatternRef::Color(color_pattern),
+            Pattern::LinearGradient(ref linear_gradient_pattern) => {
+                PatternRef::LinearGradient(linear_gradient_pattern)
             }
         }
     }
