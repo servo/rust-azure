@@ -10,10 +10,6 @@ build = "make -f makefile.cargo"
 
 git = "https://github.com/servo/rust-geom"
 
-[dependencies.layers]
-
-git = "https://github.com/servo/rust-layers"
-
 [dependencies.skia-sys]
 
 git = "https://github.com/servo/skia"

@@ -60,7 +60,6 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use layers::platform::surface::NativePaintingGraphicsContext;
 use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
 use std::mem;
@@ -424,11 +423,10 @@ impl DrawTarget {
     }
 
     pub fn new_with_fbo(backend: BackendType,
-                        native_graphics_context: &NativePaintingGraphicsContext,
+                        native_graphics_context: AzGLNativeContextRef,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == BackendType::Skia);
-        let native_graphics_context = native_graphics_context as *const _ as AzGLNativeContextRef;
         let skia_context = unsafe {
             AzCreateSkiaSharedGLContext(native_graphics_context,
                                         &mut size.as_azure_int_size())
