@@ -588,6 +588,13 @@ pub fn AzPathBuilderArc(aPathBuilder: AzPathBuilderRef,
                         aEndAngle: AzFloat,
                         aAntiClockwise: bool);
 
+pub fn AzPathBuilderBezierTo(aPathBuilder: AzPathBuilderRef,
+                             aControlPoint1: *const AzPoint,
+                             aControlPoint2: *const AzPoint,
+                             aControlPoint3: *const AzPoint);
+
+pub fn AzPathBuilderClose(aPathBuilder: AzPathBuilderRef);
+
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 
 pub fn AzReleasePath(aPath: AzPathRef);
