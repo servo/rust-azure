@@ -9,7 +9,6 @@
 
 extern crate libc;
 extern crate geom;
-extern crate layers;
 #[cfg(target_os = "linux")]
 extern crate xlib;
 #[cfg(target_os = "android")]
