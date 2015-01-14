@@ -37,7 +37,7 @@ use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
 use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
 use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
-use azure::{AzSourceSurfaceGetSize, AzCreateSkiaDrawTargetForFBO};
+use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
 use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
@@ -57,8 +57,9 @@ use geom::rect::Rect;
 use geom::size::Size2D;
 use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
-use skia::SkiaGrGLNativeContextRef;
+use skia::{SkiaGrGLNativeContextRef, SkiaGrContextRef};
 use skia::{SkiaSkNativeSharedGLContextRef, SkiaSkNativeSharedGLContextCreate};
+use skia::{SkiaSkNativeSharedGLContextGetFBOID, SkiaSkNativeSharedGLContextGetGrContext};
 use skia::{SkiaSkNativeSharedGLContextRelease, SkiaSkNativeSharedGLContextRetain};
 use skia::{SkiaSkNativeSharedGLContextMakeCurrent, SkiaSkNativeSharedGLContextStealSurface};
 use skia::{SkiaSkNativeSharedGLContextFlush, SkiaGrGLSharedSurfaceRef};
@@ -430,14 +431,26 @@ impl DrawTarget {
         assert!(backend == BackendType::Skia);
         let native_surface = native_graphics_context as SkiaGrGLSharedSurfaceRef;
         let skia_context = unsafe {
-            SkiaSkNativeSharedGLContextCreate(native_graphics_context,
-                                        size.width,
-                                        size.height)
+            SkiaSkNativeSharedGLContextCreate(native_graphics_context, size.width, size.height)
         };
+
+        if skia_context.is_null() {
+            panic!("null skia shared gl context");
+        }
+
+        let gr_context = unsafe {
+            SkiaSkNativeSharedGLContextGetGrContext(skia_context)
+        };
+
+        let fbo_id = unsafe {
+            SkiaSkNativeSharedGLContextGetFBOID(skia_context)
+        };
+
         let azure_draw_target = unsafe {
-            AzCreateSkiaDrawTargetForFBO(skia_context,
-                                         &mut size.as_azure_int_size(),
-                                         format.as_azure_surface_format())
+            AzCreateDrawTargetSkiaWithGrContextAndFBO(gr_context,
+                                                      fbo_id,
+                                                      &mut size.as_azure_int_size(),
+                                                      format.as_azure_surface_format())
         };
         if azure_draw_target.is_null() {
             panic!("null azure draw target");

@@ -10,7 +10,7 @@
 
 use libc::*;
 
-use skia::SkiaSkNativeSharedGLContextRef;
+use skia::{SkiaGrContextRef, SkiaSkNativeSharedGLContextRef};
 
 pub type AzFontOptions = *mut c_void;
 pub type AzFloat = c_float;
@@ -439,7 +439,7 @@ pub fn AzCreateDrawTarget(aBackend: AzBackendType, aSize: *mut AzIntSize, aForma
 
 pub fn AzCreateDrawTargetForData(aBackend: AzBackendType, aData: *mut c_uchar, aSize: *mut AzIntSize, aStride: i32, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
-pub fn AzCreateSkiaDrawTargetForFBO(aGLContext: SkiaSkNativeSharedGLContextRef, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
+pub fn AzCreateDrawTargetSkiaWithGrContextAndFBO(aGrContext: SkiaGrContextRef, aFBOID: u32, aSize: *mut AzIntSize, aFormat: AzSurfaceFormat) -> AzDrawTargetRef;
 
 pub fn AzRetainDrawTarget(aTarget: AzDrawTargetRef);
 

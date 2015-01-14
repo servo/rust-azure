@@ -345,9 +345,11 @@ AzDrawTargetRef AzCreateDrawTargetForData(AzBackendType aBackend,
                                           AzIntSize *aSize,
                                           int32_t aStride,
                                           AzSurfaceFormat aFormat);
-AzDrawTargetRef AzCreateSkiaDrawTragetForFBO(SkiaSkNativeSharedGLContextRef aGLContext,
-                                             AzIntSize *aSize,
-                                             AzSurfaceFormat aFormat);
+AzDrawTargetRef
+AzCreateDrawTargetSkiaWithGrContextAndFBO(SkiaGrContextRef aGrContext,
+                                          unsigned int aFBOID,
+                                          AzIntSize *aSize,
+                                          AzSurfaceFormat aFormat);
 
 void AzRetainDrawTarget(AzDrawTargetRef aTarget);
 
