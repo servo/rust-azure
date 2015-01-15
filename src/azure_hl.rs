@@ -353,18 +353,13 @@ impl BackendType {
 
 pub struct DrawTarget {
     pub azure_draw_target: AzDrawTargetRef,
-    pub data: Option<Arc<Vec<u8>>>,
-    pub skia_context: Option<SkiaSkNativeSharedGLContextRef>
+    pub backing: DrawTargetBacking,
 }
 
 impl Drop for DrawTarget {
     fn drop(&mut self) {
         unsafe {
             AzReleaseDrawTarget(self.azure_draw_target);
-            match self.skia_context {
-                None => {}
-                Some(ctx_ref) => { SkiaSkNativeSharedGLContextRelease(ctx_ref); }
-            }
         }
     }
 }
@@ -374,12 +369,6 @@ impl PartialEq for DrawTarget {
     fn eq(&self, other: &DrawTarget) -> bool {
         self.azure_draw_target == other.azure_draw_target
     }
-}
-
-/// Contains the GL resources that Skia was holding onto that may be safely extracted. At the
-/// moment this consists simply of the native surface.
-pub struct StolenGLResources {
-    pub surface: SkiaGrGLSharedSurfaceRef,
 }
 
 impl DrawTarget {
@@ -395,8 +384,7 @@ impl DrawTarget {
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
-            data: None,
-            skia_context: None
+            backing: DrawTargetBacking::Empty,
         }
     }
 
@@ -419,8 +407,7 @@ impl DrawTarget {
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
-            data: Some(Arc::new(data)),
-            skia_context: None
+            backing: DrawTargetBacking::Data(Arc::new(data)),
         }
     }
 
@@ -457,47 +444,29 @@ impl DrawTarget {
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
-            data: None,
-            skia_context: Some(skia_context)
+            backing: DrawTargetBacking::SkiaContext(skia_context)
         }
     }
 
     pub fn clone(&self) -> DrawTarget {
         unsafe {
             AzRetainDrawTarget(self.azure_draw_target);
-            match self.skia_context {
-                Some(ctx) => SkiaSkNativeSharedGLContextRetain(ctx),
-                None => (),
-            }
         }
         DrawTarget {
             azure_draw_target: self.azure_draw_target,
-            data: match self.data {
-                None => None,
-                Some(ref arc) => Some(arc.clone())
-            },
-            skia_context: self.skia_context
+            backing: self.backing.clone(),
         }
     }
 
     pub fn make_current(&self) {
-        match self.skia_context {
-            None => {}
-            Some(ctx) => { 
-                unsafe {
-                    SkiaSkNativeSharedGLContextMakeCurrent(ctx);
-                }
-            }
-        }
+        self.backing.make_current();
     }
 
-    /// Consumes this draw target and returns the underlying native surface and GL context, if they exist.
-    pub fn steal_gl_resources(self) -> Option<StolenGLResources> {
-        self.skia_context.map(|ctx| {
-            StolenGLResources {
-                surface: unsafe { SkiaSkNativeSharedGLContextStealSurface(ctx) },
-            }
-        })
+    /// Consumes this draw target and returns the underlying draw target backing.
+    pub fn steal_draw_target_backing(mut self) -> DrawTargetBacking {
+        let mut backing = DrawTargetBacking::Empty;
+        mem::swap(&mut backing, &mut self.backing);
+        backing
     }
 
     pub fn get_size(&self) -> AzIntSize {
@@ -523,11 +492,8 @@ impl DrawTarget {
     pub fn flush(&self) {
         unsafe {
             AzDrawTargetFlush(self.azure_draw_target);
-            match self.skia_context {
-                None => {}
-                Some(ctx) => { SkiaSkNativeSharedGLContextFlush(ctx); }
-            }
         }
+        self.backing.flush();
     }
 
     pub fn clear_rect(&self, rect: &Rect<AzFloat>) {
@@ -676,8 +642,7 @@ impl DrawTarget {
                 format.as_azure_surface_format());
             DrawTarget {
                 azure_draw_target: new_draw_target,
-                data: None,
-                skia_context: None,
+                backing: DrawTargetBacking::Empty,
             }
         }
     }
@@ -695,8 +660,7 @@ impl DrawTarget {
                 sigma);
             DrawTarget {
                 azure_draw_target: new_draw_target,
-                data: None,
-                skia_context: None,
+                backing: DrawTargetBacking::Empty,
             }
         }
     }
@@ -775,6 +739,54 @@ impl DrawTarget {
 // Ugly workaround for the lack of explicit self.
 pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
     return draw_target.clone();
+}
+
+pub enum DrawTargetBacking {
+    Empty, // The backing is completely owned by the DrawTarget.
+    Data(Arc<Vec<u8>>),
+    SkiaContext(SkiaSkNativeSharedGLContextRef),
+}
+
+impl Drop for DrawTargetBacking {
+    fn drop(&mut self) {
+        match *self {
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
+            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
+                SkiaSkNativeSharedGLContextRelease(skia_context);
+            }
+        }
+    }
+}
+
+impl DrawTargetBacking {
+    pub fn clone(&self) -> DrawTargetBacking {
+        match *self {
+            DrawTargetBacking::Empty => DrawTargetBacking::Empty,
+            DrawTargetBacking::Data(ref arc_data) => DrawTargetBacking::Data(arc_data.clone()),
+            DrawTargetBacking::SkiaContext(skia_context) => {
+                unsafe { SkiaSkNativeSharedGLContextRetain(skia_context); }
+                DrawTargetBacking::SkiaContext(skia_context)
+            }
+        }
+    }
+
+    pub fn make_current(&self) {
+        match *self {
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
+            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
+                SkiaSkNativeSharedGLContextMakeCurrent(skia_context);
+            }
+        }
+    }
+
+    pub fn flush(&self) {
+        match *self {
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { },
+            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
+                SkiaSkNativeSharedGLContextFlush(skia_context);
+            }
+        }
+    }
 }
 
 pub struct SourceSurface {
