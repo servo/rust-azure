@@ -243,7 +243,7 @@ pub static AZ_ATT_TRANSFER_DISABLE_B: u32 = 2;
 pub static AZ_ATT_TRANSFER_DISABLE_A: u32 = 3;
 
 #[repr(C)]
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct struct__AzColor {
     pub r: AzFloat,
     pub g: AzFloat,
@@ -325,7 +325,7 @@ pub struct struct__AzMatrix {
 pub type AzMatrix = struct__AzMatrix;
 
 #[repr(C)]
-#[deriving(PartialEq, Clone)]
+#[derive(PartialEq, Clone)]
 pub struct struct__AzMatrix5x4 {
     pub _11: AzFloat, pub _12: AzFloat, pub _13: AzFloat, pub _14: AzFloat,
     pub _21: AzFloat, pub _22: AzFloat, pub _23: AzFloat, pub _24: AzFloat,
