@@ -107,7 +107,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
     }
 }
 
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Color {
     pub r: AzFloat,
     pub g: AzFloat,
@@ -195,7 +195,7 @@ impl StrokeOptions {
             miter_limit: miter_limit,
             mDashPattern: ptr::null_mut(),
             mDashLength: 0,
-            fields: AZ_CAP_BUTT as u8 << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
+            fields: (AZ_CAP_BUTT as u8) << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
         }
     }
 
@@ -285,7 +285,7 @@ impl SurfaceFormat {
     }
 }
 
-#[deriving(Copy)]
+#[derive(Copy)]
 pub enum Filter {
     Good,
     Linear,
@@ -320,7 +320,7 @@ impl DrawSurfaceOptions {
 }
 
 
-#[deriving(Clone, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum BackendType {
     None,
     Direct2D,
@@ -802,14 +802,14 @@ impl GradientStops {
 }
 
 #[repr(C)]
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct GradientStop {
     pub offset: AzFloat,
     pub color: Color,
 }
 
 #[repr(i32)]
-#[deriving(Clone, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum ExtendMode {
     Clamp = 0,
     Repeat = 1,
@@ -879,11 +879,12 @@ impl Drop for DataSourceSurface {
 }
 
 impl DataSourceSurface {
-    pub fn with_data(&self, f: |&[u8]|) {
+    pub fn with_data<F: Fn(&[u8])>(&self, f: F) {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
             let len = self.stride() * self.size().height;
-            slice::raw::buf_as_slice(buf, len as uint, f);
+            let slice = slice::from_raw_buf(&buf, len as usize);
+            f(slice)
         }
     }
 
@@ -1339,7 +1340,7 @@ impl FilterInput for FilterNode {
     }
 }
 
-#[deriving(PartialEq, Clone, Show)]
+#[derive(PartialEq, Clone, Show)]
 pub struct Matrix5x4 {
     pub m11: AzFloat, pub m12: AzFloat, pub m13: AzFloat, pub m14: AzFloat,
     pub m21: AzFloat, pub m22: AzFloat, pub m23: AzFloat, pub m24: AzFloat,

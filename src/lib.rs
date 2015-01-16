@@ -5,8 +5,6 @@
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
 
-#![feature(globs)]
-
 extern crate libc;
 extern crate geom;
 #[cfg(target_os = "linux")]
