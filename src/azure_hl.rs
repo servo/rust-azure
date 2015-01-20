@@ -879,7 +879,7 @@ impl Drop for DataSourceSurface {
 }
 
 impl DataSourceSurface {
-    pub fn with_data<F: Fn(&[u8])>(&self, f: F) {
+    pub fn with_data<F: FnOnce(&[u8])>(&self, f: F) {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
             let len = self.stride() * self.size().height;
