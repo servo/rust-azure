@@ -400,14 +400,14 @@ impl DrawTarget {
 
     pub fn new_with_data(backend: BackendType,
                          mut data: Vec<u8>,
-                         offset: uint,
+                         offset: usize,
                          size: Size2D<i32>,
                          stride: i32,
                          format: SurfaceFormat) -> DrawTarget {
         assert!((data.len() - offset) as i32 >= stride * size.height);
         let azure_draw_target = unsafe {
             AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                      data.as_mut_slice().as_mut_ptr().offset(offset as int),
+                                      data.as_mut_slice().as_mut_ptr().offset(offset as isize),
                                       &mut size.as_azure_int_size(),
                                       stride,
                                       format.as_azure_surface_format())
