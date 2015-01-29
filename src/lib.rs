@@ -7,6 +7,7 @@
 
 extern crate libc;
 extern crate geom;
+extern crate skia;
 #[cfg(target_os = "linux")]
 extern crate xlib;
 #[cfg(target_os = "android")]
@@ -56,21 +57,18 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzDrawOptions, struct__AzStrokeOptions, AzStrokeOptions, struct__AzDrawSurfaceOptions, 
                 AzDrawSurfaceOptions, struct__AzGlyph, AzGlyph, struct__AzGlyphBuffer, 
                 AzGlyphBuffer, struct__AzNativeFont, AzNativeFont, AzGradientStopsRef, 
-                AzSkiaSharedGLContextRef, AzSkiaSharedGrGLContextRef, AzSkiaGrContextRef, AzSkiaGrGLSharedSurfaceRef, 
                 AzDrawTargetRef, AzPatternRef, AzColorPatternRef, AzScaledFontRef, 
                 AzGlyphRenderingOptionsRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef, AzDrawSurfaceOptionsRef, 
-                AzGLContext, AzSkiaGrGLSharedContextRef, AzGLContextMetadataRef, AzGLNativeContextRef, 
+                AzGLContext, AzGLContextMetadataRef,
                 AzPathRef, AzPathBuilderRef, AzSanityCheck, AzCreateColorPattern, 
-                AzCreateSkiaSharedGLContext, AzRetainSkiaSharedGLContext, AzReleaseSkiaSharedGLContext, 
-                AzSkiaSharedGLContextGetFBOID, AzSkiaSharedGLContextStealSurface, AzSkiaSharedGLContextGetGrContext, AzSkiaSharedGLContextMakeCurrent, 
-                AzSkiaSharedGLContextFlush, AzCreateDrawTarget, AzCreateDrawTargetForData, AzCreateSkiaDrawTargetForFBO, 
+                AzCreateDrawTarget, AzCreateDrawTargetForData, AzCreateDrawTargetSkiaWithGrContextAndFBO,
                 AzRetainDrawTarget, AzReleaseDrawTarget, AzDrawTargetGetSize, AzDrawTargetFlush, 
                 AzDrawTargetClearRect, AzDrawTargetFillRect, AzDrawTargetStrokeRect, AzDrawTargetStrokeLine, 
                 AzDrawTargetFill, AzDrawTargetPushClip, AzDrawTargetPopClip, AzDrawTargetFillGlyphs, 
                 AzDrawTargetDrawSurface, AzDrawTargetGetSnapshot, AzDrawTargetCreateSourceSurfaceFromData, AzReleaseSourceSurface, 
                 AzSourceSurfaceGetSize, AzSourceSurfaceGetFormat, AzSourceSurfaceGetDataSurface, AzDataSourceSurfaceGetData, 
                 AzDataSourceSurfaceGetStride, AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzDrawTargetSetTransform, 
-                AzCreateFontOptionsForName, AzDestroyFontOptions, AzSkiaGetCurrentGLContext, AzCreatePathBuilder, 
+                AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreatePathBuilder, 
                 AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
 
 pub mod azure_hl;
