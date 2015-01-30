@@ -77,7 +77,13 @@ CXXFLAGS += \
 
 USE_CLANG = $(shell $(CXX) --version|grep -c 'clang')
 
-ifneq (arm,$(findstring arm,$(TARGET)))
+ifeq (i686,$(findstring i686,$(TARGET)))
+	supports_sse = true
+endif
+ifeq (x86_64,$(findstring x86_64,$(TARGET)))
+	supports_sse = true
+endif
+ifeq (true,$(supports_sse))
 AZURE_CPP_SRC += \
 	libazure/BlurSSE2.cpp \
 	libazure/FilterProcessingSSE2.cpp \
