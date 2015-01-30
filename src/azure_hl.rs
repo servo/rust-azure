@@ -400,7 +400,7 @@ impl DrawTarget {
 
     pub fn new_with_data(backend: BackendType,
                          mut data: Vec<u8>,
-                         offset: isize,
+                         offset: usize,
                          size: Size2D<i32>,
                          stride: i32,
                          format: SurfaceFormat) -> DrawTarget {
