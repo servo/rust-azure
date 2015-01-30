@@ -254,6 +254,13 @@ pub struct struct__AzColor {
 
 pub type AzColor = struct__AzColor;
 
+#[inline]
+impl PartialEq for AzColor {
+    fn eq(&self, other: &AzColor) -> bool {
+        self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
+    }
+}
+
 #[repr(C)]
 pub struct struct__AzGradientStop {
     pub offset: AzFloat,

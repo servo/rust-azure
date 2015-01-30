@@ -127,6 +127,13 @@ impl Color {
     }
 }
 
+#[inline]
+impl PartialEq for Color {
+    fn eq(&self, other: &Color) -> bool {
+        self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
+    }
+}
+
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
