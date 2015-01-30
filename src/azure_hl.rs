@@ -128,10 +128,7 @@ impl Color {
 #[inline]
 impl PartialEq for Color {
     fn eq(&self, other: &Color) -> bool {
-        if self.r != other.r || self.g != other.g || self.b != other.b || self.a != other.a {
-            return false;
-        }
-        return true;
+        self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
     }
 }
 

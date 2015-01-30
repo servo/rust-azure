@@ -256,10 +256,7 @@ pub type AzColor = struct__AzColor;
 #[inline]
 impl PartialEq for AzColor {
     fn eq(&self, other: &AzColor) -> bool {
-        if self.r != other.r || self.g != other.g || self.b != other.b || self.a != other.a {
-            return false;
-        }
-        return true;
+        self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
     }
 }
 
