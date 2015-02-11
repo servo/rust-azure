@@ -59,8 +59,8 @@ CXXFLAGS += \
 	$(NULL)
 endif
 
-SKIA_OUTDIR = $(shell find $(OUT_DIR)/.. -name 'skia-*' -type d)
-FREETYPE_OUTDIR = $(shell find $(OUT_DIR)/.. -name 'freetype-sys-*' -type d)
+SKIA_OUTDIR = $(shell find $(OUT_DIR)/../.. -name 'skia-*' -type d)/out
+FREETYPE_OUTDIR = $(shell find $(OUT_DIR)/../.. -name 'freetype-sys-*' -type d)/out
 
 CXXFLAGS += \
 	-I $(FREETYPE_OUTDIR)/include \
