@@ -4,6 +4,7 @@
 
 //! High-level bindings to Azure.
 
+pub use AzColor as Color;
 use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL, AZ_FILTER_TYPE_COLOR_MATRIX};
 use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
 use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
@@ -109,32 +110,6 @@ impl AsAzurePoint for Point2D<AzFloat> {
     }
 }
 
-#[derive(Copy, Clone)]
-pub struct Color {
-    pub r: AzFloat,
-    pub g: AzFloat,
-    pub b: AzFloat,
-    pub a: AzFloat,
-}
-
-impl Color {
-    pub fn new(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> Color {
-        Color { r: r, g: g, b: b, a: a }
-    }
-
-    fn as_azure_color(&self) -> AzColor {
-        struct__AzColor { r: self.r, g: self.g, b: self.b, a: self.a }
-    }
-}
-
-#[inline]
-impl PartialEq for Color {
-    fn eq(&self, other: &Color) -> bool {
-        self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
-    }
-}
-
-
 // FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
     pub azure_color_pattern: AzColorPatternRef,
@@ -152,7 +127,7 @@ impl ColorPattern {
     pub fn new(color: Color) -> ColorPattern {
         unsafe {
             ColorPattern {
-                azure_color_pattern: AzCreateColorPattern(&mut color.as_azure_color())
+                azure_color_pattern: AzCreateColorPattern(&mut color.clone())
             }
         }
     }
@@ -1187,7 +1162,7 @@ impl FilterAttribute for FloodAttribute {
         unsafe {
             AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
                                           AZ_ATT_FLOOD_COLOR,
-                                          &value.as_azure_color())
+                                          &value)
         }
     }
 }
