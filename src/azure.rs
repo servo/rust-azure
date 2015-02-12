@@ -244,7 +244,7 @@ pub static AZ_ATT_TRANSFER_DISABLE_B: u32 = 2;
 pub static AZ_ATT_TRANSFER_DISABLE_A: u32 = 3;
 
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Copy, Clone)]
 pub struct struct__AzColor {
     pub r: AzFloat,
     pub g: AzFloat,
