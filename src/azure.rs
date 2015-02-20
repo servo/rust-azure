@@ -179,10 +179,14 @@ pub static AZ_JOIN_ROUND: u32 = 1_u32;
 pub static AZ_JOIN_MITER: u32 = 2_u32;
 pub static AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
 
+pub type AzJoinStyle = enum_AzJoinStyle;
+
 pub type enum_AzCapStyle = c_uint;
 pub static AZ_CAP_BUTT: u32 = 0_u32;
 pub static AZ_CAP_ROUND: u32 = 1_u32;
 pub static AZ_CAP_SQUARE: u32 = 2_u32;
+
+pub type AzCapStyle = enum_AzCapStyle;
 
 pub type enum_AzSamplingBounds = c_uint;
 pub static AZ_SAMPLING_UNBOUNDED: u32 = 0_u32;
@@ -356,7 +360,7 @@ pub type AzDrawOptions = struct__AzDrawOptions;
 pub struct struct__AzStrokeOptions {
     pub mLineWidth: AzFloat,
     pub mMiterLimit: AzFloat,
-    pub mDashPattern: *mut AzFloat,
+    pub mDashPattern: *const AzFloat,
     pub mDashLength: size_t,
     pub mDashOffset: AzFloat,
     pub fields: uint8_t,
