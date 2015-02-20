@@ -193,22 +193,20 @@ impl CapStyle {
 }
 
 #[allow(non_snake_case)]
-pub struct StrokeOptions {
+pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
-    pub mDashPattern: *const AzFloat,
-    pub mDashLength: size_t,
+    pub mDashPattern: &'a[AzFloat],
     pub fields: uint8_t
 }
 
-impl StrokeOptions {
+impl<'a> StrokeOptions<'a> {
     pub fn new(line_width: AzFloat, line_join: JoinStyle, line_cap: CapStyle, miter_limit: AzFloat,
-               dash_pattern: &[AzFloat]) -> StrokeOptions {
+               dash_pattern: &'a[AzFloat]) -> StrokeOptions {
         StrokeOptions {
             line_width: line_width,
             miter_limit: miter_limit,
-            mDashPattern: dash_pattern.as_ptr(),
-            mDashLength: dash_pattern.len() as size_t,
+            mDashPattern: dash_pattern,
             fields: ((line_cap.as_azure_cap_style()) as u8) << 4 | ((line_join.as_azure_join_style()) as u8),
         }
     }
@@ -217,8 +215,8 @@ impl StrokeOptions {
         struct__AzStrokeOptions {
             mLineWidth: self.line_width,
             mMiterLimit: self.miter_limit,
-            mDashPattern: self.mDashPattern,
-            mDashLength: self.mDashLength,
+            mDashPattern: self.mDashPattern.as_ptr(),
+            mDashLength: self.mDashPattern.len() as size_t,
             mDashOffset: 0.0 as AzFloat,
             fields: self.fields
         }
