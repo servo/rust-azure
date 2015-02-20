@@ -23,7 +23,7 @@ use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzG
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
-use azure::{AzCompositionOp};
+use azure::{AzCompositionOp, AzJoinStyle, AzCapStyle};
 use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzMatrix5x4};
@@ -163,23 +163,51 @@ pub enum CompositionOp {
     Count,
 }
 
+#[repr(i32)]
+#[derive(Clone, PartialEq)]
+pub enum JoinStyle {
+    Bevel = 0,
+    Round = 1,
+    Miter = 2,
+    MiterOrBevel = 3,
+}
+
+impl JoinStyle {
+    fn as_azure_join_style(self) -> AzJoinStyle {
+        self as AzJoinStyle
+    }
+}
+
+#[repr(i32)]
+#[derive(Clone, PartialEq)]
+pub enum CapStyle {
+    Butt = 0,
+    Round = 1,
+    Square = 2,
+}
+
+impl CapStyle {
+    fn as_azure_cap_style(self) -> AzCapStyle {
+        self as AzCapStyle
+    }
+}
+
 #[allow(non_snake_case)]
-pub struct StrokeOptions {
+pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
-    pub mDashPattern: *mut AzFloat,
-    pub mDashLength: size_t,
+    pub mDashPattern: &'a[AzFloat],
     pub fields: uint8_t
 }
 
-impl StrokeOptions {
-    pub fn new(line_width: AzFloat, miter_limit: AzFloat) -> StrokeOptions {
+impl<'a> StrokeOptions<'a> {
+    pub fn new(line_width: AzFloat, line_join: JoinStyle, line_cap: CapStyle, miter_limit: AzFloat,
+               dash_pattern: &'a[AzFloat]) -> StrokeOptions {
         StrokeOptions {
             line_width: line_width,
             miter_limit: miter_limit,
-            mDashPattern: ptr::null_mut(),
-            mDashLength: 0,
-            fields: (AZ_CAP_BUTT as u8) << 4 | AZ_JOIN_MITER_OR_BEVEL as u8
+            mDashPattern: dash_pattern,
+            fields: ((line_cap.as_azure_cap_style()) as u8) << 4 | ((line_join.as_azure_join_style()) as u8),
         }
     }
 
@@ -187,21 +215,11 @@ impl StrokeOptions {
         struct__AzStrokeOptions {
             mLineWidth: self.line_width,
             mMiterLimit: self.miter_limit,
-            mDashPattern: self.mDashPattern,
-            mDashLength: self.mDashLength,
+            mDashPattern: self.mDashPattern.as_ptr(),
+            mDashLength: self.mDashPattern.len() as size_t,
             mDashOffset: 0.0 as AzFloat,
             fields: self.fields
         }
-    }
-
-    pub fn set_join_style(&mut self, style: u8) {
-        self.fields = self.fields & 0b1111_0000_u8;
-        self.fields = self.fields | style ;
-    }
-
-    pub fn set_cap_style(&mut self, style: u8) {
-        self.fields = self.fields & 0b0000_1111_u8;
-        self.fields = self.fields | (style << 4);
     }
 }
 
