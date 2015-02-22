@@ -607,6 +607,24 @@ extern "C" void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
     gfxPathBuilder->Arc(*gfxOrigin, aRadius, aStartAngle, aEndAngle, aAntiClockwise);
 }
 
+extern "C" void
+AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder,
+                      const AzPoint *aControlPoint1,
+                      const AzPoint *aControlPoint2,
+                      const AzPoint *aControlPoint3) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    const gfx::Point *gfxControlPoint1 = reinterpret_cast<const gfx::Point*>(aControlPoint1);
+    const gfx::Point *gfxControlPoint2 = reinterpret_cast<const gfx::Point*>(aControlPoint2);
+    const gfx::Point *gfxControlPoint3 = reinterpret_cast<const gfx::Point*>(aControlPoint3);
+    gfxPathBuilder->BezierTo(*gfxControlPoint1, *gfxControlPoint2, *gfxControlPoint3);
+}
+
+extern "C" void
+AzPathBuilderClose(AzPathBuilderRef aPathBuilder) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    gfxPathBuilder->Close();
+}
+
 extern "C" AzPathRef
 AzPathBuilderFinish(AzPathBuilderRef aPathBuilder) {
     gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
