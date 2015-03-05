@@ -42,8 +42,8 @@ use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
 use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::{AzLinearGradientPatternRef, AzMatrix, AzPatternRef};
-use azure::{AzCreateLinearGradientPattern, AzDrawTargetPushClipRect};
+use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzMatrix, AzPatternRef};
+use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzDrawTargetPushClipRect};
 use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
 use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
@@ -1050,9 +1050,44 @@ impl LinearGradientPattern {
     }
 }
 
+pub struct RadialGradientPattern {
+    pub azure_radial_gradient_pattern: AzRadialGradientPatternRef,
+}
+
+impl Drop for RadialGradientPattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_radial_gradient_pattern);
+        }
+    }
+}
+
+impl RadialGradientPattern {
+    pub fn new(center1: &Point2D<AzFloat>,
+               center2: &Point2D<AzFloat>,
+               radius1: AzFloat,
+               radius2: AzFloat,
+               stops: GradientStops,
+               matrix: &Matrix2D<AzFloat>)
+               -> RadialGradientPattern {
+        unsafe {
+            RadialGradientPattern {
+                azure_radial_gradient_pattern:
+                    AzCreateRadialGradientPattern(mem::transmute::<_,*const AzPoint>(center1),
+                                                  mem::transmute::<_,*const AzPoint>(center2),
+                                                  radius1,
+                                                  radius2,
+                                                  stops.azure_gradient_stops,
+                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+            }
+        }
+    }
+}
+
 pub enum PatternRef<'a> {
     Color(&'a ColorPattern),
     LinearGradient(&'a LinearGradientPattern),
+    RadialGradient(&'a RadialGradientPattern),
 }
 
 impl<'a> PatternRef<'a> {
@@ -1063,6 +1098,9 @@ impl<'a> PatternRef<'a> {
             },
             PatternRef::LinearGradient(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
+            },
+            PatternRef::RadialGradient(radial_gradient_pattern) => {
+                radial_gradient_pattern.azure_radial_gradient_pattern
             }
         }
     }
@@ -1071,6 +1109,7 @@ impl<'a> PatternRef<'a> {
 pub enum Pattern {
     Color(ColorPattern),
     LinearGradient(LinearGradientPattern),
+    RadialGradient(RadialGradientPattern),
 }
 
 impl Pattern {
@@ -1079,6 +1118,9 @@ impl Pattern {
             Pattern::Color(ref color_pattern) => PatternRef::Color(color_pattern),
             Pattern::LinearGradient(ref linear_gradient_pattern) => {
                 PatternRef::LinearGradient(linear_gradient_pattern)
+            },
+            Pattern::RadialGradient(ref radial_gradient_pattern) => {
+                PatternRef::RadialGradient(radial_gradient_pattern)
             }
         }
     }

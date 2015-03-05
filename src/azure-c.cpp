@@ -653,6 +653,22 @@ AzCreateLinearGradientPattern(const AzPoint *aBegin,
     return gfxLinearGradientPattern;
 }
 
+extern "C" AzRadialGradientPatternRef
+AzCreateRadialGradientPattern(const AzPoint *aCenter1,
+                              const AzPoint *aCenter2,
+                              AzFloat aRadius1,
+                              AzFloat aRadius2,
+                              AzGradientStopsRef aStops,
+                              const AzMatrix *aMatrix) {
+    const gfx::Point *gfxCenter1 = reinterpret_cast<const gfx::Point*>(aCenter1);
+    const gfx::Point *gfxCenter2 = reinterpret_cast<const gfx::Point*>(aCenter2);
+    gfx::GradientStops *gfxStops = reinterpret_cast<gfx::GradientStops*>(aStops);
+    const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aMatrix);
+    gfx::RadialGradientPattern* gfxRadialGradientPattern = new
+        gfx::RadialGradientPattern(*gfxCenter1, *gfxCenter2, aRadius1, aRadius2, gfxStops, *gfxMatrix);
+    return gfxRadialGradientPattern;
+}
+
 extern "C" void
 AzReleasePattern(AzPatternRef aPattern) {
     gfx::Pattern *gfxPattern = reinterpret_cast<gfx::Pattern*>(aPattern);
