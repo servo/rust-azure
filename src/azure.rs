@@ -413,6 +413,8 @@ pub type AzColorPatternRef = *mut c_void;
 
 pub type AzLinearGradientPatternRef = *mut c_void;
 
+pub type AzRadialGradientPatternRef = *mut c_void;
+
 pub type AzScaledFontRef = *mut c_void;
 
 pub type AzGlyphRenderingOptionsRef = *mut c_void;
@@ -529,6 +531,14 @@ pub fn AzCreateLinearGradientPattern(aBegin: *const AzPoint,
                                      aStops: AzGradientStopsRef,
                                      aMatrix: *const AzMatrix)
                                      -> AzLinearGradientPatternRef;
+
+pub fn AzCreateRadialGradientPattern(aCenter1: *const AzPoint,
+                                     aCenter2: *const AzPoint,
+                                     aRadius1: AzFloat,
+                                     aRadius2: AzFloat,
+                                     aStops: AzGradientStopsRef,
+                                     aMatrix: *const AzMatrix)
+                                     -> AzRadialGradientPatternRef;
 
 pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 
