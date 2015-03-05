@@ -620,6 +620,16 @@ AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder,
 }
 
 extern "C" void
+AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder,
+                               const AzPoint *aControlPoint,
+                               const AzPoint *aEndPoint) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    const gfx::Point *gfxControlPoint = reinterpret_cast<const gfx::Point*>(aControlPoint);
+    const gfx::Point *gfxEndPoint = reinterpret_cast<const gfx::Point*>(aEndPoint);
+    gfxPathBuilder->QuadraticBezierTo(*gfxControlPoint, *gfxEndPoint);
+}
+
+extern "C" void
 AzPathBuilderClose(AzPathBuilderRef aPathBuilder) {
     gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
     gfxPathBuilder->Close();
