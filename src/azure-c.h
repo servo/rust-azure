@@ -441,6 +441,9 @@ void AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder,
                            const AzPoint *aControlPoint1,
                            const AzPoint *aControlPoint2,
                            const AzPoint *aControlPoint3);
+void AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder,
+                                    const AzPoint *aCP,
+                                    const AzPoint *aEndPoint);
 void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 

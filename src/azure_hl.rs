@@ -50,7 +50,8 @@ use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTarget
 use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
 use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
 use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
-use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType, AzPathBuilderBezierTo};
+use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
+use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderClose};
 
 use geom::matrix2d::Matrix2D;
@@ -981,6 +982,17 @@ impl PathBuilder {
                              start_angle,
                              end_angle,
                              anticlockwise)
+        }
+    }
+
+    /// Adds a quadratic Bézier curve to the current figure.
+    pub fn quadratic_curve_to(&self,
+                              control_point: &Point2D<AzFloat>,
+                              end_point: &Point2D<AzFloat>) {
+        unsafe {
+            AzPathBuilderQuadraticBezierTo(self.azure_path_builder,
+                                           &control_point.as_azure_point(),
+                                           &end_point.as_azure_point())
         }
     }
 
