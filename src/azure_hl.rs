@@ -674,7 +674,7 @@ impl DrawTarget {
         unsafe {
             GradientStops::new(AzDrawTargetCreateGradientStops(
                     self.azure_draw_target,
-                    mem::transmute::<_,*const AzGradientStop>(&gradient_stops[0]),
+                    mem::transmute::<_,*const AzGradientStop>(gradient_stops.as_ptr()),
                     gradient_stops.len() as u32,
                     extend_mode.as_azure_extend_mode()))
         }
