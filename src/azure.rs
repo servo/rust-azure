@@ -478,6 +478,8 @@ pub fn AzDrawTargetStrokeLine(aDrawTarget: AzDrawTargetRef, aStart: *mut AzPoint
 
 pub fn AzDrawTargetFill(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions);
 
+pub fn AzDrawTargetStroke(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef, aPattern: AzPatternRef, aStrokeOptions: *const AzStrokeOptions, aDrawOptions: *const AzDrawOptions);
+
 pub fn AzDrawTargetPushClip(aDrawTarget: AzDrawTargetRef, aPath: AzPathRef);
 
 pub fn AzDrawTargetPushClipRect(aDrawTarget: AzDrawTargetRef, aRect: *const AzRect);
