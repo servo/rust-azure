@@ -268,6 +268,18 @@ AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath,
 }
 
 extern "C" void
+AzDrawTargetStroke(AzDrawTargetRef aDrawTarget, AzPathRef aPath,
+                   AzPatternRef aPattern, const AzStrokeOptions *aStrokeOptions,
+                   const AzDrawOptions *aDrawOptions) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    const gfx::Path *gfxPath = reinterpret_cast<const gfx::Path*>(aPath);
+    const gfx::Pattern *gfxPattern = reinterpret_cast<const gfx::Pattern*>(aPattern);
+    const gfx::StrokeOptions *gfxStrokeOptions = reinterpret_cast<const gfx::StrokeOptions*>(aStrokeOptions);
+    const gfx::DrawOptions *gfxDrawOptions = reinterpret_cast<const gfx::DrawOptions*>(aDrawOptions);
+    gfxDrawTarget->Stroke(gfxPath, *gfxPattern, *gfxStrokeOptions, *gfxDrawOptions);
+}
+
+extern "C" void
 AzDrawTargetPushClip(AzDrawTargetRef aDrawTarget, AzPathRef aPath) {
   gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
   const gfx::Path *gfxPath = reinterpret_cast<const gfx::Path*>(aPath);

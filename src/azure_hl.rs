@@ -40,7 +40,7 @@ use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
-use azure::{AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
+use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzMatrix, AzPatternRef};
 use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzDrawTargetPushClipRect};
@@ -529,6 +529,20 @@ impl DrawTarget {
                                  &mut rect.as_azure_rect(),
                                  pattern.as_azure_pattern(),
                                  draw_options);
+        }
+    }
+
+    pub fn stroke(&self,
+                  path: &Path,
+                  pattern: &ColorPattern,
+                  stroke_options: &StrokeOptions,
+                  draw_options: &DrawOptions) {
+        unsafe {
+            AzDrawTargetStroke(self.azure_draw_target,
+                               path.azure_path,
+                               pattern.azure_color_pattern,
+                               &stroke_options.as_azure_stroke_options(),
+                               &draw_options.as_azure_draw_options());
         }
     }
 

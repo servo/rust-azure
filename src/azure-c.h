@@ -366,6 +366,11 @@ void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
 			              AzRect* aRect,
 			              AzPatternRef aPattern,
                           AzDrawOptions* aDrawOptions);
+void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget,
+                        AzPathRef aPath,
+                        AzPatternRef aPattern,
+                        const AzStrokeOptions *aStrokeOptions,
+                        const AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
 			    AzRect *aRect,
 			    AzPatternRef aPattern,
