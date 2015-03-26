@@ -590,6 +590,8 @@ pub fn AzPathBuilderQuadraticBezierTo(aPathBuilder: AzPathBuilderRef,
                                       aControlPoint: *const AzPoint,
                                       aEndPoint: *const AzPoint);
 
+pub fn AzPathBuilderCurrentPoint(aPathBuilder: AzPathBuilderRef) -> AzPoint;
+
 pub fn AzPathBuilderClose(aPathBuilder: AzPathBuilderRef);
 
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;

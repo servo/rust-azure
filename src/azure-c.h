@@ -449,6 +449,7 @@ void AzPathBuilderBezierTo(AzPathBuilderRef aPathBuilder,
 void AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder,
                                     const AzPoint *aCP,
                                     const AzPoint *aEndPoint);
+AzPoint AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder);
 void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 

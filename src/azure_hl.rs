@@ -52,7 +52,7 @@ use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
 use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
 use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
-use azure::{AzPathBuilderClose};
+use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
 
 use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
@@ -1020,6 +1020,13 @@ impl PathBuilder {
                                   &control_point_1.as_azure_point(),
                                   &control_point_2.as_azure_point(),
                                   &control_point_3.as_azure_point())
+        }
+    }
+
+    /// Returns the current last point of the current path.
+    pub fn get_current_point(&self) -> AzPoint {
+        unsafe {
+            AzPathBuilderCurrentPoint(self.azure_path_builder)
         }
     }
 

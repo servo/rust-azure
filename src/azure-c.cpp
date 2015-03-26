@@ -641,6 +641,15 @@ AzPathBuilderQuadraticBezierTo(AzPathBuilderRef aPathBuilder,
     gfxPathBuilder->QuadraticBezierTo(*gfxControlPoint, *gfxEndPoint);
 }
 
+extern "C" AzPoint
+AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder) {
+    gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
+    AzPoint p;
+    p.x = gfxPathBuilder->CurrentPoint().x;
+    p.y = gfxPathBuilder->CurrentPoint().y;
+    return p;
+}
+
 extern "C" void
 AzPathBuilderClose(AzPathBuilderRef aPathBuilder) {
     gfx::PathBuilder *gfxPathBuilder = static_cast<gfx::PathBuilder*>(aPathBuilder);
