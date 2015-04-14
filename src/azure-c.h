@@ -210,14 +210,14 @@ enum AzPatternType {
   AZ_PATTERN_RADIAL_GRADIENT
 };
 
-enum AzJoinStyle {
+enum AzJoinStyle: uint8_t {
   AZ_JOIN_BEVEL,
   AZ_JOIN_ROUND,
   AZ_JOIN_MITER,
   AZ_JOIN_MITER_OR_BEVEL
 };
 
-enum AzCapStyle {
+enum AzCapStyle: uint8_t {
   AZ_CAP_BUTT,
   AZ_CAP_ROUND,
   AZ_CAP_SQUARE
@@ -303,18 +303,14 @@ typedef struct _AzDrawOptions {
   */
 } AzDrawOptions;
 
-// FIXME: Again, bitfields
 typedef struct _AzStrokeOptions {
   AzFloat mLineWidth;
   AzFloat mMiterLimit;
   const AzFloat* mDashPattern;
   size_t mDashLength;
   AzFloat mDashOffset;
-  uint8_t fields;
-  /*
-    enum AzJoinStyle mLineJoin : 4;
-    enum AzCapStyle mLineCap : 3;
-   */
+  AzJoinStyle mLineJoin;
+  AzCapStyle mLineCap;
 } AzStrokeOptions;
 
 typedef struct _AzDrawSurfaceOptions {

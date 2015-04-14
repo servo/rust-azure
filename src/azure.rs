@@ -173,18 +173,18 @@ pub static AZ_PATTERN_SURFACE: u32 = 1_u32;
 pub static AZ_PATTERN_LINEAR_GRADIENT: u32 = 2_u32;
 pub static AZ_PATTERN_RADIAL_GRADIENT: u32 = 3_u32;
 
-pub type enum_AzJoinStyle = c_uint;
-pub static AZ_JOIN_BEVEL: u32 = 0_u32;
-pub static AZ_JOIN_ROUND: u32 = 1_u32;
-pub static AZ_JOIN_MITER: u32 = 2_u32;
-pub static AZ_JOIN_MITER_OR_BEVEL: u32 = 3_u32;
+pub type enum_AzJoinStyle = c_uchar;
+pub static AZ_JOIN_BEVEL: u8 = 0_u8;
+pub static AZ_JOIN_ROUND: u8 = 1_u8;
+pub static AZ_JOIN_MITER: u8 = 2_u8;
+pub static AZ_JOIN_MITER_OR_BEVEL: u8 = 3_u8;
 
 pub type AzJoinStyle = enum_AzJoinStyle;
 
-pub type enum_AzCapStyle = c_uint;
-pub static AZ_CAP_BUTT: u32 = 0_u32;
-pub static AZ_CAP_ROUND: u32 = 1_u32;
-pub static AZ_CAP_SQUARE: u32 = 2_u32;
+pub type enum_AzCapStyle = c_uchar;
+pub static AZ_CAP_BUTT: u8 = 0_u8;
+pub static AZ_CAP_ROUND: u8 = 1_u8;
+pub static AZ_CAP_SQUARE: u8 = 2_u8;
 
 pub type AzCapStyle = enum_AzCapStyle;
 
@@ -363,7 +363,8 @@ pub struct struct__AzStrokeOptions {
     pub mDashPattern: *const AzFloat,
     pub mDashLength: size_t,
     pub mDashOffset: AzFloat,
-    pub fields: uint8_t,
+    pub mLineJoin: AzJoinStyle,
+    pub mLineCap: AzCapStyle,
 }
 
 pub type AzStrokeOptions = struct__AzStrokeOptions;
