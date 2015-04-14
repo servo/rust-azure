@@ -165,8 +165,8 @@ pub enum CompositionOp {
     Count,
 }
 
-#[repr(i32)]
-#[derive(Clone, PartialEq)]
+#[repr(u8)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum JoinStyle {
     Bevel = 0,
     Round = 1,
@@ -180,8 +180,8 @@ impl JoinStyle {
     }
 }
 
-#[repr(i32)]
-#[derive(Clone, PartialEq)]
+#[repr(u8)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum CapStyle {
     Butt = 0,
     Round = 1,
@@ -199,7 +199,8 @@ pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
     pub mDashPattern: &'a[AzFloat],
-    pub fields: uint8_t
+    pub line_join: JoinStyle,
+    pub line_cap: CapStyle,
 }
 
 impl<'a> StrokeOptions<'a> {
@@ -209,7 +210,8 @@ impl<'a> StrokeOptions<'a> {
             line_width: line_width,
             miter_limit: miter_limit,
             mDashPattern: dash_pattern,
-            fields: ((line_cap.as_azure_cap_style()) as u8) << 4 | ((line_join.as_azure_join_style()) as u8),
+            line_join: line_join,
+            line_cap: line_cap,
         }
     }
 
@@ -220,7 +222,8 @@ impl<'a> StrokeOptions<'a> {
             mDashPattern: self.mDashPattern.as_ptr(),
             mDashLength: self.mDashPattern.len() as size_t,
             mDashOffset: 0.0 as AzFloat,
-            fields: self.fields
+            mLineJoin: self.line_join.as_azure_join_style(),
+            mLineCap: self.line_cap.as_azure_cap_style(),
         }
     }
 }
