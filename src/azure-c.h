@@ -363,8 +363,8 @@ void AzDrawTargetGetTransform(AzDrawTargetRef aDrawTarget, AzMatrix* aOutMatrix)
 void AzDrawTargetFlush(AzDrawTargetRef aDrawTarget);
 void AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect);
 void AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
-			              AzRect* aRect,
-			              AzPatternRef aPattern,
+                          AzRect* aRect,
+                          AzPatternRef aPattern,
                           AzDrawOptions* aDrawOptions);
 void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget,
                         AzPathRef aPath,
@@ -372,16 +372,16 @@ void AzDrawTargetStroke(AzDrawTargetRef aDrawTarget,
                         const AzStrokeOptions *aStrokeOptions,
                         const AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget,
-			    AzRect *aRect,
-			    AzPatternRef aPattern,
-			    AzStrokeOptions *aStrokeOptions,
-			    AzDrawOptions *aDrawOptions);
+                            AzRect *aRect,
+                            AzPatternRef aPattern,
+                            AzStrokeOptions *aStrokeOptions,
+                            AzDrawOptions *aDrawOptions);
 void AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
-			                AzPoint *aStart,
-			                AzPoint *aEnd,
-			                AzPatternRef aPattern,
-			                AzStrokeOptions *aStrokeOptions,
-			                AzDrawOptions *aDrawOptions);
+                            AzPoint *aStart,
+                            AzPoint *aEnd,
+                            AzPatternRef aPattern,
+                            AzStrokeOptions *aStrokeOptions,
+                            AzDrawOptions *aDrawOptions);
 void AzDrawTargetFillGlyphs(AzDrawTargetRef aDrawTarget,
                             AzScaledFontRef aFont,
                             AzGlyphBuffer *aGlyphBuffer,

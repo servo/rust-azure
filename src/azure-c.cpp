@@ -302,7 +302,7 @@ AzDrawTargetPopClip(AzDrawTargetRef aDrawTarget) {
 extern "C" void
 AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
                      AzRect* aRect,
-		             AzPatternRef aPattern,
+                     AzPatternRef aPattern,
                      AzDrawOptions* aDrawOptions) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
@@ -315,8 +315,8 @@ AzDrawTargetFillRect(AzDrawTargetRef aDrawTarget,
 
 extern "C" void
 AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
-		       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
-		       AzDrawOptions *aDrawOptions) {
+                       AzPatternRef aPattern, AzStrokeOptions *aStrokeOptions,
+                       AzDrawOptions *aDrawOptions) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Rect *gfxRect = reinterpret_cast<gfx::Rect*>(aRect);
     gfx::Pattern *gfxPattern = static_cast<gfx::Pattern*>(aPattern);
@@ -327,10 +327,10 @@ AzDrawTargetStrokeRect(AzDrawTargetRef aDrawTarget, AzRect *aRect,
 
 extern "C" void
 AzDrawTargetStrokeLine(AzDrawTargetRef aDrawTarget,
-		       AzPoint *aStart, AzPoint *aEnd,
-		       AzPatternRef aPattern,
-		       AzStrokeOptions *aStrokeOptions,
-		       AzDrawOptions *aDrawOptions) {
+                       AzPoint *aStart, AzPoint *aEnd,
+                       AzPatternRef aPattern,
+                       AzStrokeOptions *aStrokeOptions,
+                       AzDrawOptions *aDrawOptions) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Point *gfxStart = reinterpret_cast<gfx::Point*>(aStart);
     gfx::Point *gfxEnd = reinterpret_cast<gfx::Point*>(aEnd);
