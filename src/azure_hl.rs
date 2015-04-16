@@ -114,6 +114,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
 pub struct ColorPattern {
+    color: Color,
     pub azure_color_pattern: AzColorPatternRef,
 }
 
@@ -125,10 +126,17 @@ impl Drop for ColorPattern {
     }
 }
 
+impl Clone for ColorPattern {
+    fn clone(&self) -> ColorPattern {
+        ColorPattern::new(self.color.clone())
+    }
+}
+
 impl ColorPattern {
     pub fn new(color: Color) -> ColorPattern {
         unsafe {
             ColorPattern {
+                color: color,
                 azure_color_pattern: AzCreateColorPattern(&mut color.clone())
             }
         }
@@ -195,6 +203,7 @@ impl CapStyle {
 }
 
 #[allow(non_snake_case)]
+#[derive(Clone)]
 pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
@@ -228,6 +237,7 @@ impl<'a> StrokeOptions<'a> {
     }
 }
 
+#[derive(Clone)]
 pub struct DrawOptions {
     pub alpha: AzFloat,
     pub fields: uint16_t,
@@ -1056,6 +1066,7 @@ impl Drop for PathBuilder {
     }
 }
 
+#[derive(Clone)]
 pub struct LinearGradientPattern {
     pub azure_linear_gradient_pattern: AzLinearGradientPatternRef,
 }
@@ -1086,6 +1097,7 @@ impl LinearGradientPattern {
     }
 }
 
+#[derive(Clone)]
 pub struct RadialGradientPattern {
     pub azure_radial_gradient_pattern: AzRadialGradientPatternRef,
 }
@@ -1142,6 +1154,7 @@ impl<'a> PatternRef<'a> {
     }
 }
 
+#[derive(Clone)]
 pub enum Pattern {
     Color(ColorPattern),
     LinearGradient(LinearGradientPattern),
