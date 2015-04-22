@@ -302,7 +302,7 @@ impl SurfaceFormat {
     }
 }
 
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub enum Filter {
     Good,
     Linear,
@@ -412,7 +412,7 @@ impl DrawTarget {
         assert!((data.len() - offset) as i32 >= stride * size.height);
         let azure_draw_target = unsafe {
             AzCreateDrawTargetForData(backend.as_azure_backend_type(),
-                                      data.as_mut_slice().as_mut_ptr().offset(offset as isize),
+                                      data.as_mut_ptr().offset(offset as isize),
                                       &mut size.as_azure_int_size(),
                                       stride,
                                       format.as_azure_surface_format())
@@ -940,7 +940,7 @@ impl DataSourceSurface {
         unsafe {
             let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
             let len = self.stride() * self.size().height;
-            let slice = slice::from_raw_buf(&buf, len as usize);
+            let slice = slice::from_raw_parts(buf, len as usize);
             f(slice)
         }
     }
@@ -1490,7 +1490,7 @@ impl FilterInput for FilterNode {
     }
 }
 
-#[derive(PartialEq, Clone, Show)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Matrix5x4 {
     pub m11: AzFloat, pub m12: AzFloat, pub m13: AzFloat, pub m14: AzFloat,
     pub m21: AzFloat, pub m22: AzFloat, pub m23: AzFloat, pub m24: AzFloat,
