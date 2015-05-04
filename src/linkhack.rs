@@ -19,7 +19,7 @@ extern { }
 
 #[cfg(target_os = "android")]
 #[link(name = "azure", kind = "static")]
-#[link(name = "stlport")]
+#[link(name = "stdc++")]
 #[link(name = "skia", kind = "static")]
 #[link(name = "expat")]
 #[link(name = "fontconfig")]
