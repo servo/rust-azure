@@ -258,7 +258,7 @@ AzDrawTargetClearRect(AzDrawTargetRef aDrawTarget, AzRect *aRect) {
 }
 
 extern "C" void
-AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath, 
+AzDrawTargetFill(AzDrawTargetRef aDrawTarget, AzPathRef aPath,
                  AzPatternRef aPattern, AzDrawOptions *aDrawOptions) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
     gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
@@ -698,6 +698,14 @@ AzCreateRadialGradientPattern(const AzPoint *aCenter1,
     gfx::RadialGradientPattern* gfxRadialGradientPattern = new
         gfx::RadialGradientPattern(*gfxCenter1, *gfxCenter2, aRadius1, aRadius2, gfxStops, *gfxMatrix);
     return gfxRadialGradientPattern;
+}
+
+extern "C" AzSurfacePatternRef
+AzCreateSurfacePattern(AzSourceSurfaceRef aSurface) {
+    gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
+    gfx::SurfacePattern* gfxSurfacePattern = new
+        gfx::SurfacePattern(gfxSourceSurface, gfx::ExtendMode::CLAMP);
+    return gfxSurfacePattern;
 }
 
 extern "C" void
