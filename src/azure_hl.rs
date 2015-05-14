@@ -23,7 +23,7 @@ use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzG
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
-use azure::{AzCompositionOp, AzJoinStyle, AzCapStyle};
+use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
 use azure::{struct__AzColor, struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzMatrix5x4};
@@ -143,6 +143,8 @@ impl ColorPattern {
     }
 }
 
+#[repr(u8)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum CompositionOp {
     Over,
     Add,
@@ -171,6 +173,27 @@ pub enum CompositionOp {
     Color,
     Luminosity,
     Count,
+}
+
+impl CompositionOp {
+    fn as_azure_composition_op(self) -> AzCompositionOp {
+        self as AzCompositionOp
+    }
+}
+
+#[repr(u8)]
+#[derive(Clone, Copy, PartialEq)]
+pub enum AntialiasMode {
+    None = 0,
+    Gray = 1,
+    Subpixel = 2,
+    Default = 3,
+}
+
+impl AntialiasMode {
+    fn as_azure_antialias_mode(self) -> AzAntialiasMode {
+        self as AzAntialiasMode
+    }
 }
 
 #[repr(u8)]
@@ -240,33 +263,41 @@ impl<'a> StrokeOptions<'a> {
 #[derive(Clone)]
 pub struct DrawOptions {
     pub alpha: AzFloat,
-    pub fields: uint16_t,
+    pub composition: CompositionOp,
+    pub antialias: AntialiasMode,
 }
 
 impl DrawOptions {
-    pub fn new(alpha: AzFloat, fields: uint16_t) -> DrawOptions {
+    pub fn default() -> DrawOptions {
         DrawOptions {
-            alpha : alpha,
-            fields : fields,
+            alpha: 1.0,
+            composition: CompositionOp::Over,
+            antialias: AntialiasMode::Default,
+        }
+    }
+
+    pub fn new(alpha: AzFloat, composition: CompositionOp, antialias: AntialiasMode) -> DrawOptions {
+        DrawOptions {
+            alpha: alpha,
+            composition: composition,
+            antialias: antialias,
         }
     }
 
     fn as_azure_draw_options(&self) -> AzDrawOptions {
         struct__AzDrawOptions {
             mAlpha: self.alpha,
-            fields: self.fields
+            mCompositionOp: self.composition.as_azure_composition_op(),
+            mAntialiasMode: self.antialias.as_azure_antialias_mode(),
         }
     }
 
     pub fn set_composition_op(&mut self, style: CompositionOp) {
-        self.fields = self.fields & 0b1111_1111_0000_0000_u16;
-        self.fields = self.fields | (style as u16);
+        self.composition = style;
     }
 
-    pub fn set_antialias_mode(&mut self, style: u8) {
-        self.fields = self.fields & 0b1111_1000_1111_1111_u16; 
-        let style = ((style & 7) as u16) << 8;
-        self.fields = self.fields | style;
+    pub fn set_antialias_mode(&mut self, style: AntialiasMode) {
+        self.antialias = style;
     }
 }
 
