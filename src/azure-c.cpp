@@ -733,8 +733,8 @@ AzCloneSurfacePattern(AzSurfacePatternRef aPattern) {
     gfx::SurfacePattern *gfxSurfacePattern = static_cast<gfx::SurfacePattern*>(aPattern);
     return new gfx::SurfacePattern(gfxSurfacePattern->mSurface,
                                    gfxSurfacePattern->mExtendMode,
-                                   gfxSurfacePattern->mFilter,
                                    gfxSurfacePattern->mMatrix,
+                                   gfxSurfacePattern->mFilter,
                                    gfxSurfacePattern->mSamplingRect);
 }
 
