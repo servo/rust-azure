@@ -42,8 +42,9 @@ use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
 use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzMatrix, AzPatternRef};
-use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzDrawTargetPushClipRect};
+use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
+use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
+use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern};
 use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
 use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
@@ -1066,7 +1067,6 @@ impl Drop for PathBuilder {
     }
 }
 
-#[derive(Clone)]
 pub struct LinearGradientPattern {
     pub azure_linear_gradient_pattern: AzLinearGradientPatternRef,
 }
@@ -1075,6 +1075,17 @@ impl Drop for LinearGradientPattern {
     fn drop(&mut self) {
         unsafe {
             AzReleasePattern(self.azure_linear_gradient_pattern);
+        }
+    }
+}
+
+impl Clone for LinearGradientPattern {
+    fn clone(&self) -> LinearGradientPattern {
+        unsafe {
+            LinearGradientPattern {
+                azure_linear_gradient_pattern:
+                    AzCloneLinearGradientPattern(self.azure_linear_gradient_pattern),
+            }
         }
     }
 }
@@ -1097,7 +1108,6 @@ impl LinearGradientPattern {
     }
 }
 
-#[derive(Clone)]
 pub struct RadialGradientPattern {
     pub azure_radial_gradient_pattern: AzRadialGradientPatternRef,
 }
@@ -1106,6 +1116,17 @@ impl Drop for RadialGradientPattern {
     fn drop(&mut self) {
         unsafe {
             AzReleasePattern(self.azure_radial_gradient_pattern);
+        }
+    }
+}
+
+impl Clone for RadialGradientPattern {
+    fn clone(&self) -> RadialGradientPattern {
+        unsafe {
+            RadialGradientPattern {
+                azure_radial_gradient_pattern:
+                    AzCloneRadialGradientPattern(self.azure_radial_gradient_pattern),
+            }
         }
     }
 }
@@ -1132,10 +1153,46 @@ impl RadialGradientPattern {
     }
 }
 
+pub struct SurfacePattern {
+    pub azure_surface_pattern: AzSurfacePatternRef,
+}
+
+impl Drop for SurfacePattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_surface_pattern);
+        }
+    }
+}
+
+impl Clone for SurfacePattern {
+    fn clone(&self) -> SurfacePattern {
+        unsafe {
+            SurfacePattern {
+                azure_surface_pattern:
+                    AzCloneSurfacePattern(self.azure_surface_pattern),
+            }
+        }
+    }
+}
+
+impl SurfacePattern {
+    pub fn new(surface: AzSourceSurfaceRef)
+               -> SurfacePattern {
+        unsafe {
+            SurfacePattern {
+                azure_surface_pattern:
+                    AzCreateSurfacePattern(surface),
+            }
+        }
+    }
+}
+
 pub enum PatternRef<'a> {
     Color(&'a ColorPattern),
     LinearGradient(&'a LinearGradientPattern),
     RadialGradient(&'a RadialGradientPattern),
+    Surface(&'a SurfacePattern),
 }
 
 impl<'a> PatternRef<'a> {
@@ -1149,7 +1206,10 @@ impl<'a> PatternRef<'a> {
             },
             PatternRef::RadialGradient(radial_gradient_pattern) => {
                 radial_gradient_pattern.azure_radial_gradient_pattern
-            }
+            },
+            PatternRef::Surface(surface_pattern) => {
+                surface_pattern.azure_surface_pattern
+            },
         }
     }
 }
@@ -1159,6 +1219,7 @@ pub enum Pattern {
     Color(ColorPattern),
     LinearGradient(LinearGradientPattern),
     RadialGradient(RadialGradientPattern),
+    Surface(SurfacePattern),
 }
 
 impl Pattern {
@@ -1170,7 +1231,10 @@ impl Pattern {
             },
             Pattern::RadialGradient(ref radial_gradient_pattern) => {
                 PatternRef::RadialGradient(radial_gradient_pattern)
-            }
+            },
+            Pattern::Surface(ref surface_pattern) => {
+                PatternRef::Surface(surface_pattern)
+            },
         }
     }
 }

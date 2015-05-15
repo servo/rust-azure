@@ -33,6 +33,7 @@ typedef void* AzPathBuilderRef;
 typedef void* AzPathRef;
 typedef void* AzLinearGradientPatternRef;
 typedef void* AzRadialGradientPatternRef;
+typedef void* AzSurfacePatternRef;
 typedef void* AzFilterNodeRef;
 
 /* Types.h */
@@ -454,12 +455,20 @@ AzLinearGradientPatternRef AzCreateLinearGradientPattern(const AzPoint *aBegin,
                                                          AzGradientStopsRef aStops,
                                                          const AzMatrix *aMatrix);
 
+AzLinearGradientPatternRef AzCloneLinearGradientPattern(AzLinearGradientPatternRef aPattern);
+
 AzRadialGradientPatternRef AzCreateRadialGradientPattern(const AzPoint *aCenter1,
                                                          const AzPoint *aCenter2,
                                                          AzFloat aRadius1,
                                                          AzFloat aRadius2,
                                                          AzGradientStopsRef aStops,
                                                          const AzMatrix *aMatrix);
+
+AzRadialGradientPatternRef AzCloneRadialGradientPattern(AzRadialGradientPatternRef aPattern);
+
+AzSurfacePatternRef AzCreateSurfacePattern(AzSourceSurfaceRef aSurface);
+
+AzSurfacePatternRef AzCloneSurfacePattern(AzSurfacePatternRef aPattern);
 
 void AzReleasePattern(AzPatternRef aPattern);
 
