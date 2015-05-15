@@ -684,6 +684,15 @@ AzCreateLinearGradientPattern(const AzPoint *aBegin,
     return gfxLinearGradientPattern;
 }
 
+extern "C" AzLinearGradientPatternRef
+AzCloneLinearGradientPattern(AzLinearGradientPatternRef aPattern) {
+    gfx::LinearGradientPattern *gfxLinearGradientPattern = static_cast<gfx::LinearGradientPattern*>(aPattern);
+    return new gfx::LinearGradientPattern(gfxLinearGradientPattern->mBegin,
+                                          gfxLinearGradientPattern->mEnd,
+                                          gfxLinearGradientPattern->mStops,
+                                          gfxLinearGradientPattern->mMatrix);
+}
+
 extern "C" AzRadialGradientPatternRef
 AzCreateRadialGradientPattern(const AzPoint *aCenter1,
                               const AzPoint *aCenter2,
@@ -700,12 +709,33 @@ AzCreateRadialGradientPattern(const AzPoint *aCenter1,
     return gfxRadialGradientPattern;
 }
 
+extern "C" AzRadialGradientPatternRef
+AzCloneRadialGradientPattern(AzRadialGradientPatternRef aPattern) {
+    gfx::RadialGradientPattern *gfxRadialGradientPattern = static_cast<gfx::RadialGradientPattern*>(aPattern);
+    return new gfx::RadialGradientPattern(gfxRadialGradientPattern->mCenter1,
+                                          gfxRadialGradientPattern->mCenter2,
+                                          gfxRadialGradientPattern->mRadius1,
+                                          gfxRadialGradientPattern->mRadius2,
+                                          gfxRadialGradientPattern->mStops,
+                                          gfxRadialGradientPattern->mMatrix);
+}
+
 extern "C" AzSurfacePatternRef
 AzCreateSurfacePattern(AzSourceSurfaceRef aSurface) {
     gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
     gfx::SurfacePattern* gfxSurfacePattern = new
         gfx::SurfacePattern(gfxSourceSurface, gfx::ExtendMode::CLAMP);
     return gfxSurfacePattern;
+}
+
+extern "C" AzSurfacePatternRef
+AzCloneSurfacePattern(AzSurfacePatternRef aPattern) {
+    gfx::SurfacePattern *gfxSurfacePattern = static_cast<gfx::SurfacePattern*>(aPattern);
+    return new gfx::SurfacePattern(gfxSurfacePattern->mSurface,
+                                   gfxSurfacePattern->mExtendMode,
+                                   gfxSurfacePattern->mFilter,
+                                   gfxSurfacePattern->mMatrix,
+                                   gfxSurfacePattern->mSamplingRect);
 }
 
 extern "C" void

@@ -537,6 +537,9 @@ pub fn AzCreateLinearGradientPattern(aBegin: *const AzPoint,
                                      aMatrix: *const AzMatrix)
                                      -> AzLinearGradientPatternRef;
 
+pub fn AzCloneLinearGradientPattern(aPattern: AzLinearGradientPatternRef)
+                                    -> AzLinearGradientPatternRef;
+
 pub fn AzCreateRadialGradientPattern(aCenter1: *const AzPoint,
                                      aCenter2: *const AzPoint,
                                      aRadius1: AzFloat,
@@ -545,9 +548,14 @@ pub fn AzCreateRadialGradientPattern(aCenter1: *const AzPoint,
                                      aMatrix: *const AzMatrix)
                                      -> AzRadialGradientPatternRef;
 
+pub fn AzCloneRadialGradientPattern(aPattern: AzRadialGradientPatternRef)
+                                    -> AzRadialGradientPatternRef;
 
 pub fn AzCreateSurfacePattern(aSurface: AzSourceSurfaceRef)
                               -> AzSurfacePatternRef;
+
+pub fn AzCloneSurfacePattern(aPattern: AzSurfacePatternRef)
+                             -> AzSurfacePatternRef;
 
 pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 
