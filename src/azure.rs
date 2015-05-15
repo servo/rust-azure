@@ -115,34 +115,34 @@ pub static AZ_FONT_STYLE_ITALIC: u32 = 1_u32;
 pub static AZ_FONT_STYLE_BOLD: u32 = 2_u32;
 pub static AZ_FONT_STYLE_BOLD_ITALIC: u32 = 3_u32;
 
-pub type enum_AzCompositionOp = c_uint;
-pub static AZ_OP_OVER: u32 = 0_u32;
-pub static AZ_OP_ADD: u32 = 1_u32;
-pub static AZ_OP_ATOP: u32 = 2_u32;
-pub static AZ_OP_OUT: u32 = 3_u32;
-pub static AZ_OP_IN: u32 = 4_u32;
-pub static AZ_OP_SOURCE: u32 = 5_u32;
-pub static AZ_OP_DEST_IN: u32 = 6_u32;
-pub static AZ_OP_DEST_OUT: u32 = 7_u32;
-pub static AZ_OP_DEST_OVER: u32 = 8_u32;
-pub static AZ_OP_DEST_ATOP: u32 = 9_u32;
-pub static AZ_OP_XOR: u32 = 10_u32;
-pub static AZ_OP_MULTIPLY: u32 = 11_u32;
-pub static AZ_OP_SCREEN: u32 = 12_u32;
-pub static AZ_OP_OVERLAY: u32 = 13_u32;
-pub static AZ_OP_DARKEN: u32 = 14_u32;
-pub static AZ_OP_LIGHTEN: u32 = 15_u32;
-pub static AZ_OP_COLOR_DODGE: u32 = 16_u32;
-pub static AZ_OP_COLOR_BURN: u32 = 17_u32;
-pub static AZ_OP_HARD_LIGHT: u32 = 18_u32;
-pub static AZ_OP_SOFT_LIGHT: u32 = 19_u32;
-pub static AZ_OP_DIFFERENCE: u32 = 20_u32;
-pub static AZ_OP_EXCLUSION: u32 = 21_u32;
-pub static AZ_OP_HUE: u32 = 22_u32;
-pub static AZ_OP_SATURATION: u32 = 23_u32;
-pub static AZ_OP_COLOR: u32 = 24_u32;
-pub static AZ_OP_LUMINOSITY: u32 = 25_u32;
-pub static AZ_OP_COUNT: u32 = 26_u32;
+pub type enum_AzCompositionOp = c_uchar;
+pub static AZ_OP_OVER: u8 = 0_u8;
+pub static AZ_OP_ADD: u8 = 1_u8;
+pub static AZ_OP_ATOP: u8 = 2_u8;
+pub static AZ_OP_OUT: u8 = 3_u8;
+pub static AZ_OP_IN: u8 = 4_u8;
+pub static AZ_OP_SOURCE: u8 = 5_u8;
+pub static AZ_OP_DEST_IN: u8 = 6_u8;
+pub static AZ_OP_DEST_OUT: u8 = 7_u8;
+pub static AZ_OP_DEST_OVER: u8 = 8_u8;
+pub static AZ_OP_DEST_ATOP: u8 = 9_u8;
+pub static AZ_OP_XOR: u8 = 10_u8;
+pub static AZ_OP_MULTIPLY: u8 = 11_u8;
+pub static AZ_OP_SCREEN: u8 = 12_u8;
+pub static AZ_OP_OVERLAY: u8 = 13_u8;
+pub static AZ_OP_DARKEN: u8 = 14_u8;
+pub static AZ_OP_LIGHTEN: u8 = 15_u8;
+pub static AZ_OP_COLOR_DODGE: u8 = 16_u8;
+pub static AZ_OP_COLOR_BURN: u8 = 17_u8;
+pub static AZ_OP_HARD_LIGHT: u8 = 18_u8;
+pub static AZ_OP_SOFT_LIGHT: u8 = 19_u8;
+pub static AZ_OP_DIFFERENCE: u8 = 20_u8;
+pub static AZ_OP_EXCLUSION: u8 = 21_u8;
+pub static AZ_OP_HUE: u8 = 22_u8;
+pub static AZ_OP_SATURATION: u8 = 23_u8;
+pub static AZ_OP_COLOR: u8 = 24_u8;
+pub static AZ_OP_LUMINOSITY: u8 = 25_u8;
+pub static AZ_OP_COUNT: u8 = 26_u8;
 pub type AzCompositionOp = enum_AzCompositionOp;
 
 pub type enum_AzExtendMode = c_uint;
@@ -154,11 +154,12 @@ pub type enum_AzFillRule = c_uint;
 pub static AZ_FILL_WINDING: u32 = 0_u32;
 pub static AZ_FILL_EVEN_ODD: u32 = 1_u32;
 
-pub type enum_AzAntialiasMode = c_uint;
-pub static AZ_AA_NONE: u32 = 0_u32;
-pub static AZ_AA_GRAY: u32 = 1_u32;
-pub static AZ_AA_SUBPIXEL: u32 = 2_u32;
-pub static AZ_AA_DEFAULT: u32 = 3_u32;
+pub type enum_AzAntialiasMode = c_uchar;
+pub static AZ_AA_NONE: u8 = 0_u8;
+pub static AZ_AA_GRAY: u8 = 1_u8;
+pub static AZ_AA_SUBPIXEL: u8 = 2_u8;
+pub static AZ_AA_DEFAULT: u8 = 3_u8;
+pub type AzAntialiasMode = enum_AzCompositionOp;
 
 pub type enum_AzFilter = c_uint;
 pub static AZ_FILTER_GOOD: u32 = 0_u32;
@@ -351,7 +352,8 @@ pub type AzMatrix5x4 = struct__AzMatrix5x4;
 #[repr(C)]
 pub struct struct__AzDrawOptions {
     pub mAlpha: AzFloat,
-    pub fields: uint16_t,
+    pub mCompositionOp: AzCompositionOp,
+    pub mAntialiasMode: AzAntialiasMode,
 }
 
 pub type AzDrawOptions = struct__AzDrawOptions;

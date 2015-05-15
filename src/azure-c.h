@@ -150,7 +150,7 @@ enum AzFontStyle
   AZ_FONT_STYLE_BOLD_ITALIC
 };
 
-enum AzCompositionOp {
+enum AzCompositionOp: uint8_t {
   AZ_OP_OVER,
   AZ_OP_ADD,
   AZ_OP_ATOP,
@@ -191,7 +191,7 @@ enum AzFillRule {
   AZ_FILL_EVEN_ODD
 };
 
-enum AzAntialiasMode {
+enum AzAntialiasMode: uint8_t {
   AZ_AA_NONE,
   AZ_AA_GRAY,
   AZ_AA_SUBPIXEL,
@@ -294,14 +294,10 @@ typedef struct _AzMatrix5x4 {
 
 /* 2D.h */
 
-// FIXME: rust-bindgen can't handle bitfields
 typedef struct _AzDrawOptions {
   AzFloat mAlpha;
-  uint16_t fields;
-  /*
-  enum AzCompositionOp mCompositionOp : 8;
-  enum AzAntialiasMode mAntialiasMode : 2;
-  */
+  AzCompositionOp mCompositionOp;
+  AzAntialiasMode mAntialiasMode;
 } AzDrawOptions;
 
 typedef struct _AzStrokeOptions {
