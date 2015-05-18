@@ -19,7 +19,7 @@ git = "https://github.com/servo/skia"
 
 [dependencies.x11]
 
-git = "https://github.com/daggerbot/x11-rs"
+version = "1.0.0"
 features = ["xlib"]
 
 [dependencies.egl]
