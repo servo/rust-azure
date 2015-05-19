@@ -724,7 +724,7 @@ extern "C" AzSurfacePatternRef
 AzCreateSurfacePattern(AzSourceSurfaceRef aSurface) {
     gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
     gfx::SurfacePattern* gfxSurfacePattern = new
-        gfx::SurfacePattern(gfxSourceSurface, gfx::ExtendMode::CLAMP);
+        gfx::SurfacePattern(gfxSourceSurface, gfx::ExtendMode::REPEAT);
     return gfxSurfacePattern;
 }
 
@@ -736,6 +736,12 @@ AzCloneSurfacePattern(AzSurfacePatternRef aPattern) {
                                    gfxSurfacePattern->mMatrix,
                                    gfxSurfacePattern->mFilter,
                                    gfxSurfacePattern->mSamplingRect);
+}
+
+extern "C" AzIntSize
+AzSurfacePatternGetSize(AzSurfacePatternRef aPattern) {
+    gfx::SurfacePattern *gfxSurfacePattern = static_cast<gfx::SurfacePattern*>(aPattern);
+    return AzSourceSurfaceGetSize(gfxSurfacePattern->mSurface);
 }
 
 extern "C" void

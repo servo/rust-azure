@@ -559,6 +559,8 @@ pub fn AzCreateSurfacePattern(aSurface: AzSourceSurfaceRef)
 pub fn AzCloneSurfacePattern(aPattern: AzSurfacePatternRef)
                              -> AzSurfacePatternRef;
 
+pub fn AzSurfacePatternGetSize(aPattern: AzSurfacePatternRef) -> AzIntSize;
+
 pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 
 pub fn AzSourceSurfaceGetSize(aSurface: AzSourceSurfaceRef) -> AzIntSize;

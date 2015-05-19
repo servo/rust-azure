@@ -44,7 +44,7 @@ use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzRelease
 use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
 use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
-use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern};
+use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
 use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
 use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
@@ -569,6 +569,7 @@ impl DrawTarget {
             None => ptr::null_mut(),
             Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
         };
+
         unsafe {
             AzDrawTargetFillRect(self.azure_draw_target,
                                  &mut rect.as_azure_rect(),
@@ -1186,6 +1187,8 @@ impl RadialGradientPattern {
 
 pub struct SurfacePattern {
     pub azure_surface_pattern: AzSurfacePatternRef,
+    pub repeat_x: bool,
+    pub repeat_y: bool,
 }
 
 impl Drop for SurfacePattern {
@@ -1202,19 +1205,29 @@ impl Clone for SurfacePattern {
             SurfacePattern {
                 azure_surface_pattern:
                     AzCloneSurfacePattern(self.azure_surface_pattern),
+                    repeat_x: self.repeat_x,
+                    repeat_y: self.repeat_y,
             }
         }
     }
 }
 
 impl SurfacePattern {
-    pub fn new(surface: AzSourceSurfaceRef)
+    pub fn new(surface: AzSourceSurfaceRef, repeat_x: bool, repeat_y: bool)
                -> SurfacePattern {
         unsafe {
             SurfacePattern {
                 azure_surface_pattern:
                     AzCreateSurfacePattern(surface),
+                    repeat_x: repeat_x,
+                    repeat_y: repeat_y,
             }
+        }
+    }
+
+    pub fn size(&self) -> AzIntSize {
+        unsafe {
+            AzSurfacePatternGetSize(self.azure_surface_pattern)
         }
     }
 }
