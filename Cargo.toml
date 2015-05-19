@@ -17,9 +17,10 @@ git = "https://github.com/servo/rust-geom"
 
 git = "https://github.com/servo/skia"
 
-[dependencies.xlib]
+[dependencies.x11]
 
-git = "https://github.com/servo/rust-xlib"
+version = "1.0.0"
+features = ["xlib"]
 
 [dependencies.egl]
 
