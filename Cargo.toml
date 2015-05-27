@@ -29,6 +29,10 @@ git = "https://github.com/servo/rust-egl"
 
 git = "https://github.com/servo/rust-freetype"
 
+[dependencies.freetype-sys]
+
+git = "https://github.com/servo/libfreetype2"
+
 [dependencies.core_foundation]
 
 git = "https://github.com/servo/rust-core-foundation"
