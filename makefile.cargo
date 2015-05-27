@@ -59,19 +59,16 @@ CXXFLAGS += \
 	$(NULL)
 endif
 
-SKIA_OUTDIR = $(shell find $(OUT_DIR)/../.. -name 'skia-*' -type d)/out
-FREETYPE_OUTDIR = $(shell find $(OUT_DIR)/../.. -name 'freetype-sys-*' -type d)/out
-
 CXXFLAGS += \
-	-I $(FREETYPE_OUTDIR)/include \
-	-iquote $(SKIA_OUTDIR)/include \
-	-iquote $(SKIA_OUTDIR)/include/core \
-	-iquote $(SKIA_OUTDIR)/include/config \
-	-iquote $(SKIA_OUTDIR)/include/effects \
-	-iquote $(SKIA_OUTDIR)/include/ports \
-	-iquote $(SKIA_OUTDIR)/include/utils \
-	-iquote $(SKIA_OUTDIR)/include/gpu \
-	-iquote $(SKIA_OUTDIR)/include/gpu/gl \
+	-I "$(DEP_FREETYPE_OUTDIR)/include" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/core" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/config" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/effects" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/ports" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/utils" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/gpu" \
+	-iquote "$(DEP_SKIA_OUTDIR)/include/gpu/gl" \
 	-DUSE_SKIA \
 	-DUSE_SKIA_GPU
 
