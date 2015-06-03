@@ -10,38 +10,39 @@ build = "build.rs"
 libc = "*"
 
 [dependencies.geom]
-
 git = "https://github.com/servo/rust-geom"
 
 [dependencies.skia]
-
 git = "https://github.com/servo/skia"
 
-[dependencies.x11]
-
+[target.i686-unknown-linux-gnu.dependencies.x11]
 version = "1.1.1"
 features = ["xlib"]
 
-[dependencies.egl]
+[target.x86_64-unknown-linux-gnu.dependencies.x11]
+version = "1.1.1"
+features = ["xlib"]
 
-git = "https://github.com/servo/rust-egl"
-
-[dependencies.freetype]
-
+[target.i686-unknown-linux-gnu.dependencies.freetype]
 git = "https://github.com/servo/rust-freetype"
 
-[dependencies.freetype-sys]
+[target.x86_64-unknown-linux-gnu.dependencies.freetype]
+git = "https://github.com/servo/rust-freetype"
 
+[target.i686-unknown-linux-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
-[dependencies.core_foundation]
+[target.x86_64-unknown-linux-gnu.dependencies.freetype-sys]
+git = "https://github.com/servo/libfreetype2"
 
+[target.x86_64-apple-darwin.dependencies.core_foundation]
 git = "https://github.com/servo/rust-core-foundation"
 
-[dependencies.core_graphics]
-
+[target.x86_64-apple-darwin.dependencies.core_graphics]
 git = "https://github.com/servo/rust-core-graphics"
 
-[dependencies.core_text]
-
+[target.x86_64-apple-darwin.dependencies.core_text]
 git = "https://github.com/servo/rust-core-text"
+
+[target.arm-linux-androideabi.dependencies.egl]
+git = "https://github.com/servo/rust-egl"
