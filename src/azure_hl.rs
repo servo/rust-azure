@@ -5,7 +5,7 @@
 //! High-level bindings to Azure.
 
 pub use AzColor as Color;
-use azure::{AZ_CAP_BUTT, AZ_JOIN_MITER_OR_BEVEL, AZ_FILTER_TYPE_COLOR_MATRIX};
+use azure::{AZ_FILTER_TYPE_COLOR_MATRIX};
 use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
 use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
 use azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
@@ -24,7 +24,7 @@ use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSur
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
 use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
-use azure::{struct__AzColor, struct__AzGlyphBuffer};
+use azure::{struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
 use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzMatrix5x4};
 use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
@@ -59,13 +59,12 @@ use geom::matrix2d::Matrix2D;
 use geom::point::Point2D;
 use geom::rect::Rect;
 use geom::size::Size2D;
-use libc::types::common::c99::{uint8_t, uint16_t};
 use libc::size_t;
-use skia::{SkiaGrGLNativeContextRef, SkiaGrContextRef};
+use skia::SkiaGrGLNativeContextRef;
 use skia::{SkiaSkNativeSharedGLContextRef, SkiaSkNativeSharedGLContextCreate};
 use skia::{SkiaSkNativeSharedGLContextGetFBOID, SkiaSkNativeSharedGLContextGetGrContext};
 use skia::{SkiaSkNativeSharedGLContextRelease, SkiaSkNativeSharedGLContextRetain};
-use skia::{SkiaSkNativeSharedGLContextMakeCurrent, SkiaSkNativeSharedGLContextStealSurface};
+use skia::SkiaSkNativeSharedGLContextMakeCurrent;
 use skia::{SkiaSkNativeSharedGLContextFlush, SkiaGrGLSharedSurfaceRef};
 use std::mem;
 use std::ptr;
@@ -463,7 +462,6 @@ impl DrawTarget {
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
         assert!(backend == BackendType::Skia);
-        let native_surface = native_graphics_context as SkiaGrGLSharedSurfaceRef;
         let skia_context = unsafe {
             SkiaSkNativeSharedGLContextCreate(native_graphics_context, size.width, size.height)
         };
