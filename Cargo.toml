@@ -1,5 +1,4 @@
 [package]
-
 name = "azure"
 version = "0.1.0"
 authors = ["The Servo Project Developers"]
@@ -29,17 +28,21 @@ git = "https://github.com/servo/rust-freetype"
 [target.x86_64-unknown-linux-gnu.dependencies.freetype]
 git = "https://github.com/servo/rust-freetype"
 
+[target.arm-linux-androideabi.dependencies.freetype]
+git = "https://github.com/servo/rust-freetype"
+
 [target.i686-unknown-linux-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
 [target.x86_64-unknown-linux-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
-[target.x86_64-apple-darwin.dependencies.core-foundation]
-git = "https://github.com/servo/core-foundation-rs"
+[target.arm-linux-androideabi.dependencies.freetype-sys]
+git = "https://github.com/servo/libfreetype2"
 
-[target.x86_64-apple-darwin.dependencies.core-graphics]
-git = "https://github.com/servo/core-graphics-rs"
+[target.x86_64-apple-darwin.dependencies]
+core-foundation = "*"
+core-graphics = "*"
 
 [target.x86_64-apple-darwin.dependencies.core-text]
 git = "https://github.com/servo/core-text-rs"

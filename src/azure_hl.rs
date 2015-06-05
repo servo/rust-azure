@@ -65,7 +65,7 @@ use skia::{SkiaSkNativeSharedGLContextRef, SkiaSkNativeSharedGLContextCreate};
 use skia::{SkiaSkNativeSharedGLContextGetFBOID, SkiaSkNativeSharedGLContextGetGrContext};
 use skia::{SkiaSkNativeSharedGLContextRelease, SkiaSkNativeSharedGLContextRetain};
 use skia::SkiaSkNativeSharedGLContextMakeCurrent;
-use skia::{SkiaSkNativeSharedGLContextFlush, SkiaGrGLSharedSurfaceRef};
+use skia::SkiaSkNativeSharedGLContextFlush;
 use std::mem;
 use std::ptr;
 use std::slice;
