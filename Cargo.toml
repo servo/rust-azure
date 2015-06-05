@@ -35,14 +35,14 @@ git = "https://github.com/servo/libfreetype2"
 [target.x86_64-unknown-linux-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
-[target.x86_64-apple-darwin.dependencies.core_foundation]
-git = "https://github.com/servo/rust-core-foundation"
+[target.x86_64-apple-darwin.dependencies.core-foundation]
+git = "https://github.com/servo/core-foundation-rs"
 
-[target.x86_64-apple-darwin.dependencies.core_graphics]
-git = "https://github.com/servo/rust-core-graphics"
+[target.x86_64-apple-darwin.dependencies.core-graphics]
+git = "https://github.com/servo/core-graphics-rs"
 
-[target.x86_64-apple-darwin.dependencies.core_text]
-git = "https://github.com/servo/rust-core-text"
+[target.x86_64-apple-darwin.dependencies.core-text]
+git = "https://github.com/servo/core-text-rs"
 
 [target.arm-linux-androideabi.dependencies.egl]
 git = "https://github.com/servo/rust-egl"
