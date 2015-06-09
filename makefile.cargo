@@ -39,6 +39,7 @@ CXXFLAGS += \
 	-std=gnu++11 \
 	-fPIC \
 	-Ilibazure \
+	-I/usr/include/freetype2 \
 	-DMOZ_GFX \
 	-DMOZ_WARN_UNUSED_RESULT="" \
 	$(NULL)

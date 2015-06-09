@@ -23,6 +23,10 @@ features = ["xlib"]
 version = "1.1.1"
 features = ["xlib"]
 
+[target.arm-unknown-linux-gnueabihf.dependencies.x11]
+version = "1.1.1"
+features = ["xlib"]
+
 [target.i686-unknown-linux-gnu.dependencies.freetype]
 git = "https://github.com/servo/rust-freetype"
 
@@ -30,6 +34,9 @@ git = "https://github.com/servo/rust-freetype"
 git = "https://github.com/servo/rust-freetype"
 
 [target.arm-linux-androideabi.dependencies.freetype]
+git = "https://github.com/servo/rust-freetype"
+
+[target.arm-unknown-linux-gnueabihf.dependencies.freetype]
 git = "https://github.com/servo/rust-freetype"
 
 [target.i686-unknown-linux-gnu.dependencies.freetype-sys]
@@ -41,6 +48,9 @@ git = "https://github.com/servo/libfreetype2"
 [target.arm-linux-androideabi.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
+[target.arm-unknown-linux-gnueabihf.dependencies.freetype-sys]
+git = "https://github.com/servo/libfreetype2"
+
 [target.x86_64-apple-darwin.dependencies]
 core-foundation = "*"
 core-graphics = "*"
@@ -49,4 +59,7 @@ core-graphics = "*"
 git = "https://github.com/servo/core-text-rs"
 
 [target.arm-linux-androideabi.dependencies.egl]
+git = "https://github.com/servo/rust-egl"
+
+[target.arm-unknown-linux-gnueabihf.dependencies.egl]
 git = "https://github.com/servo/rust-egl"
