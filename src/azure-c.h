@@ -466,6 +466,8 @@ AzSurfacePatternRef AzCreateSurfacePattern(AzSourceSurfaceRef aSurface);
 
 AzSurfacePatternRef AzCloneSurfacePattern(AzSurfacePatternRef aPattern);
 
+AzIntSize AzSurfacePatternGetSize(AzSurfacePatternRef aPattern);
+
 void AzReleasePattern(AzPatternRef aPattern);
 
 void AzReleaseGradientStops(AzGradientStopsRef aStops);
