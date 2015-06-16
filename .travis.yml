@@ -1,0 +1,7 @@
+language: rust
+rust:
+  - nightly
+  - stable
+sudo: false
+notifications:
+  webhooks: http://build.servo.org:54856/travis
