@@ -547,11 +547,14 @@ impl DrawTarget {
         }
     }
 
-    pub fn fill(&self, path: &Path, pattern: &ColorPattern, draw_options: &DrawOptions) {
+    pub fn fill(&self,
+                path: &Path,
+                pattern: PatternRef,
+                draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetFill(self.azure_draw_target,
                              path.azure_path,
-                             pattern.azure_color_pattern,
+                             pattern.as_azure_pattern(),
                              &mut draw_options.as_azure_draw_options());
         }
     }
@@ -578,13 +581,13 @@ impl DrawTarget {
 
     pub fn stroke(&self,
                   path: &Path,
-                  pattern: &ColorPattern,
+                  pattern: PatternRef,
                   stroke_options: &StrokeOptions,
                   draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStroke(self.azure_draw_target,
                                path.azure_path,
-                               pattern.azure_color_pattern,
+                               pattern.as_azure_pattern(),
                                &stroke_options.as_azure_stroke_options(),
                                &draw_options.as_azure_draw_options());
         }
@@ -608,13 +611,13 @@ impl DrawTarget {
 
     pub fn stroke_rect(&self,
                    rect: &Rect<AzFloat>,
-                   pattern: &ColorPattern,
+                   pattern: PatternRef,
                    stroke_options: &StrokeOptions,
                    draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeRect(self.azure_draw_target,
                                    &mut rect.as_azure_rect(),
-                                   pattern.azure_color_pattern,
+                                   pattern.as_azure_pattern(),
                                    &mut stroke_options.as_azure_stroke_options(),
                                    &mut draw_options.as_azure_draw_options());
         }
@@ -1099,6 +1102,8 @@ impl Drop for PathBuilder {
 
 pub struct LinearGradientPattern {
     pub azure_linear_gradient_pattern: AzLinearGradientPatternRef,
+    pub begin: Point2D<AzFloat>,
+    pub end: Point2D<AzFloat>,
 }
 
 impl Drop for LinearGradientPattern {
@@ -1115,6 +1120,8 @@ impl Clone for LinearGradientPattern {
             LinearGradientPattern {
                 azure_linear_gradient_pattern:
                     AzCloneLinearGradientPattern(self.azure_linear_gradient_pattern),
+                begin: self.begin,
+                end: self.end,
             }
         }
     }
@@ -1133,8 +1140,14 @@ impl LinearGradientPattern {
                                                   mem::transmute::<_,*const AzPoint>(end),
                                                   stops.azure_gradient_stops,
                                                   mem::transmute::<_,*const AzMatrix>(matrix)),
+                begin: *begin,
+                end: *end,
             }
         }
+    }
+
+    pub fn is_zero_size(&self) -> bool {
+        self.begin == self.end
     }
 }
 
@@ -1213,10 +1226,16 @@ impl Clone for SurfacePattern {
 impl SurfacePattern {
     pub fn new(surface: AzSourceSurfaceRef, repeat_x: bool, repeat_y: bool)
                -> SurfacePattern {
+        let mode = if !repeat_x && !repeat_y {
+            ExtendMode::Clamp
+        } else {
+            ExtendMode::Repeat
+        };
+
         unsafe {
             SurfacePattern {
                 azure_surface_pattern:
-                    AzCreateSurfacePattern(surface),
+                    AzCreateSurfacePattern(surface, mode.as_azure_extend_mode()),
                     repeat_x: repeat_x,
                     repeat_y: repeat_y,
             }

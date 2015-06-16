@@ -721,10 +721,11 @@ AzCloneRadialGradientPattern(AzRadialGradientPatternRef aPattern) {
 }
 
 extern "C" AzSurfacePatternRef
-AzCreateSurfacePattern(AzSourceSurfaceRef aSurface) {
+AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, AzExtendMode aExtendMode) {
     gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
+    gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
     gfx::SurfacePattern* gfxSurfacePattern = new
-        gfx::SurfacePattern(gfxSourceSurface, gfx::ExtendMode::REPEAT);
+        gfx::SurfacePattern(gfxSourceSurface, gfxExtendMode);
     return gfxSurfacePattern;
 }
 

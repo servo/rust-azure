@@ -462,7 +462,7 @@ AzRadialGradientPatternRef AzCreateRadialGradientPattern(const AzPoint *aCenter1
 
 AzRadialGradientPatternRef AzCloneRadialGradientPattern(AzRadialGradientPatternRef aPattern);
 
-AzSurfacePatternRef AzCreateSurfacePattern(AzSourceSurfaceRef aSurface);
+AzSurfacePatternRef AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, AzExtendMode aExtendMode);
 
 AzSurfacePatternRef AzCloneSurfacePattern(AzSurfacePatternRef aPattern);
 
