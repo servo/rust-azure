@@ -8,9 +8,7 @@ build = "build.rs"
 
 [dependencies]
 libc = "*"
-
-[dependencies.geom]
-git = "https://github.com/servo/rust-geom"
+euclid = "0.1"
 
 [dependencies.skia]
 git = "https://github.com/servo/skia"

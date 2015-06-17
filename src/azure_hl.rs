@@ -55,10 +55,10 @@ use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
 
-use geom::matrix2d::Matrix2D;
-use geom::point::Point2D;
-use geom::rect::Rect;
-use geom::size::Size2D;
+use euclid::matrix2d::Matrix2D;
+use euclid::point::Point2D;
+use euclid::rect::Rect;
+use euclid::size::Size2D;
 use libc::size_t;
 use skia::SkiaGrGLNativeContextRef;
 use skia::{SkiaSkNativeSharedGLContextRef, SkiaSkNativeSharedGLContextCreate};

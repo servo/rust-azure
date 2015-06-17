@@ -6,7 +6,7 @@
 #![crate_type = "rlib"]
 
 extern crate libc;
-extern crate geom;
+extern crate euclid;
 extern crate skia;
 #[cfg(target_os = "linux")]
 extern crate x11;
