@@ -368,7 +368,7 @@ impl DrawSurfaceOptions {
 }
 
 
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum BackendType {
     None,
     Direct2D,
