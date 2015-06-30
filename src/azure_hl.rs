@@ -368,7 +368,7 @@ impl DrawSurfaceOptions {
 }
 
 
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum BackendType {
     None,
     Direct2D,
@@ -461,7 +461,7 @@ impl DrawTarget {
                         native_graphics_context: SkiaGrGLNativeContextRef,
                         size: Size2D<i32>,
                         format: SurfaceFormat) -> DrawTarget {
-        assert!(backend == BackendType::Skia);
+        assert_eq!(backend, BackendType::Skia);
         let skia_context = unsafe {
             SkiaSkNativeSharedGLContextCreate(native_graphics_context, size.width, size.height)
         };
@@ -684,7 +684,7 @@ impl DrawTarget {
                                            stride: i32,
                                            format: SurfaceFormat)
                                            -> SourceSurface {
-        assert!(data.len() as i32 == stride * size.height);
+        assert_eq!(data.len() as i32, stride * size.height);
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
