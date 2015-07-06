@@ -36,7 +36,7 @@ use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransfo
 use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
 use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
 use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
-use azure::{AzReleaseSourceSurface, AzRetainDrawTarget};
+use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
 use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
@@ -856,6 +856,16 @@ pub struct SourceSurface {
     pub azure_source_surface: AzSourceSurfaceRef,
 }
 
+impl Clone for SourceSurface {
+    fn clone(&self) -> SourceSurface {
+        unsafe {
+            SourceSurface {
+                azure_source_surface: AzRetainSourceSurface(self.azure_source_surface),
+            }
+        }
+    }
+}
+
 impl Drop for SourceSurface {
     fn drop(&mut self) {
         unsafe {
@@ -1224,7 +1234,10 @@ impl Clone for SurfacePattern {
 }
 
 impl SurfacePattern {
-    pub fn new(surface: AzSourceSurfaceRef, repeat_x: bool, repeat_y: bool)
+    pub fn new(surface: AzSourceSurfaceRef,
+               repeat_x: bool,
+               repeat_y: bool,
+               matrix: &Matrix2D<AzFloat>)
                -> SurfacePattern {
         let mode = if !repeat_x && !repeat_y {
             ExtendMode::Clamp
@@ -1235,9 +1248,11 @@ impl SurfacePattern {
         unsafe {
             SurfacePattern {
                 azure_surface_pattern:
-                    AzCreateSurfacePattern(surface, mode.as_azure_extend_mode()),
-                    repeat_x: repeat_x,
-                    repeat_y: repeat_y,
+                    AzCreateSurfacePattern(surface,
+                                           mode.as_azure_extend_mode(),
+                                           mem::transmute::<_,*const AzMatrix>(matrix)),
+                repeat_x: repeat_x,
+                repeat_y: repeat_y,
             }
         }
     }
