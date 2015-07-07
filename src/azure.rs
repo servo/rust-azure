@@ -553,13 +553,17 @@ pub fn AzCreateRadialGradientPattern(aCenter1: *const AzPoint,
 pub fn AzCloneRadialGradientPattern(aPattern: AzRadialGradientPatternRef)
                                     -> AzRadialGradientPatternRef;
 
-pub fn AzCreateSurfacePattern(aSurface: AzSourceSurfaceRef, aExtendMode: AzExtendMode)
+pub fn AzCreateSurfacePattern(aSurface: AzSourceSurfaceRef,
+                              aExtendMode: AzExtendMode,
+                              aMatrix: *const AzMatrix)
                               -> AzSurfacePatternRef;
 
 pub fn AzCloneSurfacePattern(aPattern: AzSurfacePatternRef)
                              -> AzSurfacePatternRef;
 
 pub fn AzSurfacePatternGetSize(aPattern: AzSurfacePatternRef) -> AzIntSize;
+
+pub fn AzRetainSourceSurface(aSurface: AzSourceSurfaceRef) -> AzSourceSurfaceRef;
 
 pub fn AzReleaseSourceSurface(aSurface: AzSourceSurfaceRef);
 

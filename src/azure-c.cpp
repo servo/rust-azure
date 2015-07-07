@@ -475,6 +475,13 @@ AzDrawTargetCreateGradientStops(AzDrawTargetRef aDrawTarget,
     return gfxGradientStops;
 }
 
+extern "C" AzSourceSurfaceRef
+AzRetainSourceSurface(AzSourceSurfaceRef aSurface) {
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfxSourceSurface->AddRef();
+    return gfxSourceSurface;
+}
+
 extern "C" void
 AzReleaseSourceSurface(AzSourceSurfaceRef aSurface) {
     gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
@@ -721,11 +728,15 @@ AzCloneRadialGradientPattern(AzRadialGradientPatternRef aPattern) {
 }
 
 extern "C" AzSurfacePatternRef
-AzCreateSurfacePattern(AzSourceSurfaceRef aSurface, AzExtendMode aExtendMode) {
+AzCreateSurfacePattern(AzSourceSurfaceRef aSurface,
+                       AzExtendMode aExtendMode,
+                       const AzMatrix* aMatrix) {
     gfx::SourceSurface *gfxSourceSurface = reinterpret_cast<gfx::SourceSurface*>(aSurface);
     gfx::ExtendMode gfxExtendMode = static_cast<gfx::ExtendMode>(aExtendMode);
-    gfx::SurfacePattern* gfxSurfacePattern = new
-        gfx::SurfacePattern(gfxSourceSurface, gfxExtendMode);
+    const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aMatrix);
+    gfx::SurfacePattern* gfxSurfacePattern = new gfx::SurfacePattern(gfxSourceSurface,
+                                                                     gfxExtendMode,
+                                                                     *gfxMatrix);
     return gfxSurfacePattern;
 }
 
