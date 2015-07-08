@@ -4,8 +4,11 @@
 
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
+#![feature(custom_derive, plugin)]
+#![plugin(serde_macros)]
 
 extern crate libc;
+extern crate serde;
 extern crate euclid;
 extern crate skia;
 #[cfg(target_os = "linux")]

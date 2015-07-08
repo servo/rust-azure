@@ -903,7 +903,7 @@ impl GradientStops {
 }
 
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct GradientStop {
     pub offset: AzFloat,
     pub color: Color,
