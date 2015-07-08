@@ -9,6 +9,8 @@ build = "build.rs"
 [dependencies]
 libc = "*"
 euclid = "0.1"
+serde = "*"
+serde_macros = "*"
 
 [dependencies.skia]
 git = "https://github.com/servo/skia"
