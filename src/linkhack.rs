@@ -7,8 +7,6 @@
 #[cfg(target_os = "linux")]
 #[link(name = "azure", kind = "static")]
 #[link(name = "stdc++")]
-#[link(name = "skia", kind = "static")]
-// skia must come before freetype for linking to succeed
 #[link(name = "freetype")]
 #[link(name = "bz2")]
 // fontconfig must come before expat for linking to succeed
@@ -20,7 +18,6 @@ extern { }
 #[cfg(target_os = "android")]
 #[link(name = "azure", kind = "static")]
 #[link(name = "stdc++")]
-#[link(name = "skia", kind = "static")]
 #[link(name = "expat")]
 #[link(name = "fontconfig")]
 #[link(name = "EGL")]
@@ -29,7 +26,6 @@ extern { }
 #[cfg(target_os = "macos")]
 #[link(name = "azure", kind = "static")]
 #[link(name = "stdc++")]
-#[link(name = "skia", kind = "static")]
 #[link(name = "objc")]
 #[link(name = "IOSurface", kind = "framework")]
 #[link(name = "OpenGL", kind = "framework")]
