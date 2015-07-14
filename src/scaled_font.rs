@@ -140,7 +140,6 @@ impl ScaledFont {
 // FIXME: Move this stuff to a rust-skia?
 // FIXME: Demangle the names!!!
 #[cfg(target_os="macos")]
-#[link(name = "skia")]
 extern {
     pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *mut SkTypeface;
 }

@@ -60,12 +60,7 @@ use euclid::point::Point2D;
 use euclid::rect::Rect;
 use euclid::size::Size2D;
 use libc::size_t;
-use skia::SkiaGrGLNativeContextRef;
-use skia::{SkiaSkNativeSharedGLContextRef, SkiaSkNativeSharedGLContextCreate};
-use skia::{SkiaSkNativeSharedGLContextGetFBOID, SkiaSkNativeSharedGLContextGetGrContext};
-use skia::{SkiaSkNativeSharedGLContextRelease, SkiaSkNativeSharedGLContextRetain};
-use skia::SkiaSkNativeSharedGLContextMakeCurrent;
-use skia::SkiaSkNativeSharedGLContextFlush;
+use skia::gl_rasterization_context::GLRasterizationContext;
 use std::mem;
 use std::ptr;
 use std::slice;
@@ -457,39 +452,23 @@ impl DrawTarget {
         }
     }
 
-    pub fn new_with_fbo(backend: BackendType,
-                        native_graphics_context: SkiaGrGLNativeContextRef,
-                        size: Size2D<i32>,
-                        format: SurfaceFormat) -> DrawTarget {
-        assert_eq!(backend, BackendType::Skia);
-        let skia_context = unsafe {
-            SkiaSkNativeSharedGLContextCreate(native_graphics_context, size.width, size.height)
-        };
-
-        if skia_context.is_null() {
-            panic!("null skia shared gl context");
-        }
-
-        let gr_context = unsafe {
-            SkiaSkNativeSharedGLContextGetGrContext(skia_context)
-        };
-
-        let fbo_id = unsafe {
-            SkiaSkNativeSharedGLContextGetFBOID(skia_context)
-        };
-
+    pub fn new_with_gl_rasterization_context(gl_rasterization_context: Arc<GLRasterizationContext>,
+                                              format: SurfaceFormat)
+                                              -> DrawTarget {
+        let mut size = gl_rasterization_context.size.as_azure_int_size();
         let azure_draw_target = unsafe {
-            AzCreateDrawTargetSkiaWithGrContextAndFBO(gr_context,
-                                                      fbo_id,
-                                                      &mut size.as_azure_int_size(),
+            AzCreateDrawTargetSkiaWithGrContextAndFBO(gl_rasterization_context.gr_context,
+                                                      gl_rasterization_context.framebuffer_id,
+                                                      &mut size,
                                                       format.as_azure_surface_format())
         };
+
         if azure_draw_target.is_null() {
-            panic!("null azure draw target");
+            panic!("Failed to create GL rasterizing AzureDrawTarget");
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
-            backing: DrawTargetBacking::SkiaContext(skia_context)
+            backing: DrawTargetBacking::GLRasterizationContext(gl_rasterization_context)
         }
     }
 
@@ -507,11 +486,9 @@ impl DrawTarget {
         self.backing.make_current();
     }
 
-    /// Consumes this draw target and returns the underlying draw target backing.
-    pub fn steal_draw_target_backing(mut self) -> DrawTargetBacking {
-        let mut backing = DrawTargetBacking::Empty;
-        mem::swap(&mut backing, &mut self.backing);
-        backing
+    pub fn finish(self) {
+        self.backing.make_current();
+        self.backing.finish();
     }
 
     pub fn get_size(&self) -> AzIntSize {
@@ -807,16 +784,14 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 pub enum DrawTargetBacking {
     Empty, // The backing is completely owned by the DrawTarget.
     Data(Arc<Vec<u8>>),
-    SkiaContext(SkiaSkNativeSharedGLContextRef),
+    GLRasterizationContext(Arc<GLRasterizationContext>),
 }
 
 impl Drop for DrawTargetBacking {
     fn drop(&mut self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
-            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
-                SkiaSkNativeSharedGLContextRelease(skia_context);
-            }
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) |
+            DrawTargetBacking::GLRasterizationContext(_) => { }
         }
     }
 }
@@ -826,28 +801,32 @@ impl DrawTargetBacking {
         match *self {
             DrawTargetBacking::Empty => DrawTargetBacking::Empty,
             DrawTargetBacking::Data(ref arc_data) => DrawTargetBacking::Data(arc_data.clone()),
-            DrawTargetBacking::SkiaContext(skia_context) => {
-                unsafe { SkiaSkNativeSharedGLContextRetain(skia_context); }
-                DrawTargetBacking::SkiaContext(skia_context)
-            }
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
+                DrawTargetBacking::GLRasterizationContext(context_ref.clone()),
         }
     }
 
     pub fn make_current(&self) {
         match *self {
             DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
-            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
-                SkiaSkNativeSharedGLContextMakeCurrent(skia_context);
-            }
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
+                context_ref.make_current(),
         }
     }
 
     pub fn flush(&self) {
         match *self {
             DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { },
-            DrawTargetBacking::SkiaContext(skia_context) => unsafe {
-                SkiaSkNativeSharedGLContextFlush(skia_context);
-            }
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
+                context_ref.flush(),
+        }
+    }
+
+    pub fn finish(&self) {
+        match *self {
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => {},
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
+                context_ref.flush_to_surface(),
         }
     }
 }
