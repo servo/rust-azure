@@ -6,6 +6,7 @@
 // on Linux to link correctly.
 
 #[cfg(target_os = "linux")]
+#[link(name = "skia")]
 #[link(name = "GL")]
 extern { }
 
