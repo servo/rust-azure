@@ -201,7 +201,7 @@ AzCreateDrawTargetForData(AzBackendType aBackend, unsigned char *aData, AzIntSiz
 
 extern "C" AzDrawTargetRef
 AzCreateDrawTargetSkiaWithGrContextAndFBO(SkiaGrContextRef aGrContext, unsigned int aFBOID, AzIntSize *aSize, AzSurfaceFormat aFormat) {
-    GrContext *grContext = reinterpret_cast<GrContext*>(aGrContext);
+    GrContext *grContext = static_cast<GrContext*>(aGrContext);
     gfx::IntSize *size = reinterpret_cast<gfx::IntSize*>(aSize);
     gfx::SurfaceFormat surfaceFormat = static_cast<gfx::SurfaceFormat>(aFormat);
     RefPtr<gfx::DrawTarget> target = gfx::Factory::CreateDrawTargetSkiaWithGrContextAndFBO(grContext,
