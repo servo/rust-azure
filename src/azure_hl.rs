@@ -453,11 +453,11 @@ impl DrawTarget {
     }
 
     pub fn new_with_gl_rasterization_context(gl_rasterization_context: Arc<GLRasterizationContext>,
-                                              format: SurfaceFormat)
-                                              -> DrawTarget {
+                                             format: SurfaceFormat)
+                                             -> DrawTarget {
         let mut size = gl_rasterization_context.size.as_azure_int_size();
         let azure_draw_target = unsafe {
-            AzCreateDrawTargetSkiaWithGrContextAndFBO(gl_rasterization_context.gr_context,
+            AzCreateDrawTargetSkiaWithGrContextAndFBO(gl_rasterization_context.gl_context.gr_context,
                                                       gl_rasterization_context.framebuffer_id,
                                                       &mut size,
                                                       format.as_azure_surface_format())
