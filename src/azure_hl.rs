@@ -573,14 +573,14 @@ impl DrawTarget {
     pub fn stroke_line(&self,
                    start: Point2D<AzFloat>,
                    end: Point2D<AzFloat>,
-                   pattern: &ColorPattern,
+                   pattern: PatternRef,
                    stroke_options: &StrokeOptions,
                    draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeLine(self.azure_draw_target,
                                    &mut start.as_azure_point(),
                                    &mut end.as_azure_point(),
-                                   pattern.azure_color_pattern,
+                                   pattern.as_azure_pattern(),
                                    &mut stroke_options.as_azure_stroke_options(),
                                    &mut draw_options.as_azure_draw_options());
         }
