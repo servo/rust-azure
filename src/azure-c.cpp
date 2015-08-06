@@ -373,6 +373,18 @@ AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
 }
 
 extern "C" void
+AzDrawTargetCopySurface(AzDrawTargetRef aDrawTarget,
+                        AzSourceSurfaceRef aSurface,
+                        AzIntRect *aSource,
+                        AzIntPoint *aDestination) {
+    gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
+    gfx::SourceSurface *gfxSourceSurface = static_cast<gfx::SourceSurface*>(aSurface);
+    gfx::IntRect *gfxSource = reinterpret_cast<gfx::IntRect*>(aSource);
+    gfx::IntPoint *gfxDestination = reinterpret_cast<gfx::IntPoint*>(aDestination);
+    gfxDrawTarget->CopySurface(gfxSourceSurface, *gfxSource, *gfxDestination);
+}
+
+extern "C" void
 AzDrawTargetDrawFilter(AzDrawTargetRef aDrawTarget,
                        AzFilterNodeRef aFilter,
                        const AzRect *aSourceRect,

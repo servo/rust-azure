@@ -387,6 +387,10 @@ void AzDrawTargetDrawSurface(AzDrawTargetRef aDrawTarget,
                              AzRect *aSource,
                              AzDrawSurfaceOptionsRef aSurfOptions,
                              AzDrawOptions *aOptions);
+void AzDrawTargetCopySurface(AzDrawTargetRef aDrawTarget,
+                             AzSourceSurfaceRef aSurface,
+                             AzIntRect *aSource,
+                             AzIntPoint *aDestination);
 void AzDrawTargetDrawFilter(AzDrawTargetRef aDrawTarget,
                             AzFilterNodeRef aFilter,
                             const AzRect *aSourceRect,

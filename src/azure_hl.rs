@@ -19,19 +19,19 @@ use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
 use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
 use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
 use azure::{AZ_ATT_TRANSFER_DISABLE_A};
-use azure::{AzPoint, AzRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
-use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzFilter, AzDrawSurfaceOptions};
+use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
+use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
 use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
 use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
 use azure::{struct__AzGlyphBuffer};
-use azure::{struct__AzDrawOptions, struct__AzDrawSurfaceOptions, struct__AzIntSize};
-use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzMatrix5x4};
+use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
+use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint, struct__AzMatrix5x4};
 use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
 use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
 use azure::{AzDrawTargetClearRect};
 use azure::{AzDrawTargetCreateSourceSurfaceFromData};
-use azure::{AzDrawTargetDrawSurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetFlush};
 use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
 use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
 use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
@@ -81,6 +81,21 @@ impl AsAzureRect for Rect<AzFloat> {
     }
 }
 
+pub trait AsAzureIntRect {
+    fn as_azure_int_rect(&self) -> AzIntRect;
+}
+
+impl AsAzureIntRect for Rect<i32> {
+    fn as_azure_int_rect(&self) -> AzIntRect {
+        struct__AzIntRect {
+            x: self.origin.x,
+            y: self.origin.y,
+            width: self.size.width,
+            height: self.size.height
+        }
+    }
+}
+
 pub trait AsAzureIntSize {
     fn as_azure_int_size(&self) -> AzIntSize;
 }
@@ -101,6 +116,19 @@ pub trait AsAzurePoint {
 impl AsAzurePoint for Point2D<AzFloat> {
     fn as_azure_point(&self) -> AzPoint {
         struct__AzPoint {
+            x: self.x,
+            y: self.y
+        }
+    }
+}
+
+pub trait AsAzureIntPoint {
+    fn as_azure_int_point(&self) -> AzIntPoint;
+}
+
+impl AsAzureIntPoint for Point2D<i32> {
+    fn as_azure_int_point(&self) -> AzIntPoint {
+        struct__AzIntPoint {
             x: self.x,
             y: self.y
         }
@@ -613,6 +641,18 @@ impl DrawTarget {
                                     &mut source.as_azure_rect(),
                                     &mut surf_options.as_azure_draw_surface_options(),
                                     &mut options.as_azure_draw_options());
+        }
+    }
+
+    pub fn copy_surface(&self,
+                        surface: SourceSurface,
+                        source: Rect<i32>,
+                        destination: Point2D<i32>) {
+        unsafe {
+            AzDrawTargetCopySurface(self.azure_draw_target,
+                                    surface.azure_source_surface,
+                                    &mut source.as_azure_int_rect(),
+                                    &mut destination.as_azure_int_point());
         }
     }
 
