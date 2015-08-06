@@ -275,6 +275,7 @@ pub struct struct__AzGradientStop {
 #[repr(C)]
 pub type AzGradientStop = struct__AzGradientStop;
 
+#[repr(C)]
 pub struct struct__AzIntRect {
     pub x: int32_t,
     pub y: int32_t,
@@ -294,6 +295,7 @@ pub struct struct__AzRect {
 
 pub type AzRect = struct__AzRect;
 
+#[repr(C)]
 pub struct struct__AzIntPoint {
     pub x: int32_t,
     pub y: int32_t,
@@ -494,6 +496,9 @@ pub fn AzDrawTargetPopClip(aDrawTarget: AzDrawTargetRef);
 pub fn AzDrawTargetFillGlyphs(aDrawTarget: AzDrawTargetRef, aFont: AzScaledFontRef, aGlyphBuffer: *mut AzGlyphBuffer, aPattern: AzPatternRef, aOptions: *mut AzDrawOptions, aRenderingOptions: AzGlyphRenderingOptionsRef);
 
 pub fn AzDrawTargetDrawSurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aDest: *mut AzRect, aSource: *mut AzRect, aSurfOptions: AzDrawSurfaceOptionsRef, aOptions: *mut AzDrawOptions);
+
+pub fn AzDrawTargetCopySurface(aDrawTarget: AzDrawTargetRef, aSurface: AzSourceSurfaceRef, aSource:
+*mut AzIntRect, aDestination: *mut AzIntPoint);
 
 pub fn AzDrawTargetDrawFilter(aDrawTarget: AzDrawTargetRef,
                               aFilter: AzFilterNodeRef,
