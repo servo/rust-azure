@@ -6,11 +6,14 @@
 #![crate_type = "rlib"]
 #![feature(custom_derive, plugin)]
 #![plugin(serde_macros)]
+#![plugin(heapsize_plugin)]
 
 extern crate libc;
 extern crate serde;
 extern crate euclid;
 extern crate skia;
+#[macro_use]
+extern crate heapsize;
 #[cfg(target_os = "linux")]
 extern crate x11;
 #[cfg(target_os = "android")]
