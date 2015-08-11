@@ -12,6 +12,12 @@ euclid = "0.1"
 serde = "*"
 serde_macros = "*"
 
+[dependencies.heapsize]
+git = "https://github.com/servo/heapsize"
+
+[dependencies.heapsize_plugin]
+git = "https://github.com/servo/heapsize"
+
 [dependencies.skia]
 git = "https://github.com/servo/skia"
 
