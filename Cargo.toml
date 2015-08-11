@@ -11,12 +11,8 @@ libc = "*"
 euclid = "0.1"
 serde = "*"
 serde_macros = "*"
-
-[dependencies.heapsize]
-git = "https://github.com/servo/heapsize"
-
-[dependencies.heapsize_plugin]
-git = "https://github.com/servo/heapsize"
+heapsize = "0.1.1"
+heapsize_plugin = "0.0.1"
 
 [dependencies.skia]
 git = "https://github.com/servo/skia"
