@@ -701,7 +701,7 @@ impl DrawTarget {
                                            stride: i32,
                                            format: SurfaceFormat)
                                            -> SourceSurface {
-        assert_eq!(data.len() as i32, stride * size.height);
+        assert!(data.len() as i32 >= stride * size.height);
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
