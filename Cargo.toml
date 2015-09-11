@@ -8,11 +8,11 @@ build = "build.rs"
 
 [dependencies]
 libc = "*"
-euclid = "0.1"
+euclid = "0.2"
 serde = "*"
 serde_macros = "*"
-heapsize = "0.1.1"
-heapsize_plugin = "0.0.1"
+heapsize = "0.1.2"
+heapsize_plugin = "0.1.0"
 
 [dependencies.skia]
 git = "https://github.com/servo/skia"
