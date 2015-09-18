@@ -159,7 +159,7 @@ pub static AZ_AA_NONE: u8 = 0_u8;
 pub static AZ_AA_GRAY: u8 = 1_u8;
 pub static AZ_AA_SUBPIXEL: u8 = 2_u8;
 pub static AZ_AA_DEFAULT: u8 = 3_u8;
-pub type AzAntialiasMode = enum_AzCompositionOp;
+pub type AzAntialiasMode = enum_AzAntialiasMode;
 
 pub type enum_AzFilter = c_uint;
 pub static AZ_FILTER_GOOD: u32 = 0_u32;
