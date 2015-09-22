@@ -21,6 +21,9 @@ use scaled_font::linux::*;
 #[cfg(target_os="android")]
 use scaled_font::android::*;
 
+#[cfg(target_os="windows")]
+use scaled_font::windows::*;
+
 #[cfg(target_os="macos")]
 pub mod macos {
     pub use core_text::font::CTFontRef;
@@ -37,9 +40,14 @@ pub mod android {
     pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
+#[cfg(target_os="windows")]
+pub mod windows {
+    pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+}
+
 pub type SkTypeface = *mut c_void;
 
-#[cfg(any(target_os="linux", target_os = "android"))]
+#[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
 pub enum FontInfo<'a> {
     NativeFont(FT_Face),
     FontData(&'a Vec<u8>),
@@ -62,7 +70,7 @@ impl ScaledFont {
         self.azure_scaled_font
     }
 
-    #[cfg(any(target_os="linux", target_os = "android"))]
+    #[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
     pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat)
         -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
