@@ -48,6 +48,9 @@ git = "https://github.com/servo/rust-freetype"
 [target.aarch64-unknown-linux-gnu.dependencies.freetype]
 git = "https://github.com/servo/rust-freetype"
 
+[target.x86_64-pc-windows-gnu.dependencies.freetype]
+git = "https://github.com/servo/rust-freetype"
+
 [target.i686-unknown-linux-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
@@ -61,6 +64,9 @@ git = "https://github.com/servo/libfreetype2"
 git = "https://github.com/servo/libfreetype2"
 
 [target.aarch64-unknown-linux-gnu.dependencies.freetype-sys]
+git = "https://github.com/servo/libfreetype2"
+
+[target.x86_64-pc-windows-gnu.dependencies.freetype-sys]
 git = "https://github.com/servo/libfreetype2"
 
 [target.x86_64-apple-darwin.dependencies]

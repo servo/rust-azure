@@ -6,6 +6,12 @@ CXX ?= g++
 AR ?= ar
 endif
 
+ifneq ("$(MSYSTEM)","")
+OUT_DIR := $(shell cygpath "$(OUT_DIR)")
+else
+CXXFLAGS += -fPIC
+endif
+
 AZURE_CPP_SRC = \
 	src/azure-c.cpp \
 	libazure/Blur.cpp \
@@ -37,9 +43,7 @@ AZURE_CPP_SRC = \
 
 CXXFLAGS += \
 	-std=gnu++11 \
-	-fPIC \
 	-Ilibazure \
-	-DMOZ_GFX \
 	-DMOZ_WARN_UNUSED_RESULT="" \
 	$(NULL)
 
@@ -106,6 +110,25 @@ AZURE_CPP_SRC += \
 	libazure/SourceSurfaceCG.cpp
 endif
 
+ifeq ("$(MSYSTEM)","MINGW64")
+CXXFLAGS += \
+	-DXP_WIN \
+	-DMOZ_ENABLE_FREETYPE \
+	-D_WIN32_WINNT=0x0600 \
+	-DSK_BUILD_FOR_WIN32 \
+	-I/mingw64/include/freetype2 \
+	$(NULL)
+
+AZURE_CPP_SRC += \
+	libazure/DrawTargetD2D.cpp \
+	libazure/SourceSurfaceD2D.cpp \
+	libazure/SourceSurfaceD2DTarget.cpp \
+	libazure/ScaledFontWin.cpp \
+	libazure/ScaledFontDWrite.cpp \
+	libazure/PathD2D.cpp \
+	$(NULL)
+endif
+
 ifeq (linux,$(findstring linux,$(TARGET)))
 CXXFLAGS += \
 	-DMOZ_ENABLE_FREETYPE \
@@ -128,7 +151,9 @@ ALL_OBJS = $(ALL_CPP_SRC:%.cpp=$(OUT_DIR)/%.o)
 .PHONY: all
 all: $(OUT_DIR)/libazure.a
 
-$(OUT_DIR)/%.o: %.cpp
+THIS_MAKEFILE := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+
+$(OUT_DIR)/%.o: %.cpp $(THIS_MAKEFILE)
 	mkdir -p `dirname $@` && $(CXX) $< -o $@ -c $(CXXFLAGS)
 
 $(OUT_DIR)/libazure.a: $(ALL_OBJS)

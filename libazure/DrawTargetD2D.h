@@ -153,9 +153,8 @@ public:
   static uint64_t mVRAMUsageSS;
 
 private:
-  TemporaryRef<ID2D1Bitmap>
-  DrawTargetD2D::GetBitmapForSurface(SourceSurface *aSurface,
-                                     Rect &aSource);
+  TemporaryRef<ID2D1Bitmap> GetBitmapForSurface(SourceSurface *aSurface,
+                                                Rect &aSource);
   friend class AutoSaveRestoreClippedOut;
   friend class SourceSurfaceD2DTarget;
 
