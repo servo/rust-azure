@@ -13,4 +13,13 @@ fn main() {
         .unwrap()
         .success());
     println!("cargo:rustc-flags=-L native={}", env::var("OUT_DIR").unwrap());
+
+    let target = env::var("TARGET").unwrap();
+    // We need a lot of stuff on Windows and we need to resolve static
+    // link order.. so just list things a few extra times.
+    if target.contains("windows") {
+        println!("cargo:rustc-link-lib=skia");
+        println!("cargo:rustc-link-lib=freetype");
+        println!("cargo:rustc-link-lib=fontconfig");
+    }
 }
