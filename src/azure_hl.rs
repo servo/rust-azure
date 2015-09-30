@@ -695,13 +695,19 @@ impl DrawTarget {
         }
     }
 
+    /// Creates a source surface from the given data. If the data is zero-sized, returns `None`;
+    /// otherwise, returns the source surface.
     pub fn create_source_surface_from_data(&self,
                                            data: &[u8],
                                            size: Size2D<i32>,
                                            stride: i32,
                                            format: SurfaceFormat)
-                                           -> SourceSurface {
+                                           -> Option<SourceSurface> {
         assert!(data.len() as i32 >= stride * size.height);
+        if data.len() == 0 {
+            return None
+        }
+
         unsafe {
             let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
                 self.azure_draw_target,
@@ -709,7 +715,7 @@ impl DrawTarget {
                 &mut size.as_azure_int_size(),
                 stride,
                 format.as_azure_surface_format());
-            SourceSurface::new(azure_surface)
+            Some(SourceSurface::new(azure_surface))
         }
     }
 
