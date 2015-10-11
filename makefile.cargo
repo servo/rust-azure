@@ -64,7 +64,6 @@ CXXFLAGS += \
 endif
 
 CXXFLAGS += \
-	-I "$(DEP_FREETYPE_OUTDIR)/include" \
 	-iquote "$(DEP_SKIA_OUTDIR)/include" \
 	-iquote "$(DEP_SKIA_OUTDIR)/include/core" \
 	-iquote "$(DEP_SKIA_OUTDIR)/include/config" \
@@ -75,6 +74,12 @@ CXXFLAGS += \
 	-iquote "$(DEP_SKIA_OUTDIR)/include/gpu/gl" \
 	-DUSE_SKIA \
 	-DUSE_SKIA_GPU
+
+ifdef DEP_FREETYPE_OUTDIR
+	CXXFLAGS += "-I$(DEP_FREETYPE_OUTDIR)/include"
+else
+	CXXFLAGS += `pkg-config --cflags freetype2`
+endif
 
 USE_CLANG = $(shell $(CXX) --version|grep -c 'clang')
 
