@@ -5,14 +5,16 @@
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
 #![feature(custom_derive, plugin)]
-#![plugin(serde_macros)]
-#![plugin(heapsize_plugin)]
+#![cfg_attr(feature = "plugins", plugin(serde_macros))]
+#![cfg_attr(feature = "plugins", plugin(heapsize_plugin))]
 
 extern crate libc;
+#[cfg(feature = "plugins")]
 extern crate serde;
 extern crate euclid;
 extern crate skia;
 #[macro_use]
+#[cfg(feature = "plugins")]
 extern crate heapsize;
 #[cfg(target_os = "linux")]
 extern crate x11;

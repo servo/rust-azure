@@ -928,7 +928,8 @@ impl GradientStops {
 }
 
 #[repr(C)]
-#[derive(Clone, Deserialize, Serialize, HeapSizeOf)]
+#[cfg_attr(feature = "plugins", derive(Deserialize, Serialize, HeapSizeOf))]
+#[derive(Clone)]
 pub struct GradientStop {
     pub offset: AzFloat,
     pub color: Color,
