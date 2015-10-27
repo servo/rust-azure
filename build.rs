@@ -7,10 +7,17 @@ use std::env;
 
 
 fn main() {
+    let target = env::var("TARGET").unwrap();
     assert!(Command::new("make")
         .args(&["-R", "-f", "makefile.cargo", &format!("-j{}", env::var("NUM_JOBS").unwrap())])
         .status()
         .unwrap()
         .success());
     println!("cargo:rustc-flags=-L native={}", env::var("OUT_DIR").unwrap());
+
+    if target.contains("windows") {
+        println!("cargo:rustc-link-lib=static=azure");
+        println!("cargo:rustc-link-lib=stdc++");
+        println!("cargo:rustc-link-lib=uuid");
+    }
 }
