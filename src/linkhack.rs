@@ -34,13 +34,3 @@ extern { }
 #[link(name = "ApplicationServices", kind = "framework")]
 extern { }
 
-#[cfg(target_os = "windows")]
-#[link(name = "azure")] // if I do kind = "static", nothing is output in the final gcc link on windows
-#[link(name = "stdc++")]
-#[link(name = "freetype")]
-#[link(name = "bz2")]
-// fontconfig must come before expat for linking to succeed
-#[link(name = "fontconfig")]
-#[link(name = "expat")]
-#[link(name = "uuid")]
-extern { }
