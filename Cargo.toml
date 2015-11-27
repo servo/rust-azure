@@ -13,7 +13,7 @@ plugins = ["serde", "serde_macros", "heapsize", "heapsize_plugin", "euclid/plugi
 
 
 [dependencies]
-libc = "*"
+libc = "0.2"
 euclid = "0.3"
 serde = {version = "*", optional = true}
 serde_macros = {version = "*", optional = true}
