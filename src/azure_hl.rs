@@ -54,6 +54,7 @@ use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
 use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
+use azure::{AzPathContainsPoint, AzPathCopyToBuilder};
 
 use euclid::matrix2d::Matrix2D;
 use euclid::point::Point2D;
@@ -1035,6 +1036,25 @@ impl SourceSurfaceMethods for DataSourceSurface {
 
 pub struct Path {
     pub azure_path: AzPathRef
+}
+
+impl Path {
+    pub fn contains_point(&self, x: f64, y: f64, matrix: &Matrix2D<AzFloat>) -> bool {
+        let point: Point2D<AzFloat> = Point2D::new(x as f32, y as f32);
+        let mut az_point = point.as_azure_point();
+        unsafe {
+            AzPathContainsPoint(self.azure_path, &mut az_point,
+                                mem::transmute::<_,*const AzMatrix>(matrix))
+        }
+    }
+
+    pub fn copy_to_builder(&self) -> PathBuilder {
+        unsafe {
+            PathBuilder {
+                azure_path_builder: AzPathCopyToBuilder(self.azure_path)
+            }
+        }
+    }
 }
 
 impl Drop for Path {
