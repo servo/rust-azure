@@ -1,7 +1,10 @@
 language: rust
-# We pin rust here, because aster (0.3.3) is broken with the latest
-# rust nightly. Once aster is fixed we can change this back to 'nightly.'
 rust: nightly
+addons:
+  apt:
+    packages:
+    - libxxf86vm-dev
+    - libosmesa6-dev
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
