@@ -683,6 +683,25 @@ AzPathBuilderFinish(AzPathBuilderRef aPathBuilder) {
     return gfxPath;
 }
 
+extern "C" bool
+AzPathContainsPoint(AzPathRef aPath,
+                    const AzPoint *aPoint,
+                    const AzMatrix *aMatrix) {
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    const gfx::Point *gfxPoint = reinterpret_cast<const gfx::Point*>(aPoint);
+    const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aMatrix);
+    return gfxPath->ContainsPoint(*gfxPoint, *gfxMatrix);
+}
+
+// TODO: need to handle fill rule
+extern "C" AzPathBuilderRef
+AzPathCopyToBuilder(AzPathRef aPath) {
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    RefPtr<gfx::PathBuilder> gfxPathBuilder = gfxPath->CopyToBuilder();
+    gfxPathBuilder->AddRef();
+    return gfxPathBuilder;
+}
+
 extern "C" void
 AzReleasePath(AzPathRef aPath) {
     gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);

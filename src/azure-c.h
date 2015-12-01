@@ -450,6 +450,11 @@ AzPoint AzPathBuilderCurrentPoint(AzPathBuilderRef aPathBuilder);
 void AzPathBuilderClose(AzPathBuilderRef aPathBuilder);
 AzPathRef AzPathBuilderFinish(AzPathBuilderRef aPathBuilder);
 
+bool AzPathContainsPoint(AzPathRef aPath,
+                         const AzPoint *aPoint,
+                         const AzMatrix *aMatrix);
+AzPathBuilderRef AzPathCopyToBuilder(AzPathRef aPath);
+
 AzLinearGradientPatternRef AzCreateLinearGradientPattern(const AzPoint *aBegin,
                                                          const AzPoint *aEnd,
                                                          AzGradientStopsRef aStops,

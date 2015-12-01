@@ -601,6 +601,10 @@ pub fn AzReleasePathBuilder(aPathBuilder: AzPathBuilderRef);
 
 pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 
+pub fn AzPathContainsPoint(aPath: AzPathRef, aPoint: *mut AzPoint, aMatrix: *const AzMatrix) -> bool;
+
+pub fn AzPathCopyToBuilder(aPath: AzPathRef) -> AzPathBuilderRef;
+
 pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 
 pub fn AzPathBuilderArc(aPathBuilder: AzPathBuilderRef,
