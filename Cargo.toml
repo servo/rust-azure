@@ -53,4 +53,4 @@ servo-freetype-sys = "2.4.11"
 [target.x86_64-apple-darwin.dependencies]
 core-foundation = "0.2.0"
 core-graphics = "0.2.0"
-core-text = { git = "https://github.com/servo/core-text-rs" }
+core-text = "1.0"
