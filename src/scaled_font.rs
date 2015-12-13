@@ -48,11 +48,13 @@ pub mod windows {
 pub type SkTypeface = *mut c_void;
 
 #[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
+#[derive(Debug)]
 pub enum FontInfo<'a> {
     NativeFont(FT_Face),
     FontData(&'a Vec<u8>),
 }
 
+#[derive(Debug)]
 pub struct ScaledFont {
     azure_scaled_font: AzScaledFontRef,
 }
