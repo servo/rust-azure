@@ -250,7 +250,7 @@ pub static AZ_ATT_TRANSFER_DISABLE_A: u32 = 3;
 
 #[repr(C)]
 #[cfg_attr(feature = "plugins", derive(Deserialize, Serialize, HeapSizeOf))]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct struct__AzColor {
     pub r: AzFloat,
     pub g: AzFloat,
@@ -268,6 +268,7 @@ impl PartialEq for AzColor {
 }
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzGradientStop {
     pub offset: AzFloat,
     pub color: AzColor,
@@ -277,6 +278,7 @@ pub struct struct__AzGradientStop {
 pub type AzGradientStop = struct__AzGradientStop;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzIntRect {
     pub x: int32_t,
     pub y: int32_t,
@@ -287,6 +289,7 @@ pub struct struct__AzIntRect {
 pub type AzIntRect = struct__AzIntRect;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzRect {
     pub x: AzFloat,
     pub y: AzFloat,
@@ -297,6 +300,7 @@ pub struct struct__AzRect {
 pub type AzRect = struct__AzRect;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzIntPoint {
     pub x: int32_t,
     pub y: int32_t,
@@ -305,6 +309,7 @@ pub struct struct__AzIntPoint {
 pub type AzIntPoint = struct__AzIntPoint;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzPoint {
     pub x: AzFloat,
     pub y: AzFloat,
@@ -313,6 +318,7 @@ pub struct struct__AzPoint {
 pub type AzPoint = struct__AzPoint;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzIntSize {
     pub width: int32_t,
     pub height: int32_t,
@@ -329,6 +335,7 @@ pub struct struct__AzSize {
 pub type AzSize = struct__AzSize;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzMatrix {
     _11: AzFloat,
     _12: AzFloat,
@@ -341,7 +348,7 @@ pub struct struct__AzMatrix {
 pub type AzMatrix = struct__AzMatrix;
 
 #[repr(C)]
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct struct__AzMatrix5x4 {
     pub _11: AzFloat, pub _12: AzFloat, pub _13: AzFloat, pub _14: AzFloat,
     pub _21: AzFloat, pub _22: AzFloat, pub _23: AzFloat, pub _24: AzFloat,
@@ -362,6 +369,7 @@ pub struct struct__AzDrawOptions {
 pub type AzDrawOptions = struct__AzDrawOptions;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzStrokeOptions {
     pub mLineWidth: AzFloat,
     pub mMiterLimit: AzFloat,
@@ -375,6 +383,7 @@ pub struct struct__AzStrokeOptions {
 pub type AzStrokeOptions = struct__AzStrokeOptions;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzDrawSurfaceOptions {
     pub filter: i8,
     pub sampling_bounds: i8,
@@ -384,6 +393,7 @@ pub struct struct__AzDrawSurfaceOptions {
 pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzGlyph {
     pub mIndex: uint32_t,
     pub mPosition: AzPoint,
@@ -393,6 +403,7 @@ pub struct struct__AzGlyph {
 pub type AzGlyph = struct__AzGlyph;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzGlyphBuffer {
     pub mGlyphs: *mut AzGlyph,
     pub mNumGlyphs: uint32_t,
@@ -402,6 +413,7 @@ pub struct struct__AzGlyphBuffer {
 pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct struct__AzNativeFont {
     pub mType: enum_AzNativeFontType,
     pub mFont: *mut c_void,

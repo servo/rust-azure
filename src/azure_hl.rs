@@ -137,6 +137,7 @@ impl AsAzureIntPoint for Point2D<i32> {
 }
 
 // FIXME: Should have a class hierarchy here starting with Pattern.
+#[derive(Debug)]
 pub struct ColorPattern {
     color: Color,
     pub azure_color_pattern: AzColorPatternRef,
@@ -168,7 +169,7 @@ impl ColorPattern {
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum CompositionOp {
     Over,
     Add,
@@ -206,7 +207,7 @@ impl CompositionOp {
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum AntialiasMode {
     None = 0,
     Gray = 1,
@@ -221,7 +222,7 @@ impl AntialiasMode {
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum JoinStyle {
     Bevel = 0,
     Round = 1,
@@ -236,7 +237,7 @@ impl JoinStyle {
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum CapStyle {
     Butt = 0,
     Round = 1,
@@ -250,7 +251,7 @@ impl CapStyle {
 }
 
 #[allow(non_snake_case)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
@@ -284,7 +285,7 @@ impl<'a> StrokeOptions<'a> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct DrawOptions {
     pub alpha: AzFloat,
     pub composition: CompositionOp,
@@ -326,6 +327,7 @@ impl DrawOptions {
 }
 
 
+#[derive(Debug)]
 pub enum SurfaceFormat {
     B8G8R8A8,
     B8G8R8X8,
@@ -357,7 +359,7 @@ impl SurfaceFormat {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Filter {
     Good,
     Linear,
@@ -370,6 +372,7 @@ impl Filter {
     }
 }
 
+#[derive(Debug)]
 pub struct DrawSurfaceOptions {
     pub filter: Filter,
     pub sampling_bounds: bool,
@@ -878,6 +881,7 @@ impl DrawTargetBacking {
     }
 }
 
+#[derive(Debug)]
 pub struct SourceSurface {
     pub azure_source_surface: AzSourceSurfaceRef,
 }
@@ -908,6 +912,7 @@ impl SourceSurface {
     }
 }
 
+#[derive(Debug)]
 pub struct GradientStops {
     pub azure_gradient_stops: AzGradientStopsRef,
 }
@@ -930,14 +935,14 @@ impl GradientStops {
 
 #[repr(C)]
 #[cfg_attr(feature = "plugins", derive(Deserialize, Serialize, HeapSizeOf))]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct GradientStop {
     pub offset: AzFloat,
     pub color: Color,
 }
 
 #[repr(i32)]
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum ExtendMode {
     Clamp = 0,
     Repeat = 1,
@@ -994,6 +999,7 @@ impl SourceSurfaceMethods for SourceSurface {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef { self.azure_source_surface }
 }
 
+#[derive(Debug)]
 pub struct DataSourceSurface {
     pub azure_data_source_surface: AzDataSourceSurfaceRef,
 }
@@ -1034,6 +1040,7 @@ impl SourceSurfaceMethods for DataSourceSurface {
     }
 }
 
+#[derive(Debug)]
 pub struct Path {
     pub azure_path: AzPathRef
 }
@@ -1065,6 +1072,7 @@ impl Drop for Path {
     }
 }
 
+#[derive(Debug)]
 pub struct PathBuilder {
     pub azure_path_builder: AzPathBuilderRef
 }
@@ -1156,6 +1164,7 @@ impl Drop for PathBuilder {
     }
 }
 
+#[derive(Debug)]
 pub struct LinearGradientPattern {
     pub azure_linear_gradient_pattern: AzLinearGradientPatternRef,
     pub begin: Point2D<AzFloat>,
@@ -1207,6 +1216,7 @@ impl LinearGradientPattern {
     }
 }
 
+#[derive(Debug)]
 pub struct RadialGradientPattern {
     pub azure_radial_gradient_pattern: AzRadialGradientPatternRef,
 }
@@ -1252,6 +1262,7 @@ impl RadialGradientPattern {
     }
 }
 
+#[derive(Debug)]
 pub struct SurfacePattern {
     pub azure_surface_pattern: AzSurfacePatternRef,
     pub repeat_x: bool,
@@ -1310,6 +1321,7 @@ impl SurfacePattern {
     }
 }
 
+#[derive(Debug)]
 pub enum PatternRef<'a> {
     Color(&'a ColorPattern),
     LinearGradient(&'a LinearGradientPattern),
@@ -1336,7 +1348,7 @@ impl<'a> PatternRef<'a> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Pattern {
     Color(ColorPattern),
     LinearGradient(LinearGradientPattern),
@@ -1361,6 +1373,7 @@ impl Pattern {
     }
 }
 
+#[derive(Debug)]
 pub struct FilterNode {
     pub azure_filter_node: AzFilterNodeRef,
 }
@@ -1383,16 +1396,22 @@ impl FilterNode {
     }
 }
 
+#[derive(Debug)]
 pub struct ColorMatrixInput;
 
+#[derive(Debug)]
 pub struct CompositeInput;
 
+#[derive(Debug)]
 pub struct FloodFilterInput;
 
+#[derive(Debug)]
 pub struct GaussianBlurInput;
 
+#[derive(Debug)]
 pub struct LinearTransferInput;
 
+#[derive(Debug)]
 pub struct TableTransferInput;
 
 pub trait FilterInputIndex {
@@ -1439,18 +1458,22 @@ pub trait FilterAttribute {
     fn set(&self, filter_node: &FilterNode);
 }
 
+#[derive(Debug)]
 pub enum ColorMatrixAttribute {
     Matrix(Matrix5x4),
 }
 
+#[derive(Debug)]
 pub enum FloodAttribute {
     Color(Color),
 }
 
+#[derive(Debug)]
 pub enum GaussianBlurAttribute {
     StdDeviation(AzFloat),
 }
 
+#[derive(Debug)]
 pub enum LinearTransferAttribute {
     DisableR(bool),
     DisableG(bool),
@@ -1466,6 +1489,7 @@ pub enum LinearTransferAttribute {
     InterceptA(AzFloat),
 }
 
+#[derive(Debug)]
 pub enum TableTransferAttribute<'a> {
     DisableR(bool),
     DisableG(bool),
@@ -1632,6 +1656,7 @@ impl<'a> FilterAttribute for TableTransferAttribute<'a> {
     }
 }
 
+#[derive(Debug)]
 pub enum FilterType {
     ColorMatrix,
     Composite,
