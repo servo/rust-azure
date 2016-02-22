@@ -260,8 +260,8 @@ pub struct struct__AzColor {
 
 pub type AzColor = struct__AzColor;
 
-#[inline]
 impl PartialEq for AzColor {
+    #[inline]
     fn eq(&self, other: &AzColor) -> bool {
         self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a
     }
@@ -274,7 +274,6 @@ pub struct struct__AzGradientStop {
     pub color: AzColor,
 }
 
-#[repr(C)]
 pub type AzGradientStop = struct__AzGradientStop;
 
 #[repr(C)]
@@ -389,7 +388,6 @@ pub struct struct__AzDrawSurfaceOptions {
     pub sampling_bounds: i8,
 }
 
-#[repr(C)]
 pub type AzDrawSurfaceOptions = struct__AzDrawSurfaceOptions;
 
 #[repr(C)]
@@ -399,7 +397,6 @@ pub struct struct__AzGlyph {
     pub mPosition: AzPoint,
 }
 
-#[repr(C)]
 pub type AzGlyph = struct__AzGlyph;
 
 #[repr(C)]
@@ -409,7 +406,6 @@ pub struct struct__AzGlyphBuffer {
     pub mNumGlyphs: uint32_t,
 }
 
-#[repr(C)]
 pub type AzGlyphBuffer = struct__AzGlyphBuffer;
 
 #[repr(C)]
@@ -443,7 +439,6 @@ pub type AzSourceSurfaceRef = *mut c_void;
 
 pub type AzDataSourceSurfaceRef = *mut c_void;
 
-#[repr(C)]
 pub type AzDrawSurfaceOptionsRef = *mut AzDrawSurfaceOptions;
 
 pub type AzGLContext = *mut c_void;
