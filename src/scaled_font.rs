@@ -3,7 +3,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 use azure::{AzScaledFontRef, AzFloat};
-use azure::{struct__AzNativeFont};
+use azure::struct__AzNativeFont;
 
 use azure_hl::BackendType;
 use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
@@ -73,14 +73,14 @@ impl ScaledFont {
     }
 
     #[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
-    pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat)
-        -> ScaledFont {
+    pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
-        use azure::{AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreateScaledFontForTrueTypeData};
+        use azure::{AzCreateFontOptionsForName, AzDestroyFontOptions,
+                    AzCreateScaledFontForTrueTypeData};
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::null_mut()
+            mFont: ptr::null_mut(),
         };
 
         match backend {
@@ -90,7 +90,8 @@ impl ScaledFont {
                         FontInfo::NativeFont(native_font) => {
                             // NOTE: azure style flags and freetype style flags are the same in the lowest 2 bits
                             let style = ((*native_font).style_flags & 3) as u32;
-                            let options = AzCreateFontOptionsForName(&*(*native_font).family_name, style);
+                            let options = AzCreateFontOptionsForName(&*(*native_font).family_name,
+                                                                     style);
                             azure_native_font.mType = AZ_NATIVE_FONT_SKIA_FONT_FACE;
                             azure_native_font.mFont = mem::transmute(options);
                             let azure_native_font_ptr = &mut azure_native_font;
@@ -98,7 +99,7 @@ impl ScaledFont {
                                 AzCreateScaledFontForNativeFont(azure_native_font_ptr, size);
                             AzDestroyFontOptions(options);
                             ScaledFont { azure_scaled_font: azure_scaled_font }
-                        },
+                        }
                         FontInfo::FontData(bytes) => {
                             let azure_scaled_font =
                                 AzCreateScaledFontForTrueTypeData(bytes.as_ptr(),
@@ -107,11 +108,13 @@ impl ScaledFont {
                                                                   size,
                                                                   AZ_NATIVE_FONT_SKIA_FONT_FACE);
                             ScaledFont { azure_scaled_font: azure_scaled_font }
-                        },
+                        }
                     }
                 }
             }
-            _ => { panic!("don't know how to make a scaled font for this backend"); }
+            _ => {
+                panic!("don't know how to make a scaled font for this backend");
+            }
         }
     }
 
@@ -123,11 +126,13 @@ impl ScaledFont {
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
-            mFont: ptr::null_mut()
+            mFont: ptr::null_mut(),
         };
 
         match backend {
-            BackendType::CoreGraphics | BackendType::CoreGraphicsAccelerated | BackendType::Skia => {
+            BackendType::CoreGraphics |
+            BackendType::CoreGraphicsAccelerated |
+            BackendType::Skia => {
                 azure_native_font.mType = AZ_NATIVE_FONT_MAC_FONT_FACE;
                 unsafe {
                     azure_native_font.mFont = mem::transmute(native_font.as_concrete_TypeRef());
@@ -140,9 +145,7 @@ impl ScaledFont {
 
         unsafe {
             let azure_scaled_font = AzCreateScaledFontForNativeFont(&mut azure_native_font, size);
-            ScaledFont {
-                azure_scaled_font: azure_scaled_font
-            }
+            ScaledFont { azure_scaled_font: azure_scaled_font }
         }
     }
 }
@@ -150,7 +153,6 @@ impl ScaledFont {
 // FIXME: Move this stuff to a rust-skia?
 // FIXME: Demangle the names!!!
 #[cfg(target_os="macos")]
-extern {
+extern "C" {
     pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *mut SkTypeface;
 }
-
