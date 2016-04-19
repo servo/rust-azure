@@ -247,7 +247,7 @@ PlaybackManager::PlaybackEvent(RecordedEvent *aEvent)
 }
 
 double
-PlaybackManager::GetEventTiming(uint32_t aID, bool aAllowBatching, bool aIgnoreFirst, 
+PlaybackManager::GetEventTiming(uint32_t aID, bool aAllowBatching, bool aIgnoreFirst,
                                 bool aDoFlush, bool aForceCompletion, double *aStdDev)
 {
   if (!aID) {
@@ -261,7 +261,7 @@ PlaybackManager::GetEventTiming(uint32_t aID, bool aAllowBatching, bool aIgnoreF
   const int N = 10;
 
   double results[sIterations];
-  
+
   DrawTarget *destinedDT = nullptr;
 
   // We need to ensure clips still always get pushed and popped in pairs!
@@ -342,7 +342,7 @@ PlaybackManager::GetEventTiming(uint32_t aID, bool aAllowBatching, bool aIgnoreF
   // should be looked in to.
 
   average /= double(N);
-  
+
   double sqDiffSum = 0;
   for (int i = 0; i < N; i++) {
     sqDiffSum += pow(results[i] - average, 2);
@@ -353,7 +353,7 @@ PlaybackManager::GetEventTiming(uint32_t aID, bool aAllowBatching, bool aIgnoreF
   *aStdDev = sqrt(sqDiffSum) / double(sIterations);
 
   PlayToEvent(0);
-  PlayToEvent(currentEvent + 1);  
+  PlayToEvent(currentEvent + 1);
 
   return average / double(sIterations);
 }

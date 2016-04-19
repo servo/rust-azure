@@ -210,7 +210,7 @@ void
 RecordedEvent::StorePattern(PatternStorage &aDestination, const Pattern &aSource) const
 {
   aDestination.mType = aSource.GetType();
-  
+
   switch (aSource.GetType()) {
   case PatternType::COLOR:
     {
@@ -780,7 +780,7 @@ RecordedClearRect::OutputSimpleEventInfo(stringstream &aStringStream) const
 void
 RecordedCopySurface::PlayEvent(Translator *aTranslator) const
 {
-	aTranslator->LookupDrawTarget(mDT)->CopySurface(aTranslator->LookupSourceSurface(mSourceSurface),
+    aTranslator->LookupDrawTarget(mDT)->CopySurface(aTranslator->LookupSourceSurface(mSourceSurface),
                                                   mSourceRect, mDest);
 }
 
@@ -1024,7 +1024,7 @@ RecordedPathCreation::~RecordedPathCreation()
 void
 RecordedPathCreation::PlayEvent(Translator *aTranslator) const
 {
-  RefPtr<PathBuilder> builder = 
+  RefPtr<PathBuilder> builder =
     aTranslator->GetReferenceDrawTarget()->CreatePathBuilder(mFillRule);
 
   for (size_t i = 0; i < mPathOps.size(); i++) {

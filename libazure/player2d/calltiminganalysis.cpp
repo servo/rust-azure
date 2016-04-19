@@ -69,7 +69,7 @@ void CallTimingAnalysis::on_pushButton_clicked()
                                                         ui->ignoreFirst->checkState() == Qt::Checked,
                                                         ui->forceFlush->checkState() == Qt::Checked,
                                                         ui->forceRealization->checkState() == Qt::Checked, &stdDev);
-    
+
     item->mTiming = avg;
     mMainWindow->mEventItems[i]->setText(3, QString::number(avg, 'g', 3) + " +/- " + QString::number(stdDev, 'g', 2) + " ms");
 

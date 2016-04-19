@@ -16,7 +16,7 @@ class Translator;
 class SourceSurfaceView : public SurfaceView
 {
     Q_OBJECT
-    
+
 public:
     explicit SourceSurfaceView(mozilla::gfx::ReferencePtr aRefPtr, mozilla::gfx::Translator *aTranslator,
                                QWidget *parent = 0);

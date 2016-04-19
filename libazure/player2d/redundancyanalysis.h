@@ -12,11 +12,11 @@ namespace Ui {
 class RedundancyAnalysis : public QMainWindow
 {
   Q_OBJECT
-    
+
 public:
   explicit RedundancyAnalysis(PlaybackManager *aPBManager, QWidget *parent = 0);
   ~RedundancyAnalysis();
-    
+
 private slots:
     void on_lineEdit_textChanged(const QString &arg1);
 

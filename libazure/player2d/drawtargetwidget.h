@@ -34,7 +34,7 @@ public:
   virtual void resizeEvent(QResizeEvent * aEvent);
 
   mozilla::gfx::DrawTarget *GetDT() { return mDT; }
-    
+
 signals:
   void RefillDT();
 

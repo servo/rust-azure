@@ -5,65 +5,56 @@
 //! High-level bindings to Azure.
 
 pub use AzColor as Color;
+use azure::AZ_ATT_TRANSFER_DISABLE_A;
 use azure::AZ_FILTER_TYPE_COLOR_MATRIX;
+use azure::AzDrawTargetClearRect;
+use azure::AzDrawTargetCreateSourceSurfaceFromData;
+use azure::struct__AzGlyphBuffer;
+use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
+use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
+use azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
 use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
 use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
 use azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
-use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
-use azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
-use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
-use azure::AZ_ATT_TRANSFER_DISABLE_A;
-use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef,
-            AzGradientStopsRef};
-use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter,
-            AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
+use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
 use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
-use azure::struct__AzGlyphBuffer;
-use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions,
-            struct__AzIntSize};
-use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint,
-            struct__AzMatrix5x4};
 use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
-use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use azure::AzDrawTargetClearRect;
-use azure::AzDrawTargetCreateSourceSurfaceFromData;
-use azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect,
-            AzDrawTargetFlush};
-use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
-use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
-use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
-use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
-use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
-use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
+use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
-use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
-use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix,
-            AzPatternRef};
-use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern,
-            AzDrawTargetPushClipRect};
-use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern,
-            AzSurfacePatternGetSize};
-use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
+use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
 use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
-use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
-use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
-use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
-use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
 use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
+use azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
+use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
+use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
+use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
+use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
+use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
+use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
+use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
+use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
+use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
 use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
 use azure::{AzPathContainsPoint, AzPathCopyToBuilder};
-
+use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
+use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
+use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
+use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
+use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
+use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
+use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
+use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
+use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint, struct__AzMatrix5x4};
 use euclid::matrix2d::Matrix2D;
 use euclid::point::Point2D;
 use euclid::rect::Rect;
@@ -773,7 +764,7 @@ impl DrawTarget {
         unsafe {
             GradientStops::new(AzDrawTargetCreateGradientStops(
                     self.azure_draw_target,
-                    mem::transmute::<_,*const AzGradientStop>(gradient_stops.as_ptr()),
+                    mem::transmute::<_, *const AzGradientStop>(gradient_stops.as_ptr()),
                     gradient_stops.len() as u32,
                     extend_mode.as_azure_extend_mode()))
         }

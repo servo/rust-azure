@@ -31,7 +31,7 @@ class PlaybackManager : public QObject, public mozilla::gfx::Translator
 public:
   PlaybackManager();
   ~PlaybackManager();
-  
+
   typedef mozilla::gfx::DrawTarget DrawTarget;
   typedef mozilla::gfx::Path Path;
   typedef mozilla::gfx::SourceSurface SourceSurface;

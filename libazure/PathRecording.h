@@ -101,10 +101,10 @@ public:
                                    const Point &aPoint,
                                    const Matrix &aTransform) const
   { return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform); }
-  
+
   virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const
   { return mPath->GetBounds(aTransform); }
-  
+
   virtual Rect GetStrokedBounds(const StrokeOptions &aStrokeOptions,
                                 const Matrix &aTransform = Matrix()) const
   { return mPath->GetStrokedBounds(aStrokeOptions, aTransform); }

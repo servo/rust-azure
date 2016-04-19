@@ -175,7 +175,7 @@ GenerateIntegralImage_SSE2(int32_t aLeftInflation, int32_t aRightInflation,
  */
 void
 AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData,
-			   int32_t aLeftLobe,
+        	   int32_t aLeftLobe,
                            int32_t aRightLobe,
                            int32_t aTopLobe,
                            int32_t aBottomLobe,
@@ -187,7 +187,7 @@ AlphaBoxBlur::BoxBlur_SSE2(uint8_t* aData,
   MOZ_ASSERT(size.height > 0);
 
   // Our 'left' or 'top' lobe will include the current pixel. i.e. when
-  // looking at an integral image the value of a pixel at 'x,y' is calculated
+  // looking at an integral image the value of a pixel at 'x, y' is calculated
   // using the value of the integral image values above/below that.
   aLeftLobe++;
   aTopLobe++;

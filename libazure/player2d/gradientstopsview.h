@@ -12,11 +12,11 @@ class GradientStopsView;
 class GradientStopsView : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit GradientStopsView(mozilla::gfx::ReferencePtr aRefPtr, mozilla::gfx::Translator *aTranslator, QWidget *parent = 0);
     ~GradientStopsView();
-    
+
 public slots:
     void UpdateView();
 

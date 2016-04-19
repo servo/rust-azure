@@ -27,11 +27,11 @@
  *   // And further to: 1 + 2 + 3 + 0;
  *
  *   #define MACRO_B(k, x) (k + x) +
- *   int b = MOZ_FOR_EACH(MACRO_B, (5,), (1, 2)) 0;
+ *   int b = MOZ_FOR_EACH(MACRO_B, (5, ), (1, 2)) 0;
  *   // Expands to: MACRO_B(5, 1) MACRO_B(5, 2) 0;
  *
  *   #define MACRO_C(k1, k2, x) (k1 + k2 + x) +
- *   int c = MOZ_FOR_EACH(MACRO_C, (5, 8,), (1, 2)) 0;
+ *   int c = MOZ_FOR_EACH(MACRO_C, (5, 8, ), (1, 2)) 0;
  *   // Expands to: MACRO_B(5, 8, 1) MACRO_B(5, 8, 2) 0;
  *
  * If the |aFixedArgs| list is not empty, a trailing comma must be included.

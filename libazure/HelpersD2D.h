@@ -291,7 +291,7 @@ static inline bool IsPatternSupportedByD2D(const Pattern &aPattern)
 
   const RadialGradientPattern *pat =
     static_cast<const RadialGradientPattern*>(&aPattern);
-  
+
   if (pat->mRadius1 != 0) {
     return false;
   }
@@ -309,8 +309,8 @@ static inline bool IsPatternSupportedByD2D(const Pattern &aPattern)
 /**
  * This structure is used to pass rectangles to our shader constant. We can use
  * this for passing rectangular areas to SetVertexShaderConstant. In the format
- * of a 4 component float(x,y,width,height). Our vertex shader can then use
- * this to construct rectangular positions from the 0,0-1,1 quad that we source
+ * of a 4 component float(x, y, width, height). Our vertex shader can then use
+ * this to construct rectangular positions from the 0, 0-1, 1 quad that we source
  * it with.
  */
 struct ShaderConstantRectD3D10
@@ -388,7 +388,7 @@ DWriteGlyphRunFromGlyphs(const GlyphBuffer &aGlyphs, ScaledFontDWrite *aFont, Au
     offsets[i].advanceOffset = aGlyphs.mGlyphs[i].mPosition.x;
     offsets[i].ascenderOffset = -aGlyphs.mGlyphs[i].mPosition.y;
   }
-    
+
   run->bidiLevel = 0;
   run->fontFace = aFont->mFontFace;
   run->fontEmSize = aFont->GetSize();
@@ -536,7 +536,7 @@ CreatePartialBitmapForSurface(DataSourceSurface *aSurface, const Matrix &aDestin
 
   Rect uploadRect(0, 0, Float(size.width), Float(size.height));
 
-  // Limit the uploadRect as much as possible without supporting discontiguous uploads 
+  // Limit the uploadRect as much as possible without supporting discontiguous uploads
   //
   //                               region we will paint from
   //   uploadRect
@@ -601,7 +601,7 @@ CreatePartialBitmapForSurface(DataSourceSurface *aSurface, const Matrix &aDestin
     Point topLeft = transform * Point(0, 0);
     Point bottomRight = transform * Point(Float(size.width), Float(size.height));
     Point bottomLeft = transform * Point(0, Float(size.height));
-    
+
     IntSize scaleSize;
 
     scaleSize.width = int32_t(std::max(Distance(topRight, topLeft),
@@ -622,7 +622,7 @@ CreatePartialBitmapForSurface(DataSourceSurface *aSurface, const Matrix &aDestin
     scaler.ScaleForSize(scaleSize);
 
     IntSize newSize = scaler.GetSize();
-    
+
     aRT->CreateBitmap(D2D1::SizeU(newSize.width, newSize.height),
                       scaler.GetScaledData(), scaler.GetStride(),
                       D2D1::BitmapProperties(D2DPixelFormat(aSurface->GetFormat())),

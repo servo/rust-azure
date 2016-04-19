@@ -115,7 +115,7 @@ struct RectTyped :
     {
       *aOut = IntRectTyped<units>(int32_t(this->X()), int32_t(this->Y()),
                                   int32_t(this->Width()), int32_t(this->Height()));
-      return RectTyped<units>(Float(aOut->x), Float(aOut->y), 
+      return RectTyped<units>(Float(aOut->x), Float(aOut->y),
                               Float(aOut->width), Float(aOut->height))
              .IsEqualEdges(*this);
     }

@@ -262,9 +262,9 @@ MainWindow::SwitchToBackend(BackendType aType)
   mPBManager.PlaybackToEvent(0);
 
   mMainBackend = aType;
-  
+
   SwitchingBackend(int(aType));
-  
+
   QApplication::processEvents();
 
   QTreeWidgetItem *item = ui->treeWidget->currentItem();
@@ -289,7 +289,7 @@ MainWindow::SwitchSimulationBackend(BackendType aType)
   mPBManager.PlaybackToEvent(0);
   RefPtr<DrawTarget> refDT = Factory::CreateDrawTarget(aType, IntSize(1, 1), SurfaceFormat::B8G8R8A8);
   mPBManager.SetBaseDT(refDT);
-  
+
   QTreeWidgetItem *item = ui->treeWidget->currentItem();
   if (item) {
     int64_t idx = static_cast<EventItem*>(item)->mID;
@@ -309,7 +309,7 @@ void MainWindow::on_actionOpen_Recording_triggered()
 
   ui->comboBox->clear();
   ui->comboBox->addItem("All");
-  
+
   inputFile.open(fileName.toStdString().c_str(), istream::in | istream::binary);
 
   inputFile.seekg(0, ios::end);

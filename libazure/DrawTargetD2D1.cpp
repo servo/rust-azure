@@ -315,7 +315,7 @@ DrawTargetD2D1::CopySurface(SourceSurface *aSurface,
   }
 
   mDC->DrawImage(image, D2D1::Point2F(Float(aDestination.x), Float(aDestination.y)),
-                 D2D1::RectF(Float(aSourceRect.x), Float(aSourceRect.y), 
+                 D2D1::RectF(Float(aSourceRect.x), Float(aSourceRect.y),
                              Float(aSourceRect.XMost()), Float(aSourceRect.YMost())),
                  D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY);
 }
@@ -454,7 +454,7 @@ DrawTargetD2D1::FillGlyphs(ScaledFont *aFont,
   bool forceClearType = false;
   if (mFormat == SurfaceFormat::B8G8R8A8 && mPermitSubpixelAA &&
       aOptions.mCompositionOp == CompositionOp::OP_OVER && aaMode == AntialiasMode::SUBPIXEL) {
-    forceClearType = true;    
+    forceClearType = true;
   }
 
 
@@ -516,7 +516,7 @@ DrawTargetD2D1::Mask(const Pattern &aSource,
   Rect rect(0, 0, (Float)mSize.width, (Float)mSize.height);
   Matrix mat = mTransform;
   mat.Invert();
-  
+
   mDC->FillRectangle(D2DRect(mat.TransformBounds(rect)), source);
 
   mDC->PopLayer();
@@ -539,7 +539,7 @@ DrawTargetD2D1::PushClip(const Path *aPath)
   PushedClip clip;
   clip.mTransform = D2DMatrix(mTransform);
   clip.mPath = pathD2D;
-  
+
   pathD2D->mGeometry->GetBounds(clip.mTransform, &clip.mBounds);
 
   mPushedClips.push_back(clip);
@@ -1085,7 +1085,7 @@ DrawTargetD2D1::PopAllClips()
 {
   if (mClipsArePushed) {
     PopClipsFromDC(mDC);
-  
+
     mClipsArePushed = false;
   }
 }
@@ -1216,7 +1216,7 @@ DrawTargetD2D1::CreateBrushForPattern(const Pattern &aPattern, Float aAlpha)
     }
 
     Matrix mat = pat->mMatrix;
-    
+
     RefPtr<ID2D1ImageBrush> imageBrush;
     RefPtr<ID2D1Image> image = GetImageForSurface(pat->mSurface, mat, pat->mExtendMode);
     mDC->CreateImageBrush(image,

@@ -31,11 +31,11 @@ struct BasePoint4D {
   // compiler generated default assignment operator
 
   bool operator==(const Sub& aPoint) const {
-    return x == aPoint.x && y == aPoint.y && 
+    return x == aPoint.x && y == aPoint.y &&
            z == aPoint.z && w == aPoint.w;
   }
   bool operator!=(const Sub& aPoint) const {
-    return x != aPoint.x || y != aPoint.y || 
+    return x != aPoint.x || y != aPoint.y ||
            z != aPoint.z || w != aPoint.w;
   }
 
@@ -105,7 +105,7 @@ struct BasePoint4D {
   Sub CrossProduct(const Sub& aPoint) const {
       return Sub(y * aPoint.z - aPoint.y * z,
           z * aPoint.x - aPoint.z * x,
-          x * aPoint.y - aPoint.x * y, 
+          x * aPoint.y - aPoint.x * y,
           0);
   }
 

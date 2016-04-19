@@ -677,7 +677,7 @@ private:
     if (!detail::Is##NAME##Valid(aLhs.mValue, aRhs.mValue)) {                 \
       return CheckedInt<T>(0, false);                                         \
     }                                                                         \
-    return CheckedInt<T>(aLhs.mValue OP aRhs.mValue,                          \
+    return CheckedInt<T>(aLhs.mValue OP aRhs.mValue, \
                          aLhs.mIsValid && aRhs.mIsValid);                     \
   }
 

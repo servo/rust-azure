@@ -54,7 +54,7 @@ TestBase::RunTests(std::ostream *aCSVOutput)
 
     if (aCSVOutput) {
       stringstream newData;
-      newData << average << ",";
+      newData << average << ", ";
       string str = newData.str();
       aCSVOutput->write(str.c_str(), str.size());
     }

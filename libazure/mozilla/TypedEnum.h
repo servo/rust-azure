@@ -63,9 +63,9 @@
  * supported, as with MOZ_ENUM_TYPE().  As with MOZ_ENUM_TYPE(), it will do
  * nothing on compilers that do not support it.
  *
- * MOZ_{BEGIN,END}_ENUM_CLASS doesn't work for defining enum classes nested
+ * MOZ_{BEGIN, END}_ENUM_CLASS doesn't work for defining enum classes nested
  * inside classes.  To define an enum class nested inside another class, use
- * MOZ_{BEGIN,END}_NESTED_ENUM_CLASS, and place a MOZ_FINISH_NESTED_ENUM_CLASS
+ * MOZ_{BEGIN, END}_NESTED_ENUM_CLASS, and place a MOZ_FINISH_NESTED_ENUM_CLASS
  * in namespace scope to handle bits that can only be implemented with
  * namespace-scoped code.  For example:
  *

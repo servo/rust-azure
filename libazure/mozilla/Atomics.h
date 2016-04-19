@@ -470,7 +470,7 @@ struct IntrinsicAddSub<T*>
 
   /*
    * The reinterpret_casts are needed so that
-   * __sync_fetch_and_{add,sub} will properly type-check.
+   * __sync_fetch_and_{add, sub} will properly type-check.
    *
    * Also, these functions do not provide standard semantics for
    * pointer types, so we need to adjust the addend.

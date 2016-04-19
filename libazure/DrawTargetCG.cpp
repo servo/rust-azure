@@ -463,9 +463,9 @@ UpdateLinearParametersToIncludePoint(double *min_t, double *max_t,
   MOZ_ASSERT(IsFinite(x) && IsFinite(y));
 
   /**
-   * Compute a parameter t such that a line perpendicular to the (dx,dy)
+   * Compute a parameter t such that a line perpendicular to the (dx, dy)
    * vector, passing through (start->x + dx*t, start->y + dy*t), also
-   * passes through (x,y).
+   * passes through (x, y).
    *
    * Let px = x - start->x, py = y - start->y.
    * t is given by
@@ -476,7 +476,7 @@ UpdateLinearParametersToIncludePoint(double *min_t, double *max_t,
    *   denominator = dx^2 + dy^2
    *   t = numerator/denominator
    *
-   * In CalculateRepeatingGradientParams we know the length of (dx,dy)
+   * In CalculateRepeatingGradientParams we know the length of (dx, dy)
    * is not zero. (This is checked in DrawLinearRepeatingGradient.)
    */
   double px = x - start->x;
@@ -673,7 +673,7 @@ DrawGradient(CGColorSpaceRef aColorSpace,
 
       // XXX: we should take the m out of the properties of LinearGradientPatterns
       CGPoint startPoint = { pat.mBegin.x, pat.mBegin.y };
-      CGPoint endPoint   = { pat.mEnd.x,   pat.mEnd.y };
+      CGPoint endPoint   = { pat.mEnd.x, pat.mEnd.y };
 
       // Canvas spec states that we should avoid drawing degenerate gradients (XXX: should this be in common code?)
       //if (startPoint.x == endPoint.x && startPoint.y == endPoint.y)
@@ -788,7 +788,7 @@ CreateCGPattern(const Pattern &aPattern, CGAffineTransform aUserSpace)
   // creates a pattern, it seems to go down a faster path than using a delegate
   // like we do below
   CGRect bounds = {
-    {0, 0,},
+    {0, 0, },
     {static_cast<CGFloat>(CGImageGetWidth(image)), static_cast<CGFloat>(CGImageGetHeight(image))}
   };
   CGAffineTransform transform =
@@ -1500,7 +1500,7 @@ bool
 DrawTargetCG::Init(BackendType aType, const IntSize &aSize, SurfaceFormat &aFormat)
 {
   int32_t stride = GetAlignedStride<16>(aSize.width * BytesPerPixel(aFormat));
-  
+
   // Calling Init with aData == nullptr will allocate.
   return Init(aType, nullptr, aSize, stride, aFormat);
 }
@@ -1546,7 +1546,7 @@ DrawTargetCG::Mask(const Pattern &aSource,
       const SurfacePattern& pat = static_cast<const SurfacePattern&>(aMask);
       CGImageRef mask = GetRetainedImageFromSourceSurface(pat.mSurface.get());
       MOZ_ASSERT(pat.mSamplingRect.IsEmpty(), "Sampling rect not supported with masks!");
-      Rect rect(0,0, CGImageGetWidth(mask), CGImageGetHeight(mask));
+      Rect rect(0, 0, CGImageGetWidth(mask), CGImageGetHeight(mask));
       // XXX: probably we need to do some flipping of the image or something
       CGContextClipToMask(mCg, RectToCGRect(rect), mask);
       FillRect(rect, aSource, aDrawOptions);

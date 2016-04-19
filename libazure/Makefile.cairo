@@ -1,6 +1,6 @@
 # Simple checks
 HAS_CAIRO=$(shell pkg-config cairo && echo YES)
-ifneq ($(HAS_CAIRO),YES)
+ifneq ($(HAS_CAIRO), YES)
 $(error Cairo package not found)
 endif
 

@@ -130,7 +130,7 @@ void RedundancyAnalysis::on_pushButton_clicked()
   mPBManager->PlaybackToEvent(start);
   dt = mPBManager->LookupDrawTarget(dtPtr);
   dt->Flush();
-  
+
   timer.Start();
   mPBManager->PlaybackToEvent(end);
   dt->Flush();

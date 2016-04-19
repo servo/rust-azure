@@ -16,7 +16,7 @@ class Translator;
 class DrawTargetView : public SurfaceView
 {
     Q_OBJECT
-    
+
 public:
     explicit DrawTargetView(mozilla::gfx::ReferencePtr aRefPtr, mozilla::gfx::Translator *aTranslator,
                             QWidget *parent = 0);

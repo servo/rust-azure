@@ -99,19 +99,19 @@ DEFINE_GUID(IID_ID2D1DeviceContext, 0xe8f7fe7a, 0x191c, 0x466d, 0xad, 0x95, 0x97
 //------------------------------------------------------------------------------
 interface DX_DECLARE_INTERFACE("e8f7fe7a-191c-466d-ad95-975678bda998") ID2D1DeviceContext  : public ID2D1RenderTarget
 {
-    
-    
+
+
     //
     // Creates a bitmap with extended bitmap properties, potentially from a block of
     // memory.
     //
     STDMETHOD(CreateBitmap)() PURE;
-    
+
     //
     // Create a D2D bitmap by copying a WIC bitmap.
     //
-    STDMETHOD(CreateBitmapFromWicBitmap)() PURE;    
-    
+    STDMETHOD(CreateBitmapFromWicBitmap)() PURE;
+
     //
     // Creates a color context from a color space.  If the space is Custom, the context
     // is initialized from the profile/profileSize arguments.  Otherwise the context is
@@ -119,212 +119,212 @@ interface DX_DECLARE_INTERFACE("e8f7fe7a-191c-466d-ad95-975678bda998") ID2D1Devi
     // profile/profileSize are ignored.
     //
     STDMETHOD(CreateColorContext)() PURE;
-    
+
     STDMETHOD(CreateColorContextFromFilename)() PURE;
-    
+
     STDMETHOD(CreateColorContextFromWicColorContext)() PURE;
-    
-    
+
+
     //
     // Creates a bitmap from a DXGI surface with a set of extended properties.
     //
     STDMETHOD(CreateBitmapFromDxgiSurface)() PURE;
-    
-    
+
+
     //
     // Create a new effect, the effect must either be built in or previously registered
     // through ID2D1Factory1::RegisterEffectFromStream or
     // ID2D1Factory1::RegisterEffectFromString.
     //
     STDMETHOD(CreateEffect)() PURE;
-    
-    
+
+
     //
     // A gradient stop collection represents a set of stops in an ideal unit length.
     // This is the source resource for a linear gradient and radial gradient brush.
     //
     STDMETHOD(CreateGradientStopCollection)() PURE;
-    
+
     //
     // Creates an image brush, the input image can be any type of image, including a
     // bitmap, effect and a command list.
     //
     STDMETHOD(CreateImageBrush)() PURE;
-    
+
     STDMETHOD(CreateBitmapBrush)() PURE;
 
     //
     // Creates a new command list.
     //
     STDMETHOD(CreateCommandList)() PURE;
-    
-    
+
+
     //
     // Indicates whether the format is supported by D2D.
     //
     STDMETHOD_(BOOL, IsDxgiFormatSupported)() CONST PURE;
-    
-    
+
+
     //
     // Indicates whether the buffer precision is supported by D2D.
     //
     STDMETHOD_(BOOL, IsBufferPrecisionSupported)() CONST PURE;
-    
-    
+
+
     //
     // This retrieves the local-space bounds in DIPs of the current image using the
     // device context DPI.
     //
     STDMETHOD(GetImageLocalBounds)() CONST PURE;
-    
-    
+
+
     //
     // This retrieves the world-space bounds in DIPs of the current image using the
     // device context DPI.
     //
     STDMETHOD(GetImageWorldBounds)() CONST PURE;
-    
-    
+
+
     //
     // Retrieves the world-space bounds in DIPs of the glyph run using the device
     // context DPI.
     //
     STDMETHOD(GetGlyphRunWorldBounds)() CONST PURE;
-    
-    
+
+
     //
     // Retrieves the device associated with this device context.
     //
     STDMETHOD_(void, GetDevice)() CONST PURE;
-    
-    
+
+
     //
     // Sets the target for this device context to point to the given image. The image
     // can be a command list or a bitmap created with the D2D1_BITMAP_OPTIONS_TARGET
     // flag.
     //
     STDMETHOD_(void, SetTarget)() PURE;
-    
-    
+
+
     //
     // Gets the target that this device context is currently pointing to.
     //
     STDMETHOD_(void, GetTarget)() CONST PURE;
-    
-    
+
+
     //
     // Sets tuning parameters for internal rendering inside the device context.
     //
     STDMETHOD_(void, SetRenderingControls)() PURE;
-    
-    
+
+
     //
     // This retrieves the rendering controls currently selected into the device
     // context.
     //
     STDMETHOD_(void, GetRenderingControls)() CONST PURE;
-    
-    
+
+
     //
     // Changes the primitive blending mode for all of the rendering operations.
     //
     STDMETHOD_(void, SetPrimitiveBlend)() PURE;
-    
-    
+
+
     //
     // Returns the primitive blend currently selected into the device context.
     //
     STDMETHOD_(void, GetPrimitiveBlend)(
         ) CONST PURE;
-    
-    
+
+
     //
     // Changes the units used for all of the rendering operations.
     //
     STDMETHOD_(void, SetUnitMode)() PURE;
-    
-    
+
+
     //
     // Returns the unit mode currently set on the device context.
     //
     STDMETHOD_(void, GetUnitMode)(
         ) CONST PURE;
-    
-    
+
+
     //
     // Draws the glyph run with an extended description to describe the glyphs.
     //
     STDMETHOD_(void, DrawGlyphRun)() PURE;
-    
+
     //
     // Draw an image to the device context. The image represents either a concrete
     // bitmap or the output of an effect graph.
     //
     STDMETHOD_(void, DrawImage)() PURE;
-    
-    
+
+
     //
     // Draw a metafile to the device context.
     //
     STDMETHOD_(void, DrawGdiMetafile)() PURE;
-    
+
     STDMETHOD_(void, DrawBitmap)() PURE;
-    
-    
+
+
     //
     // Push a layer on the device context.
     //
     STDMETHOD_(void, PushLayer)(
         _In_ CONST D2D1_LAYER_PARAMETERS1 *layerParameters,
-        _In_opt_ ID2D1Layer *layer 
+        _In_opt_ ID2D1Layer *layer
         ) PURE;
-    
+
     using ID2D1RenderTarget::PushLayer;
-    
-    
+
+
     //
     // This indicates that a portion of an effect's input is invalid. This method can
     // be called many times.
     //
     STDMETHOD(InvalidateEffectInputRectangle)() PURE;
-    
-    
+
+
     //
     // Gets the number of invalid ouptut rectangles that have accumulated at the
     // effect.
     //
     STDMETHOD(GetEffectInvalidRectangleCount)() PURE;
-    
-    
+
+
     //
     // Gets the invalid rectangles that are at the output of the effect.
     //
     STDMETHOD(GetEffectInvalidRectangles)() PURE;
-    
-    
+
+
     //
     // Gets the maximum region of each specified input which would be used during a
     // subsequent rendering operation
     //
     STDMETHOD(GetEffectRequiredInputRectangles)() PURE;
-    
-    
+
+
     //
     // Fill using the alpha channel of the supplied opacity mask bitmap. The brush
     // opacity will be modulated by the mask. The render target antialiasing mode must
     // be set to aliased.
     //
     STDMETHOD_(void, FillOpacityMask)() PURE;
-    
- 
+
+
     HRESULT CreateBitmap1() { return S_OK; }
     HRESULT CreateBitmap2() { return S_OK; }
     HRESULT CreateBitmap3() { return S_OK; }
     HRESULT CreateBitmap4() { return S_OK; }
-    
+
     HRESULT CreateImageBrush1() { return S_OK; }
     HRESULT CreateImageBrush2() { return S_OK; }
-    
+
     HRESULT CreateBitmapBrush1() { return S_OK; }
     HRESULT CreateBitmapBrush2() { return S_OK; }
     HRESULT CreateBitmapBrush3() { return S_OK; }
@@ -339,25 +339,25 @@ interface DX_DECLARE_INTERFACE("e8f7fe7a-191c-466d-ad95-975678bda998") ID2D1Devi
     void DrawImage5() {}
     void DrawImage6() {}
     void DrawImage7() {}
-    
+
     void
     PushLayer(
         CONST D2D1_LAYER_PARAMETERS1 &layerParameters,
-        _In_opt_ ID2D1Layer *layer 
-        )  
+        _In_opt_ ID2D1Layer *layer
+        )
     {
         PushLayer(&layerParameters, layer);
     }
-    
+
     void DrawGdiMetafile1() {}
-    
+
     void DrawBitmap1() {}
     void DrawBitmap2() {}
     void DrawBitmap3() {}
-    
+
     void FillOpacityMask1() {}
-    void FillOpacityMask2() {}   
-    
+    void FillOpacityMask2() {}
+
     //
     // Sets tuning parameters for internal rendering inside the device context.
     //

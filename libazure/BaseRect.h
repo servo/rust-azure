@@ -328,18 +328,18 @@ struct BaseRect {
     width = XMost() - aX;
     x = aX;
   }
-  void SetRightEdge(T aXMost) { 
+  void SetRightEdge(T aXMost) {
     MOZ_ASSERT(aXMost >= x);
-    width = aXMost - x; 
+    width = aXMost - x;
   }
   void SetTopEdge(T aY) {
     MOZ_ASSERT(aY <= YMost());
     height = YMost() - aY;
     y = aY;
   }
-  void SetBottomEdge(T aYMost) { 
+  void SetBottomEdge(T aYMost) {
     MOZ_ASSERT(aYMost >= y);
-    height = aYMost - y; 
+    height = aYMost - y;
   }
 
   // Round the rectangle edges to integer coordinates, such that the rounded
@@ -517,8 +517,8 @@ struct BaseRect {
 
   friend std::ostream& operator<<(std::ostream& stream,
       const BaseRect<T, Sub, Point, SizeT, MarginT>& aRect) {
-    return stream << '(' << aRect.x << ',' << aRect.y << ','
-                  << aRect.width << ',' << aRect.height << ')';
+    return stream << '(' << aRect.x << ', ' << aRect.y << ', '
+                  << aRect.width << ', ' << aRect.height << ')';
   }
 
 private:

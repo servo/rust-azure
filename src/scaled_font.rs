@@ -2,52 +2,42 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#[cfg(target_os = "android")] use scaled_font::android::*;
+#[cfg(target_os = "linux")] use scaled_font::linux::*;
+#[cfg(target_os = "macos")] use scaled_font::macos::*;
+#[cfg(target_os = "windows")] use scaled_font::windows::*;
+use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
 use azure::{AzScaledFontRef, AzFloat};
 use azure::struct__AzNativeFont;
-
 use azure_hl::BackendType;
-use azure::{AzCreateScaledFontForNativeFont, AzReleaseScaledFont};
-
 use libc::c_void;
 use std::mem;
 use std::ptr;
 
-#[cfg(target_os="macos")]
-use scaled_font::macos::*;
-
-#[cfg(target_os="linux")]
-use scaled_font::linux::*;
-
-#[cfg(target_os="android")]
-use scaled_font::android::*;
-
-#[cfg(target_os="windows")]
-use scaled_font::windows::*;
-
-#[cfg(target_os="macos")]
+#[cfg(target_os = "macos")]
 pub mod macos {
     pub use core_text::font::CTFontRef;
     pub use core_graphics::font::{CGFont, CGFontRef};
 }
 
-#[cfg(target_os="linux")]
+#[cfg(target_os = "linux")]
 pub mod linux {
     pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
-#[cfg(target_os="android")]
+#[cfg(target_os = "android")]
 pub mod android {
     pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
-#[cfg(target_os="windows")]
+#[cfg(target_os = "windows")]
 pub mod windows {
     pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 pub type SkTypeface = *mut c_void;
 
-#[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
+#[cfg(any(target_os = "linux", target_os = "android", target_os = "windows"))]
 #[derive(Debug)]
 pub enum FontInfo<'a> {
     NativeFont(FT_Face),
@@ -72,11 +62,10 @@ impl ScaledFont {
         self.azure_scaled_font
     }
 
-    #[cfg(any(target_os="linux", target_os = "android", target_os = "windows"))]
+    #[cfg(any(target_os = "linux", target_os = "android", target_os = "windows"))]
     pub fn new(backend: BackendType, font_info: FontInfo, size: AzFloat) -> ScaledFont {
+        use azure::{ AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreateScaledFontForTrueTypeData };
         use azure::AZ_NATIVE_FONT_SKIA_FONT_FACE;
-        use azure::{AzCreateFontOptionsForName, AzDestroyFontOptions,
-                    AzCreateScaledFontForTrueTypeData};
 
         let mut azure_native_font = struct__AzNativeFont {
             mType: 0,
@@ -119,7 +108,7 @@ impl ScaledFont {
     }
 
     /// Mac-specific function to create a font for the given backend.
-    #[cfg(target_os="macos")]
+    #[cfg(target_os = "macos")]
     pub fn new(backend: BackendType, native_font: &CGFont, size: AzFloat) -> ScaledFont {
         use azure::AZ_NATIVE_FONT_MAC_FONT_FACE;
         use core_foundation::base::TCFType;
@@ -152,7 +141,7 @@ impl ScaledFont {
 
 // FIXME: Move this stuff to a rust-skia?
 // FIXME: Demangle the names!!!
-#[cfg(target_os="macos")]
+#[cfg(target_os = "macos")]
 extern "C" {
     pub fn _Z26SkCreateTypefaceFromCTFontPK8__CTFont(font: CTFontRef) -> *mut SkTypeface;
 }

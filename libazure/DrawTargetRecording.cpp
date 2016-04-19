@@ -323,7 +323,7 @@ DrawTargetRecording::FillGlyphs(ScaledFont *aFont,
     RecordingFontUserData *userData = new RecordingFontUserData;
     userData->refPtr = aFont;
     userData->recorder = mRecorder;
-    aFont->AddUserData(reinterpret_cast<UserDataKey*>(mRecorder.get()), userData, 
+    aFont->AddUserData(reinterpret_cast<UserDataKey*>(mRecorder.get()), userData,
                        &RecordingFontUserDataDestroyFunc);
   }
 

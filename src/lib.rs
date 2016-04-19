@@ -8,26 +8,17 @@
 #![cfg_attr(feature = "plugins", plugin(serde_macros))]
 #![cfg_attr(feature = "plugins", plugin(heapsize_plugin))]
 
-extern crate libc;
-#[cfg(feature = "plugins")]
-extern crate serde;
+#[cfg(feature = "plugins")] extern crate serde;
+#[cfg(not(target_os = "macos"))] extern crate freetype;
+#[cfg(target_os = "android")] extern crate egl;
+#[cfg(target_os = "linux")] extern crate x11;
+#[cfg(target_os = "macos")] extern crate core_foundation;
+#[cfg(target_os = "macos")] extern crate core_graphics;
+#[cfg(target_os = "macos")] extern crate core_text;
+#[macro_use] #[cfg(feature = "plugins")] extern crate heapsize;
 extern crate euclid;
+extern crate libc;
 extern crate skia;
-#[macro_use]
-#[cfg(feature = "plugins")]
-extern crate heapsize;
-#[cfg(target_os = "linux")]
-extern crate x11;
-#[cfg(target_os = "android")]
-extern crate egl;
-#[cfg(not(target_os = "macos"))]
-extern crate freetype;
-#[cfg(target_os = "macos")]
-extern crate core_foundation;
-#[cfg(target_os = "macos")]
-extern crate core_graphics;
-#[cfg(target_os = "macos")]
-extern crate core_text;
 
 pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO,
@@ -83,7 +74,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzDrawTargetSetTransform,
                 AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreatePathBuilder,
                 AzPathCopyToBuilder, AzPathContainsPoint, AzReleasePathBuilder,
-                AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
+                AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath };
 
 pub mod azure_hl;
 pub mod scaled_font;

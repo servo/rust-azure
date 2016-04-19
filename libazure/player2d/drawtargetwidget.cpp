@@ -25,14 +25,14 @@ DrawTargetWidget::InitDT()
 {
   setAttribute(Qt::WA_NoSystemBackground, false);
   setAttribute(Qt::WA_OpaquePaintEvent, false);
-  setAttribute(Qt::WA_PaintOnScreen, false); 
+  setAttribute(Qt::WA_PaintOnScreen, false);
 #ifdef WIN32
   mSwapChain = nullptr;
 
   if (mType == BackendType::DIRECT2D) {
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_OpaquePaintEvent);
-    setAttribute(Qt::WA_PaintOnScreen); 
+    setAttribute(Qt::WA_PaintOnScreen);
 
     RefPtr<IDXGIDevice> dxgiDevice;
     RefPtr<IDXGIAdapter> dxgiAdapter;
@@ -68,7 +68,7 @@ DrawTargetWidget::InitDT()
   } else
 #endif
   {
-    mDT = Factory::CreateDrawTarget(mType, IntSize(width(),height()), SurfaceFormat::B8G8R8X8);
+    mDT = Factory::CreateDrawTarget(mType, IntSize(width(), height()), SurfaceFormat::B8G8R8X8);
   }
 }
 
@@ -128,7 +128,7 @@ DrawTargetWidget::redraw()
     RefPtr<SourceSurface> srcSurf = mDT->Snapshot();
     RefPtr<DataSourceSurface> dataSrc = srcSurf->GetDataSurface();
     QImage qimage(dataSrc->GetData(), width(), height(), dataSrc->Stride(), QImage::Format_RGB32);
-    painter.drawImage(QRect(0,0,width(), height()), qimage);
+    painter.drawImage(QRect(0, 0, width(), height()), qimage);
   }
 }
 

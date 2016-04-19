@@ -133,7 +133,7 @@ SourceSurfaceD2DTarget::GetBitmap(ID2D1RenderTarget *aRT)
   mTexture->GetDesc(&desc);
 
   IntSize size(desc.Width, desc.Height);
-  
+
   RefPtr<IDXGISurface> surf;
   hr = mTexture->QueryInterface((IDXGISurface**)byRef(surf));
 

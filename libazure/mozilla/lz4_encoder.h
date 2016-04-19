@@ -80,7 +80,7 @@ int FUNCTION_NAME(
                  char* dest,
                  int inputSize
 #ifdef LIMITED_OUTPUT
-                ,int maxOutputSize
+                , int maxOutputSize
 #endif
                  )
 {
@@ -152,12 +152,12 @@ int FUNCTION_NAME(
 #ifdef LIMITED_OUTPUT
         if unlikely(op + length + (2 + 1 + LASTLITERALS) + (length>>8) > oend) return 0;   // Check output limit
 #endif
-        if (length>=(int)RUN_MASK) 
-        { 
-            int len = length-RUN_MASK; 
-            *token=(RUN_MASK<<ML_BITS); 
-            for(; len >= 255 ; len-=255) *op++ = 255; 
-            *op++ = (BYTE)len; 
+        if (length>=(int)RUN_MASK)
+        {
+            int len = length-RUN_MASK;
+            *token=(RUN_MASK<<ML_BITS);
+            for(; len >= 255 ; len-=255) *op++ = 255;
+            *op++ = (BYTE)len;
         }
         else *token = (BYTE)(length<<ML_BITS);
 
@@ -166,7 +166,7 @@ int FUNCTION_NAME(
 
 _next_match:
         // Encode Offset
-        LZ4_WRITE_LITTLEENDIAN_16(op,(U16)(ip-ref));
+        LZ4_WRITE_LITTLEENDIAN_16(op, (U16)(ip-ref));
 
         // Start Counting
         ip+=MINMATCH; ref+=MINMATCH;    // MinMatch already verified
@@ -188,13 +188,13 @@ _endCount:
 #ifdef LIMITED_OUTPUT
         if unlikely(op + (1 + LASTLITERALS) + (length>>8) > oend) return 0;    // Check output limit
 #endif
-        if (length>=(int)ML_MASK) 
-        { 
-            *token += ML_MASK; 
-            length -= ML_MASK; 
-            for (; length > 509 ; length-=510) { *op++ = 255; *op++ = 255; } 
-            if (length >= 255) { length-=255; *op++ = 255; } 
-            *op++ = (BYTE)length; 
+        if (length>=(int)ML_MASK)
+        {
+            *token += ML_MASK;
+            length -= ML_MASK;
+            for (; length > 509 ; length-=510) { *op++ = 255; *op++ = 255; }
+            if (length >= 255) { length-=255; *op++ = 255; }
+            *op++ = (BYTE)length;
         }
         else *token += (BYTE)length;
 

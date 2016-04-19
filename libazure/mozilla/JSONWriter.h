@@ -134,7 +134,7 @@ class JSONWriter
 
     void SanityCheck() const
     {
-      MOZ_ASSERT_IF( mIsOwned,  mOwnedStr.get() && !mUnownedStr);
+      MOZ_ASSERT_IF( mIsOwned, mOwnedStr.get() && !mUnownedStr);
       MOZ_ASSERT_IF(!mIsOwned, !mOwnedStr.get() &&  mUnownedStr);
     }
 
@@ -234,7 +234,7 @@ class JSONWriter
   void Separator()
   {
     if (mNeedComma[mDepth]) {
-      mWriter->Write(",");
+      mWriter->Write(", ");
     }
     if (mDepth > 0) {
       mWriter->Write("\n");

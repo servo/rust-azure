@@ -147,7 +147,7 @@ PathSkia::ContainsPoint(const Point &aPoint, const Matrix &aTransform) const
                     int32_t(SkFloatToScalar(transformed.y + 1.f)));
 
   SkRegion pathRegion;
-  
+
   return pathRegion.setPath(mPath, pointRect);
 }
 
@@ -180,7 +180,7 @@ PathSkia::StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
                     int32_t(SkFloatToScalar(transformed.y + 1.f)));
 
   SkRegion pathRegion;
-  
+
   return pathRegion.setPath(strokePath, pointRect);
 }
 
@@ -197,7 +197,7 @@ PathSkia::GetStrokedBounds(const StrokeOptions &aStrokeOptions,
 {
   SkPaint paint;
   StrokeOptionsToPaint(paint, aStrokeOptions);
-  
+
   SkPath result;
   paint.getFillPath(mPath, &result);
 

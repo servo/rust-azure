@@ -104,7 +104,7 @@ ImageHalfScaler::ScaleForSize(const IntSize &aSize)
   IntSize currentSampledSize = mOrigSize;
   uint32_t currentSampledStride = mOrigStride;
   uint8_t *currentSampledData = mOrigData;
-  
+
   while (verticalDownscales && horizontalDownscales) {
     if (currentSampledSize.width % 2) {
       currentSampledSize.width -= 1;

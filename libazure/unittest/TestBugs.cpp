@@ -55,7 +55,7 @@ TestBugs::CairoClip918671()
   RefPtr<Path> path2 = pb2->Finish();
   dt->PushClip(path2);
 
-  dt->FillRect(Rect(0, 0, 100, 100), ColorPattern(Color(1,0,0)));
+  dt->FillRect(Rect(0, 0, 100, 100), ColorPattern(Color(1, 0, 0)));
 
   RefPtr<SourceSurface> surf1 = dt->Snapshot();
   RefPtr<SourceSurface> surf2 = ref->Snapshot();

@@ -58,7 +58,7 @@ SourceSurfaceSkia::InitFromCanvas(SkCanvas* aCanvas,
   return true;
 }
 
-bool 
+bool
 SourceSurfaceSkia::InitFromData(unsigned char* aData,
                                 const IntSize &aSize,
                                 int32_t aStride,

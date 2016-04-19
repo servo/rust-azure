@@ -131,7 +131,7 @@ void ConvolveHorizontally_SSE2(const unsigned char* src_data,
       coeff16 = _mm_unpacklo_epi16(coeff16, coeff16);
 
       // Note: line buffer must be padded to align_up(filter_offset, 16).
-      // We resolve this by temporary buffer 
+      // We resolve this by temporary buffer
       __m128i src8 = _mm_loadu_si128(&buffer);
       __m128i src16 = _mm_unpacklo_epi8(src8, zero);
       __m128i mul_hi = _mm_mulhi_epi16(src16, coeff16);

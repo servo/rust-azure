@@ -81,7 +81,7 @@ struct BasePoint {
   }
 
   friend std::ostream& operator<<(std::ostream& stream, const BasePoint<T, Sub, Coord>& aPoint) {
-    return stream << '(' << aPoint.x << ',' << aPoint.y << ')';
+    return stream << '(' << aPoint.x << ', ' << aPoint.y << ')';
   }
 
 };

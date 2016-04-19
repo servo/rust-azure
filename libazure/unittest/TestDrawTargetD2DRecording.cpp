@@ -11,7 +11,7 @@ using namespace mozilla::gfx;
 TestDrawTargetD2DRecording::TestDrawTargetD2DRecording()
 {
   RefPtr<DrawEventRecorder> recorder = Factory::CreateEventRecorderForFile("unittestrecording.aer");
-  
+
   RefPtr<DrawTarget> d2dDT = Factory::CreateDrawTarget(BACKEND_DIRECT2D, IntSize(DT_WIDTH, DT_HEIGHT), FORMAT_B8G8R8A8);
 
   mDT = Factory::CreateRecordingDrawTarget(recorder, d2dDT);

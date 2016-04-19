@@ -30,7 +30,7 @@ TemporaryRef<DataSourceSurface>
 FilterProcessing::ApplyBlending_SSE2(DataSourceSurface* aInput1, DataSourceSurface* aInput2,
                                      BlendMode aBlendMode)
 {
-  return ApplyBlending_SIMD<__m128i,__m128i,__m128i>(aInput1, aInput2, aBlendMode);
+  return ApplyBlending_SIMD<__m128i, __m128i, __m128i>(aInput1, aInput2, aBlendMode);
 }
 
 void
@@ -39,7 +39,7 @@ FilterProcessing::ApplyMorphologyHorizontal_SSE2(uint8_t* aSourceData, int32_t a
                                                  const IntRect& aDestRect, int32_t aRadius,
                                                  MorphologyOperator aOp)
 {
-  ApplyMorphologyHorizontal_SIMD<__m128i,__m128i>(
+  ApplyMorphologyHorizontal_SIMD<__m128i, __m128i>(
     aSourceData, aSourceStride, aDestData, aDestStride, aDestRect, aRadius, aOp);
 }
 
@@ -49,21 +49,21 @@ FilterProcessing::ApplyMorphologyVertical_SSE2(uint8_t* aSourceData, int32_t aSo
                                                  const IntRect& aDestRect, int32_t aRadius,
                                                  MorphologyOperator aOp)
 {
-  ApplyMorphologyVertical_SIMD<__m128i,__m128i>(
+  ApplyMorphologyVertical_SIMD<__m128i, __m128i>(
     aSourceData, aSourceStride, aDestData, aDestStride, aDestRect, aRadius, aOp);
 }
 
 TemporaryRef<DataSourceSurface>
 FilterProcessing::ApplyColorMatrix_SSE2(DataSourceSurface* aInput, const Matrix5x4 &aMatrix)
 {
-  return ApplyColorMatrix_SIMD<__m128i,__m128i,__m128i>(aInput, aMatrix);
+  return ApplyColorMatrix_SIMD<__m128i, __m128i, __m128i>(aInput, aMatrix);
 }
 
 void
 FilterProcessing::ApplyComposition_SSE2(DataSourceSurface* aSource, DataSourceSurface* aDest,
                                         CompositeOperator aOperator)
 {
-  return ApplyComposition_SIMD<__m128i,__m128i,__m128i>(aSource, aDest, aOperator);
+  return ApplyComposition_SIMD<__m128i, __m128i, __m128i>(aSource, aDest, aOperator);
 }
 
 void
@@ -83,7 +83,7 @@ FilterProcessing::DoPremultiplicationCalculation_SSE2(const IntSize& aSize,
                                      uint8_t* aTargetData, int32_t aTargetStride,
                                      uint8_t* aSourceData, int32_t aSourceStride)
 {
-  DoPremultiplicationCalculation_SIMD<__m128i,__m128i,__m128i>(aSize, aTargetData, aTargetStride, aSourceData, aSourceStride);
+  DoPremultiplicationCalculation_SIMD<__m128i, __m128i, __m128i>(aSize, aTargetData, aTargetStride, aSourceData, aSourceStride);
 }
 
 void
@@ -92,20 +92,20 @@ FilterProcessing::DoUnpremultiplicationCalculation_SSE2(
                                  uint8_t* aTargetData, int32_t aTargetStride,
                                  uint8_t* aSourceData, int32_t aSourceStride)
 {
-  DoUnpremultiplicationCalculation_SIMD<__m128i,__m128i>(aSize, aTargetData, aTargetStride, aSourceData, aSourceStride);
+  DoUnpremultiplicationCalculation_SIMD<__m128i, __m128i>(aSize, aTargetData, aTargetStride, aSourceData, aSourceStride);
 }
 
 TemporaryRef<DataSourceSurface>
 FilterProcessing::RenderTurbulence_SSE2(const IntSize &aSize, const Point &aOffset, const Size &aBaseFrequency,
                                         int32_t aSeed, int aNumOctaves, TurbulenceType aType, bool aStitch, const Rect &aTileRect)
 {
-  return RenderTurbulence_SIMD<__m128,__m128i,__m128i>(aSize, aOffset, aBaseFrequency, aSeed, aNumOctaves, aType, aStitch, aTileRect);
+  return RenderTurbulence_SIMD<__m128, __m128i, __m128i>(aSize, aOffset, aBaseFrequency, aSeed, aNumOctaves, aType, aStitch, aTileRect);
 }
 
 TemporaryRef<DataSourceSurface>
 FilterProcessing::ApplyArithmeticCombine_SSE2(DataSourceSurface* aInput1, DataSourceSurface* aInput2, Float aK1, Float aK2, Float aK3, Float aK4)
 {
-  return ApplyArithmeticCombine_SIMD<__m128i,__m128i,__m128i>(aInput1, aInput2, aK1, aK2, aK3, aK4);
+  return ApplyArithmeticCombine_SIMD<__m128i, __m128i, __m128i>(aInput1, aInput2, aK1, aK2, aK3, aK4);
 }
 
 } // namespace mozilla

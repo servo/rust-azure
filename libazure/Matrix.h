@@ -134,7 +134,7 @@ public:
   {
     return Matrix(aScaleX, 0.0f, 0.0f, aScaleY, 0.0f, 0.0f);
   }
-  
+
   /**
    * Similar to PreTranslate, but applies a scale to this matrix.
    */
@@ -159,7 +159,7 @@ public:
 
     return *this;
   }
-  
+
   GFX2D_API static Matrix Rotation(Float aAngle);
 
   /**

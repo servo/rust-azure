@@ -13,7 +13,7 @@
 #include "2D.h"
 
 // {97143DC6-CBC4-4DD4-A8BA-13342B0BA46D}
-DEFINE_GUID(CLSID_RadialGradientEffect, 
+DEFINE_GUID(CLSID_RadialGradientEffect,
 0x97143dc6, 0xcbc4, 0x4dd4, 0xa8, 0xba, 0x13, 0x34, 0x2b, 0xb, 0xa4, 0x6d);
 
 // Macro to keep our class nice and clean.
@@ -50,13 +50,13 @@ public:
   IFACEMETHODIMP_(ULONG) AddRef();
   IFACEMETHODIMP_(ULONG) Release();
   IFACEMETHODIMP QueryInterface(REFIID riid, void** ppOutput);
-  
+
   // ID2D1Transform
   IFACEMETHODIMP MapInputRectsToOutputRect(const D2D1_RECT_L* pInputRects,
                                            const D2D1_RECT_L* pInputOpaqueSubRects,
                                            UINT32 inputRectCount,
                                            D2D1_RECT_L* pOutputRect,
-                                           D2D1_RECT_L* pOutputOpaqueSubRect);    
+                                           D2D1_RECT_L* pOutputOpaqueSubRect);
   IFACEMETHODIMP MapOutputRectToInputRects(const D2D1_RECT_L* pOutputRect,
                                            D2D1_RECT_L* pInputRects,
                                            UINT32 inputRectCount) const;

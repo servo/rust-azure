@@ -702,7 +702,7 @@ FilterNodeD2D1::SetAttribute(uint32_t aIndex, const Color &aValue)
   case FilterType::SPOT_SPECULAR:
   case FilterType::DISTANT_SPECULAR:
     mEffect->SetValue(input, D2D1::Vector3F(aValue.r, aValue.g, aValue.b));
-	break;
+    break;
   default:
     mEffect->SetValue(input, D2D1::Vector4F(aValue.r * aValue.a, aValue.g * aValue.a, aValue.b * aValue.a, aValue.a));
   }
@@ -795,7 +795,7 @@ FilterNodeConvolveD2D1::FilterNodeConvolveD2D1(DrawTarget *aDT, ID2D1DeviceConte
   // we update the filter chain dynamically in UpdateChain().
 
   HRESULT hr;
-  
+
   hr = aDC->CreateEffect(CLSID_D2D1ConvolveMatrix, byRef(mEffect));
 
   if (FAILED(hr)) {

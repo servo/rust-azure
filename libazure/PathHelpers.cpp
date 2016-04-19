@@ -88,13 +88,13 @@ AppendRoundedRectToPath(PathBuilder* aPathBuilder,
 
   typedef struct { Float a, b; } twoFloats;
 
-  twoFloats cwCornerMults[4] = { { -1,  0 },    // cc == clockwise
+  twoFloats cwCornerMults[4] = { { -1, 0 }, // cc == clockwise
                                  {  0, -1 },
-                                 { +1,  0 },
+                                 { +1, 0 },
                                  {  0, +1 } };
-  twoFloats ccwCornerMults[4] = { { +1,  0 },   // ccw == counter-clockwise
+  twoFloats ccwCornerMults[4] = { { +1, 0 }, // ccw == counter-clockwise
                                   {  0, -1 },
-                                  { -1,  0 },
+                                  { -1, 0 },
                                   {  0, +1 } };
 
   twoFloats *cornerMults = aDrawClockwise ? cwCornerMults : ccwCornerMults;

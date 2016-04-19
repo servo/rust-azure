@@ -125,8 +125,8 @@ namespace mozilla {
  * our constructor takes two arguments and either could usefully be a move, it
  * seems silly to write out all four combinations:
  *
- *   C::C(X&  x, Y&  y) : x(x),       y(y)       { }
- *   C::C(X&  x, Y&& y) : x(x),       y(Move(y)) { }
+ *   C::C(X&  x, Y&  y) : x(x), y(y)       { }
+ *   C::C(X&  x, Y&& y) : x(x), y(Move(y)) { }
  *   C::C(X&& x, Y&  y) : x(Move(x)), y(y)       { }
  *   C::C(X&& x, Y&& y) : x(Move(x)), y(Move(y)) { }
  *

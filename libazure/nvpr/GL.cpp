@@ -299,10 +299,10 @@ GL::SetTransform(const Matrix& aTransform, UniqueId aTransformId)
   }
 
   const GLfloat matrix[] = {
-    aTransform._11,  aTransform._12,  0,  0,
-    aTransform._21,  aTransform._22,  0,  0,
-    0,               0,               1,  0,
-    aTransform._31,  aTransform._32,  0,  1
+    aTransform._11, aTransform._12, 0, 0,
+    aTransform._21, aTransform._22, 0, 0,
+    0, 0, 1, 0,
+    aTransform._31, aTransform._32, 0, 1
   };
 
   MatrixLoadfEXT(GL_MODELVIEW, matrix);

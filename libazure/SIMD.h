@@ -182,7 +182,7 @@ inline Scalaru8x16_t From8<Scalaru8x16_t>(uint8_t a, uint8_t b, uint8_t c, uint8
 template<>
 inline Scalaru8x16_t FromZero8<Scalaru8x16_t>()
 {
-  return From8<Scalaru8x16_t>(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  return From8<Scalaru8x16_t>(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 template<>
@@ -989,13 +989,13 @@ inline __m128i ShuffleHi16(__m128i aM)
 template<int8_t aIndex>
 inline __m128i Splat32(__m128i aM)
 {
-  return Shuffle32<aIndex,aIndex,aIndex,aIndex>(aM);
+  return Shuffle32<aIndex, aIndex, aIndex, aIndex>(aM);
 }
 
 template<int8_t aIndex>
 inline __m128i Splat32On8(__m128i aM)
 {
-  return Shuffle32<aIndex,aIndex,aIndex,aIndex>(aM);
+  return Shuffle32<aIndex, aIndex, aIndex, aIndex>(aM);
 }
 
 template<int8_t aIndexLo, int8_t aIndexHi>
@@ -1003,8 +1003,8 @@ inline __m128i Splat16(__m128i aM)
 {
   AssertIndex<aIndexLo>();
   AssertIndex<aIndexHi>();
-  return ShuffleHi16<aIndexHi,aIndexHi,aIndexHi,aIndexHi>(
-           ShuffleLo16<aIndexLo,aIndexLo,aIndexLo,aIndexLo>(aM));
+  return ShuffleHi16<aIndexHi, aIndexHi, aIndexHi, aIndexHi>(
+           ShuffleLo16<aIndexLo, aIndexLo, aIndexLo, aIndexLo>(aM));
 }
 
 inline __m128i
@@ -1107,7 +1107,7 @@ FastDivideBy255(__m128i m)
 {
   // v = m << 8
   __m128i v = _mm_slli_epi32(m, 8);
-  // v = v + (m + (255,255,255,255))
+  // v = v + (m + (255, 255, 255, 255))
   v = _mm_add_epi32(v, _mm_add_epi32(m, _mm_set1_epi32(255)));
   // v = v >> 16
   return _mm_srai_epi32(v, 16);

@@ -9,7 +9,7 @@ DEBUGFLAGS=-g -DDEBUG
 RELEASEFLAGS=-O3
 DEFINES=USE_SSE2
 
-ifeq ($(QMAKE_BIN),)
+ifeq ($(QMAKE_BIN), )
 QMAKE_BIN=qmake
 else
 endif
@@ -21,7 +21,7 @@ endif
 
 # ================ OS FEATURES ================
 UNAME = $(shell uname)
-ifeq ($(UNAME),Darwin)
+ifeq ($(UNAME), Darwin)
 LIBS += -framework CoreFoundation -framework ApplicationServices
 endif
 
@@ -77,8 +77,8 @@ UNITTEST_CPPSRCS_ALLPLATFORMS = \
   unittest/TestDrawTarget.cpp \
   unittest/TestPath.cpp \
   $(NULL)
-  
-ifeq ($(UNAME),Darwin)
+
+ifeq ($(UNAME), Darwin)
 LIBS += -framework CoreFoundation
 endif
 
@@ -87,13 +87,13 @@ UNITTEST_CPPSRCS = $(UNITTEST_CPPSRCS_ALLPLATFORMS)
 PERFTEST_CPPSRCS = $(PERFTEST_CPPSRCS_ALLPLATFORMS)
 RECORDBENCH_CPPSRCS = $(RECORDBENCH_CPPSRCS_ALLPLATFORMS)
 
-ifeq ($(UNAME),Linux)
+ifeq ($(UNAME), Linux)
 DEFINES += MOZ_ENABLE_FREETYPE
 INCLUDES += /usr/include/freetype2
 LIBS += -lfreetype
 MOZ2D_PLAYER2D_LIBS += -lfreetype
 endif
-ifeq ($(UNAME),Darwin)
+ifeq ($(UNAME), Darwin)
 DEFINES += MOZ_ENABLE_FREETYPE
 LIBS += -L/opt/local/lib -lfreetype
 MOZ2D_PLAYER2D_LIBS += -L/opt/local/lib -lfreetype
@@ -132,22 +132,22 @@ endif
 
 QMAKE_PARAMS += "MOZ2D_PATH=$(PWD)"
 
-CXXFLAGS += $(addprefix -I,$(INCLUDES))
-  
+CXXFLAGS += $(addprefix -I, $(INCLUDES))
+
 CPPSRCS = $(MOZ2D_CPPSRCS) $(UNITTEST_CPPSRCS) $(PERFTEST_CPPSRCS) $(RECORDBENCH_CPPSRCS)
 PRE_PERFTEST_CPPSRCS = $(MOZ2D_CPPSRCS) $(PERFTEST_CPPSRCS)
 PRE_UNITTEST_CPPSRCS = $(MOZ2D_CPPSRCS) $(UNITTEST_CPPSRCS)
 PRE_RECORDBENCH_CPPSRCS = $(MOZ2D_CPPSRCS) $(RECORDBENCH_CPPSRCS)
 
-RELEASE_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/,$(CPPSRCS))
-DEBUG_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/,$(CPPSRCS))
-RELEASE_PERFTEST_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/,$(PRE_PERFTEST_CPPSRCS))
-DEBUG_PERFTEST_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/,$(PRE_PERFTEST_CPPSRCS))
-RELEASE_UNITTEST_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/,$(PRE_UNITTEST_CPPSRCS))
-DEBUG_UNITTEST_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/,$(PRE_UNITTEST_CPPSRCS))
-RELEASE_RECORDBENCH_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/,$(PRE_RECORDBENCH_CPPSRCS))
-DEBUG_RECORDBENCH_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/,$(PRE_RECORDBENCH_CPPSRCS))
-COMPILER_DEFINES = $(addprefix -D,$(DEFINES))
+RELEASE_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/, $(CPPSRCS))
+DEBUG_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/, $(CPPSRCS))
+RELEASE_PERFTEST_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/, $(PRE_PERFTEST_CPPSRCS))
+DEBUG_PERFTEST_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/, $(PRE_PERFTEST_CPPSRCS))
+RELEASE_UNITTEST_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/, $(PRE_UNITTEST_CPPSRCS))
+DEBUG_UNITTEST_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/, $(PRE_UNITTEST_CPPSRCS))
+RELEASE_RECORDBENCH_CPPSRCS = $(addprefix $(OBJDIR_RELEASE)/, $(PRE_RECORDBENCH_CPPSRCS))
+DEBUG_RECORDBENCH_CPPSRCS = $(addprefix $(OBJDIR_DEBUG)/, $(PRE_RECORDBENCH_CPPSRCS))
+COMPILER_DEFINES = $(addprefix -D, $(DEFINES))
 
 -include $(RELEASE_CPPSRCS:.cpp=.d)
 -include $(DEBUG_CPPSRCS:.cpp=.d)
@@ -158,7 +158,7 @@ release: \
   $(OBJDIR_RELEASE)/perftest/perftest \
   $(OBJDIR_RELEASE)/recordbench/recordbench \
   $(OBJDIR_RELEASE)/.mkdir.done \
-	$(NULL)
+    $(NULL)
 
 debug: \
   $(OBJDIR_DEBUG)/libmoz2d.a \
@@ -166,48 +166,48 @@ debug: \
   $(OBJDIR_DEBUG)/perftest/perftest \
   $(OBJDIR_DEBUG)/recordbench/recordbench \
   $(OBJDIR_DEBUG)/.mkdir.done \
-	$(NULL)
+    $(NULL)
 
 player2d: $(OBJDIR_RELEASE)/player2d/player2d $(OBJDIR_DEBUG)/player2d/player2d
 
 $(OBJDIR_RELEASE)/unittest/unittest: $(RELEASE_UNITTEST_CPPSRCS:.cpp=.o)
-	$(CXX) $(RELEASE_UNITTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/unittest/unittest
+    $(CXX) $(RELEASE_UNITTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/unittest/unittest
 
 $(OBJDIR_DEBUG)/unittest/unittest: $(DEBUG_UNITTEST_CPPSRCS:.cpp=.o)
-	$(CXX) $(DEBUG_UNITTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/unittest/unittest
+    $(CXX) $(DEBUG_UNITTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/unittest/unittest
 
 $(OBJDIR_RELEASE)/perftest/perftest: $(RELEASE_PERFTEST_CPPSRCS:.cpp=.o)
-	$(CXX) $(RELEASE_PERFTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/perftest/perftest
+    $(CXX) $(RELEASE_PERFTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/perftest/perftest
 
 $(OBJDIR_DEBUG)/perftest/perftest: $(DEBUG_PERFTEST_CPPSRCS:.cpp=.o)
-	$(CXX) $(DEBUG_PERFTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/perftest/perftest
+    $(CXX) $(DEBUG_PERFTEST_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/perftest/perftest
 
 $(OBJDIR_RELEASE)/recordbench/recordbench: $(RELEASE_RECORDBENCH_CPPSRCS:.cpp=.o)
-	$(CXX) $(RELEASE_RECORDBENCH_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/recordbench/recordbench
+    $(CXX) $(RELEASE_RECORDBENCH_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_RELEASE)/recordbench/recordbench
 
 $(OBJDIR_DEBUG)/recordbench/recordbench: $(DEBUG_RECORDBENCH_CPPSRCS:.cpp=.o)
-	$(CXX) $(DEBUG_RECORDBENCH_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/recordbench/recordbench
+    $(CXX) $(DEBUG_RECORDBENCH_CPPSRCS:.cpp=.o) $(LIBS) -o $(OBJDIR_DEBUG)/recordbench/recordbench
 
 $(OBJDIR_RELEASE)/libmoz2d.a: $(RELEASE_CPPSRCS:.cpp=.o)
-	ar rcs $(OBJDIR_RELEASE)/libmoz2d.a $(RELEASE_CPPSRCS:.cpp=.o)
+    ar rcs $(OBJDIR_RELEASE)/libmoz2d.a $(RELEASE_CPPSRCS:.cpp=.o)
 
 $(OBJDIR_DEBUG)/libmoz2d.a: $(DEBUG_CPPSRCS:.cpp=.o)
-	ar rcs $(OBJDIR_DEBUG)/libmoz2d.a $(DEBUG_CPPSRCS:.cpp=.o)
+    ar rcs $(OBJDIR_DEBUG)/libmoz2d.a $(DEBUG_CPPSRCS:.cpp=.o)
 
 $(OBJDIR_RELEASE)/player2d/player2d: $(OBJDIR_RELEASE)/.mkdir.done $(OBJDIR_RELEASE)/libmoz2d.a
-	@hash $(QMAKE_BIN) || "echo Please install Qt for your platform: http://qt-project.org/"
-	export MOZ2D_PLAYER2D_LIBS="$(MOZ2D_PLAYER2D_LIBS)" && cd $(OBJDIR_RELEASE)/player2d && $(QMAKE_BIN) ../../player2d $(QMAKE_PARAMS) && make
+    @hash $(QMAKE_BIN) || "echo Please install Qt for your platform: http://qt-project.org/"
+    export MOZ2D_PLAYER2D_LIBS = "$(MOZ2D_PLAYER2D_LIBS)" && cd $(OBJDIR_RELEASE)/player2d && $(QMAKE_BIN) ../../player2d $(QMAKE_PARAMS) && make
 
 $(OBJDIR_DEBUG)/player2d/player2d: $(OBJDIR_DEBUG)/.mkdir.done $(OBJDIR_DEBUG)/libmoz2d.a
-	@hash $(QMAKE_BIN) || "echo Please install Qt for your platform: http://qt-project.org/"
-	export MOZ2D_PLAYER2D_LIBS="$(MOZ2D_PLAYER2D_LIBS)" && cd $(OBJDIR_DEBUG)/player2d && $(QMAKE_BIN) ../../player2d $(QMAKE_PARAMS) MOZ2D_DEBUG=1 && make
+    @hash $(QMAKE_BIN) || "echo Please install Qt for your platform: http://qt-project.org/"
+    export MOZ2D_PLAYER2D_LIBS = "$(MOZ2D_PLAYER2D_LIBS)" && cd $(OBJDIR_DEBUG)/player2d && $(QMAKE_BIN) ../../player2d $(QMAKE_PARAMS) MOZ2D_DEBUG=1 && make
 
 check: $(OBJDIR_RELEASE)/unittest/unittest $(OBJDIR_RELEASE)/perftest/perftest
-	$(OBJDIR_RELEASE)/unittest/unittest
-	$(OBJDIR_RELEASE)/perftest/perftest
+    $(OBJDIR_RELEASE)/unittest/unittest
+    $(OBJDIR_RELEASE)/perftest/perftest
 
 clean:
-	rm -rf $(OBJDIR_RELEASE) $(OBJDIR_DEBUG)
+    rm -rf $(OBJDIR_RELEASE) $(OBJDIR_DEBUG)
 
 
 
@@ -215,18 +215,18 @@ clean:
 # ================== IMPLICIT RULES ===========================
 
 %/.mkdir.done:
-	mkdir -p $(dir $@)/perftest
-	mkdir -p $(dir $@)/unittest
-	mkdir -p $(dir $@)/recordbench
-	mkdir -p $(dir $@)/player2d
-	mkdir -p $(dir $@)/nvpr
-	mkdir -p $@
+    mkdir -p $(dir $@)/perftest
+    mkdir -p $(dir $@)/unittest
+    mkdir -p $(dir $@)/recordbench
+    mkdir -p $(dir $@)/player2d
+    mkdir -p $(dir $@)/nvpr
+    mkdir -p $@
 
 $(OBJDIR_RELEASE)/%.o: %.cpp $(OBJDIR_RELEASE)/.mkdir.done
-	$(CXX) -c $(COMPILER_DEFINES) $(RELEASEFLAGS) $(CXXFLAGS) -o $@ $<
-	$(CXX) -MM -MT $@ $(COMPILER_DEFINES) $(RELEASEFLAGS) $(CXXFLAGS) -o $(@:.o=.d) $<
+    $(CXX) -c $(COMPILER_DEFINES) $(RELEASEFLAGS) $(CXXFLAGS) -o $@ $<
+    $(CXX) -MM -MT $@ $(COMPILER_DEFINES) $(RELEASEFLAGS) $(CXXFLAGS) -o $(@:.o=.d) $<
 
 $(OBJDIR_DEBUG)/%.o: %.cpp $(OBJDIR_DEBUG)/.mkdir.done
-	$(CXX) $(COMPILER_DEFINES) $(DEBUGFLAGS) $(CXXFLAGS) -c -o $@ $<
-	$(CXX) -MM -MT $@ $(COMPILER_DEFINES) $(DEBUGFLAGS) $(CXXFLAGS) -o $(@:.o=.d) $<
+    $(CXX) $(COMPILER_DEFINES) $(DEBUGFLAGS) $(CXXFLAGS) -c -o $@ $<
+    $(CXX) -MM -MT $@ $(COMPILER_DEFINES) $(DEBUGFLAGS) $(CXXFLAGS) -o $(@:.o=.d) $<
 

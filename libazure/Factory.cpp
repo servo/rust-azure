@@ -316,7 +316,7 @@ Factory::CreateDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFor
     // Failed
     gfxDebug() << "Failed to create DrawTarget, Type: " << int(aBackend) << " Size: " << aSize;
   }
-  
+
   return retVal.forget();
 }
 
@@ -327,10 +327,10 @@ Factory::CreateRecordingDrawTarget(DrawEventRecorder *aRecorder, DrawTarget *aDT
 }
 
 TemporaryRef<DrawTarget>
-Factory::CreateDrawTargetForData(BackendType aBackend, 
-                                 unsigned char *aData, 
-                                 const IntSize &aSize, 
-                                 int32_t aStride, 
+Factory::CreateDrawTargetForData(BackendType aBackend,
+                                 unsigned char *aData,
+                                 const IntSize &aSize,
+                                 int32_t aStride,
                                  SurfaceFormat aFormat)
 {
   if (!CheckSurfaceSize(aSize)) {

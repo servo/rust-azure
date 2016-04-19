@@ -2,21 +2,21 @@
   * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-     
+
 #ifndef MOZILLA_GFX_DRAWTARGETDUAL_H_
 #define MOZILLA_GFX_DRAWTARGETDUAL_H_
-     
+
 #include <vector>
 #include <sstream>
 
 #include "SourceSurfaceDual.h"
-     
+
 #include "2D.h"
 #include "Filters.h"
-     
+
 namespace mozilla {
 namespace gfx {
-     
+
 #define FORWARD_FUNCTION(funcName) \
   virtual void funcName() { mA->funcName(); mB->funcName(); }
 #define FORWARD_FUNCTION1(funcName, var1Type, var1Name) \
@@ -39,15 +39,15 @@ public:
   DrawTargetDual(DrawTarget *aA, DrawTarget *aB)
     : mA(aA)
     , mB(aB)
-  { 
+  {
     mFormat = aA->GetFormat();
   }
-     
+
   virtual DrawTargetType GetType() const MOZ_OVERRIDE { return mA->GetType(); }
   virtual BackendType GetBackendType() const { return mA->GetBackendType(); }
   virtual TemporaryRef<SourceSurface> Snapshot() { return new SourceSurfaceDual(mA, mB); }
   virtual IntSize GetSize() { return mA->GetSize(); }
-     
+
   FORWARD_FUNCTION(Flush)
   FORWARD_FUNCTION1(PushClip, const Path *, aPath)
   FORWARD_FUNCTION1(PushClipRect, const Rect &, aRect)
@@ -96,9 +96,9 @@ public:
   virtual void FillGlyphs(ScaledFont *aScaledFont, const GlyphBuffer &aBuffer,
                           const Pattern &aPattern, const DrawOptions &aOptions,
                           const GlyphRenderingOptions *aRenderingOptions);
-  
+
   virtual void Mask(const Pattern &aSource, const Pattern &aMask, const DrawOptions &aOptions);
-     
+
   virtual TemporaryRef<SourceSurface>
     CreateSourceSurfaceFromData(unsigned char *aData,
                                 const IntSize &aSize,
@@ -107,26 +107,26 @@ public:
   {
     return mA->CreateSourceSurfaceFromData(aData, aSize, aStride, aFormat);
   }
-     
+
   virtual TemporaryRef<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const
   {
     return mA->OptimizeSourceSurface(aSurface);
   }
-     
+
   virtual TemporaryRef<SourceSurface>
     CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const
   {
     return mA->CreateSourceSurfaceFromNativeSurface(aSurface);
   }
-     
+
   virtual TemporaryRef<DrawTarget>
     CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const;
-     
+
   virtual TemporaryRef<PathBuilder> CreatePathBuilder(FillRule aFillRule = FillRule::FILL_WINDING) const
   {
     return mA->CreatePathBuilder(aFillRule);
   }
-     
+
   virtual TemporaryRef<GradientStops>
     CreateGradientStops(GradientStop *aStops,
                         uint32_t aNumStops,
@@ -154,8 +154,8 @@ private:
   RefPtr<DrawTarget> mA;
   RefPtr<DrawTarget> mB;
 };
-     
+
 }
 }
-     
-#endif /* MOZILLA_GFX_DRAWTARGETDUAL_H_ */ 
+
+#endif /* MOZILLA_GFX_DRAWTARGETDUAL_H_ */

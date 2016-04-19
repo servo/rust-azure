@@ -3,20 +3,20 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-DEPTH		= @DEPTH@
-topsrcdir	= @top_srcdir@
-srcdir		= @srcdir@
-VPATH		=  $(srcdir) $(srcdir)/unittest
+DEPTH        = @DEPTH@
+topsrcdir    = @top_srcdir@
+srcdir        = @srcdir@
+VPATH        =  $(srcdir) $(srcdir)/unittest
 
 include $(DEPTH)/config/autoconf.mk
 
-MODULE		= gfx2d
-LIBRARY_NAME	= gfx2d
-LIBXUL_LIBRARY	= 1
-EXPORT_LIBRARY	= 1
+MODULE        = gfx2d
+LIBRARY_NAME    = gfx2d
+LIBXUL_LIBRARY    = 1
+EXPORT_LIBRARY    = 1
 
 EXPORTS_NAMESPACES = mozilla/gfx
-EXPORTS_mozilla/gfx	= \
+EXPORTS_mozilla/gfx    = \
         2D.h \
         BasePoint.h \
         BasePoint3D.h \
@@ -33,9 +33,9 @@ EXPORTS_mozilla/gfx	= \
         Types.h \
         Tools.h \
         UserData.h \
-	$(NULL)
+    $(NULL)
 
-CPPSRCS	= \
+CPPSRCS    = \
         Factory.cpp \
         Rect.cpp \
         Matrix.cpp \
@@ -61,27 +61,27 @@ GTEST_CPPSRCS = \
         TestScaling.cpp \
         $(NULL)
 
-ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
-CPPSRCS	+= \
-	   SourceSurfaceCG.cpp \
-	   DrawTargetCG.cpp \
-	   PathCG.cpp \
-	   $(NULL)
+ifeq (cocoa, $(MOZ_WIDGET_TOOLKIT))
+CPPSRCS    += \
+       SourceSurfaceCG.cpp \
+       DrawTargetCG.cpp \
+       PathCG.cpp \
+       $(NULL)
 
 CMMSRCS = \
-	   QuartzSupport.mm \
-	   $(NULL)
+       QuartzSupport.mm \
+       $(NULL)
 
-EXPORTS_mozilla/gfx	+= \
-	   QuartzSupport.h \
-	   MacIOSurface.h \
-	   $(NULL)
+EXPORTS_mozilla/gfx    += \
+       QuartzSupport.h \
+       MacIOSurface.h \
+       $(NULL)
 endif
 
 DEFINES += -DMOZ_GFX -DUSE_CAIRO -DGFX2D_INTERNAL
 
 ifdef MOZ_ENABLE_SKIA
-CPPSRCS	+= \
+CPPSRCS    += \
         SourceSurfaceSkia.cpp \
         DrawTargetSkia.cpp \
         PathSkia.cpp \
@@ -90,7 +90,7 @@ CPPSRCS	+= \
         $(NULL)
 endif
 
-ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+ifeq (cocoa, $(MOZ_WIDGET_TOOLKIT))
 ifdef MOZ_ENABLE_SKIA
 CPPSRCS += \
         ScaledFontMac.cpp \
@@ -99,8 +99,8 @@ CPPSRCS += \
 endif
 endif
 
-ifeq ($(MOZ_WIDGET_TOOLKIT),$(findstring $(MOZ_WIDGET_TOOLKIT),android gtk2 gonk qt))
-CPPSRCS	+= \
+ifeq ($(MOZ_WIDGET_TOOLKIT), $(findstring $(MOZ_WIDGET_TOOLKIT), android gtk2 gonk qt))
+CPPSRCS    += \
         ScaledFontFreetype.cpp \
         $(NULL)
 DEFINES += -DMOZ_ENABLE_FREETYPE
@@ -113,9 +113,9 @@ DEFINES += -DGFX_LOG_DEBUG -DGFX_LOG_WARNING
 endif
 
 # Are we targeting x86 or x64?  If so, build SSE2 files.
-ifneq (,$(INTEL_ARCHITECTURE))
+ifneq (, $(INTEL_ARCHITECTURE))
 # VC2005 doesn't support _mm_castsi128_ps, so SSE2 is turned off
-ifneq (1400,$(_MSC_VER))
+ifneq (1400, $(_MSC_VER))
 CPPSRCS += \
         ImageScalingSSE2.cpp \
         BlurSSE2.cpp \
@@ -124,8 +124,8 @@ DEFINES += -DUSE_SSE2
 endif
 endif
 
-ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-CPPSRCS	+= \
+ifeq ($(MOZ_WIDGET_TOOLKIT), windows)
+CPPSRCS    += \
         DrawTargetD2D.cpp \
         SourceSurfaceD2D.cpp \
         SourceSurfaceD2DTarget.cpp \
@@ -148,13 +148,13 @@ include $(topsrcdir)/ipc/chromium/chromium-config.mk
 # Due to bug 796023, we can't have -DUNICODE and -D_UNICODE; defining those
 # macros changes the type of LOGFONT to LOGFONTW instead of LOGFONTA. This
 # changes the symbol names of exported C++ functions that use LOGFONT.
-DEFINES := $(filter-out -DUNICODE -D_UNICODE,$(DEFINES))
+DEFINES := $(filter-out -DUNICODE -D_UNICODE, $(DEFINES))
 
-#ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-#CPPSRCS	+= \
+#ifeq ($(MOZ_WIDGET_TOOLKIT), cocoa)
+#CPPSRCS    += \
 #        DrawTargetCG.cpp \
 #        SourceSurfaceCG.cpp \
-#	$(NULL)
+#    $(NULL)
 #
 ## Always link with OpenGL/AGL
 #EXTRA_DSO_LDOPTS += -framework OpenGL -framework AGL -framework QuickTime -framework AppKit -framework QuartzCore
@@ -162,7 +162,7 @@ DEFINES := $(filter-out -DUNICODE -D_UNICODE,$(DEFINES))
 
 # The file uses SSE2 intrinsics, so it needs special compile flags on some
 # compilers.
-ifneq (,$(INTEL_ARCHITECTURE))
+ifneq (, $(INTEL_ARCHITECTURE))
 ifdef GNU_CC
 ImageScalingSSE2.$(OBJ_SUFFIX): CXXFLAGS+=-msse2
 BlurSSE2.$(OBJ_SUFFIX): CXXFLAGS+=-msse2

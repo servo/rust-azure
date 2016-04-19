@@ -271,7 +271,7 @@ float4 SampleBlendTextureSeparablePS_1( VS_OUTPUT In) : SV_Target
   float4 output = tex.Sample(sSampler, In.TexCoord);
   float4 background = bcktex.Sample(sBckSampler, In.TexCoord);
   if((output.a == 0) || (background.a == 0))
-	return output;
+    return output;
 
   output.rgb /= output.a;
   background.rgb /= background.a;
@@ -323,7 +323,7 @@ float4 SampleBlendTextureSeparablePS_2( VS_OUTPUT In) : SV_Target
   float4 output = tex.Sample(sSampler, In.TexCoord);
   float4 background = bcktex.Sample(sBckSampler, In.TexCoord);
   if((output.a == 0) || (background.a == 0))
-	return output;
+    return output;
 
   output.rgb /= output.a;
   background.rgb /= background.a;
@@ -346,7 +346,7 @@ float4 SampleBlendTextureSeparablePS_2( VS_OUTPUT In) : SV_Target
   } else if(blendop == 8) {
     if(output.r <= 0.5)
       retval.r = 2 * output.r * background.r;
-	else
+    else
       retval.r = Screen(background.r, 2 * output.r -1);
     if(output.g <= 0.5)
       retval.g = 2 * output.g * background.g;
@@ -400,7 +400,7 @@ float4 SampleBlendTextureNonSeparablePS( VS_OUTPUT In) : SV_Target
   float4 output = tex.Sample(sSampler, In.TexCoord);
   float4 background = bcktex.Sample(sBckSampler, In.TexCoord);
   if((output.a == 0) || (background.a == 0))
-	return output;
+    return output;
 
   output.rgb /= output.a;
   background.rgb /= background.a;
@@ -441,7 +441,7 @@ float4 SampleRadialGradientPS(VS_RADIAL_OUTPUT In, uniform sampler aSampler) : S
     //
     // A more extensive derrivation can be found in the pixman radial gradient
     // code.
- 
+
     float2 p = In.PixelCoord;
     float3 dp = float3(p - center1, radius1);
 
@@ -565,12 +565,12 @@ PS_TEXT_OUTPUT SampleTextTexturePS( VS_OUTPUT In) : SV_Target
 PS_TEXT_OUTPUT SampleTextTexturePSMasked( VS_OUTPUT In) : SV_Target
 {
     PS_TEXT_OUTPUT output;
-    
+
     float maskValue = mask.Sample(sMaskSampler, In.MaskTexCoord).a;
 
     output.color = float4(TextColor.r, TextColor.g, TextColor.b, 1.0);
     output.alpha.rgba = tex.Sample(sSampler, In.TexCoord).bgrg * TextColor.a * maskValue;
-    
+
     return output;
 };
 

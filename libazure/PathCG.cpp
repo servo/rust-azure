@@ -288,7 +288,7 @@ PathCG::StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
 }
 
 //XXX: what should these functions return for an empty path?
-// currently they return CGRectNull {inf,inf, 0, 0}
+// currently they return CGRectNull {inf, inf, 0, 0}
 Rect
 PathCG::GetBounds(const Matrix &aTransform) const
 {

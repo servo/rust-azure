@@ -2,9 +2,9 @@
   * This Source Code Form is subject to the terms of the Mozilla Public
   * License, v. 2.0. If a copy of the MPL was not distributed with this
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  
+
 #pragma once
-  
+
 #include "2D.h"
 #include "TestBase.h"
 #include "TestHelpers.h"
@@ -61,23 +61,23 @@ public:
   void ArithmeticCombine();
   void Composite();
   void GaussianBlur();
-  
+
 protected:
   TestDrawTargetBase();
-  
+
   void RefreshSnapshot();
-  
+
   void VerifyAllPixels(const mozilla::gfx::Color &aColor,
                        uint8_t aTolerance = 0);
   void VerifyPixel(const mozilla::gfx::IntPoint &aPoint,
                    const mozilla::gfx::Color &aColor,
                    uint8_t aTolerance = 0);
-  
+
   uint32_t BGRAPixelFromColor(const mozilla::gfx::Color &aColor);
-  
+
   mozilla::RefPtr<mozilla::gfx::DrawTarget> mDT;
   mozilla::RefPtr<mozilla::gfx::DataSourceSurface> mDataSnapshot;
-}; 
+};
 
 #ifdef WIN32
 IMPLEMENT_DT_TESTS(D2D, DIRECT2D, TestDrawTarget);

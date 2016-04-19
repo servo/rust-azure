@@ -28,9 +28,9 @@ typedef unsigned short GLushort; /* 2-byte unsigned */
 typedef unsigned int GLuint;   /* 4-byte unsigned */
 typedef int GLsizei;  /* 4-byte signed */
 typedef float GLfloat;  /* single precision float */
-typedef float GLclampf; /* single precision float in [0,1] */
+typedef float GLclampf; /* single precision float in [0, 1] */
 typedef double GLdouble; /* double precision float */
-typedef double GLclampd; /* double precision float in [0,1] */
+typedef double GLclampd; /* double precision float in [0, 1] */
 
 #define GL_FALSE 0
 #define GL_TRUE 1

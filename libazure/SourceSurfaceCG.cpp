@@ -262,7 +262,7 @@ DataSourceSurfaceCG::DataSourceSurfaceCG(CGImageRef aImage)
   // Get image width, height. We'll use the entire image.
   CGFloat w = CGImageGetWidth(aImage);
   CGFloat h = CGImageGetHeight(aImage);
-  CGRect rect = {{0,0},{w,h}};
+  CGRect rect = {{0, 0}, {w, h}};
 
   // Draw the image to the bitmap context. Once we draw, the memory
   // allocated for the context for rendering will then contain the

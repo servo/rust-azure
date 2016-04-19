@@ -251,7 +251,7 @@ public:
   SurfaceFormat mFormat;
   bool mHasExistingData;
   RefPtr<SourceSurface> mExistingData;
-  
+
 private:
   friend class RecordedEvent;
 
@@ -494,7 +494,7 @@ public:
   RecordedCopySurface(DrawTarget *aDT, ReferencePtr aSourceSurface,
                       const IntRect &aSourceRect, const IntPoint &aDest)
     : RecordedDrawingEvent(COPYSURFACE, aDT), mSourceSurface(aSourceSurface),
-	  mSourceRect(aSourceRect), mDest(aDest)
+      mSourceRect(aSourceRect), mDest(aDest)
   {
   }
 
@@ -585,7 +585,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "SetTransform"; }
 private:
   friend class RecordedEvent;
@@ -609,7 +609,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "DrawSurface"; }
 private:
   friend class RecordedEvent;
@@ -637,7 +637,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "DrawSurfaceWithShadow"; }
 private:
   friend class RecordedEvent;
@@ -684,12 +684,12 @@ class RecordedPathCreation : public RecordedEvent {
 public:
   MOZ_IMPLICIT RecordedPathCreation(PathRecording *aPath);
   ~RecordedPathCreation();
-  
+
   virtual void PlayEvent(Translator *aTranslator) const;
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "Path Creation"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -708,12 +708,12 @@ public:
     : RecordedEvent(PATHDESTRUCTION), mRefPtr(aPath)
   {
   }
-  
+
   virtual void PlayEvent(Translator *aTranslator) const;
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "Path Destruction"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -739,7 +739,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "SourceSurface Creation"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -766,7 +766,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "SourceSurface Destruction"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -839,7 +839,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "GradientStops Creation"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -865,7 +865,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "GradientStops Destruction"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -887,7 +887,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "Snapshot"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -918,7 +918,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "ScaledFont Creation"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 
@@ -947,7 +947,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "ScaledFont Destruction"; }
   virtual ReferencePtr GetObjectRef() const { return mRefPtr; }
 private:
@@ -972,7 +972,7 @@ public:
 
   virtual void RecordToStream(std::ostream &aStream) const;
   virtual void OutputSimpleEventInfo(std::stringstream &aStringStream) const;
-  
+
   virtual std::string GetName() const { return "MaskSurface"; }
 private:
   friend class RecordedEvent;

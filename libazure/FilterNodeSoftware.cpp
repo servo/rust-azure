@@ -1073,11 +1073,11 @@ FilterNodeBlendSoftware::Render(const IntRect& aRect)
   CopyRect(input1, target, IntRect(IntPoint(), size), IntPoint());
 
   RefPtr<DrawTarget> dt =
-	    Factory::CreateDrawTargetForData(BackendType::CAIRO,
-	                                     target->GetData(),
-	                                     target->GetSize(),
-	                                     target->Stride(),
-	                                     target->GetFormat());
+        Factory::CreateDrawTargetForData(BackendType::CAIRO,
+                                         target->GetData(),
+                                         target->GetSize(),
+                                         target->Stride(),
+                                         target->GetFormat());
 
   Rect r(0, 0, size.width, size.height);
   dt->DrawSurface(input2, r, r, DrawSurfaceOptions(), DrawOptions(1.0f, ToBlendOp(mBlendMode)));
@@ -2279,9 +2279,9 @@ ColorComponentAtPoint(const uint8_t *aData, int32_t aStride, Float x, Float y, s
   const int32_t tlx = f - tux;
   const int32_t tuy = uint32_t((y - ly) * f);
   const int32_t tly = f - tuy;
-  const uint8_t &cll = ColorComponentAtPoint(aData, aStride, lx,     ly,     bpp, c);
-  const uint8_t &cul = ColorComponentAtPoint(aData, aStride, lx + 1, ly,     bpp, c);
-  const uint8_t &clu = ColorComponentAtPoint(aData, aStride, lx,     ly + 1, bpp, c);
+  const uint8_t &cll = ColorComponentAtPoint(aData, aStride, lx, ly, bpp, c);
+  const uint8_t &cul = ColorComponentAtPoint(aData, aStride, lx + 1, ly, bpp, c);
+  const uint8_t &clu = ColorComponentAtPoint(aData, aStride, lx, ly + 1, bpp, c);
   const uint8_t &cuu = ColorComponentAtPoint(aData, aStride, lx + 1, ly + 1, bpp, c);
   return ((cll * tlx + cul * tux) * tly +
           (clu * tlx + cuu * tux) * tuy + f * f / 2) / (f * f);

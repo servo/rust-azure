@@ -68,7 +68,7 @@ TestPathBase::SegmentEndVector()
   mBuilder->LineTo(Point(10, 0));
   mBuilder->LineTo(Point(0, 0));
   mPath = mBuilder->Finish();
- 
+
   VerifyComputePointAtLength(10, Point(10, 0), Point(-1, 0));
 }
 

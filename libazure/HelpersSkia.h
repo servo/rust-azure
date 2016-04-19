@@ -143,7 +143,7 @@ StrokeOptionsToPaint(SkPaint& aPaint, const StrokeOptions &aOptions)
     }
 
     SkDashPathEffect* dash = SkDashPathEffect::Create(&pattern.front(),
-                                                      dashCount, 
+                                                      dashCount,
                                                       SkFloatToScalar(aOptions.mDashOffset));
     SkSafeUnref(aPaint.setPathEffect(dash));
   }
@@ -233,14 +233,14 @@ static inline SkColor ColorToSkColor(const Color &color, Float aAlpha)
 static inline SkRect
 RectToSkRect(const Rect& aRect)
 {
-  return SkRect::MakeXYWH(SkFloatToScalar(aRect.x), SkFloatToScalar(aRect.y), 
+  return SkRect::MakeXYWH(SkFloatToScalar(aRect.x), SkFloatToScalar(aRect.y),
                           SkFloatToScalar(aRect.width), SkFloatToScalar(aRect.height));
 }
 
 static inline SkRect
 IntRectToSkRect(const IntRect& aRect)
 {
-  return SkRect::MakeXYWH(SkIntToScalar(aRect.x), SkIntToScalar(aRect.y), 
+  return SkRect::MakeXYWH(SkIntToScalar(aRect.x), SkIntToScalar(aRect.y),
                           SkIntToScalar(aRect.width), SkIntToScalar(aRect.height));
 }
 
@@ -285,7 +285,7 @@ ExtendModeToTileMode(ExtendMode aMode)
   return SkShader::kClamp_TileMode;
 }
 
-// The following class was imported from Skia, which is under the 
+// The following class was imported from Skia, which is under the
 // following licence:
 //
 // Copyright (c) 2011 Google Inc. All rights reserved.

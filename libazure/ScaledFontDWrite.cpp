@@ -55,7 +55,7 @@ public:
     * Important! Note the key here -has- to be a pointer to an
     * ffReferenceKey object.
     */
-  virtual HRESULT STDMETHODCALLTYPE 
+  virtual HRESULT STDMETHODCALLTYPE
     CreateStreamFromKey(void const* fontFileReferenceKey,
                         UINT32 fontFileReferenceKeySize,
                         OUT IDWriteFontFileStream** fontFileStream);
@@ -77,7 +77,7 @@ public:
 
 private:
   static IDWriteFontFileLoader* mInstance;
-}; 
+};
 
 class DWriteFontFileStream : public IDWriteFontFileStream
 {
@@ -216,8 +216,8 @@ DoGrayscale(IDWriteFontFace *aDWFace, Float ppem)
 IDWriteFontFileLoader* DWriteFontFileLoader::mInstance = nullptr;
 
 HRESULT STDMETHODCALLTYPE
-DWriteFontFileLoader::CreateStreamFromKey(const void *fontFileReferenceKey, 
-                                          UINT32 fontFileReferenceKeySize, 
+DWriteFontFileLoader::CreateStreamFromKey(const void *fontFileReferenceKey,
+                                          UINT32 fontFileReferenceKeySize,
                                           IDWriteFontFileStream **fontFileStream)
 {
   if (!fontFileReferenceKey || !fontFileStream) {
@@ -225,7 +225,7 @@ DWriteFontFileLoader::CreateStreamFromKey(const void *fontFileReferenceKey,
   }
 
   const ffReferenceKey *key = static_cast<const ffReferenceKey*>(fontFileReferenceKey);
-  *fontFileStream = 
+  *fontFileStream =
     new DWriteFontFileStream(key->mData, key->mSize);
 
   if (!*fontFileStream) {
@@ -377,13 +377,13 @@ ScaledFontDWrite::GetFontFileData(FontFileDataOutput aDataCallback, void *aBaton
   UINT32 refKeySize;
   // XXX - This can currently crash for webfonts, as when we get the reference
   // key out of the file, that can be an invalid reference key for the loader
-  // we use it with. The fix to this is not obvious but it will probably 
+  // we use it with. The fix to this is not obvious but it will probably
   // have to happen inside thebes.
   file->GetReferenceKey(&referenceKey, &refKeySize);
 
   RefPtr<IDWriteFontFileLoader> loader;
   file->GetLoader(byRef(loader));
-  
+
   RefPtr<IDWriteFontFileStream> stream;
   loader->CreateStreamFromKey(referenceKey, refKeySize, byRef(stream));
 
@@ -393,7 +393,7 @@ ScaledFontDWrite::GetFontFileData(FontFileDataOutput aDataCallback, void *aBaton
     MOZ_ASSERT(false);
     return false;
   }
-  
+
   uint32_t fileSize = static_cast<uint32_t>(fileSize64);
   const void *fragmentStart;
   void *context;

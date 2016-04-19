@@ -26,7 +26,7 @@ enum FilterBackend {
 
 enum TransformFilterAtts
 {
-  ATT_TRANSFORM_MATRIX = 0,                 // Matrix
+  ATT_TRANSFORM_MATRIX = 0, // Matrix
   ATT_TRANSFORM_FILTER                      // Filter
 };
 
@@ -67,7 +67,7 @@ enum BlendFilterInputs
 
 enum MorphologyFilterAtts
 {
-  ATT_MORPHOLOGY_RADII = 0,                 // IntSize
+  ATT_MORPHOLOGY_RADII = 0, // IntSize
   ATT_MORPHOLOGY_OPERATOR                   // MorphologyOperator
 };
 
@@ -90,7 +90,7 @@ enum AlphaMode
 
 enum ColorMatrixFilterAtts
 {
-  ATT_COLOR_MATRIX_MATRIX = 0,              // Matrix5x4
+  ATT_COLOR_MATRIX_MATRIX = 0, // Matrix5x4
   ATT_COLOR_MATRIX_ALPHA_MODE               // AlphaMode
 };
 
@@ -121,9 +121,9 @@ enum TileFilterInputs
 
 enum TransferAtts
 {
-  ATT_TRANSFER_DISABLE_R = 0,               // bool
-  ATT_TRANSFER_DISABLE_G,                   // bool
-  ATT_TRANSFER_DISABLE_B,                   // bool
+  ATT_TRANSFER_DISABLE_R = 0, // bool
+  ATT_TRANSFER_DISABLE_G, // bool
+  ATT_TRANSFER_DISABLE_B, // bool
   ATT_TRANSFER_DISABLE_A                    // bool
 };
 
@@ -138,9 +138,9 @@ enum TableTransferAtts
   ATT_TABLE_TRANSFER_DISABLE_G = ATT_TRANSFER_DISABLE_G,
   ATT_TABLE_TRANSFER_DISABLE_B = ATT_TRANSFER_DISABLE_B,
   ATT_TABLE_TRANSFER_DISABLE_A = ATT_TRANSFER_DISABLE_A,
-  ATT_TABLE_TRANSFER_TABLE_R,               // Float[]
-  ATT_TABLE_TRANSFER_TABLE_G,               // Float[]
-  ATT_TABLE_TRANSFER_TABLE_B,               // Float[]
+  ATT_TABLE_TRANSFER_TABLE_R, // Float[]
+  ATT_TABLE_TRANSFER_TABLE_G, // Float[]
+  ATT_TABLE_TRANSFER_TABLE_B, // Float[]
   ATT_TABLE_TRANSFER_TABLE_A                // Float[]
 };
 
@@ -155,9 +155,9 @@ enum DiscreteTransferAtts
   ATT_DISCRETE_TRANSFER_DISABLE_G = ATT_TRANSFER_DISABLE_G,
   ATT_DISCRETE_TRANSFER_DISABLE_B = ATT_TRANSFER_DISABLE_B,
   ATT_DISCRETE_TRANSFER_DISABLE_A = ATT_TRANSFER_DISABLE_A,
-  ATT_DISCRETE_TRANSFER_TABLE_R,            // Float[]
-  ATT_DISCRETE_TRANSFER_TABLE_G,            // Float[]
-  ATT_DISCRETE_TRANSFER_TABLE_B,            // Float[]
+  ATT_DISCRETE_TRANSFER_TABLE_R, // Float[]
+  ATT_DISCRETE_TRANSFER_TABLE_G, // Float[]
+  ATT_DISCRETE_TRANSFER_TABLE_B, // Float[]
   ATT_DISCRETE_TRANSFER_TABLE_A             // Float[]
 };
 
@@ -172,13 +172,13 @@ enum LinearTransferAtts
   ATT_LINEAR_TRANSFER_DISABLE_G = ATT_TRANSFER_DISABLE_G,
   ATT_LINEAR_TRANSFER_DISABLE_B = ATT_TRANSFER_DISABLE_B,
   ATT_LINEAR_TRANSFER_DISABLE_A = ATT_TRANSFER_DISABLE_A,
-  ATT_LINEAR_TRANSFER_SLOPE_R,              // Float
-  ATT_LINEAR_TRANSFER_SLOPE_G,              // Float
-  ATT_LINEAR_TRANSFER_SLOPE_B,              // Float
-  ATT_LINEAR_TRANSFER_SLOPE_A,              // Float
-  ATT_LINEAR_TRANSFER_INTERCEPT_R,          // Float
-  ATT_LINEAR_TRANSFER_INTERCEPT_G,          // Float
-  ATT_LINEAR_TRANSFER_INTERCEPT_B,          // Float
+  ATT_LINEAR_TRANSFER_SLOPE_R, // Float
+  ATT_LINEAR_TRANSFER_SLOPE_G, // Float
+  ATT_LINEAR_TRANSFER_SLOPE_B, // Float
+  ATT_LINEAR_TRANSFER_SLOPE_A, // Float
+  ATT_LINEAR_TRANSFER_INTERCEPT_R, // Float
+  ATT_LINEAR_TRANSFER_INTERCEPT_G, // Float
+  ATT_LINEAR_TRANSFER_INTERCEPT_B, // Float
   ATT_LINEAR_TRANSFER_INTERCEPT_A           // Float
 };
 
@@ -193,17 +193,17 @@ enum GammaTransferAtts
   ATT_GAMMA_TRANSFER_DISABLE_G = ATT_TRANSFER_DISABLE_G,
   ATT_GAMMA_TRANSFER_DISABLE_B = ATT_TRANSFER_DISABLE_B,
   ATT_GAMMA_TRANSFER_DISABLE_A = ATT_TRANSFER_DISABLE_A,
-  ATT_GAMMA_TRANSFER_AMPLITUDE_R,             // Float
-  ATT_GAMMA_TRANSFER_AMPLITUDE_G,             // Float
-  ATT_GAMMA_TRANSFER_AMPLITUDE_B,             // Float
-  ATT_GAMMA_TRANSFER_AMPLITUDE_A,             // Float
-  ATT_GAMMA_TRANSFER_EXPONENT_R,              // Float
-  ATT_GAMMA_TRANSFER_EXPONENT_G,              // Float
-  ATT_GAMMA_TRANSFER_EXPONENT_B,              // Float
-  ATT_GAMMA_TRANSFER_EXPONENT_A,              // Float
-  ATT_GAMMA_TRANSFER_OFFSET_R,                // Float
-  ATT_GAMMA_TRANSFER_OFFSET_G,                // Float
-  ATT_GAMMA_TRANSFER_OFFSET_B,                // Float
+  ATT_GAMMA_TRANSFER_AMPLITUDE_R, // Float
+  ATT_GAMMA_TRANSFER_AMPLITUDE_G, // Float
+  ATT_GAMMA_TRANSFER_AMPLITUDE_B, // Float
+  ATT_GAMMA_TRANSFER_AMPLITUDE_A, // Float
+  ATT_GAMMA_TRANSFER_EXPONENT_R, // Float
+  ATT_GAMMA_TRANSFER_EXPONENT_G, // Float
+  ATT_GAMMA_TRANSFER_EXPONENT_B, // Float
+  ATT_GAMMA_TRANSFER_EXPONENT_A, // Float
+  ATT_GAMMA_TRANSFER_OFFSET_R, // Float
+  ATT_GAMMA_TRANSFER_OFFSET_G, // Float
+  ATT_GAMMA_TRANSFER_OFFSET_B, // Float
   ATT_GAMMA_TRANSFER_OFFSET_A                 // Float
 };
 
@@ -214,15 +214,15 @@ enum GammaTransferInputs
 
 enum ConvolveMatrixAtts
 {
-  ATT_CONVOLVE_MATRIX_KERNEL_SIZE = 0,      // IntSize
-  ATT_CONVOLVE_MATRIX_KERNEL_MATRIX,        // Float[]
-  ATT_CONVOLVE_MATRIX_DIVISOR,              // Float
-  ATT_CONVOLVE_MATRIX_BIAS,                 // Float
-  ATT_CONVOLVE_MATRIX_TARGET,               // IntPoint
-  ATT_CONVOLVE_MATRIX_SOURCE_RECT,          // IntRect
-  ATT_CONVOLVE_MATRIX_EDGE_MODE,            // ConvolveMatrixEdgeMode
-  ATT_CONVOLVE_MATRIX_KERNEL_UNIT_LENGTH,   // Size
-  ATT_CONVOLVE_MATRIX_PRESERVE_ALPHA,       // bool
+  ATT_CONVOLVE_MATRIX_KERNEL_SIZE = 0, // IntSize
+  ATT_CONVOLVE_MATRIX_KERNEL_MATRIX, // Float[]
+  ATT_CONVOLVE_MATRIX_DIVISOR, // Float
+  ATT_CONVOLVE_MATRIX_BIAS, // Float
+  ATT_CONVOLVE_MATRIX_TARGET, // IntPoint
+  ATT_CONVOLVE_MATRIX_SOURCE_RECT, // IntRect
+  ATT_CONVOLVE_MATRIX_EDGE_MODE, // ConvolveMatrixEdgeMode
+  ATT_CONVOLVE_MATRIX_KERNEL_UNIT_LENGTH, // Size
+  ATT_CONVOLVE_MATRIX_PRESERVE_ALPHA, // bool
 };
 
 enum ConvolveMatrixEdgeMode
@@ -239,8 +239,8 @@ enum ConvolveMatrixInputs
 
 enum DisplacementMapAtts
 {
-  ATT_DISPLACEMENT_MAP_SCALE = 0,           // Float
-  ATT_DISPLACEMENT_MAP_X_CHANNEL,           // ColorChannel
+  ATT_DISPLACEMENT_MAP_SCALE = 0, // Float
+  ATT_DISPLACEMENT_MAP_X_CHANNEL, // ColorChannel
   ATT_DISPLACEMENT_MAP_Y_CHANNEL            // ColorChannel
 };
 
@@ -260,11 +260,11 @@ enum DisplacementMapInputs
 
 enum TurbulenceAtts
 {
-  ATT_TURBULENCE_BASE_FREQUENCY = 0,        // Size
-  ATT_TURBULENCE_NUM_OCTAVES,               // uint32_t
-  ATT_TURBULENCE_SEED,                      // uint32_t
-  ATT_TURBULENCE_STITCHABLE,                // bool
-  ATT_TURBULENCE_TYPE,                      // TurbulenceType
+  ATT_TURBULENCE_BASE_FREQUENCY = 0, // Size
+  ATT_TURBULENCE_NUM_OCTAVES, // uint32_t
+  ATT_TURBULENCE_SEED, // uint32_t
+  ATT_TURBULENCE_STITCHABLE, // bool
+  ATT_TURBULENCE_TYPE, // TurbulenceType
   ATT_TURBULENCE_RECT                       // IntRect
 };
 
@@ -317,7 +317,7 @@ enum GaussianBlurInputs
 
 enum DirectionalBlurAtts
 {
-  ATT_DIRECTIONAL_BLUR_STD_DEVIATION = 0,   // Float
+  ATT_DIRECTIONAL_BLUR_STD_DEVIATION = 0, // Float
   ATT_DIRECTIONAL_BLUR_DIRECTION            // BlurDirection
 };
 
@@ -334,23 +334,23 @@ enum DirectionalBlurInputs
 
 enum LightingAtts
 {
-  ATT_POINT_LIGHT_POSITION = 0,             // Point3D
+  ATT_POINT_LIGHT_POSITION = 0, // Point3D
 
-  ATT_SPOT_LIGHT_POSITION,                  // Point3D
-  ATT_SPOT_LIGHT_POINTS_AT,                 // Point3D
-  ATT_SPOT_LIGHT_FOCUS,                     // Float
-  ATT_SPOT_LIGHT_LIMITING_CONE_ANGLE,       // Float
+  ATT_SPOT_LIGHT_POSITION, // Point3D
+  ATT_SPOT_LIGHT_POINTS_AT, // Point3D
+  ATT_SPOT_LIGHT_FOCUS, // Float
+  ATT_SPOT_LIGHT_LIMITING_CONE_ANGLE, // Float
 
-  ATT_DISTANT_LIGHT_AZIMUTH,                // Float
-  ATT_DISTANT_LIGHT_ELEVATION,              // Float
+  ATT_DISTANT_LIGHT_AZIMUTH, // Float
+  ATT_DISTANT_LIGHT_ELEVATION, // Float
 
-  ATT_LIGHTING_COLOR,                       // Color
-  ATT_LIGHTING_SURFACE_SCALE,               // Float
-  ATT_LIGHTING_KERNEL_UNIT_LENGTH,          // Size
+  ATT_LIGHTING_COLOR, // Color
+  ATT_LIGHTING_SURFACE_SCALE, // Float
+  ATT_LIGHTING_KERNEL_UNIT_LENGTH, // Size
 
-  ATT_DIFFUSE_LIGHTING_DIFFUSE_CONSTANT,    // Float
+  ATT_DIFFUSE_LIGHTING_DIFFUSE_CONSTANT, // Float
 
-  ATT_SPECULAR_LIGHTING_SPECULAR_CONSTANT,  // Float
+  ATT_SPECULAR_LIGHTING_SPECULAR_CONSTANT, // Float
   ATT_SPECULAR_LIGHTING_SPECULAR_EXPONENT   // Float
 };
 

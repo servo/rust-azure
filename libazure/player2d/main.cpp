@@ -20,6 +20,6 @@ int main(int argc, char *argv[])
     w.DefaultArrangement();
 
     Q_INIT_RESOURCE(resources);
-  
+
     return a.exec();
 }

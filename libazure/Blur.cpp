@@ -460,7 +460,7 @@ AlphaBoxBlur::Blur(uint8_t* aData)
   }
 
   // no need to do all this if not blurring or spreading
-  if (mBlurRadius != IntSize(0,0) || mSpreadRadius != IntSize(0,0)) {
+  if (mBlurRadius != IntSize(0, 0) || mSpreadRadius != IntSize(0, 0)) {
     int32_t stride = GetStride();
 
     IntSize size = GetSize();
@@ -660,7 +660,7 @@ AlphaBoxBlur::BoxBlur_C(uint8_t* aData,
   MOZ_ASSERT(size.width > 0);
 
   // Our 'left' or 'top' lobe will include the current pixel. i.e. when
-  // looking at an integral image the value of a pixel at 'x,y' is calculated
+  // looking at an integral image the value of a pixel at 'x, y' is calculated
   // using the value of the integral image values above/below that.
   aLeftLobe++;
   aTopLobe++;

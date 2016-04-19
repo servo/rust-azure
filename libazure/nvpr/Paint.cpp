@@ -196,7 +196,7 @@ PaintConfig::SetToFocalGradient(GradientStopsNVpr* aStops,
   // With the following variables inside the unit circle:
   //
   //   f = focal point, normalized to a unit-circle gradient
-  //   p = sample's [x,y] location, normalized to a unit-circle gradient
+  //   p = sample's [x, y] location, normalized to a unit-circle gradient
   //
   // A shader program can find the sample's gradient offset using the general
   // radial gradient equation:
@@ -309,7 +309,7 @@ PaintConfig::SetToRadialGradient(GradientStopsNVpr* aStops,
   //
   //   c = end circle's center
   //   r = end circle's radius
-  //   p = sample's [x,y] location
+  //   p = sample's [x, y] location
   //   A = dot(c, c) - r^2 + 2 * r - 1
   //
   // A shader program can use the this equation to find the gradient offset:
@@ -732,7 +732,7 @@ public:
   virtual void WriteColorFunction(std::ostream& aOut) const
   {
     const char* op =
-      mPaintMode == PaintConfig::MODE_RADIAL_GRAD_OUTSIDE_DISCARD_HIGH ? "<=" : ">=";
+      mPaintMode == PaintConfig::MODE_RADIAL_GRAD_OUTSIDE_DISCARD_HIGH ? "< = " : "> = ";
     aOut << "vec2 q = gl_TexCoord[" << mTextureUnit << "].st;" << endl;
     aOut << "float d = dot(" << uEndCenter << ", q) + " << uB << ";" << endl;
     aOut << "float offset = d + sqrt(d * d - " << uA << " * dot(q, q) + " << uC << ");" << endl;

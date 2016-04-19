@@ -201,14 +201,14 @@ FlattenedPath::ComputePointAtLength(Float aLength, Point *aTangent)
 
 // This function explicitly permits aControlPoints to refer to the same object
 // as either of the other arguments.
-static void 
+static void
 SplitBezier(const BezierControlPoints &aControlPoints,
             BezierControlPoints *aFirstSegmentControlPoints,
             BezierControlPoints *aSecondSegmentControlPoints,
             Float t)
 {
   MOZ_ASSERT(aSecondSegmentControlPoints);
-  
+
   *aSecondSegmentControlPoints = aControlPoints;
 
   Point cp1a = aControlPoints.mCP1 + (aControlPoints.mCP2 - aControlPoints.mCP1) * t;
@@ -324,7 +324,7 @@ FindInflectionApproximationRange(BezierControlPoints aControlPoints,
  *
  * Point d0 = a1 - a0
  * Point d1 = a2 - a1
- 
+
  * Point e0 = d1 - d0
  *
  * this avoids any multiplications and may or may not be faster than the approach take below.
@@ -447,7 +447,7 @@ FlattenBezier(const BezierControlPoints &aControlPoints,
   BezierControlPoints remainingCP = aControlPoints;
 
   // For both inflection points, calulate the range where they can be linearly
-  // approximated if they are positioned within [0,1]
+  // approximated if they are positioned within [0, 1]
   if (count > 0 && t1 >= 0 && t1 < 1.0) {
     FindInflectionApproximationRange(aControlPoints, &t1min, &t1max, t1, aTolerance);
   }

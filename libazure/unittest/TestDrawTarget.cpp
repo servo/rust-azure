@@ -453,7 +453,7 @@ TestDrawTargetBase::FillGradient()
   rawStops[0].offset = 0;
   rawStops[1].color = Color(0, 0.502f, 0, 1.0f);
   rawStops[1].offset = 1.0f;
-  
+
   RefPtr<GradientStops> stops = mDT->CreateGradientStops(rawStops, 2);
 
   mDT->FillRect(Rect(0, 0, DT_WIDTH, DT_HEIGHT), LinearGradientPattern(Point(0, 0), Point(0, DT_HEIGHT), stops));
@@ -473,7 +473,7 @@ TestDrawTargetBase::FillRadialGradient()
   rawStops[0].offset = 0;
   rawStops[1].color = Color(0, 0.502f, 0, 1.0f);
   rawStops[1].offset = 1.0f;
-  
+
   RefPtr<GradientStops> stops = mDT->CreateGradientStops(rawStops, 2);
 
   mDT->FillRect(Rect(0, 0, DT_WIDTH, DT_HEIGHT), RadialGradientPattern(Point(0, 0), Point(0, 0), 0, 1000, stops));
@@ -615,11 +615,11 @@ TestDrawTargetBase::ColorMatrix()
 
   RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::COLOR_MATRIX);
 
-  Matrix5x4 mat(-255,  1.0,  0.0, -8.0,
-                 0.0,  1.0, -6.0, -2.0,
-                 0.33, 0.0,  0.0,  5.0,
-                 25.0, 0.0,  0.0,  0.0,
-                 0.0,  0.1,  0.5,  0.1);
+  Matrix5x4 mat(-255, 1.0, 0.0, -8.0,
+                 0.0, 1.0, -6.0, -2.0,
+                 0.33, 0.0, 0.0, 5.0,
+                 25.0, 0.0, 0.0, 0.0,
+                 0.0, 0.1, 0.5, 0.1);
 
   filter->SetAttribute(ATT_COLOR_MATRIX_MATRIX, mat);
   filter->SetAttribute(ATT_COLOR_MATRIX_ALPHA_MODE, (uint32_t)ALPHA_MODE_STRAIGHT);
@@ -1315,8 +1315,8 @@ TestDrawTargetBase::VerifyAllPixels(const Color &aColor,
             abs(actr - expr) > aTolerance ||
             abs(acta - expa) > aTolerance) {
           message << "Verify Pixel (" << x << "x" << y << ") Failed."
-            " Expected (" << expr << "," << expg << "," << expb << "," << expa << ") "
-            " Got (" << actr << "," << actg << "," << actb << "," << acta << ")\n";
+            " Expected (" << expr << ", " << expg << ", " << expb << ", " << expa << ") "
+            " Got (" << actr << ", " << actg << ", " << actb << ", " << acta << ")\n";
 
           LogMessage(message.str());
           LogMessage("VerifyAllPixels Failed\n");
@@ -1353,8 +1353,8 @@ TestDrawTargetBase::VerifyPixel(const IntPoint &aPoint, const mozilla::gfx::Colo
         abs(actr - expr) > aTolerance ||
         abs(acta - expa) > aTolerance) {
       message << "Verify Pixel (" << aPoint.x << "x" << aPoint.y << ") Failed."
-        " Expected (" << expr << "," << expg << "," << expb << "," << expa << ") "
-        " Got (" << actr << "," << actg << "," << actb << "," << acta << ")\n";
+        " Expected (" << expr << ", " << expg << ", " << expb << ", " << expa << ") "
+        " Got (" << actr << ", " << actg << ", " << actb << ", " << acta << ")\n";
 
       LogMessage(message.str());
       mTestFailed = true;

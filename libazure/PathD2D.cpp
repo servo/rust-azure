@@ -346,9 +346,9 @@ PathD2D::TransformedCopyToBuilder(const Matrix &aTransform, FillRule aFillRule) 
   }
 
   RefPtr<PathBuilderD2D> pathBuilder = new PathBuilderD2D(sink, path, mFillRule);
-  
+
   pathBuilder->mCurrentPoint = aTransform * mEndPoint;
-  
+
   if (mEndedActive) {
     pathBuilder->mFigureActive = true;
   }

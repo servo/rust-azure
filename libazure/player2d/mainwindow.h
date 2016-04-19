@@ -21,7 +21,7 @@ class BackendSwitch : public QAction
 {
   Q_OBJECT
 public:
-  BackendSwitch(const QString &aName, mozilla::gfx::BackendType aType, 
+  BackendSwitch(const QString &aName, mozilla::gfx::BackendType aType,
                 bool aSimulation, QObject *aParent)
     : QAction(aName, aParent)
     , mType(aType)
@@ -41,7 +41,7 @@ private:
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
-    
+
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();

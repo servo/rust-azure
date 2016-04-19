@@ -69,7 +69,7 @@ public:
     , mEndPoint(aEndPoint)
     , mFillRule(aFillRule)
   {}
-  
+
   virtual BackendType GetBackendType() const { return BackendType::DIRECT2D; }
 
   virtual TemporaryRef<PathBuilder> CopyToBuilder(FillRule aFillRule = FillRule::FILL_WINDING) const;

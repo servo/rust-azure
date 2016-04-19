@@ -31,11 +31,11 @@ typedef CFTypeRef IOSurfacePtr;
 typedef IOSurfacePtr (*IOSurfaceCreateFunc) (CFDictionaryRef properties);
 typedef IOSurfacePtr (*IOSurfaceLookupFunc) (uint32_t io_surface_id);
 typedef IOSurfaceID (*IOSurfaceGetIDFunc) (CFTypeRef io_surface);
-typedef IOReturn (*IOSurfaceLockFunc) (CFTypeRef io_surface, 
-                                       uint32_t options, 
+typedef IOReturn (*IOSurfaceLockFunc) (CFTypeRef io_surface,
+                                       uint32_t options,
                                        uint32_t *seed);
-typedef IOReturn (*IOSurfaceUnlockFunc) (CFTypeRef io_surface, 
-                                         uint32_t options, 
+typedef IOReturn (*IOSurfaceUnlockFunc) (CFTypeRef io_surface,
+                                         uint32_t options,
                                          uint32_t *seed);
 typedef void* (*IOSurfaceGetBaseAddressFunc) (CFTypeRef io_surface);
 typedef size_t (*IOSurfaceGetWidthFunc) (IOSurfacePtr io_surface);
@@ -55,11 +55,11 @@ typedef IOSurfacePtr (*IOSurfaceContextGetSurfaceFunc)(CGContextRef ref);
 
 #define GET_CONST(const_name) \
   ((CFStringRef*) dlsym(sIOSurfaceFramework, const_name))
-#define GET_IOSYM(dest,sym_name) \
+#define GET_IOSYM(dest, sym_name) \
   (typeof(dest)) dlsym(sIOSurfaceFramework, sym_name)
-#define GET_CGLSYM(dest,sym_name) \
+#define GET_CGLSYM(dest, sym_name) \
   (typeof(dest)) dlsym(sOpenGLFramework, sym_name)
-#define GET_CGSYM(dest,sym_name) \
+#define GET_CGSYM(dest, sym_name) \
   (typeof(dest)) dlsym(sCoreGraphicsFramework, sym_name)
 
 class MacIOSurfaceLib: public MacIOSurface {
@@ -96,9 +96,9 @@ public:
   static size_t       IOSurfaceGetWidth(IOSurfacePtr aIOSurfacePtr);
   static size_t       IOSurfaceGetHeight(IOSurfacePtr aIOSurfacePtr);
   static size_t       IOSurfaceGetBytesPerRow(IOSurfacePtr aIOSurfacePtr);
-  static IOReturn     IOSurfaceLock(IOSurfacePtr aIOSurfacePtr, 
+  static IOReturn     IOSurfaceLock(IOSurfacePtr aIOSurfacePtr,
                                     uint32_t options, uint32_t *seed);
-  static IOReturn     IOSurfaceUnlock(IOSurfacePtr aIOSurfacePtr, 
+  static IOReturn     IOSurfaceUnlock(IOSurfacePtr aIOSurfacePtr,
                                       uint32_t options, uint32_t *seed);
   static CGLError     CGLTexImageIOSurface2D(CGLContextObj ctxt,
                              GLenum target, GLenum internalFormat,
@@ -189,12 +189,12 @@ size_t MacIOSurfaceLib::IOSurfaceGetBytesPerRow(IOSurfacePtr aIOSurfacePtr) {
   return sBytesPerRow(aIOSurfacePtr);
 }
 
-IOReturn MacIOSurfaceLib::IOSurfaceLock(IOSurfacePtr aIOSurfacePtr, 
+IOReturn MacIOSurfaceLib::IOSurfaceLock(IOSurfacePtr aIOSurfacePtr,
                                        uint32_t options, uint32_t *seed) {
   return sLock(aIOSurfacePtr, options, seed);
 }
 
-IOReturn MacIOSurfaceLib::IOSurfaceUnlock(IOSurfacePtr aIOSurfacePtr, 
+IOReturn MacIOSurfaceLib::IOSurfaceUnlock(IOSurfacePtr aIOSurfacePtr,
                                          uint32_t options, uint32_t *seed) {
   return sUnlock(aIOSurfacePtr, options, seed);
 }
@@ -240,7 +240,7 @@ CFStringRef MacIOSurfaceLib::GetIOConst(const char* symbole) {
 void MacIOSurfaceLib::LoadLibrary() {
   if (isLoaded) {
     return;
-  } 
+  }
   isLoaded = true;
   sIOSurfaceFramework = dlopen(IOSURFACE_FRAMEWORK_PATH,
                             RTLD_LAZY | RTLD_LOCAL);
@@ -268,7 +268,7 @@ void MacIOSurfaceLib::LoadLibrary() {
   kPropBytesPerRow = GetIOConst("kIOSurfaceBytesPerRow");
   kPropIsGlobal = GetIOConst("kIOSurfaceIsGlobal");
   sCreate = GET_IOSYM(sCreate, "IOSurfaceCreate");
-  sGetID  = GET_IOSYM(sGetID,  "IOSurfaceGetID");
+  sGetID  = GET_IOSYM(sGetID, "IOSurfaceGetID");
   sWidth = GET_IOSYM(sWidth, "IOSurfaceGetWidth");
   sHeight = GET_IOSYM(sHeight, "IOSurfaceGetHeight");
   sBytesPerRow = GET_IOSYM(sBytesPerRow, "IOSurfaceGetBytesPerRow");
@@ -332,10 +332,10 @@ TemporaryRef<MacIOSurface> MacIOSurface::CreateIOSurface(int aWidth, int aHeight
   ::CFDictionaryAddValue(props, MacIOSurfaceLib::kPropHeight,
                                 cfHeight);
   ::CFRelease(cfHeight);
-  ::CFDictionaryAddValue(props, MacIOSurfaceLib::kPropBytesPerElem, 
+  ::CFDictionaryAddValue(props, MacIOSurfaceLib::kPropBytesPerElem,
                                 cfBytesPerElem);
   ::CFRelease(cfBytesPerElem);
-  ::CFDictionaryAddValue(props, MacIOSurfaceLib::kPropIsGlobal, 
+  ::CFDictionaryAddValue(props, MacIOSurfaceLib::kPropIsGlobal,
                                 kCFBooleanTrue);
 
   IOSurfacePtr surfaceRef = MacIOSurfaceLib::IOSurfaceCreate(props);
@@ -354,7 +354,7 @@ TemporaryRef<MacIOSurface> MacIOSurface::CreateIOSurface(int aWidth, int aHeight
 }
 
 TemporaryRef<MacIOSurface> MacIOSurface::LookupSurface(IOSurfaceID aIOSurfaceID,
-                                                       double aContentsScaleFactor) { 
+                                                       double aContentsScaleFactor) {
   if (!MacIOSurfaceLib::isInit() || aContentsScaleFactor <= 0)
     return nullptr;
 
@@ -370,11 +370,11 @@ TemporaryRef<MacIOSurface> MacIOSurface::LookupSurface(IOSurfaceID aIOSurfaceID,
   return ioSurface.forget();
 }
 
-IOSurfaceID MacIOSurface::GetIOSurfaceID() { 
+IOSurfaceID MacIOSurface::GetIOSurfaceID() {
   return MacIOSurfaceLib::IOSurfaceGetID(mIOSurfacePtr);
 }
 
-void* MacIOSurface::GetBaseAddress() { 
+void* MacIOSurface::GetBaseAddress() {
   return MacIOSurfaceLib::IOSurfaceGetBaseAddress(mIOSurfacePtr);
 }
 
@@ -388,7 +388,7 @@ size_t MacIOSurface::GetHeight() {
   return MacIOSurfaceLib::IOSurfaceGetHeight(mIOSurfacePtr) / intScaleFactor;
 }
 
-size_t MacIOSurface::GetBytesPerRow() { 
+size_t MacIOSurface::GetBytesPerRow() {
   return MacIOSurfaceLib::IOSurfaceGetBytesPerRow(mIOSurfacePtr);
 }
 
@@ -429,9 +429,9 @@ MacIOSurface::GetAsSurface() {
   return surf.forget();
 }
 
-CGLError 
+CGLError
 MacIOSurface::CGLTexImageIOSurface2D(void *c,
-                                    GLenum internalFormat, GLenum format, 
+                                    GLenum internalFormat, GLenum format,
                                     GLenum type, GLuint plane)
 {
   NSOpenGLContext *ctxt = static_cast<NSOpenGLContext*>(c);
@@ -571,7 +571,7 @@ nsresult nsCARenderer::SetupRenderer(void *aCALayer, int aWidth, int aHeight,
   }
   ::CGLDestroyPixelFormat(format);
 
-  CARenderer* caRenderer = [[CARenderer rendererWithCGLContext:mOpenGLContext 
+  CARenderer* caRenderer = [[CARenderer rendererWithCGLContext:mOpenGLContext
                                                        options:nil] retain];
   if (caRenderer == nil) {
     mUnsupportedWidth = aWidth;
@@ -822,7 +822,7 @@ IOSurfaceID nsCARenderer::GetIOSurfaceID() {
   return mIOSurface->GetIOSurfaceID();
 }
 
-nsresult nsCARenderer::Render(int aWidth, int aHeight, 
+nsresult nsCARenderer::Render(int aWidth, int aHeight,
                               double aContentsScaleFactor,
                               CGImageRef *aOutCGImage) {
   if (!aOutCGImage && !mIOSurface) {
@@ -891,7 +891,7 @@ nsresult nsCARenderer::Render(int aWidth, int aHeight,
   [CATransaction commit];
   double caTime = ::CACurrentMediaTime();
   [caRenderer beginFrameAtTime:caTime timeStamp:nullptr];
-  [caRenderer addUpdateRect:CGRectMake(0,0, aWidth * intScaleFactor,
+  [caRenderer addUpdateRect:CGRectMake(0, 0, aWidth * intScaleFactor,
                                        aHeight * intScaleFactor)];
   [caRenderer render];
   [caRenderer endFrame];
@@ -920,8 +920,8 @@ nsresult nsCARenderer::Render(int aWidth, int aHeight,
   return NS_OK;
 }
 
-nsresult nsCARenderer::DrawSurfaceToCGContext(CGContextRef aContext, 
-                                              MacIOSurface *surf, 
+nsresult nsCARenderer::DrawSurfaceToCGContext(CGContextRef aContext,
+                                              MacIOSurface *surf,
                                               CGColorSpaceRef aColorSpace,
                                               int aX, int aY,
                                               size_t aWidth, size_t aHeight) {
@@ -932,9 +932,9 @@ nsresult nsCARenderer::DrawSurfaceToCGContext(CGContextRef aContext,
 
   // We get rendering glitches if we use a width/height that falls
   // outside of the IOSurface.
-  if (aWidth + aX > ioWidth) 
+  if (aWidth + aX > ioWidth)
     aWidth = ioWidth - aX;
-  if (aHeight + aY > ioHeight) 
+  if (aHeight + aY > ioHeight)
     aHeight = ioHeight - aY;
 
   if (aX < 0 || aX >= ioWidth ||
@@ -947,8 +947,8 @@ nsresult nsCARenderer::DrawSurfaceToCGContext(CGContextRef aContext,
   double scaleFactor = surf->GetContentsScaleFactor();
   size_t intScaleFactor = ceil(surf->GetContentsScaleFactor());
   CGDataProviderRef dataProvider = ::CGDataProviderCreateWithData(ioData,
-                                      ioData, ioHeight*intScaleFactor*(bytesPerRow)*4, 
-                                      nullptr); //No release callback 
+                                      ioData, ioHeight*intScaleFactor*(bytesPerRow)*4,
+                                      nullptr); //No release callback
   if (!dataProvider) {
     surf->Unlock();
     return NS_ERROR_FAILURE;
@@ -975,11 +975,11 @@ nsresult nsCARenderer::DrawSurfaceToCGContext(CGContextRef aContext,
   }
 
   ::CGContextScaleCTM(aContext, 1.0f, -1.0f);
-  ::CGContextDrawImage(aContext, 
+  ::CGContextDrawImage(aContext,
                        CGRectMake(aX * scaleFactor,
-                                  (-(CGFloat)aY - (CGFloat)aHeight) * scaleFactor, 
+                                  (-(CGFloat)aY - (CGFloat)aHeight) * scaleFactor,
                                   aWidth * scaleFactor,
-                                  aHeight * scaleFactor), 
+                                  aHeight * scaleFactor),
                        subImage);
 
   ::CGImageRelease(subImage);
@@ -1013,8 +1013,8 @@ void nsCARenderer::SaveToDisk(MacIOSurface *surf) {
   size_t ioHeight = surf->GetHeight();
   void* ioData = surf->GetBaseAddress();
   CGDataProviderRef dataProvider = ::CGDataProviderCreateWithData(ioData,
-                                      ioData, ioHeight*(bytesPerRow)*4, 
-                                      nullptr); //No release callback 
+                                      ioData, ioHeight*(bytesPerRow)*4,
+                                      nullptr); //No release callback
   if (!dataProvider) {
     surf->Unlock();
     return;

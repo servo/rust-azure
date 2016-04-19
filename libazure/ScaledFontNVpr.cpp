@@ -47,7 +47,7 @@ ScaledFontNVpr::Create(const FontOptions* aFont, GLfloat aSize)
   return new ScaledFontNVpr(font, aSize);
 }
 
-TemporaryRef<ScaledFontNVpr> 
+TemporaryRef<ScaledFontNVpr>
 ScaledFontNVpr::Create(const uint8_t* aData, uint32_t aFileSize,
                        uint32_t aIndex, GLfloat aSize)
 {

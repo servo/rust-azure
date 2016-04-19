@@ -137,14 +137,14 @@ FilterProcessing::ApplyMorphologyVertical_Scalar(uint8_t* aSourceData, int32_t a
 TemporaryRef<DataSourceSurface>
 FilterProcessing::ApplyColorMatrix_Scalar(DataSourceSurface* aInput, const Matrix5x4 &aMatrix)
 {
-  return ApplyColorMatrix_SIMD<simd::Scalari32x4_t,simd::Scalari16x8_t,simd::Scalaru8x16_t>(aInput, aMatrix);
+  return ApplyColorMatrix_SIMD<simd::Scalari32x4_t, simd::Scalari16x8_t, simd::Scalaru8x16_t>(aInput, aMatrix);
 }
 
 void
 FilterProcessing::ApplyComposition_Scalar(DataSourceSurface* aSource, DataSourceSurface* aDest,
                                           CompositeOperator aOperator)
 {
-  return ApplyComposition_SIMD<simd::Scalari32x4_t,simd::Scalaru16x8_t,simd::Scalaru8x16_t>(aSource, aDest, aOperator);
+  return ApplyComposition_SIMD<simd::Scalari32x4_t, simd::Scalaru16x8_t, simd::Scalaru8x16_t>(aSource, aDest, aOperator);
 }
 
 void
@@ -230,14 +230,14 @@ TemporaryRef<DataSourceSurface>
 FilterProcessing::RenderTurbulence_Scalar(const IntSize &aSize, const Point &aOffset, const Size &aBaseFrequency,
                                           int32_t aSeed, int aNumOctaves, TurbulenceType aType, bool aStitch, const Rect &aTileRect)
 {
-   return RenderTurbulence_SIMD<simd::Scalarf32x4_t,simd::Scalari32x4_t,simd::Scalaru8x16_t>(
+   return RenderTurbulence_SIMD<simd::Scalarf32x4_t, simd::Scalari32x4_t, simd::Scalaru8x16_t>(
      aSize, aOffset, aBaseFrequency, aSeed, aNumOctaves, aType, aStitch, aTileRect);
 }
 
 TemporaryRef<DataSourceSurface>
 FilterProcessing::ApplyArithmeticCombine_Scalar(DataSourceSurface* aInput1, DataSourceSurface* aInput2, Float aK1, Float aK2, Float aK3, Float aK4)
 {
-  return ApplyArithmeticCombine_SIMD<simd::Scalari32x4_t,simd::Scalari16x8_t,simd::Scalaru8x16_t>(aInput1, aInput2, aK1, aK2, aK3, aK4);
+  return ApplyArithmeticCombine_SIMD<simd::Scalari32x4_t, simd::Scalari16x8_t, simd::Scalaru8x16_t>(aInput1, aInput2, aK1, aK2, aK3, aK4);
 }
 
 } // namespace mozilla

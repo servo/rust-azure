@@ -20,6 +20,6 @@ MOZ2D_CPPSRCS += \
 
 UNITTEST_CPPSRCS += \
   $(NULL)
-  
+
 PERFTEST_CPPSRCS += \
   $(NULL)

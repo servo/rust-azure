@@ -227,15 +227,15 @@ void ConvolveVertically(const ConvolutionFilter1D::Fixed* filter_values,
     int accum[4] = {0};
     for (int filter_y = 0; filter_y < filter_length; filter_y++) {
       ConvolutionFilter1D::Fixed cur_filter = filter_values[filter_y];
-      accum[0] += cur_filter 
-	* source_data_rows[filter_y][byte_offset + R_OFFSET_IDX];
-      accum[1] += cur_filter 
-	* source_data_rows[filter_y][byte_offset + G_OFFSET_IDX];
-      accum[2] += cur_filter 
-	* source_data_rows[filter_y][byte_offset + B_OFFSET_IDX];
+      accum[0] += cur_filter
+    * source_data_rows[filter_y][byte_offset + R_OFFSET_IDX];
+      accum[1] += cur_filter
+    * source_data_rows[filter_y][byte_offset + G_OFFSET_IDX];
+      accum[2] += cur_filter
+    * source_data_rows[filter_y][byte_offset + B_OFFSET_IDX];
       if (has_alpha)
-        accum[3] += cur_filter 
-	  * source_data_rows[filter_y][byte_offset + A_OFFSET_IDX];
+        accum[3] += cur_filter
+      * source_data_rows[filter_y][byte_offset + A_OFFSET_IDX];
     }
 
     // Bring this value back in range. All of the filter scaling factors

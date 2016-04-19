@@ -201,7 +201,7 @@ ImageHalfScaler::HalfImage2D_SSE2(uint8_t *aSource, int32_t aSourceStride,
     // Take care of the final pixels, we know there's an even number of pixels
     // in the source rectangle. We use a 2x2 'simd' implementation for this.
     //
-    // Potentially we only have to do this in the last row since overflowing 
+    // Potentially we only have to do this in the last row since overflowing
     // 8 pixels in an earlier row would appear to be harmless as it doesn't
     // touch invalid memory. Even when reading and writing to the same surface.
     // in practice we only do this when doing an additional downscale pass, and

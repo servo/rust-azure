@@ -31,7 +31,7 @@ using namespace std;
 int
 main()
 {
-  TestObject tests[] = 
+  TestObject tests[] =
   {
     { new SanityChecks(), "Sanity Checks" },
 #ifdef WIN32
@@ -69,15 +69,15 @@ main()
       fileStream.open(fileName.c_str(), mode);
 
       if (!sGroupInitialized[group]) {
-        fileStream.write(",", 1);
+        fileStream.write(", ", 1);
         for(unsigned int c = 0; c < tests[i].test->mTests.size(); c++) {
           fileStream.write(tests[i].test->mTests[c].name.c_str(), tests[i].test->mTests[c].name.size());
-          fileStream.write(",", 1);
+          fileStream.write(", ", 1);
         }
         fileStream.write("\n", 1);
       }
       fileStream.write(tests[i].name.c_str(), tests[i].name.size());
-      fileStream.write(",", 1);
+      fileStream.write(", ", 1);
       sGroupInitialized[group] = true;
     }
 

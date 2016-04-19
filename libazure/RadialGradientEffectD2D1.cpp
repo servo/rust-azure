@@ -74,7 +74,7 @@ IFACEMETHODIMP
 RadialGradientEffectD2D1::Initialize(ID2D1EffectContext* pContextInternal, ID2D1TransformGraph* pTransformGraph)
 {
   HRESULT hr;
-  
+
   hr = pContextInternal->LoadPixelShader(GUID_SampleRadialGradientPS, SampleRadialGradientPS, sizeof(SampleRadialGradientPS));
 
   if (FAILED(hr)) {
@@ -119,9 +119,9 @@ RadialGradientEffectD2D1::PrepareForRender(D2D1_CHANGE_TYPE changeType)
   D2D1_POINT_2F dc = D2D1::Point2F(mCenter2.x - mCenter1.x, mCenter2.y - mCenter2.y);
   float dr = mRadius2 - mRadius1;
   float A = dc.x * dc.x + dc.y * dc.y - dr * dr;
- 
+
   HRESULT hr;
-  
+
   if (A == 0) {
     hr = mDrawInfo->SetPixelShader(GUID_SampleRadialGradientA0PS);
   } else {
@@ -344,7 +344,7 @@ RadialGradientEffectD2D1::CreateGradientTexture()
     }
 
     float interp;
-    
+
     if (nextColorPos != prevColorPos) {
       interp = (pos - prevColorPos) / (nextColorPos - prevColorPos);
     } else {

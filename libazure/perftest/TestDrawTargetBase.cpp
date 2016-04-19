@@ -307,7 +307,7 @@ TestDrawTargetBase::StrokeCurveThin()
     mDT->Stroke(path, ColorPattern(Color(0, 0, 0, 1)), StrokeOptions(1.0f));
   }
   Flush();
-}  
+}
 
 void
 TestDrawTargetBase::StrokeCurveThinUncached()
@@ -320,7 +320,7 @@ TestDrawTargetBase::StrokeCurveThinUncached()
     mDT->Stroke(path, ColorPattern(Color(0, 0, 0, 1)), StrokeOptions(1.0f));
   }
   Flush();
-}  
+}
 
 void
 TestDrawTargetBase::StrokeCurveThick()

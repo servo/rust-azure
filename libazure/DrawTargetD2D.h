@@ -118,7 +118,7 @@ public:
 
   virtual TemporaryRef<SourceSurface>
     CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const;
-  
+
   virtual TemporaryRef<DrawTarget>
     CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const;
 
@@ -265,7 +265,7 @@ private:
   // Careful here, RAII will not ensure destruction of the RefPtrs.
   RefPtr<ID2D1Layer> mCachedLayers[kLayerCacheSize];
   uint32_t mCurrentCachedLayer;
-  
+
   // The latest snapshot of this surface. This needs to be told when this
   // target is modified. We keep it alive as a cache.
   RefPtr<SourceSurfaceD2DTarget> mSnapshot;

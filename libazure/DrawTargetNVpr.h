@@ -147,7 +147,7 @@ public:
 
   virtual TemporaryRef<SourceSurface>
     CreateSourceSurfaceFromNativeSurface(const NativeSurface& aSurface) const;
-  
+
   virtual TemporaryRef<DrawTarget>
     CreateSimilarDrawTarget(const IntSize& aSize, SurfaceFormat aFormat) const;
 

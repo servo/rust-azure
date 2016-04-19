@@ -88,8 +88,8 @@ else:unix {
     LIBS += -L$$MOZ2D_PATH/debug -lmoz2d $$(MOZ2D_PLAYER2D_LIBS)
   }
 
-  !macx: GROUP_START = -Wl,--start-group
-  !macx: GROUP_END = -Wl,--end-group
+  !macx: GROUP_START = -Wl, --start-group
+  !macx: GROUP_END = -Wl, --end-group
   !isEmpty(MOZ2D_SKIA) {
     LIBS += -L$$MOZ2D_SKIA/out/$$CONFIG_PREFIX/ $$GROUP_START -lskia_images -lskia_effects -lskia_sfnt -lskia_utils -lskia_core -lskia_skgpu -lskia_opts -lskia_opts_ssse3 -lskia_ports -lfreetype -lfontconfig -lGL $$GROUP_END
   }

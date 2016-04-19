@@ -174,7 +174,7 @@ ScaledFontBase::SetCairoScaledFont(cairo_scaled_font_t* font)
 
   if (font == mScaledFont)
     return;
- 
+
   if (mScaledFont)
     cairo_scaled_font_destroy(mScaledFont);
 
@@ -187,14 +187,14 @@ ScaledFontBase::InitScaledFontFromFace(cairo_font_face_t* aFace)
 {
   cairo_matrix_t sizeMatrix;
   cairo_matrix_t identityMatrix;
-  
+
   cairo_matrix_init_scale(&sizeMatrix, mSize, mSize);
   cairo_matrix_init_identity(&identityMatrix);
 
   cairo_font_options_t *fontOptions = cairo_font_options_create();
-  
+
   mScaledFont = cairo_scaled_font_create(aFace, &sizeMatrix, &identityMatrix, fontOptions);
-  
+
   cairo_font_options_destroy(fontOptions);
 }
 #endif

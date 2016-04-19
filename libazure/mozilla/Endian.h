@@ -11,7 +11,7 @@
  * reading and writing 16-, 32-, and 64-bit signed and unsigned integers
  * in their respective endianness.  The naming scheme is:
  *
- * {Little,Big}Endian::{read,write}{Uint,Int}<bitsize>
+ * {Little, Big}Endian::{read, write}{Uint, Int}<bitsize>
  *
  * For instance, LittleEndian::readInt32 will read a 32-bit signed
  * integer from memory in little endian format.  Similarly,
@@ -21,12 +21,12 @@
  * The class NativeEndian exposes methods for conversion of existing
  * data to and from the native endianness.  These methods are intended
  * for cases where data needs to be transferred, serialized, etc.
- * swap{To,From}{Little,Big}Endian byteswap a single value if necessary.
+ * swap{To, From}{Little, Big}Endian byteswap a single value if necessary.
  * Bulk conversion functions are also provided which optimize the
  * no-conversion-needed case:
  *
- * - copyAndSwap{To,From}{Little,Big}Endian;
- * - swap{To,From}{Little,Big}EndianInPlace.
+ * - copyAndSwap{To, From}{Little, Big}Endian;
+ * - swap{To, From}{Little, Big}EndianInPlace.
  *
  * The *From* variants are intended to be used for reading data and the
  * *To* variants for writing data.

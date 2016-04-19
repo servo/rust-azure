@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/icons">
+    <qresource prefix = "/icons">
         <file>icons/zoom_best_fit.ico</file>
         <file>icons/zoom_in.ico</file>
         <file>icons/zoom_out.ico</file>

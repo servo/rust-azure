@@ -24,7 +24,7 @@
 // thing we need from windows.h, we just declare it here directly.
 // Note: the function's documented signature is
 //  WINBASEAPI void WINAPI OutputDebugStringA(LPCSTR lpOutputString)
-// but if we don't include windows.h, the macros WINBASEAPI, WINAPI, and 
+// but if we don't include windows.h, the macros WINBASEAPI, WINAPI, and
 // LPCSTR are not defined, so we need to replace them with their expansions.
 extern "C" __declspec(dllimport) void __stdcall OutputDebugStringA(const char* lpOutputString);
 #endif
@@ -145,7 +145,7 @@ public:
     { mMessage << "Point" << aPoint; return *this; }
   template <typename T, typename Sub>
   Log &operator <<(const BaseSize<T, Sub>& aSize)
-    { mMessage << "Size(" << aSize.width << "," << aSize.height << ")"; return *this; }
+    { mMessage << "Size(" << aSize.width << ", " << aSize.height << ")"; return *this; }
   template <typename T, typename Sub, typename Point, typename SizeT, typename Margin>
   Log &operator <<(const BaseRect<T, Sub, Point, SizeT, Margin>& aRect)
     { mMessage << "Rect" << aRect; return *this; }
