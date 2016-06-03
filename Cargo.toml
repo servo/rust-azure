@@ -10,6 +10,8 @@ build = "build.rs"
 default = []
 plugins = ["serde", "serde_macros", "heapsize", "heapsize_plugin", "euclid/plugins"]
 
+[build-dependencies]
+cmake = "0.1"
 
 [dependencies]
 euclid = "0.6.1"
