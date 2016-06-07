@@ -31,6 +31,7 @@ include_directories(
 )
 
 add_definitions(-DUSE_SKIA -DUSE_SKIA_GPU)
+add_definitions(-DMOZ_DISABLE_D2D_D3D)
 
 add_definitions(-DWIN32 -EHsc)
 
@@ -71,6 +72,10 @@ set_prefix(LIBAZURE_SRC libazure/
 	SourceSurfaceRawData.cpp
 	SourceSurfaceSkia.cpp
 )
+
+if(WIN32)
+  set(LIBAZURE_SRC ${LIBAZURE_SRC} libazure/ScaledFontWin.cpp)
+endif()
 
 set(ALL_SRC
 	${BINDINGS_SRC}

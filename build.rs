@@ -17,7 +17,9 @@ fn main() {
     let target = env::var("TARGET").unwrap();
     if target.contains("windows") {
         println!("cargo:rustc-link-lib=static=azure");
-        println!("cargo:rustc-link-lib=stdc++");
         println!("cargo:rustc-link-lib=uuid");
+        if target.contains("gnu") {
+            println!("cargo:rustc-link-lib=stdc++");
+        }
     }
 }

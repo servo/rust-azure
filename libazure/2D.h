@@ -1218,7 +1218,7 @@ public:
   static FT_Library GetFreetypeLibrary();
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(MOZ_DISABLE_D2D_D3D)
   static TemporaryRef<DrawTarget> CreateDrawTargetForD3D10Texture(ID3D10Texture2D *aTexture, SurfaceFormat aFormat);
   static TemporaryRef<DrawTarget>
     CreateDualDrawTargetForD3D10Textures(ID3D10Texture2D *aTextureA,

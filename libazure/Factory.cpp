@@ -156,7 +156,7 @@ namespace gfx {
 // XXX - Need to define an API to set this.
 GFX2D_API int sGfxLogLevel = LOG_DEBUG;
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(MOZ_DISABLE_D2D_D3D)
 ID3D10Device1 *Factory::mD3D10Device;
 #ifdef USE_D2D1_1
 ID3D11Device *Factory::mD3D11Device;
@@ -248,7 +248,7 @@ Factory::CreateDrawTarget(BackendType aBackend, const IntSize &aSize, SurfaceFor
 
   RefPtr<DrawTarget> retVal;
   switch (aBackend) {
-#ifdef WIN32
+#if defined(WIN32) && !defined(MOZ_DISABLE_D2D_D3D)
   case BackendType::DIRECT2D:
     {
       RefPtr<DrawTargetD2D> newTarget;
@@ -403,10 +403,12 @@ Factory::CreateScaledFontForNativeFont(const NativeFont &aNativeFont, Float aSiz
 {
   switch (aNativeFont.mType) {
 #ifdef WIN32
+#if !defined(MOZ_DISABLE_D2D_D3D)
   case NativeFontType::DWRITE_FONT_FACE:
     {
       return new ScaledFontDWrite(static_cast<IDWriteFontFace*>(aNativeFont.mFont), aSize);
     }
+#endif
 #if defined(USE_CAIRO) || defined(USE_SKIA)
   case NativeFontType::GDI_FONT_FACE:
     {
@@ -438,7 +440,7 @@ Factory::CreateScaledFontForTrueTypeData(uint8_t *aData, uint32_t aSize,
                                          FontType aType)
 {
   switch (aType) {
-#ifdef WIN32
+#if defined(WIN32) && !defined(MOZ_DISABLE_D2D_D3D)
   case FontType::DWRITE:
     {
       return new ScaledFontDWrite(aData, aSize, aFaceIndex, aGlyphSize);
@@ -492,7 +494,7 @@ Factory::GetFreetypeLibrary()
 }
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(MOZ_DISABLE_D2D_D3D)
 TemporaryRef<DrawTarget>
 Factory::CreateDrawTargetForD3D10Texture(ID3D10Texture2D *aTexture, SurfaceFormat aFormat)
 {
