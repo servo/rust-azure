@@ -3,15 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 extern crate cmake;
-//use std::process::Command;
 use std::env;
 
 fn main() {
-    let dst = cmake::Config::new(".").generator("Ninja")
-        .define("CMAKE_C_COMPILER", "cl.exe")
-        .define("CMAKE_CXX_COMPILER", "cl.exe")
-        .define("CMAKE_LINKER", "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\bin\\amd64\\link.exe")
-        .build();
+    let dst = cmake::Config::new(".").build();
     println!("cargo:rustc-link-search=native={}/lib", dst.display());
 
     let target = env::var("TARGET").unwrap();
