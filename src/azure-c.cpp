@@ -526,6 +526,8 @@ AzSourceSurfaceGetFormat(AzSourceSurfaceRef aSurface) {
             return AZ_FORMAT_YUV;
         case gfx::SurfaceFormat::UNKNOWN:
             return AZ_FORMAT_UNKNOWN;
+        default:
+            assert(0);
     }
 }
 

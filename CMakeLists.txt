@@ -15,6 +15,9 @@ endif(CCACHE_FOUND)
 
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Zi")
+  # TODO(vlad): we need to update our copy of Moz2D!
+  # VS2015/VC 14.0 needs this -- we should be using unordered_set instead of hash_set
+  add_definitions(-D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS)
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 endif()
