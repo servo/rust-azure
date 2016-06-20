@@ -57,12 +57,14 @@ include_directories(
 if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
   include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
 else()
-  pkg_check_modules(FREETYPE REQUIRED freetype2)
-  include_directories(${FREETYPE_INCLUDE_DIRS})
+  # We need to work with older pkg-config
+  #pkg_check_modules(FREETYPE REQUIRED freetype2)
+  EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
+  add_definitions(${FREETYPE_CFLAGS})
 endif()
 
 add_definitions(-DUSE_SKIA -DUSE_SKIA_GPU)
-add_definitions(-DMOZ_WARN_UNUSED_RESULTS="")
+add_definitions(-DMOZ_WARN_UNUSED_RESULT="")
 
 # Azure bindings
 set_prefix(BINDINGS_SRC src/
@@ -123,6 +125,7 @@ if(WIN32)
   add_definitions(-DWIN32 -DXP_WIN -D_WIN32_WINNT=0x0600 -DSK_BUILD_FOR_WIN32)
   
   if (CMAKE_COMPILER_IS_GNUCC)
+    # we could use pkg-config here, probably
     add_definitions(-DMOZ_ENABLE_FREETYPE)
     include_directories(-I/mingw64/include/freetype2)
   endif()
@@ -156,7 +159,7 @@ set(ALL_SRC
 
 if(NOT WIN32)
   # Should we use -fPIE instead?
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  add_definitions(-fPIC -std=gnu++11)
 endif()
 
 # TODO(vlad/jack): check target type, use
@@ -193,3 +196,9 @@ endif()
 include_directories(libazure)
 add_library(azure STATIC ${ALL_SRC})
 install(TARGETS azure ARCHIVE DESTINATION lib)
+
+if("$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
+  include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
+  EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
+  target_link_libraries(azure ${FREETYPE_LDFLAGS})
+endif()
