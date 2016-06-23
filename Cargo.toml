@@ -12,7 +12,7 @@ plugins = ["serde", "serde_macros", "heapsize", "heapsize_plugin", "euclid/plugi
 
 
 [dependencies]
-euclid = "0.6.1"
+euclid = "0.7.0"
 heapsize = {version = ">=0.2, <0.4", optional = true}
 heapsize_plugin = {version = "0.1.0", optional = true}
 libc = "0.2"
