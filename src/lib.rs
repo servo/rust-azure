@@ -20,8 +20,8 @@ extern crate heapsize;
 extern crate x11;
 #[cfg(target_os = "android")]
 extern crate egl;
-#[cfg(not(target_os = "macos"))]
-extern crate freetype;
+#[cfg(any(target_os = "android", target_os = "linux", target_os = "windows"))]
+extern crate freetype_sys;
 #[cfg(target_os = "macos")]
 extern crate core_foundation;
 #[cfg(target_os = "macos")]

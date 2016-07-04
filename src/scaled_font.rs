@@ -32,17 +32,17 @@ pub mod macos {
 
 #[cfg(target_os="linux")]
 pub mod linux {
-    pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+    pub use freetype_sys::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 #[cfg(target_os="android")]
 pub mod android {
-    pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+    pub use freetype_sys::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 #[cfg(target_os="windows")]
 pub mod windows {
-    pub use freetype::freetype::{FT_Face, FT_LOAD_DEFAULT};
+    pub use freetype_sys::{FT_Face, FT_LOAD_DEFAULT};
 }
 
 pub type SkTypeface = *mut c_void;
