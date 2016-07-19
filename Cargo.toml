@@ -1,6 +1,6 @@
 [package]
 name = "azure"
-version = "0.4.6"
+version = "0.4.7"
 authors = ["The Servo Project Developers"]
 documentation = "http://doc.servo.org/azure/"
 
