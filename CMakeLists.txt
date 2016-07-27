@@ -164,7 +164,7 @@ if(NOT WIN32)
   add_definitions(-fPIC)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_definitions(-std=gnu++11)
 endif()
 
