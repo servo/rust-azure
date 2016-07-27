@@ -4,7 +4,7 @@
 
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
-#![feature(custom_derive, plugin)]
+#![cfg_attr(feature = "plugins", feature(custom_derive, plugin))]
 #![cfg_attr(feature = "plugins", plugin(serde_macros))]
 #![cfg_attr(feature = "plugins", plugin(heapsize_plugin))]
 
