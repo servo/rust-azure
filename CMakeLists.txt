@@ -54,18 +54,20 @@ include_directories(
 	$ENV{DEP_SKIA_OUTDIR}/src
 )
 
-if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
-  include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
-  # makefile.cargo never added any link flags or libs in this case,
-  # so we don't either
-else()
-  # We need to work with older cmake -- pkg_check_modules was added in
-  # a version of cmake newer than what Ubuntu 14.04 LTS ships with.
-  #pkg_check_modules(FREETYPE REQUIRED freetype2)
-  EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
-  EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
-  add_definitions(${FREETYPE_CFLAGS})
-  link_libraries(${FREETYPE_CLDFLAGS})
+if(NOT APPLE)
+  if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
+    include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
+    # makefile.cargo never added any link flags or libs in this case,
+    # so we don't either
+  else()
+    # We need to work with older cmake -- pkg_check_modules was added in
+    # a version of cmake newer than what Ubuntu 14.04 LTS ships with.
+    #pkg_check_modules(FREETYPE REQUIRED freetype2)
+    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
+    EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
+    add_definitions(${FREETYPE_CFLAGS})
+    link_libraries(${FREETYPE_CLDFLAGS})
+  endif()
 endif()
 
 add_definitions(-DUSE_SKIA -DUSE_SKIA_GPU)
