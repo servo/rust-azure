@@ -54,16 +54,23 @@ include_directories(
 	$ENV{DEP_SKIA_OUTDIR}/src
 )
 
-if(NOT APPLE)
+if(MSVC)
+  set(WINDOWS_USE_DIRECTWRITE TRUE)
+endif()
+
+if(NOT APPLE AND NOT WINDOWS_USE_DIRECTWRITE)
   if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
-    include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
+    include_directories($ENV{DEP_FREETYPE_OUTDIR}/include/freetype2)
     # makefile.cargo never added any link flags or libs in this case,
     # so we don't either
   else()
     # We need to work with older cmake -- pkg_check_modules was added in
     # a version of cmake newer than what Ubuntu 14.04 LTS ships with.
     #pkg_check_modules(FREETYPE REQUIRED freetype2)
-    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
+    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS RESULT_VARIABLE FREETYPE_NOT_FOUND)
+    if(FREETYPE_NOT_FOUND)
+      message(FATAL_ERROR "Freetype is required by rust-azure for this build, but it was not built by the freetype crate nor found by pkg-config")
+    endif()
     EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
     add_definitions(${FREETYPE_CFLAGS})
     link_libraries(${FREETYPE_CLDFLAGS})
@@ -133,8 +140,9 @@ if(WIN32)
   if(MSVC)
     # Enable C++ exceptions; extern "c" defaults to nothrow
     add_definitions(-EHsc)
-  else()
-    # This is going to be MSYS2/MINGW64; assume freetype
+  endif()
+
+  if(NOT WINDOWS_USE_DIRECTWRITE)
     add_definitions(-DMOZ_ENABLE_FREETYPE)
   endif()
 
@@ -143,9 +151,12 @@ if(WIN32)
     SourceSurfaceD2D.cpp
     SourceSurfaceD2DTarget.cpp
     ScaledFontWin.cpp
-    ScaledFontDWrite.cpp
     PathD2D.cpp
     )
+
+  if(WINDOWS_USE_DIRECTWRITE)
+    set(LIBAZURE_PLATFORM_SRC ${LIBAZURE_PLATFORM_SRC} libazure/ScaledFontDWrite.cpp)
+  endif()
 endif()
 
 if(ENV{TARGET} MATCHES androideabi)
