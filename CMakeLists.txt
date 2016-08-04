@@ -63,7 +63,10 @@ if(NOT APPLE)
     # We need to work with older cmake -- pkg_check_modules was added in
     # a version of cmake newer than what Ubuntu 14.04 LTS ships with.
     #pkg_check_modules(FREETYPE REQUIRED freetype2)
-    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
+    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS RESULT_VARIABLE FREETYPE_NOT_FOUND)
+    if(FREETYPE_NOT_FOUND)
+      message(FATAL_ERROR "Freetype is required by rust-azure for this build, but it was not built by the freetype crate nor found by pkg-config")
+    endif()
     EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
     add_definitions(${FREETYPE_CFLAGS})
     link_libraries(${FREETYPE_CLDFLAGS})
