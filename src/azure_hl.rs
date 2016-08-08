@@ -974,7 +974,7 @@ pub trait SourceSurfaceMethods {
         let size = unsafe {
             AzSourceSurfaceGetSize_(self.get_azure_source_surface())
         };
-        Size2D { width: size.width, height: size.height }
+        Size2D::new(size.width, size.height)
     }
 
     fn format(&self) -> SurfaceFormat {

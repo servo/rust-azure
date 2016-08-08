@@ -1,6 +1,6 @@
 [package]
 name = "azure"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["The Servo Project Developers"]
 documentation = "http://doc.servo.org/azure/"
 
@@ -14,17 +14,17 @@ plugins = ["serde", "serde_macros", "heapsize", "heapsize_plugin", "euclid/plugi
 cmake = "0.1"
 
 [dependencies]
-euclid = ">=0.6.1, <0.8"
+euclid = "0.8"
 heapsize = {version = ">=0.2, <0.4", optional = true}
 heapsize_plugin = {version = "0.1.0", optional = true}
 libc = "0.2"
 serde = {version = ">=0.6.1, <0.8", optional = true}
 serde_macros = {version = ">=0.6.1, <0.8", optional = true}
-servo-skia = "0.20130412.12"
+servo-skia = "0.20130412.14"
 
 [target.'cfg(not(target_os = "macos"))'.dependencies]
 freetype = { git = "https://github.com/servo/rust-freetype" }
-servo-freetype-sys = "2.4.11"
+servo-freetype-sys = "4.0.1"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 x11 = { version = "2.0.0", features = ["xlib"] }
