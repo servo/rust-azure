@@ -54,17 +54,25 @@ include_directories(
 	$ENV{DEP_SKIA_OUTDIR}/src
 )
 
-if(NOT APPLE)
+if(MSVC)
+  set(WINDOWS_USE_DIRECTWRITE TRUE)
+endif()
+
+if(NOT APPLE AND NOT WINDOWS_USE_DIRECTWRITE)
   if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
-    include_directories($ENV{DEP_FREETYPE_OUTDIR}/include)
-    # makefile.cargo never added any link flags or libs in this case,
-    # so we don't either
+    include_directories($ENV{DEP_FREETYPE_OUTDIR}/include/freetype2)
+    message(STATUS "Using DEP_FREETYPE_OUTDIR/include/freetype2: " $ENV{DEP_FREETYPE_OUTDIR})
   else()
     # We need to work with older cmake -- pkg_check_modules was added in
     # a version of cmake newer than what Ubuntu 14.04 LTS ships with.
     #pkg_check_modules(FREETYPE REQUIRED freetype2)
-    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS)
+    EXEC_PROGRAM(pkg-config ARGS --cflags freetype2 OUTPUT_VARIABLE FREETYPE_CFLAGS RESULT_VARIABLE FREETYPE_NOT_FOUND)
+    if(FREETYPE_NOT_FOUND)
+      message(FATAL_ERROR "Freetype is required by rust-azure for this build, but it was not built by the freetype crate nor found by pkg-config")
+    endif()
     EXEC_PROGRAM(pkg-config ARGS --libs freetype2 OUTPUT_VARIABLE FREETYPE_CLDFLAGS)
+    message(STATUS "Using FREETYPE_CFLAGS: " ${FREETYPE_CFLAGS})
+    message(STATUS "Using FREETYPE_CLDFLAGS: " ${FREETYPE_CLDFLAGS})
     add_definitions(${FREETYPE_CFLAGS})
     link_libraries(${FREETYPE_CLDFLAGS})
   endif()
@@ -133,8 +141,9 @@ if(WIN32)
   if(MSVC)
     # Enable C++ exceptions; extern "c" defaults to nothrow
     add_definitions(-EHsc)
-  else()
-    # This is going to be MSYS2/MINGW64; assume freetype
+  endif()
+
+  if(NOT WINDOWS_USE_DIRECTWRITE)
     add_definitions(-DMOZ_ENABLE_FREETYPE)
   endif()
 
@@ -143,9 +152,12 @@ if(WIN32)
     SourceSurfaceD2D.cpp
     SourceSurfaceD2DTarget.cpp
     ScaledFontWin.cpp
-    ScaledFontDWrite.cpp
     PathD2D.cpp
     )
+
+  if(WINDOWS_USE_DIRECTWRITE)
+    set(LIBAZURE_PLATFORM_SRC ${LIBAZURE_PLATFORM_SRC} libazure/ScaledFontDWrite.cpp)
+  endif()
 endif()
 
 if(ENV{TARGET} MATCHES androideabi)
@@ -170,7 +182,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_definitions(-std=gnu++11)
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86")
+if($ENV{TARGET} MATCHES "(i386|x86_64)-.*")
   set(ALL_SRC ${ALL_SRC} ${LIBAZURE_X86_SRC})
   add_definitions(-DUSE_SSE2)
   if(NOT MSVC)
@@ -181,7 +193,7 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
     endif()
   endif()
-elseif(ENV{TARGET} MATCHES "arm")
+elseif(ENV{TARGET} MATCHES "arm-.*")
   add_definitions(-mfpu=neon -D__ARM_HAVE_OPTIONAL_NEON_SUPPORT)
   # FIXME: Need more advanced detection of FP support
   if(ENV{TARGET} MATCHES "eabihf")
@@ -193,7 +205,7 @@ elseif(ENV{TARGET} MATCHES "arm")
     # FIXME: Assumes armv7 for cross compile
     add_definitions(-march=armv7-a -mthumb)
   endif()
-elseif(ENV{TARGET} MATCHES "aarch64")
+elseif(ENV{TARGET} MATCHES "aarch64-.*")
   add_definitions(-D__ARM_HAVE_NEON)
 endif()
 
