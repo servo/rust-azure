@@ -152,12 +152,9 @@ if(WIN32)
     SourceSurfaceD2D.cpp
     SourceSurfaceD2DTarget.cpp
     ScaledFontWin.cpp
+    ScaledFontDWrite.cpp
     PathD2D.cpp
     )
-
-  if(WINDOWS_USE_DIRECTWRITE)
-    set(LIBAZURE_PLATFORM_SRC ${LIBAZURE_PLATFORM_SRC} libazure/ScaledFontDWrite.cpp)
-  endif()
 endif()
 
 if(ENV{TARGET} MATCHES androideabi)
