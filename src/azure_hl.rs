@@ -5,57 +5,52 @@
 //! High-level bindings to Azure.
 
 pub use AzColor as Color;
-use azure::{AZ_FILTER_TYPE_COLOR_MATRIX};
+use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
+use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
+use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TABLE_TRANSFER_TABLE_B};
+use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_R};
+use azure::{AZ_ATT_TRANSFER_DISABLE_A, AZ_ATT_TRANSFER_DISABLE_B, AZ_ATT_TRANSFER_DISABLE_G};
+use azure::{AZ_ATT_TRANSFER_DISABLE_R, AZ_FILTER_TYPE_COLOR_MATRIX, AZ_FILTER_TYPE_COMPOSITE};
 use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
 use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
 use azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
-use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
-use azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
-use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
-use azure::{AZ_ATT_TRANSFER_DISABLE_A};
-use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
-use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
-use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
-use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
-use azure::{struct__AzGlyphBuffer};
-use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
-use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint, struct__AzMatrix5x4};
-use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
-use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use azure::{AzDrawTargetClearRect};
-use azure::{AzDrawTargetCreateSourceSurfaceFromData};
-use azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
-use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
-use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
-use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
-use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
-use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
-use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
-use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
-use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
-use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
-use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
-use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
-use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
-use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
-use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
-use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
-use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
-use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
-use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
-use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
-use azure::{AzPathContainsPoint, AzPathCopyToBuilder};
-
+use azure::{AZ_IN_TABLE_TRANSFER_IN, AzAntialiasMode, AzBackendType, AzCapStyle};
+use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern};
+use azure::{AzColor, AzColorPatternRef, AzCompositionOp, AzCreateColorPattern, AzCreateDrawTarget};
+use azure::{AzCreateDrawTargetForData, AzCreateDrawTargetSkiaWithGrContextAndFBO};
+use azure::{AzCreateLinearGradientPattern, AzCreatePathBuilder, AzCreateRadialGradientPattern};
+use azure::{AzCreateSurfacePattern, AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use azure::{AzDataSourceSurfaceRef, AzDrawOptions, AzDrawSurfaceOptions, AzDrawTargetClearRect};
+use azure::{AzDrawTargetCopySurface, AzDrawTargetCreateFilter, AzDrawTargetCreateGradientStops};
+use azure::{AzDrawTargetCreateShadowDrawTarget, AzDrawTargetCreateSimilarDrawTarget};
+use azure::{AzDrawTargetCreateSourceSurfaceFromData, AzDrawTargetDrawFilter};
+use azure::{AzDrawTargetDrawSurface, AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetFill};
+use azure::{AzDrawTargetFillGlyphs, AzDrawTargetFillRect, AzDrawTargetFlush};
+use azure::{AzDrawTargetGetFormat, AzDrawTargetGetSize, AzDrawTargetGetSnapshot};
+use azure::{AzDrawTargetGetTransform, AzDrawTargetPopClip, AzDrawTargetPushClip};
+use azure::{AzDrawTargetPushClipRect, AzDrawTargetRef, AzDrawTargetSetTransform};
+use azure::{AzDrawTargetStroke, AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzExtendMode};
+use azure::{AzFilter, AzFilterNodeRef, AzFilterNodeSetBoolAttribute};
+use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFilterNodeInput};
+use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetFloatAttribute};
+use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetSourceSurfaceInput, AzFilterType};
+use azure::{AzFloat, AzGlyphRenderingOptionsRef, AzGradientStop, AzGradientStopsRef, AzIntPoint};
+use azure::{AzIntRect, AzIntSize, AzJoinStyle, AzLinearGradientPatternRef, AzMatrix};
+use azure::{AzPathBuilderArc, AzPathBuilderBezierTo, AzPathBuilderClose};
+use azure::{AzPathBuilderCurrentPoint, AzPathBuilderFinish, AzPathBuilderLineTo};
+use azure::{AzPathBuilderMoveTo, AzPathBuilderQuadraticBezierTo, AzPathBuilderRef};
+use azure::{AzPathContainsPoint, AzPathCopyToBuilder, AzPathRef, AzPatternRef, AzPoint};
+use azure::{AzRadialGradientPatternRef, AzRect, AzReleaseDrawTarget, AzReleaseFilterNode};
+use azure::{AzReleaseGradientStops, AzReleasePath, AzReleasePathBuilder, AzReleasePattern};
+use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface, AzScaledFontRef};
+use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat, AzSourceSurfaceGetSize};
+use azure::{AzSourceSurfaceRef, AzStrokeOptions, AzSurfaceFormat, AzSurfacePatternGetSize};
+use azure::{AzSurfacePatternRef, struct__AzDrawOptions, struct__AzDrawSurfaceOptions};
+use azure::{struct__AzGlyphBuffer, struct__AzIntPoint, struct__AzIntRect, struct__AzIntSize};
+use azure::{struct__AzMatrix5x4, struct__AzPoint, struct__AzRect, struct__AzStrokeOptions};
 use euclid::matrix2d::Matrix2D;
 use euclid::point::Point2D;
 use euclid::rect::Rect;
@@ -77,7 +72,7 @@ impl AsAzureRect for Rect<AzFloat> {
             x: self.origin.x,
             y: self.origin.y,
             width: self.size.width,
-            height: self.size.height
+            height: self.size.height,
         }
     }
 }
@@ -92,7 +87,7 @@ impl AsAzureIntRect for Rect<i32> {
             x: self.origin.x,
             y: self.origin.y,
             width: self.size.width,
-            height: self.size.height
+            height: self.size.height,
         }
     }
 }
@@ -105,7 +100,7 @@ impl AsAzureIntSize for Size2D<i32> {
     fn as_azure_int_size(&self) -> AzIntSize {
         struct__AzIntSize {
             width: self.width,
-            height: self.height
+            height: self.height,
         }
     }
 }
@@ -118,7 +113,7 @@ impl AsAzurePoint for Point2D<AzFloat> {
     fn as_azure_point(&self) -> AzPoint {
         struct__AzPoint {
             x: self.x,
-            y: self.y
+            y: self.y,
         }
     }
 }
@@ -131,7 +126,7 @@ impl AsAzureIntPoint for Point2D<i32> {
     fn as_azure_int_point(&self) -> AzIntPoint {
         struct__AzIntPoint {
             x: self.x,
-            y: self.y
+            y: self.y,
         }
     }
 }
@@ -162,7 +157,7 @@ impl ColorPattern {
         unsafe {
             ColorPattern {
                 color: color,
-                azure_color_pattern: AzCreateColorPattern(&mut color.clone())
+                azure_color_pattern: AzCreateColorPattern(&mut color.clone()),
             }
         }
     }
@@ -255,14 +250,18 @@ impl CapStyle {
 pub struct StrokeOptions<'a> {
     pub line_width: AzFloat,
     pub miter_limit: AzFloat,
-    pub mDashPattern: &'a[AzFloat],
+    pub mDashPattern: &'a [AzFloat],
     pub line_join: JoinStyle,
     pub line_cap: CapStyle,
 }
 
 impl<'a> StrokeOptions<'a> {
-    pub fn new(line_width: AzFloat, line_join: JoinStyle, line_cap: CapStyle, miter_limit: AzFloat,
-               dash_pattern: &'a[AzFloat]) -> StrokeOptions {
+    pub fn new(line_width: AzFloat,
+               line_join: JoinStyle,
+               line_cap: CapStyle,
+               miter_limit: AzFloat,
+               dash_pattern: &'a [AzFloat])
+               -> StrokeOptions {
         StrokeOptions {
             line_width: line_width,
             miter_limit: miter_limit,
@@ -301,7 +300,10 @@ impl DrawOptions {
         }
     }
 
-    pub fn new(alpha: AzFloat, composition: CompositionOp, antialias: AntialiasMode) -> DrawOptions {
+    pub fn new(alpha: AzFloat,
+               composition: CompositionOp,
+               antialias: AntialiasMode)
+               -> DrawOptions {
         DrawOptions {
             alpha: alpha,
             composition: composition,
@@ -336,7 +338,7 @@ pub enum SurfaceFormat {
     R5G6B5,
     A8,
     YUV,
-    UNKNOWN
+    UNKNOWN,
 }
 
 impl SurfaceFormat {
@@ -354,7 +356,7 @@ impl SurfaceFormat {
             5 => SurfaceFormat::A8,
             6 => SurfaceFormat::YUV,
             7 => SurfaceFormat::UNKNOWN,
-            _ => panic!("SurfaceFormat::new(): unknown Azure surface format")
+            _ => panic!("SurfaceFormat::new(): unknown Azure surface format"),
         }
     }
 }
@@ -363,7 +365,7 @@ impl SurfaceFormat {
 pub enum Filter {
     Good,
     Linear,
-    Point
+    Point,
 }
 
 impl Filter {
@@ -411,15 +413,15 @@ pub enum BackendType {
 impl BackendType {
     pub fn as_azure_backend_type(self) -> AzBackendType {
         match self {
-            BackendType::None                    => 0,
-            BackendType::Direct2D                => 1,
-            BackendType::CoreGraphics            => 2,
+            BackendType::None => 0,
+            BackendType::Direct2D => 1,
+            BackendType::CoreGraphics => 2,
             BackendType::CoreGraphicsAccelerated => 3,
-            BackendType::Cairo                   => 4,
-            BackendType::Skia                    => 5,
-            BackendType::Recording               => 6,
-            BackendType::Direct2D11              => 7,
-            BackendType::NVPathRendering         => 8,
+            BackendType::Cairo => 4,
+            BackendType::Skia => 5,
+            BackendType::Recording => 6,
+            BackendType::Direct2D11 => 7,
+            BackendType::NVPathRendering => 8,
         }
     }
 }
@@ -445,12 +447,11 @@ impl PartialEq for DrawTarget {
 }
 
 impl DrawTarget {
-    pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat)
-                   -> DrawTarget {
+    pub fn new(backend: BackendType, size: Size2D<i32>, format: SurfaceFormat) -> DrawTarget {
         let azure_draw_target = unsafe {
             AzCreateDrawTarget(backend.as_azure_backend_type(),
-                                                       &mut size.as_azure_int_size(),
-                                                       format.as_azure_surface_format())
+                               &mut size.as_azure_int_size(),
+                               format.as_azure_surface_format())
         };
         if azure_draw_target.is_null() {
             panic!("null azure draw target");
@@ -466,7 +467,8 @@ impl DrawTarget {
                          offset: usize,
                          size: Size2D<i32>,
                          stride: i32,
-                         format: SurfaceFormat) -> DrawTarget {
+                         format: SurfaceFormat)
+                         -> DrawTarget {
         assert!((data.len() - offset) as i32 >= stride * size.height);
         let azure_draw_target = unsafe {
             AzCreateDrawTargetForData(backend.as_azure_backend_type(),
@@ -489,7 +491,8 @@ impl DrawTarget {
                                              -> DrawTarget {
         let mut size = gl_rasterization_context.size.as_azure_int_size();
         let azure_draw_target = unsafe {
-            AzCreateDrawTargetSkiaWithGrContextAndFBO(gl_rasterization_context.gl_context.gr_context,
+            AzCreateDrawTargetSkiaWithGrContextAndFBO(gl_rasterization_context.gl_context
+                                                          .gr_context,
                                                       gl_rasterization_context.framebuffer_id,
                                                       &mut size,
                                                       format.as_azure_surface_format())
@@ -500,7 +503,7 @@ impl DrawTarget {
         }
         DrawTarget {
             azure_draw_target: azure_draw_target,
-            backing: DrawTargetBacking::GLRasterizationContext(gl_rasterization_context)
+            backing: DrawTargetBacking::GLRasterizationContext(gl_rasterization_context),
         }
     }
 
@@ -524,22 +527,18 @@ impl DrawTarget {
     }
 
     pub fn get_size(&self) -> AzIntSize {
-        unsafe {
-            AzDrawTargetGetSize(self.azure_draw_target)
-        }
+        unsafe { AzDrawTargetGetSize(self.azure_draw_target) }
     }
 
     pub fn get_format(&self) -> SurfaceFormat {
-        unsafe {
-            SurfaceFormat::new(AzDrawTargetGetFormat(self.azure_draw_target))
-        }
+        unsafe { SurfaceFormat::new(AzDrawTargetGetFormat(self.azure_draw_target)) }
     }
 
     pub fn get_transform(&self) -> Matrix2D<AzFloat> {
         unsafe {
             let mut result: AzMatrix = mem::uninitialized();
             AzDrawTargetGetTransform(self.azure_draw_target, &mut result);
-            mem::transmute::<AzMatrix,Matrix2D<AzFloat>>(result)
+            mem::transmute::<AzMatrix, Matrix2D<AzFloat>>(result)
         }
     }
 
@@ -556,10 +555,7 @@ impl DrawTarget {
         }
     }
 
-    pub fn fill(&self,
-                path: &Path,
-                pattern: PatternRef,
-                draw_options: &DrawOptions) {
+    pub fn fill(&self, path: &Path, pattern: PatternRef, draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetFill(self.azure_draw_target,
                              path.azure_path,
@@ -572,12 +568,11 @@ impl DrawTarget {
                      rect: &Rect<AzFloat>,
                      pattern: PatternRef,
                      draw_options: Option<&DrawOptions>) {
-        let mut draw_options = draw_options.map(|draw_options| {
-            draw_options.as_azure_draw_options()
-        });
+        let mut draw_options =
+            draw_options.map(|draw_options| draw_options.as_azure_draw_options());
         let draw_options = match draw_options {
             None => ptr::null_mut(),
-            Some(ref mut draw_options) => draw_options as *mut AzDrawOptions
+            Some(ref mut draw_options) => draw_options as *mut AzDrawOptions,
         };
 
         unsafe {
@@ -603,11 +598,11 @@ impl DrawTarget {
     }
 
     pub fn stroke_line(&self,
-                   start: Point2D<AzFloat>,
-                   end: Point2D<AzFloat>,
-                   pattern: PatternRef,
-                   stroke_options: &StrokeOptions,
-                   draw_options: &DrawOptions) {
+                       start: Point2D<AzFloat>,
+                       end: Point2D<AzFloat>,
+                       pattern: PatternRef,
+                       stroke_options: &StrokeOptions,
+                       draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeLine(self.azure_draw_target,
                                    &mut start.as_azure_point(),
@@ -619,10 +614,10 @@ impl DrawTarget {
     }
 
     pub fn stroke_rect(&self,
-                   rect: &Rect<AzFloat>,
-                   pattern: PatternRef,
-                   stroke_options: &StrokeOptions,
-                   draw_options: &DrawOptions) {
+                       rect: &Rect<AzFloat>,
+                       pattern: PatternRef,
+                       stroke_options: &StrokeOptions,
+                       draw_options: &DrawOptions) {
         unsafe {
             AzDrawTargetStrokeRect(self.azure_draw_target,
                                    &mut rect.as_azure_rect(),
@@ -668,8 +663,8 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawFilter(self.azure_draw_target,
                                    filter.azure_filter_node,
-                                   mem::transmute::<_,*const AzRect>(source_rect),
-                                   mem::transmute::<_,*const AzPoint>(dest_point),
+                                   mem::transmute::<_, *const AzRect>(source_rect),
+                                   mem::transmute::<_, *const AzPoint>(dest_point),
                                    &options.as_azure_draw_options())
         }
     }
@@ -684,9 +679,9 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawSurfaceWithShadow(self.azure_draw_target,
                                               surface.azure_source_surface,
-                                              mem::transmute::<_,*const AzPoint>(dest),
-                                              mem::transmute::<_,*const AzColor>(color),
-                                              mem::transmute::<_,*const AzPoint>(offset),
+                                              mem::transmute::<_, *const AzPoint>(dest),
+                                              mem::transmute::<_, *const AzColor>(color),
+                                              mem::transmute::<_, *const AzPoint>(offset),
                                               sigma,
                                               operator as AzCompositionOp)
         }
@@ -709,27 +704,29 @@ impl DrawTarget {
                                            -> Option<SourceSurface> {
         assert!(data.len() as i32 >= stride * size.height);
         if data.len() == 0 {
-            return None
+            return None;
         }
 
         unsafe {
-            let azure_surface = AzDrawTargetCreateSourceSurfaceFromData(
-                self.azure_draw_target,
-                data.as_ptr(),
-                &mut size.as_azure_int_size(),
-                stride,
-                format.as_azure_surface_format());
+            let azure_surface =
+                AzDrawTargetCreateSourceSurfaceFromData(self.azure_draw_target,
+                                                        data.as_ptr(),
+                                                        &mut size.as_azure_int_size(),
+                                                        stride,
+                                                        format.as_azure_surface_format());
             Some(SourceSurface::new(azure_surface))
         }
     }
 
-    pub fn create_similar_draw_target(&self, size: &Size2D<i32>, format: SurfaceFormat)
+    pub fn create_similar_draw_target(&self,
+                                      size: &Size2D<i32>,
+                                      format: SurfaceFormat)
                                       -> DrawTarget {
         unsafe {
-            let new_draw_target = AzDrawTargetCreateSimilarDrawTarget(
-                self.azure_draw_target,
-                &size.as_azure_int_size(),
-                format.as_azure_surface_format());
+            let new_draw_target =
+                AzDrawTargetCreateSimilarDrawTarget(self.azure_draw_target,
+                                                    &size.as_azure_int_size(),
+                                                    format.as_azure_surface_format());
             DrawTarget {
                 azure_draw_target: new_draw_target,
                 backing: DrawTargetBacking::Empty,
@@ -743,11 +740,11 @@ impl DrawTarget {
                                      sigma: AzFloat)
                                      -> DrawTarget {
         unsafe {
-            let new_draw_target = AzDrawTargetCreateShadowDrawTarget(
-                self.azure_draw_target,
-                &size.as_azure_int_size(),
-                format.as_azure_surface_format(),
-                sigma);
+            let new_draw_target =
+                AzDrawTargetCreateShadowDrawTarget(self.azure_draw_target,
+                                                   &size.as_azure_int_size(),
+                                                   format.as_azure_surface_format(),
+                                                   sigma);
             DrawTarget {
                 azure_draw_target: new_draw_target,
                 backing: DrawTargetBacking::Empty,
@@ -762,9 +759,11 @@ impl DrawTarget {
         unsafe {
             GradientStops::new(AzDrawTargetCreateGradientStops(
                     self.azure_draw_target,
-                    mem::transmute::<_,*const AzGradientStop>(gradient_stops.as_ptr()),
+                    mem::transmute::<_, *const AzGradientStop>(gradient_stops.as_ptr()),
                     gradient_stops.len() as u32,
-                    extend_mode.as_azure_extend_mode()))
+                    extend_mode.as_azure_extend_mode(),
+                )
+            )
         }
     }
 
@@ -782,20 +781,16 @@ impl DrawTarget {
                        rendering_options: AzGlyphRenderingOptionsRef) {
         unsafe {
             AzDrawTargetFillGlyphs(self.azure_draw_target,
-                    azfontref,
-                    &mut glyphbuf,
-                    azure_pattern,
-                    &mut options,
-                    rendering_options);
+                                   azfontref,
+                                   &mut glyphbuf,
+                                   azure_pattern,
+                                   &mut options,
+                                   rendering_options);
         }
     }
 
     pub fn create_path_builder(&self) -> PathBuilder {
-        unsafe {
-            PathBuilder {
-                azure_path_builder: AzCreatePathBuilder(self.azure_draw_target)
-            }
-        }
+        unsafe { PathBuilder { azure_path_builder: AzCreatePathBuilder(self.azure_draw_target) } }
     }
 
     pub fn create_filter(&self, filter_type: FilterType) -> FilterNode {
@@ -809,7 +804,7 @@ impl DrawTarget {
 
     pub fn push_clip(&self, path: &Path) {
         unsafe {
-            AzDrawTargetPushClip(self.azure_draw_target,path.azure_path);
+            AzDrawTargetPushClip(self.azure_draw_target, path.azure_path);
         }
     }
 
@@ -840,8 +835,9 @@ pub enum DrawTargetBacking {
 impl Drop for DrawTargetBacking {
     fn drop(&mut self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) |
-            DrawTargetBacking::GLRasterizationContext(_) => { }
+            DrawTargetBacking::Empty |
+            DrawTargetBacking::Data(_) |
+            DrawTargetBacking::GLRasterizationContext(_) => {}
         }
     }
 }
@@ -851,32 +847,37 @@ impl DrawTargetBacking {
         match *self {
             DrawTargetBacking::Empty => DrawTargetBacking::Empty,
             DrawTargetBacking::Data(ref arc_data) => DrawTargetBacking::Data(arc_data.clone()),
-            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
-                DrawTargetBacking::GLRasterizationContext(context_ref.clone()),
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) => {
+                DrawTargetBacking::GLRasterizationContext(context_ref.clone())
+            }
         }
     }
 
     pub fn make_current(&self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
-            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
-                context_ref.make_current(),
+            DrawTargetBacking::Empty |
+            DrawTargetBacking::Data(_) => {}
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) => {
+                context_ref.make_current()
+            }
         }
     }
 
     pub fn flush(&self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { },
-            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
-                context_ref.flush(),
+            DrawTargetBacking::Empty |
+            DrawTargetBacking::Data(_) => {}
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) => context_ref.flush(),
         }
     }
 
     pub fn finish(&self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => {},
-            DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
-                context_ref.flush_to_surface(),
+            DrawTargetBacking::Empty |
+            DrawTargetBacking::Data(_) => {}
+            DrawTargetBacking::GLRasterizationContext(ref context_ref) => {
+                context_ref.flush_to_surface()
+            }
         }
     }
 }
@@ -889,9 +890,7 @@ pub struct SourceSurface {
 impl Clone for SourceSurface {
     fn clone(&self) -> SourceSurface {
         unsafe {
-            SourceSurface {
-                azure_source_surface: AzRetainSourceSurface(self.azure_source_surface),
-            }
+            SourceSurface { azure_source_surface: AzRetainSourceSurface(self.azure_source_surface) }
         }
     }
 }
@@ -906,9 +905,7 @@ impl Drop for SourceSurface {
 
 impl SourceSurface {
     pub fn new(azure_source_surface: AzSourceSurfaceRef) -> SourceSurface {
-        SourceSurface {
-            azure_source_surface: azure_source_surface
-        }
+        SourceSurface { azure_source_surface: azure_source_surface }
     }
 }
 
@@ -927,9 +924,7 @@ impl Drop for GradientStops {
 
 impl GradientStops {
     pub fn new(azure_gradient_stops: AzGradientStopsRef) -> GradientStops {
-        GradientStops {
-            azure_gradient_stops: azure_gradient_stops,
-        }
+        GradientStops { azure_gradient_stops: azure_gradient_stops }
     }
 }
 
@@ -971,32 +966,27 @@ pub trait SourceSurfaceMethods {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef;
 
     fn size(&self) -> Size2D<i32> {
-        let size = unsafe {
-            AzSourceSurfaceGetSize_(self.get_azure_source_surface())
-        };
+        let size = unsafe { AzSourceSurfaceGetSize_(self.get_azure_source_surface()) };
         Size2D::new(size.width, size.height)
     }
 
     fn format(&self) -> SurfaceFormat {
-        unsafe {
-            SurfaceFormat::new(AzSourceSurfaceGetFormat_(self.get_azure_source_surface()))
-        }
+        unsafe { SurfaceFormat::new(AzSourceSurfaceGetFormat_(self.get_azure_source_surface())) }
     }
 }
 
 impl SourceSurface {
     pub fn get_data_surface(&self) -> DataSourceSurface {
-        let data_source_surface = unsafe {
-            AzSourceSurfaceGetDataSurface(self.azure_source_surface)
-        };
-        DataSourceSurface {
-            azure_data_source_surface: data_source_surface
-        }
+        let data_source_surface =
+            unsafe { AzSourceSurfaceGetDataSurface(self.azure_source_surface) };
+        DataSourceSurface { azure_data_source_surface: data_source_surface }
     }
 }
 
 impl SourceSurfaceMethods for SourceSurface {
-    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef { self.azure_source_surface }
+    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
+        self.azure_source_surface
+    }
 }
 
 #[derive(Debug)]
@@ -1023,9 +1013,7 @@ impl DataSourceSurface {
     }
 
     pub fn stride(&self) -> i32 {
-        unsafe {
-            AzDataSourceSurfaceGetStride(self.azure_data_source_surface)
-        }
+        unsafe { AzDataSourceSurfaceGetStride(self.azure_data_source_surface) }
     }
 
     // FIXME: Workaround for lack of working cross-crate default methods.
@@ -1042,7 +1030,7 @@ impl SourceSurfaceMethods for DataSourceSurface {
 
 #[derive(Debug)]
 pub struct Path {
-    pub azure_path: AzPathRef
+    pub azure_path: AzPathRef,
 }
 
 impl Path {
@@ -1050,17 +1038,14 @@ impl Path {
         let point: Point2D<AzFloat> = Point2D::new(x as f32, y as f32);
         let mut az_point = point.as_azure_point();
         unsafe {
-            AzPathContainsPoint(self.azure_path, &mut az_point,
-                                mem::transmute::<_,*const AzMatrix>(matrix))
+            AzPathContainsPoint(self.azure_path,
+                                &mut az_point,
+                                mem::transmute::<_, *const AzMatrix>(matrix))
         }
     }
 
     pub fn copy_to_builder(&self) -> PathBuilder {
-        unsafe {
-            PathBuilder {
-                azure_path_builder: AzPathCopyToBuilder(self.azure_path)
-            }
-        }
+        unsafe { PathBuilder { azure_path_builder: AzPathCopyToBuilder(self.azure_path) } }
     }
 }
 
@@ -1074,7 +1059,7 @@ impl Drop for Path {
 
 #[derive(Debug)]
 pub struct PathBuilder {
-    pub azure_path_builder: AzPathBuilderRef
+    pub azure_path_builder: AzPathBuilderRef,
 }
 
 impl PathBuilder {
@@ -1136,23 +1121,17 @@ impl PathBuilder {
 
     /// Returns the current last point of the current path.
     pub fn get_current_point(&self) -> AzPoint {
-        unsafe {
-            AzPathBuilderCurrentPoint(self.azure_path_builder)
-        }
+        unsafe { AzPathBuilderCurrentPoint(self.azure_path_builder) }
     }
 
     /// Closes the current path.
     pub fn close(&self) {
-        unsafe {
-            AzPathBuilderClose(self.azure_path_builder)
-        }
+        unsafe { AzPathBuilderClose(self.azure_path_builder) }
     }
 
     pub fn finish(&self) -> Path {
         let az_path = unsafe { AzPathBuilderFinish(self.azure_path_builder) };
-        Path {
-            azure_path : az_path
-        }
+        Path { azure_path: az_path }
     }
 }
 
@@ -1201,10 +1180,10 @@ impl LinearGradientPattern {
         unsafe {
             LinearGradientPattern {
                 azure_linear_gradient_pattern:
-                    AzCreateLinearGradientPattern(mem::transmute::<_,*const AzPoint>(begin),
-                                                  mem::transmute::<_,*const AzPoint>(end),
+                    AzCreateLinearGradientPattern(mem::transmute::<_, *const AzPoint>(begin),
+                                                  mem::transmute::<_, *const AzPoint>(end),
                                                   stops.azure_gradient_stops,
-                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+                                                  mem::transmute::<_, *const AzMatrix>(matrix)),
                 begin: *begin,
                 end: *end,
             }
@@ -1251,12 +1230,12 @@ impl RadialGradientPattern {
         unsafe {
             RadialGradientPattern {
                 azure_radial_gradient_pattern:
-                    AzCreateRadialGradientPattern(mem::transmute::<_,*const AzPoint>(center1),
-                                                  mem::transmute::<_,*const AzPoint>(center2),
+                    AzCreateRadialGradientPattern(mem::transmute::<_, *const AzPoint>(center1),
+                                                  mem::transmute::<_, *const AzPoint>(center2),
                                                   radius1,
                                                   radius2,
                                                   stops.azure_gradient_stops,
-                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+                                                  mem::transmute::<_, *const AzMatrix>(matrix)),
             }
         }
     }
@@ -1281,10 +1260,9 @@ impl Clone for SurfacePattern {
     fn clone(&self) -> SurfacePattern {
         unsafe {
             SurfacePattern {
-                azure_surface_pattern:
-                    AzCloneSurfacePattern(self.azure_surface_pattern),
-                    repeat_x: self.repeat_x,
-                    repeat_y: self.repeat_y,
+                azure_surface_pattern: AzCloneSurfacePattern(self.azure_surface_pattern),
+                repeat_x: self.repeat_x,
+                repeat_y: self.repeat_y,
             }
         }
     }
@@ -1307,7 +1285,7 @@ impl SurfacePattern {
                 azure_surface_pattern:
                     AzCreateSurfacePattern(surface,
                                            mode.as_azure_extend_mode(),
-                                           mem::transmute::<_,*const AzMatrix>(matrix)),
+                                           mem::transmute::<_, *const AzMatrix>(matrix)),
                 repeat_x: repeat_x,
                 repeat_y: repeat_y,
             }
@@ -1315,9 +1293,7 @@ impl SurfacePattern {
     }
 
     pub fn size(&self) -> AzIntSize {
-        unsafe {
-            AzSurfacePatternGetSize(self.azure_surface_pattern)
-        }
+        unsafe { AzSurfacePatternGetSize(self.azure_surface_pattern) }
     }
 }
 
@@ -1332,18 +1308,14 @@ pub enum PatternRef<'a> {
 impl<'a> PatternRef<'a> {
     fn as_azure_pattern(&self) -> AzPatternRef {
         match *self {
-            PatternRef::Color(color_pattern) => {
-                color_pattern.azure_color_pattern
-            },
+            PatternRef::Color(color_pattern) => color_pattern.azure_color_pattern,
             PatternRef::LinearGradient(linear_gradient_pattern) => {
                 linear_gradient_pattern.azure_linear_gradient_pattern
-            },
+            }
             PatternRef::RadialGradient(radial_gradient_pattern) => {
                 radial_gradient_pattern.azure_radial_gradient_pattern
-            },
-            PatternRef::Surface(surface_pattern) => {
-                surface_pattern.azure_surface_pattern
-            },
+            }
+            PatternRef::Surface(surface_pattern) => surface_pattern.azure_surface_pattern,
         }
     }
 }
@@ -1362,13 +1334,11 @@ impl Pattern {
             Pattern::Color(ref color_pattern) => PatternRef::Color(color_pattern),
             Pattern::LinearGradient(ref linear_gradient_pattern) => {
                 PatternRef::LinearGradient(linear_gradient_pattern)
-            },
+            }
             Pattern::RadialGradient(ref radial_gradient_pattern) => {
                 PatternRef::RadialGradient(radial_gradient_pattern)
-            },
-            Pattern::Surface(ref surface_pattern) => {
-                PatternRef::Surface(surface_pattern)
-            },
+            }
+            Pattern::Surface(ref surface_pattern) => PatternRef::Surface(surface_pattern),
         }
     }
 }
@@ -1387,11 +1357,15 @@ impl Drop for FilterNode {
 }
 
 impl FilterNode {
-    pub fn set_input<FIndex,FInput>(&self, index: FIndex, input: &FInput)
-                                    where FIndex: FilterInputIndex, FInput: FilterInput {
+    pub fn set_input<FIndex, FInput>(&self, index: FIndex, input: &FInput)
+        where FIndex: FilterInputIndex,
+              FInput: FilterInput
+    {
         input.set(self, index.azure_index())
     }
-    pub fn set_attribute<A>(&self, attribute: A) where A: FilterAttribute {
+    pub fn set_attribute<A>(&self, attribute: A)
+        where A: FilterAttribute
+    {
         attribute.set(self)
     }
 }
@@ -1516,9 +1490,7 @@ impl FilterAttribute for FloodAttribute {
     fn set(&self, filter_node: &FilterNode) {
         let FloodAttribute::Color(value) = *self;
         unsafe {
-            AzFilterNodeSetColorAttribute(filter_node.azure_filter_node,
-                                          AZ_ATT_FLOOD_COLOR,
-                                          &value)
+            AzFilterNodeSetColorAttribute(filter_node.azure_filter_node, AZ_ATT_FLOOD_COLOR, &value)
         }
     }
 }
@@ -1703,23 +1675,52 @@ impl FilterInput for FilterNode {
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Matrix5x4 {
-    pub m11: AzFloat, pub m12: AzFloat, pub m13: AzFloat, pub m14: AzFloat,
-    pub m21: AzFloat, pub m22: AzFloat, pub m23: AzFloat, pub m24: AzFloat,
-    pub m31: AzFloat, pub m32: AzFloat, pub m33: AzFloat, pub m34: AzFloat,
-    pub m41: AzFloat, pub m42: AzFloat, pub m43: AzFloat, pub m44: AzFloat,
-    pub m51: AzFloat, pub m52: AzFloat, pub m53: AzFloat, pub m54: AzFloat,
+    pub m11: AzFloat,
+    pub m12: AzFloat,
+    pub m13: AzFloat,
+    pub m14: AzFloat,
+    pub m21: AzFloat,
+    pub m22: AzFloat,
+    pub m23: AzFloat,
+    pub m24: AzFloat,
+    pub m31: AzFloat,
+    pub m32: AzFloat,
+    pub m33: AzFloat,
+    pub m34: AzFloat,
+    pub m41: AzFloat,
+    pub m42: AzFloat,
+    pub m43: AzFloat,
+    pub m44: AzFloat,
+    pub m51: AzFloat,
+    pub m52: AzFloat,
+    pub m53: AzFloat,
+    pub m54: AzFloat,
 }
 
 impl Matrix5x4 {
     #[inline]
     pub fn as_azure_matrix_5x4(&self) -> struct__AzMatrix5x4 {
         struct__AzMatrix5x4 {
-            _11: self.m11, _12: self.m12, _13: self.m13, _14: self.m14,
-            _21: self.m21, _22: self.m22, _23: self.m23, _24: self.m24,
-            _31: self.m31, _32: self.m32, _33: self.m33, _34: self.m34,
-            _41: self.m41, _42: self.m42, _43: self.m43, _44: self.m44,
-            _51: self.m51, _52: self.m52, _53: self.m53, _54: self.m54,
+            _11: self.m11,
+            _12: self.m12,
+            _13: self.m13,
+            _14: self.m14,
+            _21: self.m21,
+            _22: self.m22,
+            _23: self.m23,
+            _24: self.m24,
+            _31: self.m31,
+            _32: self.m32,
+            _33: self.m33,
+            _34: self.m34,
+            _41: self.m41,
+            _42: self.m42,
+            _43: self.m43,
+            _44: self.m44,
+            _51: self.m51,
+            _52: self.m52,
+            _53: self.m53,
+            _54: self.m54,
         }
     }
 }
-
