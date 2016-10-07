@@ -4,13 +4,15 @@
 
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
-#![cfg_attr(feature = "plugins", feature(custom_derive, plugin))]
-#![cfg_attr(feature = "plugins", plugin(serde_macros))]
+#![cfg_attr(feature = "plugins", feature(custom_derive, plugin, rustc_attrs, rustc_macro))]
 #![cfg_attr(feature = "plugins", plugin(heapsize_plugin))]
 
 extern crate libc;
 #[cfg(feature = "plugins")]
 extern crate serde;
+#[cfg(feature = "plugins")]
+#[macro_use]
+extern crate serde_derive;
 extern crate euclid;
 extern crate skia;
 #[macro_use]
