@@ -67,6 +67,43 @@ use std::ptr;
 use std::slice;
 use std::sync::Arc;
 
+impl Color {
+    #[inline]
+    pub fn new(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> AzColor {
+        AzColor { r: r, g: g, b: b, a: a }
+    }
+
+    #[inline]
+    pub fn rgb(r: u8, g: u8, b: u8) -> AzColor {
+        AzColor {
+            r: (r as AzFloat) / (255.0 as AzFloat),
+            g: (g as AzFloat) / (255.0 as AzFloat),
+            b: (b as AzFloat) / (255.0 as AzFloat),
+            a: 1.0 as AzFloat
+        }
+    }
+
+    #[inline]
+    pub fn rgba(r: AzFloat, g: AzFloat, b: AzFloat, a: AzFloat) -> AzColor {
+        AzColor { r: r, g: g, b: b, a: a }
+    }
+
+    #[inline]
+    pub fn black() -> AzColor {
+        AzColor { r: 0.0, g: 0.0, b: 0.0, a: 1.0 }
+    }
+
+    #[inline]
+    pub fn transparent() -> AzColor {
+        AzColor { r: 0.0, g: 0.0, b: 0.0, a: 0.0 }
+    }
+
+    #[inline]
+    pub fn white() -> AzColor {
+        AzColor { r: 1.0, g: 1.0, b: 1.0, a: 1.0 }
+    }
+}
+
 pub trait AsAzureRect {
     fn as_azure_rect(&self) -> AzRect;
 }
