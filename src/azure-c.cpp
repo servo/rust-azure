@@ -866,5 +866,3 @@ AzFilterNodeSetBoolAttribute(AzFilterNodeRef aFilter, uint32_t aIndex, bool aVal
     gfx::FilterNode *gfxFilterNode = reinterpret_cast<gfx::FilterNode*>(aFilter);
     gfxFilterNode->SetAttribute(aIndex, aValue);
 }
-
-

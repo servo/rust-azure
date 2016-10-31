@@ -1,0 +1,19 @@
+[configs]
+skip-check-length = false
+skip-check-licenses = false
+
+[ignore]
+# Ignored packages with duplicated versions
+packages = []
+# Files that are ignored
+files = [
+  "./Cargo.lock",
+  "./Cargo.toml",
+  "./src/azure.rs",
+  "./src/azure-c.cpp",
+]
+# Directories that are ignored
+directories = [
+  "./libazure",
+  "./target",
+]
