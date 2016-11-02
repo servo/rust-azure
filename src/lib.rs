@@ -5,7 +5,6 @@
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
 #![cfg_attr(feature = "plugins", feature(custom_derive, plugin, proc_macro, rustc_attrs))]
-#![cfg_attr(feature = "plugins", plugin(heapsize_plugin))]
 
 extern crate libc;
 #[cfg(feature = "plugins")]
@@ -18,6 +17,9 @@ extern crate skia;
 #[macro_use]
 #[cfg(feature = "plugins")]
 extern crate heapsize;
+#[macro_use]
+#[cfg(feature = "plugins")]
+extern crate heapsize_derive;
 #[cfg(target_os = "linux")]
 extern crate x11;
 #[cfg(target_os = "android")]
