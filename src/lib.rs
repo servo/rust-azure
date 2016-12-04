@@ -84,7 +84,6 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
 
 pub mod azure_hl;
-pub mod scaled_font;
 
 #[cfg(target_os = "linux")]
 pub mod test;
