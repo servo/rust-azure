@@ -54,11 +54,7 @@ include_directories(
 	$ENV{DEP_SKIA_OUTDIR}/src
 )
 
-if(MSVC)
-  set(WINDOWS_USE_DIRECTWRITE TRUE)
-endif()
-
-if(NOT APPLE AND NOT WINDOWS_USE_DIRECTWRITE)
+if(NOT APPLE AND NOT WIN32)
   if(NOT "$ENV{DEP_FREETYPE_OUTDIR}" STREQUAL "")
     include_directories($ENV{DEP_FREETYPE_OUTDIR}/include/freetype2)
     message(STATUS "Using DEP_FREETYPE_OUTDIR/include/freetype2: " $ENV{DEP_FREETYPE_OUTDIR})
@@ -137,14 +133,10 @@ endif() # MacOS X
 
 if(WIN32)
   add_definitions(-DWIN32 -DXP_WIN -D_WIN32_WINNT=0x0600 -DSK_BUILD_FOR_WIN32)
-  
+
   if(MSVC)
     # Enable C++ exceptions; extern "c" defaults to nothrow
     add_definitions(-EHsc)
-  endif()
-
-  if(NOT WINDOWS_USE_DIRECTWRITE)
-    add_definitions(-DMOZ_ENABLE_FREETYPE)
   endif()
 
   set_prefix(LIBAZURE_PLATFORM_SRC libazure/

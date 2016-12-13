@@ -24,7 +24,7 @@ extern crate heapsize_derive;
 extern crate x11;
 #[cfg(target_os = "android")]
 extern crate egl;
-#[cfg(not(target_os = "macos"))]
+#[cfg(all(target_os = "linux", target_os = "android"))]
 extern crate freetype;
 #[cfg(target_os = "macos")]
 extern crate core_foundation;
@@ -84,7 +84,6 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
 
 pub mod azure_hl;
-pub mod scaled_font;
 
 #[cfg(target_os = "linux")]
 pub mod test;
