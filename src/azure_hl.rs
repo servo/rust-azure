@@ -576,7 +576,7 @@ impl DrawTarget {
         unsafe {
             let mut result: AzMatrix = mem::uninitialized();
             AzDrawTargetGetTransform(self.azure_draw_target, &mut result);
-            mem::transmute::<AzMatrix,Matrix2D<AzFloat>>(result)
+            result.as_matrix_2d()
         }
     }
 
@@ -705,8 +705,8 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawFilter(self.azure_draw_target,
                                    filter.azure_filter_node,
-                                   mem::transmute::<_,*const AzRect>(source_rect),
-                                   mem::transmute::<_,*const AzPoint>(dest_point),
+                                   &AzRect::from_rect(source_rect),
+                                   &AzPoint::from_point_2d(dest_point),
                                    &options.as_azure_draw_options())
         }
     }
@@ -721,9 +721,9 @@ impl DrawTarget {
         unsafe {
             AzDrawTargetDrawSurfaceWithShadow(self.azure_draw_target,
                                               surface.azure_source_surface,
-                                              mem::transmute::<_,*const AzPoint>(dest),
-                                              mem::transmute::<_,*const AzColor>(color),
-                                              mem::transmute::<_,*const AzPoint>(offset),
+                                              &AzPoint::from_point_2d(dest),
+                                              color,
+                                              &AzPoint::from_point_2d(offset),
                                               sigma,
                                               operator as AzCompositionOp)
         }
@@ -1088,7 +1088,7 @@ impl Path {
         let mut az_point = point.as_azure_point();
         unsafe {
             AzPathContainsPoint(self.azure_path, &mut az_point,
-                                mem::transmute::<_,*const AzMatrix>(matrix))
+                                &AzMatrix::from_matrix_2d(matrix))
         }
     }
 
@@ -1238,10 +1238,10 @@ impl LinearGradientPattern {
         unsafe {
             LinearGradientPattern {
                 azure_linear_gradient_pattern:
-                    AzCreateLinearGradientPattern(mem::transmute::<_,*const AzPoint>(begin),
-                                                  mem::transmute::<_,*const AzPoint>(end),
+                    AzCreateLinearGradientPattern(&AzPoint::from_point_2d(begin),
+                                                  &AzPoint::from_point_2d(end),
                                                   stops.azure_gradient_stops,
-                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+                                                  &AzMatrix::from_matrix_2d(matrix)),
                 begin: *begin,
                 end: *end,
             }
@@ -1288,12 +1288,12 @@ impl RadialGradientPattern {
         unsafe {
             RadialGradientPattern {
                 azure_radial_gradient_pattern:
-                    AzCreateRadialGradientPattern(mem::transmute::<_,*const AzPoint>(center1),
-                                                  mem::transmute::<_,*const AzPoint>(center2),
+                    AzCreateRadialGradientPattern(&AzPoint::from_point_2d(center1),
+                                                  &AzPoint::from_point_2d(center2),
                                                   radius1,
                                                   radius2,
                                                   stops.azure_gradient_stops,
-                                                  mem::transmute::<_,*const AzMatrix>(matrix)),
+                                                  &AzMatrix::from_matrix_2d(matrix)),
             }
         }
     }
@@ -1344,7 +1344,7 @@ impl SurfacePattern {
                 azure_surface_pattern:
                     AzCreateSurfacePattern(surface,
                                            mode.as_azure_extend_mode(),
-                                           mem::transmute::<_,*const AzMatrix>(matrix)),
+                                           &AzMatrix::from_matrix_2d(matrix)),
                 repeat_x: repeat_x,
                 repeat_y: repeat_y,
             }
@@ -1760,3 +1760,44 @@ impl Matrix5x4 {
     }
 }
 
+impl AzMatrix {
+    #[inline]
+    fn as_matrix_2d(&self) -> Matrix2D<AzFloat> {
+        Matrix2D::row_major(
+            self._11, self._12, self._21, self._22, self._31, self._32)
+    }
+
+    #[inline]
+    fn from_matrix_2d(matrix: &Matrix2D<AzFloat>) -> Self {
+        AzMatrix {
+            _11: matrix.m11,
+            _12: matrix.m12,
+            _21: matrix.m21,
+            _22: matrix.m22,
+            _31: matrix.m31,
+            _32: matrix.m32,
+        }
+    }
+}
+
+impl AzPoint {
+    #[inline]
+    fn from_point_2d(point: &Point2D<AzFloat>) -> Self {
+        AzPoint {
+            x: point.x,
+            y: point.y,
+        }
+    }
+}
+
+impl AzRect {
+    #[inline]
+    fn from_rect(rect: &Rect<AzFloat>) -> Self {
+        AzRect {
+            x: rect.origin.x,
+            y: rect.origin.y,
+            width: rect.size.width,
+            height: rect.size.height,
+        }
+    }
+}
