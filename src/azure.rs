@@ -336,12 +336,12 @@ pub type AzSize = struct__AzSize;
 #[repr(C)]
 #[derive(Debug)]
 pub struct struct__AzMatrix {
-    _11: AzFloat,
-    _12: AzFloat,
-    _21: AzFloat,
-    _22: AzFloat,
-    _31: AzFloat,
-    _32: AzFloat,
+    pub _11: AzFloat,
+    pub _12: AzFloat,
+    pub _21: AzFloat,
+    pub _22: AzFloat,
+    pub _31: AzFloat,
+    pub _32: AzFloat,
 }
 
 pub type AzMatrix = struct__AzMatrix;
