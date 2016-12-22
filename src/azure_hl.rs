@@ -808,7 +808,7 @@ impl DrawTarget {
 
     pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
         unsafe {
-            AzDrawTargetSetTransform(self.azure_draw_target, mem::transmute(matrix));
+            AzDrawTargetSetTransform(self.azure_draw_target, &AzMatrix::from_matrix_2d(matrix));
         }
     }
 
