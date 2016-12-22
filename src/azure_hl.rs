@@ -5,6 +5,7 @@
 //! High-level bindings to Azure.
 
 pub use AzColor as Color;
+pub use azure::AzGradientStop as GradientStop;
 use azure::{AZ_FILTER_TYPE_COLOR_MATRIX};
 use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
 use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
@@ -22,7 +23,7 @@ use azure::{AZ_ATT_TRANSFER_DISABLE_A};
 use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
 use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
 use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode, AzGradientStop};
+use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode};
 use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
 use azure::{struct__AzGlyphBuffer};
 use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
@@ -799,7 +800,7 @@ impl DrawTarget {
         unsafe {
             GradientStops::new(AzDrawTargetCreateGradientStops(
                     self.azure_draw_target,
-                    mem::transmute::<_,*const AzGradientStop>(gradient_stops.as_ptr()),
+                    gradient_stops.as_ptr(),
                     gradient_stops.len() as u32,
                     extend_mode.as_azure_extend_mode()))
         }
@@ -968,14 +969,6 @@ impl GradientStops {
             azure_gradient_stops: azure_gradient_stops,
         }
     }
-}
-
-#[repr(C)]
-#[cfg_attr(feature = "plugins", derive(Deserialize, Serialize, HeapSizeOf))]
-#[derive(Clone, Debug)]
-pub struct GradientStop {
-    pub offset: AzFloat,
-    pub color: Color,
 }
 
 #[repr(i32)]
