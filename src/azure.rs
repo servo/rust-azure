@@ -596,7 +596,7 @@ pub fn AzCreateScaledFontForTrueTypeData(aFontData: *const u8, aFontDataSize: u3
 
 pub fn AzReleaseScaledFont(aFont: AzScaledFontRef);
 
-pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *mut AzMatrix);
+pub fn AzDrawTargetSetTransform(aDrawTarget: AzDrawTargetRef, aTransform: *const AzMatrix);
 
 pub fn AzCreateFontOptionsForName(aName: *const c_char, aStyle: enum_AzFontStyle) -> *mut AzFontOptions;
 

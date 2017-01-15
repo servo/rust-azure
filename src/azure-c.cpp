@@ -570,9 +570,9 @@ AzReleaseScaledFont(AzScaledFontRef aFont) {
 
 extern "C" void
 AzDrawTargetSetTransform(AzDrawTargetRef aDrawTarget,
-                         AzMatrix *aTransform) {
+                         const AzMatrix *aTransform) {
     gfx::DrawTarget *gfxDrawTarget = static_cast<gfx::DrawTarget*>(aDrawTarget);
-    gfx::Matrix *gfxMatrix = reinterpret_cast<gfx::Matrix*>(aTransform);
+    const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aTransform);
     gfxDrawTarget->SetTransform(*gfxMatrix);
 }
 
