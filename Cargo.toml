@@ -1,6 +1,6 @@
 [package]
 name = "azure"
-version = "0.12.0"
+version = "0.11.0"
 authors = ["The Servo Project Developers"]
 documentation = "http://doc.servo.org/azure/"
 
@@ -14,13 +14,13 @@ plugins = ["serde", "serde_derive", "heapsize", "heapsize_derive"]
 cmake = "0.1"
 
 [dependencies]
-euclid = "0.11"
+euclid = "0.10"
 heapsize = {version = "0.3", optional = true}
 heapsize_derive = {version = "0.1.0", optional = true}
 libc = "0.2"
 serde = {version = "0.9", optional = true}
 serde_derive = {version = "0.9", optional = true}
-servo-skia = "0.30000002"
+servo-skia = "0.30000001"
 
 [target.'cfg(all(target_os = "linux", target_os = "android"))'.dependencies]
 freetype = "0.2"
@@ -34,5 +34,5 @@ servo-egl = "0.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 core-foundation = "0.3"
-core-graphics = "0.7"
+core-graphics = "0.6"
 core-text = "3.0"
