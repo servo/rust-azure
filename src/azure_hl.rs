@@ -57,10 +57,11 @@ use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
 use azure::{AzPathContainsPoint, AzPathCopyToBuilder};
 
-use euclid::matrix2d::Matrix2D;
-use euclid::point::Point2D;
-use euclid::rect::Rect;
-use euclid::size::Size2D;
+use euclid::Transform2D;
+use euclid::Point2D;
+use euclid::Vector2D;
+use euclid::Rect;
+use euclid::Size2D;
 use libc::size_t;
 use skia::gl_rasterization_context::GLRasterizationContext;
 use std::mem;
@@ -153,6 +154,17 @@ pub trait AsAzurePoint {
 }
 
 impl AsAzurePoint for Point2D<AzFloat> {
+    fn as_azure_point(&self) -> AzPoint {
+        struct__AzPoint {
+            x: self.x,
+            y: self.y
+        }
+    }
+}
+
+// Azure does not have a separation between points and vectors, AzPoint is used
+// to represent both
+impl AsAzurePoint for Vector2D<AzFloat> {
     fn as_azure_point(&self) -> AzPoint {
         struct__AzPoint {
             x: self.x,
@@ -573,7 +585,7 @@ impl DrawTarget {
         }
     }
 
-    pub fn get_transform(&self) -> Matrix2D<AzFloat> {
+    pub fn get_transform(&self) -> Transform2D<AzFloat> {
         unsafe {
             let mut result: AzMatrix = mem::uninitialized();
             AzDrawTargetGetTransform(self.azure_draw_target, &mut result);
@@ -716,7 +728,7 @@ impl DrawTarget {
                                     surface: SourceSurface,
                                     dest: &Point2D<AzFloat>,
                                     color: &Color,
-                                    offset: &Point2D<AzFloat>,
+                                    offset: &Vector2D<AzFloat>,
                                     sigma: AzFloat,
                                     operator: CompositionOp) {
         unsafe {
@@ -724,7 +736,7 @@ impl DrawTarget {
                                               surface.azure_source_surface,
                                               &AzPoint::from_point_2d(dest),
                                               color,
-                                              &AzPoint::from_point_2d(offset),
+                                              &AzPoint::from_vector_2d(offset),
                                               sigma,
                                               operator as AzCompositionOp)
         }
@@ -806,7 +818,7 @@ impl DrawTarget {
         }
     }
 
-    pub fn set_transform(&self, matrix: &Matrix2D<AzFloat>) {
+    pub fn set_transform(&self, matrix: &Transform2D<AzFloat>) {
         unsafe {
             AzDrawTargetSetTransform(self.azure_draw_target, &AzMatrix::from_matrix_2d(matrix));
         }
@@ -1076,7 +1088,7 @@ pub struct Path {
 }
 
 impl Path {
-    pub fn contains_point(&self, x: f64, y: f64, matrix: &Matrix2D<AzFloat>) -> bool {
+    pub fn contains_point(&self, x: f64, y: f64, matrix: &Transform2D<AzFloat>) -> bool {
         let point: Point2D<AzFloat> = Point2D::new(x as f32, y as f32);
         let mut az_point = point.as_azure_point();
         unsafe {
@@ -1226,7 +1238,7 @@ impl LinearGradientPattern {
     pub fn new(begin: &Point2D<AzFloat>,
                end: &Point2D<AzFloat>,
                stops: GradientStops,
-               matrix: &Matrix2D<AzFloat>)
+               matrix: &Transform2D<AzFloat>)
                -> LinearGradientPattern {
         unsafe {
             LinearGradientPattern {
@@ -1276,7 +1288,7 @@ impl RadialGradientPattern {
                radius1: AzFloat,
                radius2: AzFloat,
                stops: GradientStops,
-               matrix: &Matrix2D<AzFloat>)
+               matrix: &Transform2D<AzFloat>)
                -> RadialGradientPattern {
         unsafe {
             RadialGradientPattern {
@@ -1324,7 +1336,7 @@ impl SurfacePattern {
     pub fn new(surface: AzSourceSurfaceRef,
                repeat_x: bool,
                repeat_y: bool,
-               matrix: &Matrix2D<AzFloat>)
+               matrix: &Transform2D<AzFloat>)
                -> SurfacePattern {
         let mode = if !repeat_x && !repeat_y {
             ExtendMode::Clamp
@@ -1755,13 +1767,13 @@ impl Matrix5x4 {
 
 impl AzMatrix {
     #[inline]
-    fn as_matrix_2d(&self) -> Matrix2D<AzFloat> {
-        Matrix2D::row_major(
+    fn as_matrix_2d(&self) -> Transform2D<AzFloat> {
+        Transform2D::row_major(
             self._11, self._12, self._21, self._22, self._31, self._32)
     }
 
     #[inline]
-    fn from_matrix_2d(matrix: &Matrix2D<AzFloat>) -> Self {
+    fn from_matrix_2d(matrix: &Transform2D<AzFloat>) -> Self {
         AzMatrix {
             _11: matrix.m11,
             _12: matrix.m12,
@@ -1776,6 +1788,13 @@ impl AzMatrix {
 impl AzPoint {
     #[inline]
     fn from_point_2d(point: &Point2D<AzFloat>) -> Self {
+        AzPoint {
+            x: point.x,
+            y: point.y,
+        }
+    }
+
+    fn from_vector_2d(point: &Vector2D<AzFloat>) -> Self {
         AzPoint {
             x: point.x,
             y: point.y,
