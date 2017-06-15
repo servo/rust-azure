@@ -3,6 +3,9 @@ name = "azure"
 version = "0.18.0"
 authors = ["The Servo Project Developers"]
 documentation = "http://doc.servo.org/azure/"
+repository = "https://github.com/servo/rust-azure"
+description = "Bindings to Mozilla's Moz2D library"
+license = "MPL-2.0"
 
 build = "build.rs"
 
