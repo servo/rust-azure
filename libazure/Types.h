@@ -6,13 +6,14 @@
 #ifndef MOZILLA_GFX_TYPES_H_
 #define MOZILLA_GFX_TYPES_H_
 
+// Required so that INT32_MAX can be defined on certain gcc versions
+#define __STDC_LIMIT_MACROS
+
 #include "mozilla/NullPtr.h"
 #include "mozilla/TypedEnum.h"
 
 #include <stddef.h>
 
-// Required so that INT32_MAX can be defined on certain gcc versions
-#define __STDC_LIMIT_MACROS
 #include <stdint.h>
 
 namespace mozilla {
