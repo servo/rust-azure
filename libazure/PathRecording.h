@@ -63,7 +63,7 @@ public:
   virtual void Close();
 
   /* Add an arc to the current figure */
-  virtual void Arc(const Point &, float, float, float, bool) { }
+  virtual void Arc(const Point &, float, float, float, float, float, bool) { }
 
   /* Point the current subpath is at - or where the next subpath will start
    * if there is no active subpath.

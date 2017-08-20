@@ -37,7 +37,8 @@ public:
   virtual void QuadraticBezierTo(const Point &aCP1,
                                  const Point &aCP2);
   virtual void Close();
-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+  virtual void Arc(const Point &aOrigin, float aRadiusX, float aRadiusY,
+                   float aRotationAngle, float aStartAngle,
                    float aEndAngle, bool aAntiClockwise = false);
 
   virtual Point CurrentPoint() const { return mPathOps.empty() ? Point() : mPathOps[mPathOps.size() - 1].mPoint; }

@@ -85,10 +85,16 @@ PathBuilderSkia::Close()
 }
 
 void
-PathBuilderSkia::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
-                     float aEndAngle, bool aAntiClockwise)
+PathBuilderSkia::Arc(const Point &aOrigin, float aRadiusX, float aRadiusY, float aRotationAngle,
+                     float aStartAngle, float aEndAngle, bool aAntiClockwise)
 {
-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle, aAntiClockwise);
+  ArcToBezier<PathBuilder>(this, aOrigin, Size(aRadiusX, aRadiusY), aStartAngle, aEndAngle, aAntiClockwise);
+
+  if (aRotationAngle) {
+    SkMatrix matrix;
+    matrix.setRotate(aRotationAngle * 180.0 / M_PI, aOrigin.x, aOrigin.y);
+    mPath.transform(matrix);
+  }
 }
 
 Point
