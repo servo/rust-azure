@@ -1147,6 +1147,30 @@ impl PathBuilder {
             AzPathBuilderArc(self.azure_path_builder,
                              &origin,
                              radius,
+                             radius,
+                             0.,
+                             start_angle,
+                             end_angle,
+                             anticlockwise)
+        }
+    }
+
+    /// Adds an ellipse to the current figure.
+    pub fn ellipse(&self,
+               origin: Point2D<AzFloat>,
+               radius_x: AzFloat,
+               radius_y: AzFloat,
+               rotation_angle: AzFloat,
+               start_angle: AzFloat,
+               end_angle: AzFloat,
+               anticlockwise: bool) {
+        let origin = origin.as_azure_point();
+        unsafe {
+            AzPathBuilderArc(self.azure_path_builder,
+                             &origin,
+                             radius_x,
+                             radius_y,
+                             rotation_angle,
                              start_angle,
                              end_angle,
                              anticlockwise)

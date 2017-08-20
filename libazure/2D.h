@@ -448,7 +448,8 @@ public:
    */
   virtual void Close() = 0;
   /** Add an arc to the current figure */
-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+  virtual void Arc(const Point &aOrigin, float aRadiusX, float aRadiusY,
+                   float aRotationAngle, float aStartAngle,
                    float aEndAngle, bool aAntiClockwise = false) = 0;
   /** Point the current subpath is at - or where the next subpath will start
    * if there is no active subpath.

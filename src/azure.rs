@@ -616,7 +616,9 @@ pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint)
 
 pub fn AzPathBuilderArc(aPathBuilder: AzPathBuilderRef,
                         aOrigin: *const AzPoint,
-                        aRadius: AzFloat,
+                        aRadiusX: AzFloat,
+                        aRadiusY: AzFloat,
+                        aRotationAngle: AzFloat,
                         aStartAngle: AzFloat,
                         aEndAngle: AzFloat,
                         aAntiClockwise: bool);

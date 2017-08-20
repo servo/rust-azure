@@ -65,7 +65,8 @@ PathBuilderCG::Close()
 }
 
 void
-PathBuilderCG::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+PathBuilderCG::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
+                 Float aRotationAngle, Float aStartAngle,
                  Float aEndAngle, bool aAntiClockwise)
 {
   // Core Graphic's initial coordinate system is y-axis up, whereas Moz2D's is
@@ -78,7 +79,7 @@ PathBuilderCG::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
   // parameter.
   CGPathAddArc(mCGPath, nullptr,
                aOrigin.x, aOrigin.y,
-               aRadius,
+               aRadiusX,
                aStartAngle,
                aEndAngle,
                aAntiClockwise);
