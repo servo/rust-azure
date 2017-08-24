@@ -1,0 +1,159 @@
+commit af9a5ef2b6e324c946f93d0150a34d2c831e83a8
+Author: Joone Hur <joone@kldp.org>
+Date:   Sun Aug 20 03:03:19 2017 -0700
+
+    Implement Ellipse API
+    
+    Bug: https://github.com/servo/servo/issues/17598
+
+diff --git a/libazure/2D.h b/libazure/2D.h
+index 85529f6..2ddebd8 100644
+--- a/libazure/2D.h
++++ b/libazure/2D.h
+@@ -448,7 +448,8 @@ public:
+    */
+   virtual void Close() = 0;
+   /** Add an arc to the current figure */
+-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
++  virtual void Arc(const Point &aOrigin, float aRadiusX, float aRadiusY,
++                   float aRotationAngle, float aStartAngle,
+                    float aEndAngle, bool aAntiClockwise = false) = 0;
+   /** Point the current subpath is at - or where the next subpath will start
+    * if there is no active subpath.
+diff --git a/libazure/Path.cpp b/libazure/Path.cpp
+index 998ac07..f045114 100644
+--- a/libazure/Path.cpp
++++ b/libazure/Path.cpp
+@@ -127,10 +127,11 @@ FlattenedPath::Close()
+ }
+ 
+ void
+-FlattenedPath::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
++FlattenedPath::Arc(const Point &aOrigin, float aRadiusX, float aRadiusY,
++                   float aRotationAngle, float aStartAngle,
+                    float aEndAngle, bool aAntiClockwise)
+ {
+-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle, aAntiClockwise);
++  ArcToBezier(this, aOrigin, Size(aRadiusX, aRadiusY), aStartAngle, aEndAngle, aAntiClockwise);
+ }
+ 
+ Float
+diff --git a/libazure/PathAnalysis.h b/libazure/PathAnalysis.h
+index 6b9b33f..d23308a 100644
+--- a/libazure/PathAnalysis.h
++++ b/libazure/PathAnalysis.h
+@@ -37,7 +37,8 @@ public:
+   virtual void QuadraticBezierTo(const Point &aCP1,
+                                  const Point &aCP2);
+   virtual void Close();
+-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
++  virtual void Arc(const Point &aOrigin, float aRadiusX, float aRadiusY,
++                   float aRotationAngle, float aStartAngle,
+                    float aEndAngle, bool aAntiClockwise = false);
+ 
+   virtual Point CurrentPoint() const { return mPathOps.empty() ? Point() : mPathOps[mPathOps.size() - 1].mPoint; }
+diff --git a/libazure/PathCG.cpp b/libazure/PathCG.cpp
+index d40f84f..82ec525 100644
+--- a/libazure/PathCG.cpp
++++ b/libazure/PathCG.cpp
+@@ -65,7 +65,8 @@ PathBuilderCG::Close()
+ }
+ 
+ void
+-PathBuilderCG::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
++PathBuilderCG::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
++                 Float aRotationAngle, Float aStartAngle,
+                  Float aEndAngle, bool aAntiClockwise)
+ {
+   // Core Graphic's initial coordinate system is y-axis up, whereas Moz2D's is
+@@ -78,7 +79,7 @@ PathBuilderCG::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+   // parameter.
+   CGPathAddArc(mCGPath, nullptr,
+                aOrigin.x, aOrigin.y,
+-               aRadius,
++               aRadiusX,
+                aStartAngle,
+                aEndAngle,
+                aAntiClockwise);
+diff --git a/libazure/PathCG.h b/libazure/PathCG.h
+index 615ad2c..a669820 100644
+--- a/libazure/PathCG.h
++++ b/libazure/PathCG.h
+@@ -41,7 +41,7 @@ public:
+   virtual void QuadraticBezierTo(const Point &aCP1,
+                                  const Point &aCP2);
+   virtual void Close();
+-  virtual void Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
++  virtual void Arc(const Point &aOrigin, Float aRadiusX, float aRadiusY, float aRotationAngle, Float aStartAngle,
+                    Float aEndAngle, bool aAntiClockwise = false);
+   virtual Point CurrentPoint() const;
+ 
+diff --git a/libazure/PathCairo.cpp b/libazure/PathCairo.cpp
+index d0c9d05..858275c 100644
+--- a/libazure/PathCairo.cpp
++++ b/libazure/PathCairo.cpp
+@@ -110,10 +110,10 @@ PathBuilderCairo::Close()
+ }
+ 
+ void
+-PathBuilderCairo::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+-                     float aEndAngle, bool aAntiClockwise)
++PathBuilderCairo::Arc(const Point &aOrigin, float aRadiusX, float aRadiusY, float aRotationAngle,
++                     float aStartAngle, float aEndAngle, bool aAntiClockwise)
+ {
+-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle, aAntiClockwise);
++  ArcToBezier(this, aOrigin, Size(aRadiusX, aRadiusY), aStartAngle, aEndAngle, aAntiClockwise);
+ }
+ 
+ Point
+diff --git a/libazure/PathRecording.h b/libazure/PathRecording.h
+index 97faa40..0cc967d 100644
+--- a/libazure/PathRecording.h
++++ b/libazure/PathRecording.h
+@@ -63,7 +63,7 @@ public:
+   virtual void Close();
+ 
+   /* Add an arc to the current figure */
+-  virtual void Arc(const Point &, float, float, float, bool) { }
++  virtual void Arc(const Point &, float, float, float, float, float, bool) { }
+ 
+   /* Point the current subpath is at - or where the next subpath will start
+    * if there is no active subpath.
+diff --git a/libazure/PathSkia.cpp b/libazure/PathSkia.cpp
+index efa0c6f..810e807 100644
+--- a/libazure/PathSkia.cpp
++++ b/libazure/PathSkia.cpp
+@@ -85,10 +85,16 @@ PathBuilderSkia::Close()
+ }
+ 
+ void
+-PathBuilderSkia::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+-                     float aEndAngle, bool aAntiClockwise)
++PathBuilderSkia::Arc(const Point &aOrigin, float aRadiusX, float aRadiusY, float aRotationAngle,
++                     float aStartAngle, float aEndAngle, bool aAntiClockwise)
+ {
+-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle, aAntiClockwise);
++  ArcToBezier<PathBuilder>(this, aOrigin, Size(aRadiusX, aRadiusY), aStartAngle, aEndAngle, aAntiClockwise);
++
++  if (aRotationAngle) {
++    SkMatrix matrix;
++    matrix.setRotate(aRotationAngle * 180.0 / M_PI, aOrigin.x, aOrigin.y);
++    mPath.transform(matrix);
++  }
+ }
+ 
+ Point
+diff --git a/libazure/PathSkia.h b/libazure/PathSkia.h
+index ccb61bc..fb765ac 100644
+--- a/libazure/PathSkia.h
++++ b/libazure/PathSkia.h
+@@ -29,8 +29,8 @@ public:
+   virtual void QuadraticBezierTo(const Point &aCP1,
+                                  const Point &aCP2);
+   virtual void Close();
+-  virtual void Arc(const Point &aOrigin, float aRadius, float aStartAngle,
+-                   float aEndAngle, bool aAntiClockwise = false);
++  virtual void Arc(const Point &aOrigin, float aRadiusX, float aRadiusY, float aRotationAngle,
++                   float aStartAngle, float aEndAngle, bool aAntiClockwise = false);
+   virtual Point CurrentPoint() const;
+   virtual TemporaryRef<Path> Finish();

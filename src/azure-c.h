@@ -435,7 +435,9 @@ void AzPathBuilderMoveTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint);
 void AzPathBuilderLineTo(AzPathBuilderRef aPathBuilder, const AzPoint *aPoint);
 void AzPathBuilderArc(AzPathBuilderRef aPathBuilder,
                       const AzPoint *aOrigin,
-                      AzFloat aRadius,
+                      AzFloat aRadiusX,
+                      AzFloat aRadiusY,
+                      AzFloat aRotationAngle,
                       AzFloat aStartAngle,
                       AzFloat aEndAngle,
                       bool aAntiClockwise);
