@@ -1,0 +1,70 @@
+commit 85b126dceaa4dab4d6c84ee62f64585c6abaebb0
+Author: Joone Hur <joone@kldp.org>
+Date:   Sat Aug 26 22:07:51 2017 -0700
+
+    Add aRadiusX and aRadiusY to Arc method in PathBuilderD2D
+    
+    Arc method was updated to support Ellipse of Canvas 2D API:
+    https://github.com/servo/rust-azure/commit/648e112bbf15a8b741553300a422381c2971b69e
+
+diff --git a/libazure/PathD2D.cpp b/libazure/PathD2D.cpp
+index 3a58395..b0d9a5f 100644
+--- a/libazure/PathD2D.cpp
++++ b/libazure/PathD2D.cpp
+@@ -216,8 +216,8 @@ PathBuilderD2D::Close()
+ }
+ 
+ void
+-PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+-                 Float aEndAngle, bool aAntiClockwise)
++PathBuilderD2D::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
++                 Float aStartAngle, Float aEndAngle, bool aAntiClockwise)
+ {
+   if (aAntiClockwise && aStartAngle < aEndAngle) {
+     // D2D does things a little differently, and draws the arc by specifying an
+@@ -239,8 +239,8 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+   }
+ 
+   Point startPoint;
+-  startPoint.x = aOrigin.x + aRadius * cos(aStartAngle);
+-  startPoint.y = aOrigin.y + aRadius * sin(aStartAngle);
++  startPoint.x = aOrigin.x + aRadiusX * cos(aStartAngle);
++  startPoint.y = aOrigin.y + aRadiusY * sin(aStartAngle);
+ 
+   if (!mFigureActive) {
+     EnsureActive(startPoint);
+@@ -249,8 +249,8 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+   }
+ 
+   Point endPoint;
+-  endPoint.x = aOrigin.x + aRadius * cos(aEndAngle);
+-  endPoint.y = aOrigin.y + aRadius * sin(aEndAngle);
++  endPoint.x = aOrigin.x + aRadiusX * cos(aEndAngle);
++  endPoint.y = aOrigin.y + aRadiusY * sin(aEndAngle);
+ 
+   D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
+ 
+@@ -265,7 +265,7 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+   }
+ 
+   mSink->AddArc(D2D1::ArcSegment(D2DPoint(endPoint),
+-                                 D2D1::SizeF(aRadius, aRadius),
++                                 D2D1::SizeF(aRadiusX, aRadiusY),
+                                  0.0f,
+                                  aAntiClockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE :
+                                                   D2D1_SWEEP_DIRECTION_CLOCKWISE,
+diff --git a/libazure/PathD2D.h b/libazure/PathD2D.h
+index d27f174..f880555 100644
+--- a/libazure/PathD2D.h
++++ b/libazure/PathD2D.h
+@@ -36,8 +36,8 @@ public:
+   virtual void QuadraticBezierTo(const Point &aCP1,
+                                  const Point &aCP2);
+   virtual void Close();
+-  virtual void Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
+-                   Float aEndAngle, bool aAntiClockwise = false);
++  virtual void Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
++                   Float aStartAngle, Float aEndAngle, bool aAntiClockwise = false);
+   virtual Point CurrentPoint() const;
+ 
+   virtual TemporaryRef<Path> Finish();

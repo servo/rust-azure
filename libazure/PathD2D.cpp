@@ -216,8 +216,8 @@ PathBuilderD2D::Close()
 }
 
 void
-PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
-                 Float aEndAngle, bool aAntiClockwise)
+PathBuilderD2D::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
+                 Float aStartAngle, Float aEndAngle, bool aAntiClockwise)
 {
   if (aAntiClockwise && aStartAngle < aEndAngle) {
     // D2D does things a little differently, and draws the arc by specifying an
@@ -239,8 +239,8 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
   }
 
   Point startPoint;
-  startPoint.x = aOrigin.x + aRadius * cos(aStartAngle);
-  startPoint.y = aOrigin.y + aRadius * sin(aStartAngle);
+  startPoint.x = aOrigin.x + aRadiusX * cos(aStartAngle);
+  startPoint.y = aOrigin.y + aRadiusY * sin(aStartAngle);
 
   if (!mFigureActive) {
     EnsureActive(startPoint);
@@ -249,8 +249,8 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
   }
 
   Point endPoint;
-  endPoint.x = aOrigin.x + aRadius * cos(aEndAngle);
-  endPoint.y = aOrigin.y + aRadius * sin(aEndAngle);
+  endPoint.x = aOrigin.x + aRadiusX * cos(aEndAngle);
+  endPoint.y = aOrigin.y + aRadiusY * sin(aEndAngle);
 
   D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
 
@@ -265,7 +265,7 @@ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadius, Float aStartAngle,
   }
 
   mSink->AddArc(D2D1::ArcSegment(D2DPoint(endPoint),
-                                 D2D1::SizeF(aRadius, aRadius),
+                                 D2D1::SizeF(aRadiusX, aRadiusY),
                                  0.0f,
                                  aAntiClockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE :
                                                   D2D1_SWEEP_DIRECTION_CLOCKWISE,
