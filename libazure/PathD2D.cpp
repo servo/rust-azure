@@ -217,7 +217,8 @@ PathBuilderD2D::Close()
 
 void
 PathBuilderD2D::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
-                 Float aStartAngle, Float aEndAngle, bool aAntiClockwise)
+                 Float aRotationAngle, Float aStartAngle, Float aEndAngle,
+                 bool aAntiClockwise)
 {
   if (aAntiClockwise && aStartAngle < aEndAngle) {
     // D2D does things a little differently, and draws the arc by specifying an

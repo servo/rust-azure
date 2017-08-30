@@ -1,0 +1,37 @@
+commit 9cfb45c8a43e9d6f39b053061947057af71c7cc1
+Author: Joone Hur <joone@kldp.org>
+Date:   Sat Aug 26 22:07:51 2017 -0700
+
+    Add aRotationAngle to Arc method in PathBuilderD2D
+    
+    Arc method was updated to support Ellipse of Canvas 2D API:
+    https://github.com/servo/rust-azure/commit/648e112bbf15a8b741553300a422381c2971b69e
+
+diff --git a/libazure/PathD2D.cpp b/libazure/PathD2D.cpp
+index b0d9a5f..28c3cb5 100644
+--- a/libazure/PathD2D.cpp
++++ b/libazure/PathD2D.cpp
+@@ -217,7 +217,8 @@ PathBuilderD2D::Close()
+ 
+ void
+ PathBuilderD2D::Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
+-                 Float aStartAngle, Float aEndAngle, bool aAntiClockwise)
++                 Float aRotationAngle, Float aStartAngle, Float aEndAngle,
++                 bool aAntiClockwise)
+ {
+   if (aAntiClockwise && aStartAngle < aEndAngle) {
+     // D2D does things a little differently, and draws the arc by specifying an
+diff --git a/libazure/PathD2D.h b/libazure/PathD2D.h
+index f880555..728e20c 100644
+--- a/libazure/PathD2D.h
++++ b/libazure/PathD2D.h
+@@ -37,7 +37,8 @@ public:
+                                  const Point &aCP2);
+   virtual void Close();
+   virtual void Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
+-                   Float aStartAngle, Float aEndAngle, bool aAntiClockwise = false);
++                   Float aRotationAngle, Float aStartAngle, Float aEndAngle,
++                   bool aAntiClockwise = false);
+   virtual Point CurrentPoint() const;
+ 
+   virtual TemporaryRef<Path> Finish();

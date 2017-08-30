@@ -37,7 +37,8 @@ public:
                                  const Point &aCP2);
   virtual void Close();
   virtual void Arc(const Point &aOrigin, Float aRadiusX, Float aRadiusY,
-                   Float aStartAngle, Float aEndAngle, bool aAntiClockwise = false);
+                   Float aRotationAngle, Float aStartAngle, Float aEndAngle,
+                   bool aAntiClockwise = false);
   virtual Point CurrentPoint() const;
 
   virtual TemporaryRef<Path> Finish();
