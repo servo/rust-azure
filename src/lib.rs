@@ -20,12 +20,6 @@ extern crate heapsize;
 #[macro_use]
 #[cfg(feature = "plugins")]
 extern crate heapsize_derive;
-#[cfg(target_os = "linux")]
-extern crate x11;
-#[cfg(target_os = "android")]
-extern crate egl;
-#[cfg(all(target_os = "linux", target_os = "android"))]
-extern crate freetype;
 
 pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO, AZ_SURFACE_CAIRO_IMAGE,
