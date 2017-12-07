@@ -249,7 +249,7 @@ pub static AZ_ATT_TRANSFER_DISABLE_B: u32 = 2;
 pub static AZ_ATT_TRANSFER_DISABLE_A: u32 = 3;
 
 #[repr(C)]
-#[cfg_attr(feature = "plugins", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[derive(Copy, Clone, Debug)]
 pub struct struct__AzColor {
     pub r: AzFloat,

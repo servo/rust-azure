@@ -6,11 +6,9 @@
 #![crate_type = "rlib"]
 
 extern crate libc;
-#[cfg(feature = "plugins")]
-extern crate serde;
-#[cfg(feature = "plugins")]
+#[cfg(feature = "serde")]
 #[macro_use]
-extern crate serde_derive;
+extern crate serde;
 extern crate euclid;
 extern crate skia;
 
