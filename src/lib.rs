@@ -4,22 +4,13 @@
 
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
-#![cfg_attr(feature = "plugins", feature(custom_derive, plugin, proc_macro, rustc_attrs))]
 
 extern crate libc;
-#[cfg(feature = "plugins")]
-extern crate serde;
-#[cfg(feature = "plugins")]
+#[cfg(feature = "serde")]
 #[macro_use]
-extern crate serde_derive;
+extern crate serde;
 extern crate euclid;
 extern crate skia;
-#[macro_use]
-#[cfg(feature = "plugins")]
-extern crate heapsize;
-#[macro_use]
-#[cfg(feature = "plugins")]
-extern crate heapsize_derive;
 
 pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO, AZ_SURFACE_CAIRO_IMAGE,
