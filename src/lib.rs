@@ -4,7 +4,6 @@
 
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
-#![cfg_attr(feature = "plugins", feature(custom_derive, plugin, proc_macro, rustc_attrs))]
 
 extern crate libc;
 #[cfg(feature = "plugins")]
