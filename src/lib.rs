@@ -14,12 +14,6 @@ extern crate serde;
 extern crate serde_derive;
 extern crate euclid;
 extern crate skia;
-#[macro_use]
-#[cfg(feature = "plugins")]
-extern crate heapsize;
-#[macro_use]
-#[cfg(feature = "plugins")]
-extern crate heapsize_derive;
 
 pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO, AZ_SURFACE_CAIRO_IMAGE,

@@ -11,15 +11,13 @@ build = "build.rs"
 
 [features]
 default = []
-plugins = ["serde", "serde_derive", "heapsize", "heapsize_derive"]
+plugins = ["serde", "serde_derive"]
 
 [build-dependencies]
 cmake = "0.1"
 
 [dependencies]
 euclid = "0.15"
-heapsize = {version = "0.4", optional = true}
-heapsize_derive = {version = "0.1.0", optional = true}
 libc = "0.2"
 serde = {version = "1.0", optional = true}
 serde_derive = {version = "1.0", optional = true}
