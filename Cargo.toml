@@ -19,7 +19,7 @@ cmake = "0.1"
 euclid = "0.16"
 libc = "0.2"
 serde = {version = "1.0", features=["derive"], optional = true}
-servo-skia = "0.30000010"
+servo-skia = { version = "0.30000010", git = "https://github.com/faern/skia", branch = "upgrade-core-foundation" }
 
 [target.'cfg(any(target_os = "linux", target_os = "android"))'.dependencies]
 servo-freetype-sys = "4.0.1"
