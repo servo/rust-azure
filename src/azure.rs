@@ -611,6 +611,7 @@ pub fn AzPathBuilderMoveTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint)
 pub fn AzPathContainsPoint(aPath: AzPathRef, aPoint: *mut AzPoint, aMatrix: *const AzMatrix) -> bool;
 
 pub fn AzPathCopyToBuilder(aPath: AzPathRef) -> AzPathBuilderRef;
+pub fn AzPathTransformedCopyToBuilder(aPath: AzPathRef, aMatrix: *const AzMatrix) -> AzPathBuilderRef;
 
 pub fn AzPathBuilderLineTo(aPathBuilder: AzPathBuilderRef, aPoint: *mut AzPoint);
 

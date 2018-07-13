@@ -704,6 +704,16 @@ AzPathCopyToBuilder(AzPathRef aPath) {
     return gfxPathBuilder;
 }
 
+// TODO: need to handle fill rule
+extern "C" AzPathBuilderRef
+AzPathTransformedCopyToBuilder(AzPathRef aPath, const AzMatrix *aMatrix) {
+  gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+  const gfx::Matrix *gfxMatrix = reinterpret_cast<const gfx::Matrix*>(aMatrix);
+  RefPtr<gfx::PathBuilder> gfxPathBuilder = gfxPath->TransformedCopyToBuilder(*gfxMatrix);
+  gfxPathBuilder->AddRef();
+  return gfxPathBuilder;
+}
+
 extern "C" void
 AzReleasePath(AzPathRef aPath) {
     gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
