@@ -55,7 +55,7 @@ use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
 use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
 use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
-use azure::{AzPathContainsPoint, AzPathCopyToBuilder};
+use azure::{AzPathContainsPoint, AzPathCopyToBuilder, AzPathTransformedCopyToBuilder};
 
 use euclid::Transform2D;
 use euclid::Point2D;
@@ -1102,6 +1102,15 @@ impl Path {
         unsafe {
             PathBuilder {
                 azure_path_builder: AzPathCopyToBuilder(self.azure_path)
+            }
+        }
+    }
+
+    pub fn transformed_copy_to_builder(&self, matrix: &Transform2D<AzFloat>) -> PathBuilder {
+        unsafe {
+            PathBuilder {
+                azure_path_builder: AzPathTransformedCopyToBuilder(self.azure_path,
+                                                                   &AzMatrix::from_matrix_2d(matrix))
             }
         }
     }
