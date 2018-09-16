@@ -998,33 +998,21 @@ impl ExtendMode {
     }
 }
 
-// FIXME Rust #8753 no fixed stack segment for default methods
-#[allow(non_snake_case)]
-unsafe fn AzSourceSurfaceGetSize_(aSurface: AzSourceSurfaceRef) -> AzIntSize {
-    AzSourceSurfaceGetSize(aSurface)
-}
-
-// FIXME Rust #8753 no fixed stack segment for default methods
-#[allow(non_snake_case)]
-unsafe fn AzSourceSurfaceGetFormat_(aSurface: AzSourceSurfaceRef) -> AzSurfaceFormat {
-    AzSourceSurfaceGetFormat(aSurface)
-}
-
-pub trait SourceSurfaceMethods {
-    fn get_azure_source_surface(&self) -> AzSourceSurfaceRef;
-
-    fn size(&self) -> Size2D<i32> {
-        let size = unsafe {
-            AzSourceSurfaceGetSize_(self.get_azure_source_surface())
-        };
-        Size2D::new(size.width, size.height)
-    }
-
-    fn format(&self) -> SurfaceFormat {
-        unsafe {
-            SurfaceFormat::new(AzSourceSurfaceGetFormat_(self.get_azure_source_surface()))
+macro_rules! surface_methods {
+    () => {
+        pub fn size(&self) -> Size2D<i32> {
+            let size = unsafe {
+                AzSourceSurfaceGetSize(self.get_azure_source_surface())
+            };
+            Size2D::new(size.width, size.height)
         }
-    }
+
+        pub fn format(&self) -> SurfaceFormat {
+            unsafe {
+                SurfaceFormat::new(AzSourceSurfaceGetFormat(self.get_azure_source_surface()))
+            }
+        }
+    };
 }
 
 impl SourceSurface {
@@ -1036,11 +1024,12 @@ impl SourceSurface {
             azure_data_source_surface: data_source_surface
         }
     }
-}
 
-impl SourceSurfaceMethods for SourceSurface {
+    surface_methods! {}
+
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef { self.azure_source_surface }
 }
+
 
 #[derive(Debug)]
 pub struct DataSourceSurface {
@@ -1056,13 +1045,16 @@ impl Drop for DataSourceSurface {
 }
 
 impl DataSourceSurface {
-    pub fn with_data<F: FnOnce(&[u8])>(&self, f: F) {
-        unsafe {
-            let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
-            let len = self.stride() * self.size().height;
-            let slice = slice::from_raw_parts(buf, len as usize);
-            f(slice)
-        }
+    /// Returns the data of the surface as a slice.
+    ///
+    /// # Safety
+    ///
+    /// Callers must make sure to not invalidate the surface through other
+    /// API calls.
+    pub unsafe fn data(&self) -> &[u8] {
+        let buf = AzDataSourceSurfaceGetData(self.azure_data_source_surface) as *const u8;
+        let len = self.stride() * self.size().height;
+        slice::from_raw_parts(buf, len as usize)
     }
 
     pub fn stride(&self) -> i32 {
@@ -1071,13 +1063,8 @@ impl DataSourceSurface {
         }
     }
 
-    // FIXME: Workaround for lack of working cross-crate default methods.
-    pub fn get_size(&self) -> Size2D<i32> {
-        self.size()
-    }
-}
+    surface_methods! {}
 
-impl SourceSurfaceMethods for DataSourceSurface {
     fn get_azure_source_surface(&self) -> AzSourceSurfaceRef {
         self.azure_data_source_surface
     }
