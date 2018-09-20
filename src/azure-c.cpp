@@ -5,7 +5,6 @@
 #include "azure-c.h"
 #include "2D.h"
 #include "Filters.h"
-#include "core/SkTypes.h"
 #include "ScaledFontSkia.h"
 #include "Types.h"
 
