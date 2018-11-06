@@ -28,6 +28,3 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated cmake || brew upgrade cmake; fi
   - g++ --version
   - cmake --version
-
-notifications:
-  webhooks: http://build.servo.org:54856/travis
