@@ -1,6 +1,6 @@
 [package]
 name = "azure"
-version = "0.34.0"
+version = "0.35.0"
 authors = ["The Servo Project Developers"]
 documentation = "https://doc.servo.org/azure/"
 repository = "https://github.com/servo/rust-azure"
@@ -19,7 +19,7 @@ cmake = "0.1"
 euclid = "0.19"
 libc = "0.2"
 serde = {version = "1.0", features=["derive"], optional = true}
-servo-skia = "0.30000019"
+servo-skia = "0.30000020"
 
 [target.'cfg(any(target_os = "linux", target_os = "android"))'.dependencies]
 servo-freetype-sys = "4.0.1"
