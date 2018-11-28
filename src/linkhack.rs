@@ -25,7 +25,7 @@ extern { }
 
 #[cfg(target_os = "macos")]
 #[link(name = "azure", kind = "static")]
-#[link(name = "stdc++")]
+#[link(name = "c++")]
 #[link(name = "objc")]
 #[link(name = "IOSurface", kind = "framework")]
 #[link(name = "OpenGL", kind = "framework")]
