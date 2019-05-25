@@ -1,6 +1,6 @@
 [package]
 name = "azure"
-version = "0.36.0"
+version = "0.36.1"
 authors = ["The Servo Project Developers"]
 documentation = "https://doc.servo.org/azure/"
 repository = "https://github.com/servo/rust-azure"
