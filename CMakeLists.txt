@@ -6,12 +6,11 @@ function(set_prefix var prefix)
   set(${var} "${tmp}" PARENT_SCOPE)
 endfunction()
 
-# Use ccache if available
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-endif(CCACHE_FOUND)
+# Use ccache if we're told to.
+if(DEFINED ENV{CCACHE})
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE $ENV{CCACHE})
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK $ENV{CCACHE})
+endif()
 
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Zi")
@@ -43,15 +42,15 @@ set(LIBAZURE_H ${MOZ2D_H} ${MOZ2D_INTERNAL_H})
 
 # Pull in Skia headers
 include_directories(
-	$ENV{DEP_SKIA_OUTDIR}/include
-	$ENV{DEP_SKIA_OUTDIR}/include/core
-	$ENV{DEP_SKIA_OUTDIR}/include/config
-	$ENV{DEP_SKIA_OUTDIR}/include/effects
-	$ENV{DEP_SKIA_OUTDIR}/include/ports
-	$ENV{DEP_SKIA_OUTDIR}/include/utils
-	$ENV{DEP_SKIA_OUTDIR}/include/gpu
-	$ENV{DEP_SKIA_OUTDIR}/include/gpu/gl
-	$ENV{DEP_SKIA_OUTDIR}/src
+  $ENV{DEP_SKIA_OUTDIR}/include
+  $ENV{DEP_SKIA_OUTDIR}/include/core
+  $ENV{DEP_SKIA_OUTDIR}/include/config
+  $ENV{DEP_SKIA_OUTDIR}/include/effects
+  $ENV{DEP_SKIA_OUTDIR}/include/ports
+  $ENV{DEP_SKIA_OUTDIR}/include/utils
+  $ENV{DEP_SKIA_OUTDIR}/include/gpu
+  $ENV{DEP_SKIA_OUTDIR}/include/gpu/gl
+  $ENV{DEP_SKIA_OUTDIR}/src
 )
 
 if(NOT APPLE AND NOT WIN32)
@@ -79,38 +78,38 @@ add_definitions(-DMOZ_WARN_UNUSED_RESULT="")
 
 # Azure bindings
 set_prefix(BINDINGS_SRC src/
-	azure-c.cpp
-	azure-c.h
+  azure-c.cpp
+  azure-c.h
 )
 
 # Core azure library
 set_prefix(LIBAZURE_SRC libazure/
-	Blur.cpp
-	convolver.cpp
-	DataSourceSurface.cpp
-	DataSurfaceHelpers.cpp
-	DrawEventRecorder.cpp
-	DrawTargetCapture.cpp
-	DrawTarget.cpp
-	DrawTargetDual.cpp
-	DrawTargetRecording.cpp
-	DrawTargetSkia.cpp
-	DrawTargetTiled.cpp
-	Factory.cpp
-	FilterNodeSoftware.cpp
-	FilterProcessing.cpp
-	FilterProcessingScalar.cpp
-	ImageScaling.cpp
-	Matrix.cpp
-	Path.cpp
-	PathHelpers.cpp
-	PathRecording.cpp
-	PathSkia.cpp
-	RecordedEvent.cpp
-	ScaledFontBase.cpp
-	ScaledFontSkia.cpp
-	SourceSurfaceRawData.cpp
-	SourceSurfaceSkia.cpp
+  Blur.cpp
+  convolver.cpp
+  DataSourceSurface.cpp
+  DataSurfaceHelpers.cpp
+  DrawEventRecorder.cpp
+  DrawTargetCapture.cpp
+  DrawTarget.cpp
+  DrawTargetDual.cpp
+  DrawTargetRecording.cpp
+  DrawTargetSkia.cpp
+  DrawTargetTiled.cpp
+  Factory.cpp
+  FilterNodeSoftware.cpp
+  FilterProcessing.cpp
+  FilterProcessingScalar.cpp
+  ImageScaling.cpp
+  Matrix.cpp
+  Path.cpp
+  PathHelpers.cpp
+  PathRecording.cpp
+  PathSkia.cpp
+  RecordedEvent.cpp
+  ScaledFontBase.cpp
+  ScaledFontSkia.cpp
+  SourceSurfaceRawData.cpp
+  SourceSurfaceSkia.cpp
 )
 
 set_prefix(LIBAZURE_X86_SRC libazure/
@@ -156,10 +155,10 @@ elseif($ENV{TARGET} MATCHES linux)
 endif()
 
 set(ALL_SRC
-	${BINDINGS_SRC}
-	${LIBAZURE_SRC}
-	${LIBAZURE_PLATFORM_SRC}
-	${LIBAZURE_H}
+  ${BINDINGS_SRC}
+  ${LIBAZURE_SRC}
+  ${LIBAZURE_PLATFORM_SRC}
+  ${LIBAZURE_H}
 )
 
 if(NOT WIN32)
