@@ -28,3 +28,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated cmake || brew upgrade cmake; fi
   - g++ --version
   - cmake --version
+
+script:
+  - cargo build --no-default-features
+  - cargo build --features gl_backend

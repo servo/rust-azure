@@ -12,7 +12,7 @@ extern { }
 
 #[test]
 fn sanity_check() {
-    use azure::AzSanityCheck;
+    use crate::azure::AzSanityCheck;
 
     unsafe { AzSanityCheck() };
 }
