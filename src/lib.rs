@@ -5,14 +5,11 @@
 #![crate_name = "azure"]
 #![crate_type = "rlib"]
 
-extern crate libc;
 #[cfg(feature = "serde")]
 #[macro_use]
 extern crate serde;
-extern crate euclid;
-extern crate skia;
 
-pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
+pub use crate::azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AZ_SURFACE_D2D1_BITMAP, AZ_SURFACE_D2D1_DRAWTARGET, AZ_SURFACE_CAIRO, AZ_SURFACE_CAIRO_IMAGE,
                 AZ_SURFACE_COREGRAPHICS_IMAGE, AZ_SURFACE_COREGRAPHICS_CGCONTEXT, AZ_SURFACE_SKIA, AZ_SURFACE_DUAL_DT,
                 enum_AzSurfaceFormat, AZ_FORMAT_B8G8R8A8, AZ_FORMAT_B8G8R8X8, AZ_FORMAT_R5G6B5,
@@ -52,7 +49,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzGlyphRenderingOptionsRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef, AzDrawSurfaceOptionsRef,
                 AzGLContext, AzGLContextMetadataRef,
                 AzPathRef, AzPathBuilderRef, AzSanityCheck, AzCreateColorPattern,
-                AzCreateDrawTarget, AzCreateDrawTargetForData, AzCreateDrawTargetSkiaWithGrContextAndFBO,
+                AzCreateDrawTarget, AzCreateDrawTargetForData,
                 AzRetainDrawTarget, AzReleaseDrawTarget, AzDrawTargetGetSize, AzDrawTargetFlush,
                 AzDrawTargetClearRect, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetStrokeRect, AzDrawTargetStrokeLine,
                 AzDrawTargetFill, AzDrawTargetStroke, AzDrawTargetPushClip, AzDrawTargetPopClip, AzDrawTargetFillGlyphs,
@@ -61,6 +58,9 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzDataSourceSurfaceGetStride, AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzDrawTargetSetTransform,
                 AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreatePathBuilder, AzPathCopyToBuilder, AzPathContainsPoint,
                 AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
+
+#[cfg(feature = "gl_backend")]
+pub use crate::azure::AzCreateDrawTargetSkiaWithGrContextAndFBO;
 
 pub mod azure_hl;
 

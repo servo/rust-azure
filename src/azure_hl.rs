@@ -4,58 +4,61 @@
 
 //! High-level bindings to Azure.
 
-pub use AzColor as Color;
-pub use azure::AzGradientStop as GradientStop;
-use azure::{AZ_FILTER_TYPE_COLOR_MATRIX};
-use azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
-use azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
-use azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
-use azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
-use azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
-use azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
-use azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
-use azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
-use azure::{AZ_ATT_TRANSFER_DISABLE_A};
-use azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
-use azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
-use azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
-use azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode};
-use azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
-use azure::{struct__AzGlyphBuffer};
-use azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
-use azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint, struct__AzMatrix5x4};
-use azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
-use azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
-use azure::{AzDrawTargetClearRect};
-use azure::{AzDrawTargetCreateSourceSurfaceFromData};
-use azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetFlush};
-use azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
-use azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
-use azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
-use azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
-use azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
-use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
-use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
-use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
-use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
-use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
-use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
-use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
-use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
-use azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
-use azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
-use azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
-use azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
-use azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
-use azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
-use azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
-use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
-use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
-use azure::{AzPathContainsPoint, AzPathCopyToBuilder, AzPathTransformedCopyToBuilder};
+pub use crate::azure::AzColor as Color;
+pub use crate::azure::AzGradientStop as GradientStop;
+use crate::azure::{AZ_FILTER_TYPE_COLOR_MATRIX};
+use crate::azure::{AZ_FILTER_TYPE_FLOOD, AZ_FILTER_TYPE_GAUSSIAN_BLUR, AZ_FILTER_TYPE_LINEAR_TRANSFER};
+use crate::azure::{AZ_FILTER_TYPE_TABLE_TRANSFER, AZ_IN_COLOR_MATRIX_IN, AZ_IN_COMPOSITE_IN};
+use crate::azure::{AZ_IN_FLOOD_IN, AZ_IN_GAUSSIAN_BLUR_IN, AZ_IN_LINEAR_TRANSFER_IN};
+use crate::azure::{AZ_ATT_COLOR_MATRIX_MATRIX, AZ_ATT_FLOOD_COLOR, AZ_ATT_GAUSSIAN_BLUR_STD_DEVIATION};
+use crate::azure::{AZ_FILTER_TYPE_COMPOSITE, AZ_IN_TABLE_TRANSFER_IN, AZ_ATT_LINEAR_TRANSFER_SLOPE_R};
+use crate::azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_G, AZ_ATT_LINEAR_TRANSFER_SLOPE_B};
+use crate::azure::{AZ_ATT_LINEAR_TRANSFER_SLOPE_A, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_R};
+use crate::azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_G, AZ_ATT_LINEAR_TRANSFER_INTERCEPT_B};
+use crate::azure::{AZ_ATT_LINEAR_TRANSFER_INTERCEPT_A, AZ_ATT_TABLE_TRANSFER_TABLE_R};
+use crate::azure::{AZ_ATT_TABLE_TRANSFER_TABLE_G, AZ_ATT_TABLE_TRANSFER_TABLE_B};
+use crate::azure::{AZ_ATT_TABLE_TRANSFER_TABLE_A, AZ_ATT_TRANSFER_DISABLE_R};
+use crate::azure::{AZ_ATT_TRANSFER_DISABLE_G, AZ_ATT_TRANSFER_DISABLE_B};
+use crate::azure::{AZ_ATT_TRANSFER_DISABLE_A};
+use crate::azure::{AzPoint, AzRect, AzIntRect, AzFloat, AzIntSize, AzColor, AzColorPatternRef, AzGradientStopsRef};
+use crate::azure::{AzStrokeOptions, AzDrawOptions, AzSurfaceFormat, AzIntPoint, AzFilter, AzDrawSurfaceOptions};
+use crate::azure::{AzBackendType, AzDrawTargetRef, AzSourceSurfaceRef, AzDataSourceSurfaceRef};
+use crate::azure::{AzScaledFontRef, AzGlyphRenderingOptionsRef, AzExtendMode};
+use crate::azure::{AzCompositionOp, AzAntialiasMode, AzJoinStyle, AzCapStyle};
+use crate::azure::{struct__AzGlyphBuffer};
+use crate::azure::{struct__AzDrawOptions, struct__AzIntRect, struct__AzDrawSurfaceOptions, struct__AzIntSize};
+use crate::azure::{struct__AzPoint, struct__AzRect, struct__AzStrokeOptions, struct__AzIntPoint, struct__AzMatrix5x4};
+use crate::azure::{AzCreateColorPattern, AzCreateDrawTarget, AzCreateDrawTargetForData};
+use crate::azure::{AzDataSourceSurfaceGetData, AzDataSourceSurfaceGetStride};
+use crate::azure::{AzDrawTargetClearRect};
+use crate::azure::{AzDrawTargetCreateSourceSurfaceFromData};
+use crate::azure::{AzDrawTargetDrawSurface, AzDrawTargetCopySurface, AzDrawTargetFillRect, AzDrawTargetFlush};
+use crate::azure::{AzDrawTargetGetSize, AzDrawTargetGetSnapshot, AzDrawTargetSetTransform};
+use crate::azure::{AzDrawTargetStrokeLine, AzDrawTargetStrokeRect, AzDrawTargetFillGlyphs};
+use crate::azure::{AzDrawTargetCreateGradientStops, AzDrawTargetGetFormat};
+use crate::azure::{AzReleaseDrawTarget, AzReleasePattern, AzReleaseGradientStops};
+use crate::azure::{AzReleaseSourceSurface, AzRetainDrawTarget, AzRetainSourceSurface};
+use crate::azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
+use crate::azure::{AzSourceSurfaceGetSize};
+use crate::azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
+use crate::azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
+use crate::azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
+use crate::azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
+use crate::azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
+use crate::azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
+use crate::azure::{AzDrawTargetDrawSurfaceWithShadow, AzDrawTargetCreateShadowDrawTarget};
+use crate::azure::{AzDrawTargetCreateSimilarDrawTarget, AzDrawTargetGetTransform};
+use crate::azure::{AzFilterNodeSetSourceSurfaceInput, AzReleaseFilterNode, AzDrawTargetCreateFilter};
+use crate::azure::{AzFilterNodeSetColorAttribute, AzFilterNodeSetFloatAttribute};
+use crate::azure::{AzFilterNodeSetMatrix5x4Attribute, AzFilterNodeSetFilterNodeInput};
+use crate::azure::{AzFilterNodeSetFloatArrayAttribute, AzFilterNodeSetBoolAttribute};
+use crate::azure::{AzDrawTargetDrawFilter, AzFilterNodeRef, AzFilterType};
+use crate::azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
+use crate::azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
+use crate::azure::{AzPathContainsPoint, AzPathCopyToBuilder, AzPathTransformedCopyToBuilder};
+
+#[cfg(feature = "gl_backend")]
+use crate::azure::AzCreateDrawTargetSkiaWithGrContextAndFBO;
 
 use euclid::Transform2D;
 use euclid::Point2D;
@@ -63,6 +66,7 @@ use euclid::Vector2D;
 use euclid::Rect;
 use euclid::Size2D;
 use libc::size_t;
+#[cfg(feature = "gl_backend")]
 use skia::gl_rasterization_context::GLRasterizationContext;
 use std::mem;
 use std::ptr;
@@ -535,6 +539,7 @@ impl DrawTarget {
         }
     }
 
+    #[cfg(feature = "gl_backend")]
     pub fn new_with_gl_rasterization_context(gl_rasterization_context: Arc<GLRasterizationContext>,
                                              format: SurfaceFormat)
                                              -> DrawTarget {
@@ -885,14 +890,16 @@ pub fn clone_mutable_draw_target(draw_target: &mut DrawTarget) -> DrawTarget {
 pub enum DrawTargetBacking {
     Empty, // The backing is completely owned by the DrawTarget.
     Data(Arc<Vec<u8>>),
+    #[cfg(feature = "gl_backend")]
     GLRasterizationContext(Arc<GLRasterizationContext>),
 }
 
 impl Drop for DrawTargetBacking {
     fn drop(&mut self) {
         match *self {
-            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) |
-            DrawTargetBacking::GLRasterizationContext(_) => { }
+            DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
+            #[cfg(feature = "gl_backend")]
+            DrawTargetBacking::GLRasterizationContext(_) => {}
         }
     }
 }
@@ -902,6 +909,7 @@ impl DrawTargetBacking {
         match *self {
             DrawTargetBacking::Empty => DrawTargetBacking::Empty,
             DrawTargetBacking::Data(ref arc_data) => DrawTargetBacking::Data(arc_data.clone()),
+            #[cfg(feature = "gl_backend")]
             DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
                 DrawTargetBacking::GLRasterizationContext(context_ref.clone()),
         }
@@ -910,6 +918,7 @@ impl DrawTargetBacking {
     pub fn make_current(&self) {
         match *self {
             DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { }
+            #[cfg(feature = "gl_backend")]
             DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
                 context_ref.make_current(),
         }
@@ -918,6 +927,7 @@ impl DrawTargetBacking {
     pub fn flush(&self) {
         match *self {
             DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => { },
+            #[cfg(feature = "gl_backend")]
             DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
                 context_ref.flush(),
         }
@@ -926,6 +936,7 @@ impl DrawTargetBacking {
     pub fn finish(&self) {
         match *self {
             DrawTargetBacking::Empty | DrawTargetBacking::Data(_) => {},
+            #[cfg(feature = "gl_backend")]
             DrawTargetBacking::GLRasterizationContext(ref context_ref) =>
                 context_ref.flush_to_surface(),
         }
