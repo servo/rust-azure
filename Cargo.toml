@@ -25,3 +25,6 @@ servo-skia = {version = "0.30000022", default-features = false}
 
 [target.'cfg(any(target_os = "linux", target_os = "android"))'.dependencies]
 servo-freetype-sys = "4.0.1"
+
+[patch.crates-io]
+servo-skia = { git = "https://github.com/servo/skia", branch = "no-gl" }
