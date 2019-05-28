@@ -70,3 +70,10 @@ pub mod test;
 pub mod linkhack;
 
 pub mod azure;
+
+#[test]
+fn test() {
+    use crate::azure_hl::*;
+    use euclid::Size2D;
+    let _dt = DrawTarget::new(BackendType::Skia, Size2D::new(1, 1), SurfaceFormat::B8G8R8A8);
+}
