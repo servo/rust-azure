@@ -68,6 +68,11 @@ use euclid::Size2D;
 use libc::size_t;
 #[cfg(feature = "gl_backend")]
 use skia::gl_rasterization_context::GLRasterizationContext;
+// The C++ Azure code relies on Skia symbols, but the Rust compiler doesn't
+// bother linking Skia if no Rust code imports any imports from it. This
+// unused import prevents that from occurring.
+#[allow(unused_imports)]
+use skia::SkiaGrContextCreate;
 use std::mem;
 use std::ptr;
 use std::slice;
