@@ -57,11 +57,7 @@ use azure::{AzPathBuilderBezierTo, AzPathBuilderQuadraticBezierTo};
 use azure::{AzPathBuilderCurrentPoint, AzPathBuilderClose};
 use azure::{AzPathContainsPoint, AzPathCopyToBuilder, AzPathTransformedCopyToBuilder};
 
-use euclid::Transform2D;
-use euclid::Point2D;
-use euclid::Vector2D;
-use euclid::Rect;
-use euclid::Size2D;
+use euclid::default::{Transform2D, Point2D, Vector2D, Rect, Size2D};
 use libc::size_t;
 use skia::gl_rasterization_context::GLRasterizationContext;
 use std::mem;
