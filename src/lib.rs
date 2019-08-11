@@ -60,7 +60,7 @@ pub use azure::{AzFontOptions, AzFloat, enum_AzSurfaceType, AZ_SURFACE_DATA,
                 AzSourceSurfaceGetSize, AzSourceSurfaceGetFormat, AzSourceSurfaceGetDataSurface, AzDataSourceSurfaceGetData,
                 AzDataSourceSurfaceGetStride, AzCreateScaledFontForNativeFont, AzReleaseScaledFont, AzDrawTargetSetTransform,
                 AzCreateFontOptionsForName, AzDestroyFontOptions, AzCreatePathBuilder, AzPathCopyToBuilder, AzPathContainsPoint,
-                AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath};
+                AzReleasePathBuilder, AzPathBuilderMoveTo, AzPathBuilderLineTo, AzPathBuilderFinish, AzReleasePath, AzRetainPath};
 
 pub mod azure_hl;
 
