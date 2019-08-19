@@ -42,7 +42,7 @@ use azure::{AzSourceSurfaceGetDataSurface, AzSourceSurfaceGetFormat};
 use azure::{AzSourceSurfaceGetSize, AzCreateDrawTargetSkiaWithGrContextAndFBO};
 use azure::{AzCreatePathBuilder, AzPathBuilderRef, AzPathBuilderMoveTo, AzPathBuilderLineTo};
 use azure::{AzDrawTargetStroke, AzPathBuilderArc, AzPathBuilderFinish, AzReleasePathBuilder};
-use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzDrawTargetPushClip, AzDrawTargetPopClip};
+use azure::{AzDrawTargetFill, AzPathRef, AzReleasePath, AzRetainPath, AzDrawTargetPushClip, AzDrawTargetPopClip};
 use azure::{AzLinearGradientPatternRef, AzRadialGradientPatternRef, AzSurfacePatternRef, AzMatrix, AzPatternRef};
 use azure::{AzCreateLinearGradientPattern, AzCreateRadialGradientPattern, AzCreateSurfacePattern, AzDrawTargetPushClipRect};
 use azure::{AzCloneLinearGradientPattern, AzCloneRadialGradientPattern, AzCloneSurfacePattern, AzSurfacePatternGetSize};
@@ -1103,6 +1103,16 @@ impl Drop for Path {
     fn drop(&mut self) {
         unsafe {
             AzReleasePath(self.azure_path);
+        }
+    }
+}
+
+impl Clone for Path {
+    fn clone(&self) -> Self {
+        unsafe {
+            Path {
+                azure_path: AzRetainPath(self.azure_path)
+            }
         }
     }
 }

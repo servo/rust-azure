@@ -640,6 +640,7 @@ pub fn AzPathBuilderClose(aPathBuilder: AzPathBuilderRef);
 pub fn AzPathBuilderFinish(aPathBuilder: AzPathBuilderRef) -> AzPathRef;
 
 pub fn AzReleasePath(aPath: AzPathRef);
+pub fn AzRetainPath(aPath: AzPathRef) -> AzPathRef;
 
 pub fn AzReleaseGradientStops(aFont: AzScaledFontRef);
 

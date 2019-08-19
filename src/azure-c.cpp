@@ -720,6 +720,13 @@ AzReleasePath(AzPathRef aPath) {
     gfxPath->Release();
 }
 
+extern "C" AzPathRef
+AzRetainPath(AzPathRef aPath) {
+    gfx::Path *gfxPath = static_cast<gfx::Path*>(aPath);
+    gfxPath->AddRef();
+    return gfxPath;
+}
+
 extern "C" AzLinearGradientPatternRef
 AzCreateLinearGradientPattern(const AzPoint *aBegin,
                               const AzPoint *aEnd,
