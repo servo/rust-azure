@@ -17,6 +17,7 @@ addons:
     packages:
     - libxxf86vm-dev
     - libosmesa6-dev
+    - libglu1-mesa-dev
     - gcc-4.7
     - g++-4.7
 
