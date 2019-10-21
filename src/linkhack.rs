@@ -34,3 +34,12 @@ extern { }
 #[link(name = "ApplicationServices", kind = "framework")]
 extern { }
 
+#[cfg(target_os = "freebsd")]
+#[link(name = "azure", kind = "static")]
+#[link(name = "c++")]
+#[link(name = "freetype")]
+#[link(name = "bz2")]
+#[link(name = "fontconfig")]
+#[link(name = "expat")]
+#[link(name = "X11")]
+extern { }
